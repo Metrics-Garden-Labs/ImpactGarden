@@ -32,5 +32,12 @@ const config: Config = {
       },
     ],
   },
+  themes: {
+    //fonts for the project
+    fontFamily: {
+      manrope: ["Manrope", "sans-serif"],
+      gambetta: ["Gambetta", "serif"],
+    },
+  },
 };
 export default config;

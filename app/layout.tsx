@@ -1,10 +1,21 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from 'next/font/local'
+import { Manrope } from "next/font/google";
+
+
 import "./globals.css";
-import { Providers } from './providers';
+//import { Providers } from './providers';
+
+const manrope = Manrope({subsets: ["latin"]})
 
 
-const inter = Inter({ subsets: ["latin"] });
+//get the gambetta font, figure out how to put it in
+
+//const gambetta = localFont({ src: './fonts/Gambetta-Italic.otf' })
+
+
+
+
 
 export const metadata: Metadata = {
   title: "Metrics Garden Labs Module 3",
@@ -18,10 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <Providers>
+      <body className={manrope.className}>
+        {/* //<Providers> */}
           {children}
-        </Providers>
+        {/* </Providers> */}
         </body>
     </html>
   );
