@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is the Module 3 (Attestation module) lofi for MetricsGardenLabs.
+
+This is where I will be testing the Frontend code for the Ethereum Attestation Service LaunchPad!
 
 ## Getting Started
 
