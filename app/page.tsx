@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Attestbox from "./components/attestbox";
-import Header from "./components/header";
+import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 
 //the plan for this is to recreate the mockup that Mari sent in
@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <>
     <main>
-      <Header />
+      <Navbar />
       <Attestbox />
       <Footer />
     </main>
