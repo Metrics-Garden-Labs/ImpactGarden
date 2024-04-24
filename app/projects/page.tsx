@@ -20,3 +20,7 @@ export default function Projects() {
     </div>
   );
 }
+
+
+//TODO: make the footer just at the bottom once you have scrolled to the botto
+        //its taking too much space at the bottom of the page
