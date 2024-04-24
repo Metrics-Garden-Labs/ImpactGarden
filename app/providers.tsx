@@ -27,8 +27,8 @@ import { useGlobalState } from './config/config';
 const { wallets } = getDefaultWallets();
 
 const config = getDefaultConfig({
-    appName: 'RainbowDemo',
-    projectId: '861a0d63610c9afa17176ad8a3acd2d2',
+    appName: 'module3',
+    projectId: 'fd9485b2313c31a14cd8fd4cdb94893f',
     wallets: [
         ...wallets,
         {
@@ -57,7 +57,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <WagmiProvider config={config}>
             <QueryClientProvider client={queryClient}>
                 <GlobalStateProvider>
-                    <RainbowKitProvider>{children}</RainbowKitProvider>
+                    <RainbowKitProvider >
+                        {children}
+                    </RainbowKitProvider>
                 </GlobalStateProvider>
             </QueryClientProvider>
         </WagmiProvider>
@@ -67,7 +69,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 const GlobalStateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { address } = useAccount();
     const [, setWalletAddress] = useGlobalState('walletAddress');
-    //console.log('address', address);
+    console.log('address', address);
 
 
     React.useEffect(() => {

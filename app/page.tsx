@@ -11,8 +11,7 @@ export default function Home() {
     <>
     <main>
       <Navbar />
-      <Attestbox />
-      <Footer />
+      <h1>This will be the landing page</h1>
     </main>
     </>
   );

@@ -3,6 +3,9 @@
 import React, {useState} from 'react'
 import { IoIosArrowDropright } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
+
 
 //get the fonts and stuff right afterwards
 
@@ -28,9 +31,12 @@ export default function Attestbox() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
-        <main className=" flex flex-col items-center justify-center w-full flex-1 p-4 md:px-20 text-center">
+      {/* <ConnectButton  /> */}
 
-                <div className="card w-full md:w-1/2 sm:w-3/4 bg-base-100 shadow-xl" style={{ height: '40vh' }}>
+            
+        <main className=" flex flex-col items-center justify-center w-full flex-1 p-4 md:px-20 text-center">
+            
+                <div className="card w-full md:w-1/2 sm:w-3/4 bg-base-100 shadow-xl" >
                     <div className="card-body">
 
                         {!hasAttested ? (
@@ -68,6 +74,7 @@ export default function Attestbox() {
                             <div className="text-left w-full pl-5 py-1">
                                 <label className='text-gray-700 '>To: </label>
                             </div>
+                            
 
                             {/* Input for the Address*/}
                             <div className="pl-5 py-0.5 w-full flex justify-center ">

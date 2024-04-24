@@ -1,3 +1,4 @@
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Link from 'next/link';
 import React from 'react';
 
@@ -15,7 +16,8 @@ export default function Navbar() {
                     <Link href='/' className='text-white text-lg hover:text-opacity-75'>HOME</Link>
                     <Link href='/about' className='text-white text-lg hover:text-opacity-75'>METRICS DATABASE</Link>
                     <Link href='/about' className='text-white text-lg hover:text-opacity-75'>ATTEST</Link>
-                    <Link href='/about' className='text-white text-lg hover:text-opacity-75'>PROJECTS</Link>
+                    <Link href='/projects' className='text-white text-lg hover:text-opacity-75'>PROJECTS</Link>
+                    {/* <ConnectButton /> */}
                 </div>
             </div>
 

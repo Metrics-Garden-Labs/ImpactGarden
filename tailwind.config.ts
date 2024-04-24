@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       colors: {
         headerblack: "#353436",
+        backgroundgray: "#F9F9F9",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -22,7 +23,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("daisyui")],
+  plugins: [require("@tailwindcss/forms"), require("daisyui")],
   daisyui: {
     themes: [
       {
