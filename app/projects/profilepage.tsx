@@ -7,12 +7,33 @@
 //there will be a main section that contains the header bar and the project information 
 'use client'
 
+import { AnyARecord } from 'dns';
 import React, { useState } from 'react';
 import { FaSearch } from "react-icons/fa";
+import { RxCross2 } from "react-icons/rx";
+import { IoIosMenu } from "react-icons/io";
+import Sidebar from './sidebar';
+
+interface Contribution {
+  id: number;
+  title: string;
+  content: string;
+}
+
+interface Props {
+  sidebarOpen: boolean;
+  setSidebarOpen: (isOpen: boolean) => void;
+}
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState('attestations');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedContribution, setSelectedContribution] = useState<Contribution | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   const tabClasses = (tabName:string) =>
   `cursor-pointer px-4 py-2 text-sm font-semibold  mr-2 ${
@@ -21,19 +42,61 @@ export default function ProfilePage() {
       : 'text-gray-600 hover:text-black'
   }`;
 
-  const contributions = [
+  const contributions: Contribution[] = [
     { id: 1, title: 'Contribution #1', content: 'Enter some content here...' },
-    { id: 2, title: 'Contribution #2', content: 'Enter some content here...' },
-    { id: 3, title: 'Contribution #3', content: 'Enter some content here...' },
-    { id: 4, title: 'Contribution #4', content: 'Enter some content here...' },
-    { id: 5, title: 'Contribution #5', content: 'Enter some content here...' },
+    { id: 2, title: 'Epic ', content: 'Enter some content here...' },
+    { id: 3, title: 'Banana ', content: 'Enter some content here...' },
+    { id: 4, title: 'Metrics Garden Labs', content: 'Enter some content here...' },
+    { id: 5, title: 'Contribution #2', content: 'Enter some content here...' },
     { id: 6, title: 'Contribution #6', content: 'Enter some content here...' },
-    { id: 7, title: 'Contribution #7', content: 'Enter some content here...' },
+    { id: 7, title: 'Aztec', content: 'Enter some content here...' },
   ];
 
   const filteredContributions = contributions.filter((contribution) =>
   contribution.title.toLowerCase().includes(searchTerm.toLowerCase())
-);
+  );
+
+  const openmodal = (contribution:any) => {
+    setSelectedContribution(contribution);
+  }
+
+  const closeModal = () => {
+    setSelectedContribution(null);
+  }
+
+  const renderModal = () => {
+    if (!selectedContribution) return null;
+
+    return (
+      <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+        <div 
+          className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-1/4 h-1/2 mx-4 md:mx-20"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="text-center pt-8 p-2">
+            <h2 className="text-xl font-bold mb-4">{selectedContribution.title}</h2>
+          </div>
+          <hr className="border-1 border-gray-300 my-2 mx-auto w-1/2" />
+          <div className="mb-4 items-center py-3">
+            <h3 className="font-semibold text-center">Description</h3>
+            <p className='text-left'>{selectedContribution.content}</p>
+          </div>
+          <div className="mb-4 ">
+            <h3 className="font-semibold text-center">Link/Evidence</h3>
+            <p>Evidence of the Contribution</p>
+          </div>
+          <div className="mb-4 ">
+            <h3 className="font-semibold text-center">Attestations</h3>
+            <p>Info on who has attested and maybe some more stuff</p>
+          </div>
+          <button onClick={closeModal} className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4">
+          <RxCross2 className='w-5 h-5'/>
+        </button>
+        </div>
+        
+      </div>
+    );
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -61,7 +124,9 @@ export default function ProfilePage() {
                     </div>
                     <div className="grid grid-cols-3 gap-12">
                         {filteredContributions.map((contribution) => (
-                        <div key={contribution.id} className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-xl w-full h-60 shadow-lg">
+                        <div key={contribution.id} 
+                             className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-xl w-full h-60 shadow-lg"
+                             onClick={() => openmodal(contribution)}>
                             <h3 className="mb-2 text-xl font-semibold ">{contribution.title}</h3>
                             <p className='text-gray-500'>{contribution.content}</p>
                         </div>
@@ -75,13 +140,23 @@ export default function ProfilePage() {
         return <div className='text-black'>Content for Charts</div>;
       default:
         return <div className='text-black'>Select a tab</div>;
-    }
+    }a
   };
 
   return (
     <main className="flex-grow p-10 bg-backgroundgray w-fulll h-full">
+     
       <div className="mb-4 border-b border-gray-200">
+      
         <nav className="flex space-x-4 text-black">
+      <button
+        className="lg:hidden" // Visible on small and medium screens, hidden on large and larger screens
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        aria-label="Toggle Sidebar"
+      >
+        <IoIosMenu className="h-6 w-6" />
+      </button>
+      
           <button onClick={() => setActiveTab('attestations')} className={tabClasses('attestations')}>
             Contributions
           </button>
@@ -93,9 +168,29 @@ export default function ProfilePage() {
           </button>
         </nav>
       </div>
-      <div className="content">
-        {renderContent()}
+    
+
+      <div className="flex">
+      {sidebarOpen && (
+      <div className="fixed inset-0 z-20 bg-white w-64 lg:hidden overflow-y-auto">
+        <Sidebar isOpen={sidebarOpen} />
       </div>
+    )}
+
+    <div
+        className={`flex-1 p-4 transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? 'lg:ml-0 ml-64' : ''
+        }`}
+        onClick={() => {
+          if (sidebarOpen) {
+            setSidebarOpen(false);
+          }
+        }}
+      >
+      {renderContent()}
+      {renderModal()}
+    </div>
+    </div>
     </main>
   );
 }

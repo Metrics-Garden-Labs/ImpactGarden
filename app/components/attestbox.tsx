@@ -31,8 +31,9 @@ export default function Attestbox() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
-      {/* <ConnectButton  /> */}
-
+      <div className='top-0 right-0'>
+        <ConnectButton label="Connect Wallet" /> 
+      </div>
             
         <main className=" flex flex-col items-center justify-center w-full flex-1 p-4 md:px-20 text-center">
             

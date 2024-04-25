@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from 'next/font/local'
 import { Manrope } from "next/font/google";
+import '@rainbow-me/rainbowkit/styles.css';
  
 
 
