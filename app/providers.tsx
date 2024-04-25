@@ -22,7 +22,7 @@ import {
 } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider, useAccount } from 'wagmi';
-import { useGlobalState } from './config/config';
+import { useGlobalState } from '../src/config/config';
 
 const { wallets } = getDefaultWallets();
 
