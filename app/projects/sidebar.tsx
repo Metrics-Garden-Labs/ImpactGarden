@@ -20,7 +20,7 @@ export default function Sidebar() {
           {/* Company image placeholder */}
           <div className="h-60 bg-gray-300 rounded-lg flex justify-center items-center">
             {/* Replace src with your image path */}
-            <img src="/path-to-company-image.png" alt="Company Logo" className="h-full w-full object-cover rounded-lg"/>
+            <img src="/MGLIcon.png" alt="Company Logo" className="h-full w-full object-cover rounded-lg"/>
           </div>
           
           {/* Project Name */}
@@ -48,9 +48,11 @@ export default function Sidebar() {
                 ))}
             </div>
           </div>
-          {/* Add the rest of your sidebar content here */}
         </div>
       </div>
     </>
   );
 }
+
+//this is good enough for now.
+//think the  biggest challenge is going to be making this dynamic for multiple projects
