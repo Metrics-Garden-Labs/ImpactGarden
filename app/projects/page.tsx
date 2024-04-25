@@ -6,7 +6,7 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import Sidebar from "./sidebar";
 import ProfilePage from "./profilepage";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { IoIosMenu } from "react-icons/io";
 
 export default function Projects() {
@@ -21,7 +21,9 @@ export default function Projects() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
+        <Sidebar isOpen={false} setSidebarOpen={function (value: SetStateAction<boolean>): void {
+          throw new Error("Function not implemented.");
+        } } />
         <main className="flex-1 overflow-auto">
           <ProfilePage />
         </main>

@@ -30,8 +30,8 @@ export default function Attestbox() {
     
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
-      <div className='top-0 right-0'>
+    <div className="relative flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
+      <div className='absolute top-4 right-4'>
         <ConnectButton label="Connect Wallet" /> 
       </div>
             
@@ -61,16 +61,16 @@ export default function Attestbox() {
                             </div>
 
                             {/* Attestation Options, add the icons*/}
-                            <div className='flex justify-center md:justify-start md:space-x-4 w-full pl-5'>
-                                {["Vote", "Like", "Build With", "Used", "Custom"].map(action => (
-                                    <div key={action} className='card bg-base-100 shadow-s border border-gray-500 rounded-md w-full md:w-1/5 mb-4 md:mb-0 px-2'>
-                                        <div className='px-4 py-3 flex items-center'>
-                                            <IoIosArrowDropright className='mr-1'/>
-                                            <p className='text-sm flex-grow'>{action}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                            <div className="flex flex-wrap justify-center sm:justify-start w-full pl-5">
+  {["Vote", "Like", "Build With", "Used", "Custom"].map(action => (
+    <div key={action} className="card bg-base-100 shadow-s border border-gray-500 rounded-md w-full sm:w-auto sm:flex-1 sm:mx-2 mb-4 px-2">
+      <div className="px-4 py-3 flex items-center">
+        <IoIosArrowDropright className="mr-1"/>
+        <p className="text-sm flex-grow">{action}</p>
+      </div>
+    </div>
+  ))}
+</div>
 
                             <div className="text-left w-full pl-5 py-1">
                                 <label className='text-gray-700 '>To: </label>

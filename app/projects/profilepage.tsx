@@ -140,7 +140,7 @@ export default function ProfilePage() {
         return <div className='text-black'>Content for Charts</div>;
       default:
         return <div className='text-black'>Select a tab</div>;
-    }a
+    }
   };
 
   return (
@@ -173,7 +173,9 @@ export default function ProfilePage() {
       <div className="flex">
       {sidebarOpen && (
       <div className="fixed inset-0 z-20 bg-white w-64 lg:hidden overflow-y-auto">
-        <Sidebar isOpen={sidebarOpen} />
+        <Sidebar isOpen={sidebarOpen} setSidebarOpen={function (value: React.SetStateAction<boolean>): void {
+              throw new Error('Function not implemented.');
+            } } />
       </div>
     )}
 
