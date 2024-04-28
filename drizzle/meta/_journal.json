@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1713783995951,
+      "tag": "0000_wise_human_torch",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1714299039450,
+      "tag": "0001_purple_adam_warlock",
+      "breakpoints": true
+    }
+  ]
+}

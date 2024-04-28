@@ -62,15 +62,15 @@ export default function Attestbox() {
 
                             {/* Attestation Options, add the icons*/}
                             <div className="flex flex-wrap justify-center sm:justify-start w-full pl-5">
-  {["Vote", "Like", "Build With", "Used", "Custom"].map(action => (
-    <div key={action} className="card bg-base-100 shadow-s border border-gray-500 rounded-md w-full sm:w-auto sm:flex-1 sm:mx-2 mb-4 px-2">
-      <div className="px-4 py-3 flex items-center">
-        <IoIosArrowDropright className="mr-1"/>
-        <p className="text-sm flex-grow">{action}</p>
-      </div>
-    </div>
-  ))}
-</div>
+                            {["Vote", "Like", "Build", "Used", "Custom"].map(action => (
+                                <div key={action} className="card bg-base-100 shadow-s border border-gray-500 rounded-md w-full sm:w-auto sm:flex-1 sm:mx-2 mb-4 px-2">
+                                <div className="px-4 py-3 flex items-center">
+                                    <IoIosArrowDropright className="mr-1"/>
+                                    <p className="text-sm flex-grow">{action}</p>
+                                </div>
+                                </div>
+                            ))}
+                            </div>
 
                             <div className="text-left w-full pl-5 py-1">
                                 <label className='text-gray-700 '>To: </label>
