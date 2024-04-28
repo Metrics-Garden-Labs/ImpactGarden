@@ -1,5 +1,6 @@
 import SearchProjects from "./searchProjects";
 import ProjectList from "./projectList";
+import Navbar from "../components/navbar";
 
 const ProjectPage = ({
     searchParams,
@@ -18,6 +19,7 @@ const ProjectPage = ({
 
   return (
     <div>
+        <Navbar />
         <h1>Search Projects Here:</h1>
         <SearchProjects />
         <ProjectList query={query} filter={filter} walletAddress={walletAddress} endpoint={endpoint}/>

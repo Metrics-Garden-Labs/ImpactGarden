@@ -15,13 +15,6 @@ dotenv.config();
 
 
 
-//[ ] TODO: use the neynar apis to fetch their usernames, walletaddresses etc
-const client =  new NeynarAPIClient(process.env.NEYNAR_API_KEY as string);
-if (!client) {
-  console.error("API key for Neynar is missing!");
-  throw new Error("API key for Neynar is missing!");
-}
-
 
 declare global {
   interface Window {
@@ -107,37 +100,44 @@ export default function Login() {
 
   async function fetchData(fid:string) {
     try{
-    const fidData = await client.fetchBulkUsers([parseInt(fid)]);
-    console.log("Fid Data", fidData);
-    setUsername(fidData.users[0].username);
-    setFirstVerifiedEthAddress(fidData.users[0].verified_addresses.eth_addresses[0]);
-    console.log("Username", username);
-    console.log("Eth Address", firstVerifiedEthAddress);
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ fid }),
+      });
 
-      //if user fid is already in the db, skip this step
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Data", data);
+        setUsername(data.username);
+        setFirstVerifiedEthAddress(data.ethAddress);
+        console.log("Username", username);
+        console.log("Eth Address", firstVerifiedEthAddress);
 
-    // if (fidData && fidData.users.length > 0 ) {
-    //   const userData = fidData.users[0];
+      const newUser = {
+        fid: fid.toString(),
+        username: data.username,
+        ethaddress: data.ethAddress || '',
+        //this stores the first ethAddress they have verified, usually their public one
+      };
 
-    //   const newUser = {
-    //     fid: fid.toString(),
-    //     username: userData.username,
-    //     ethaddress: userData.verified_addresses.eth_addresses[0],
-    //     //this stores the first ethAddress they have verified, usually their public one
-    //   };
-
-    //   //call api to insert user
-    //   const response = await fetch('/api/addUserDb', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(newUser)
-    //   });
-    //   const dbResponse = await response.json();
-    //   console.log("insert user to db success", dbResponse);
-    // }
-
+      //call api to insert user
+      const dbResponse = await fetch('/api/addUserDb', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newUser)
+      });
+      
+        if (dbResponse.ok) {
+        console.log("insert user to db success", dbResponse);
+      } else {
+        console.error("Error inserting user to db:", dbResponse);
+      }
+    }
     } catch (error) {
       console.error('Error fetching data', error);
     }
@@ -147,52 +147,61 @@ export default function Login() {
   //can add the signout logic in other areas of the app
 
 
+console.log("FID", fid);
 
-
-  return (
-    <>
-      <div className='relative min-h-screen bg-white'>
-        <img src="/mglskel.png" alt="MGL Skeleton" className="absolute p-10 top-o left-0 h-25 w-60" />
-        <div className='flex justify-ceneter items-center h-screen'>
+return (
+  <>
+    <div className='relative min-h-screen bg-white'>
+      <img src="/mglskel.png" alt="MGL Skeleton" className="absolute p-10 top-o left-0 h-25 w-60" />
+      <div className='flex justify-ceneter items-center h-screen'>
         <div className='card max-w-lg w-full mx-auto p-10 bg-white rounded-xl shadow-xl'>
           <div className='card-body justify-center items-center'>
-          <h2 className="text-center font-semibold text-xl mb-4">Sign-in</h2>
-          <p className="text-center text-gray-600 mb-6">Please sign in with your Farcaster account</p>
-            <div
-              className="neynar_signin mt-6"
-              data-client_id={client_id}
-              data-success-callback="onSignInSuccess"
-              data-theme='light'
-              data-variant='farcaster'
-              data-logo_size='30px'
-              data-height='48px'
-              data-width='218px'
-              data-border_radius='10px'
-              data-font_size='16px'
-              data-font_weight='300'
-              data-padding='8px 15px'
-              data-margin='0'
-            />
+            {fid ? (
+              <>
+                <h2 className="text-center font-semibold text-xl mb-4">Welcome, {username}!</h2>
+                <p className="text-center text-gray-600 mb-6">You are logged in with Farcaster.</p>
+                <div className="flex items-center">
+                  <button
+                    onClick={handleSignout}
+                    title="Sign Out"
+                    className="btn btn-primary"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 className="text-center font-semibold text-xl mb-4">Sign-in</h2>
+                <p className="text-center text-gray-600 mb-6">Please sign in with your Farcaster account</p>
+                <div
+                  className="neynar_signin mt-6"
+                  data-client_id={client_id}
+                  data-success-callback="onSignInSuccess"
+                  data-theme='light'
+                  data-variant='farcaster'
+                  data-logo_size='30px'
+                  data-height='48px'
+                  data-width='218px'
+                  data-border_radius='10px'
+                  data-font_size='16px'
+                  data-font_weight='300'
+                  data-padding='8px 15px'
+                  data-margin='0'
+                />
+              </>
+            )}
           </div>
-      
+        </div>
+      </div>
+    </div>
+  </>
+);
+}
+          
+
         {/* <p>FID: {fid}</p>
         <p>Username: {username}</p>
         <p>Eth Address: {firstVerifiedEthAddress}</p> */}
 
-        {/* <div className="flex items-center">
-            <button
-              onClick={handleSignout}
-              title="Sign Out"
-              className="btn btn-primary"
-            >
-              Sign-Out
-            </button>
-        </div> */}
-      </div>
-      </div>
-      </div>
-    </>
-    
-  );
-}
 

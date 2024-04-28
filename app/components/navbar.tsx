@@ -16,8 +16,10 @@ export default function Navbar() {
             <div className="flex justify-end">
                 <div className='flex items-center gap-x-8'>
                     <Link href='/' className='text-white text-lg hover:text-opacity-75'>HOME</Link>
+                    <Link href='/login' className='text-white text-lg hover:text-opacity-75'>LOGIN</Link>
                     <Link href='/about' className='text-white text-lg hover:text-opacity-75'>METRICS DATABASE</Link>
                     <Link href='/attest' className='text-white text-lg hover:text-opacity-75'>ATTEST</Link>
+                    <Link href='/searchProject' className='text-white text-lg hover:text-opacity-75'>SEARCH PROJECTS</Link>
                     <Link href='/projects' className='text-white text-lg hover:text-opacity-75'>PROJECTS</Link>
                     {/* <ConnectButton /> */}
                 </div>
