@@ -42,6 +42,7 @@ export const POST = async (request: Request) => {
 
     //insert contribution into database
     const insertedContribution = await insertContribution(newContribution);
+    console.log("Inserted Contribution", insertedContribution);
     return NextResponse.json(insertedContribution, { status: 200 });
   } catch (error) {
     console.error("Error inserting Contribution", error);

@@ -35,6 +35,7 @@ interface ProfilePageProps {
 
 
 export default function ProfilePage({ contributions }: ProfilePageProps) {
+    console.log('Contributions in profile page:', contributions);
   const [activeTab, setActiveTab] = useState('attestations');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedContribution, setSelectedContribution] = useState<Contribution | null>(null);
@@ -59,7 +60,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
   //addinng conributions modal
   const addContribution = async (contribution: Contribution) => {
     //api call to save the contribution to db
-    const response = await fetch('/api/contributions', {
+    const response = await fetch('/api/addContributionDb', {
         method: 'POST',
         body: JSON.stringify(contribution),
         headers: {
@@ -73,17 +74,6 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
             //update the contributions state
         }
     };
-
-
-  // const contributions: Contribution[] = [
-  //   { id: 1, title: 'Contribution #1', content: 'Enter some content here...' },
-  //   { id: 2, title: 'Epic ', content: 'Enter some content here...' },
-  //   { id: 3, title: 'Banana ', content: 'Enter some content here...' },
-  //   { id: 4, title: 'Metrics Garden Labs', content: 'Enter some content here...' },
-  //   { id: 5, title: 'Contribution #2', content: 'Enter some content here...' },
-  //   { id: 6, title: 'Contribution #6', content: 'Enter some content here...' },
-  //   { id: 7, title: 'Aztec', content: 'Enter some content here...' },
-  // ];
 
   const filteredContributions = contributions.filter((contribution) =>
   contribution.contribution.toLowerCase().includes(searchTerm.toLowerCase())

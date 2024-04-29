@@ -18,6 +18,7 @@ const ProjectPage = async ({ params }: Props) => {
 
   try {
     const contributions: Contribution[] = await getContributionsByProjectName(projectName);
+    console.log('Contributions:', contributions);
     const project: Project | null = await getProjectByName(projectName);
 
     if (!project) {

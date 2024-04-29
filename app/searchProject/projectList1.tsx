@@ -71,28 +71,36 @@ export default function ProjectList({ projects, query, filter, walletAddress, en
           <div className="mb-4 items-center py-3">
             <h3 className="font-semibold text-center">Website</h3>
             <p className="text-center">
+              {selectedProject.websiteUrl   && (
                 <a href={selectedProject.websiteUrl} target="_blank" rel="noopener noreferrer">
                 {selectedProject.websiteUrl}
                 </a>
+              )}
             </p>
             </div>
           <div className="mb-4">
             <h3 className="font-semibold text-center">Twitter</h3>
             <p className="text-center">
+            {selectedProject.twitterUrl && (
               <a href={selectedProject.twitterUrl} target="_blank" rel="noopener noreferrer">
                 {selectedProject.twitterUrl}
               </a>
+            )}
             </p>
           </div>
           <div className="mb-4">
             <h3 className="font-semibold text-center">Github</h3>
             <p className="text-center">
+            {selectedProject.githubUrl && (
               <a href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer">
                 {selectedProject.githubUrl}
               </a>
+            )}
             </p>
           </div>
           <div className="mb-4 text-center">
+            {/* //if the project name isnot in the database this does not work */}
+            {/* there must be a waay to fix this */}
             <Link href={`/projects/${encodeURIComponent(selectedProject.projectName)}`}>
               <button 
                 className='btn'
