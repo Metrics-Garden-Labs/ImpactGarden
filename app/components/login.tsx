@@ -97,7 +97,7 @@ export default function Login() {
       fetchData(fid);
     }
   }, [fid])
-  const URL = process.env.NEXT_PUBLIC_API_URL;
+  const URL = process.env.NEXT_PUBLIC_URL;
   async function fetchData(fid:string) {
     try{
       const response = await fetch(`${URL}/api/login`, {
@@ -124,7 +124,7 @@ export default function Login() {
       };
 
       //call api to insert user
-      const URL = process.env.NEXT_PUBLIC_API_URL;
+      const URL = process.env.NEXT_PUBLIC_URL;
       const dbResponse = await fetch(`${URL}/api/addUserDb`, {
         method: 'POST',
         headers: {

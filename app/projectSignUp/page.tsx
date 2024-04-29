@@ -114,7 +114,7 @@ export default function AttestDb() {
         };
 
         //api call to insert project into the database
-        const URL = process.env.NEXT_PUBLIC_API_URL;
+        const URL = process.env.NEXT_PUBLIC_URL;
         const response = await fetch(`${URL}/api/addProjectDb`, {
             method: 'POST',
             headers: {

@@ -62,7 +62,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
   const addContribution = async (contribution: Contribution) => {
     try {
     //api call to save the contribution to db
-    const URL = process.env.NEXT_PUBLIC_API_URL;
+    const URL = process.env.NEXT_PUBLIC_URL;
         const response = await fetch(`${URL}/api/addContributionDb`, {
             method: 'POST',
             body: JSON.stringify(contribution),
