@@ -83,6 +83,14 @@ export default function ProjectList({ projects, query, filter, walletAddress, en
               </a>
             </p>
           </div>
+          <div className="mb-4">
+            <h3 className="font-semibold text-center">Github</h3>
+            <p className="text-center">
+              <a href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer">
+                {selectedProject.githubUrl}
+              </a>
+            </p>
+          </div>
           <button onClick={closeModal} className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4">
             <RxCross2 className="w-5 h-5" />
           </button>
