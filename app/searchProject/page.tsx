@@ -18,8 +18,9 @@ const ProjectPage = async ({ searchParams }: Props) => {
   const filter = searchParams?.filter || '';
   const walletAddress = searchParams?.walletAddress || '';
   const endpoint = searchParams?.endpoint || '';
+  const URL = process.env.NEXT_PUBLIC_API_URL;
 
-  const res = await fetch('http://localhost:3001/api/getProjects', {
+  const res = await fetch(`${URL}/api/getProjects`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
