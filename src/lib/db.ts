@@ -6,6 +6,7 @@ import * as schema from "./schema";
 import { getAttestationsByAttester } from "./eas";
 import { Waterfall } from "next/font/google";
 import { eq } from "drizzle-orm";
+import { Project } from "@/src/types";
 
 export const db = drizzle(sql, { schema });
 
@@ -49,20 +50,15 @@ export const getProjects = async (walletAddress: string, endpoint: string) => {
   try {
     console.log("Wallet Address db", walletAddress);
     console.log("Endpoint db", endpoint);
-    const dbProjects = await db.select().from(projects);
-    let easProjects: any[] = [];
+    const dbProjects: Project[] = await db.select().from(projects);
+    let easProjects: Project[] = [];
     //issue at the moment is that the easProjects does not show up by defaault, only when you query them
     if (walletAddress && endpoint) {
-      easProjects = await getAttestationsByAttester(walletAddress, endpoint);
-    }
-
-    console.log("eas projects", easProjects);
-
-    //adding functionality to combine the projects from the db and eas scan
-    //will have to make another one of these for pretty much each tablexs
-    const combinedProjects = [
-      ...dbProjects,
-      ...easProjects
+      const attestations = await getAttestationsByAttester(
+        walletAddress,
+        endpoint
+      );
+      easProjects = attestations
         .map((attestation: any) => {
           try {
             const decodedData = JSON.parse(attestation.decodedDataJson);
@@ -80,15 +76,19 @@ export const getProjects = async (walletAddress: string, endpoint: string) => {
               githubUrl:
                 decodedData.find((item: any) => item.name === "githubUrl")
                   ?.value?.value || "",
-              ethAddress: attestation.recipient, //can be attester
+              ethAddress: attestation.recipient,
             };
           } catch (error) {
             console.error("Error parsing attestation data:", error);
             return null;
           }
         })
-        .filter((project: any) => project !== null),
-    ];
+        .filter(
+          (project: Project | null): project is Project => project !== null
+        );
+    }
+
+    const combinedProjects: Project[] = [...dbProjects, ...easProjects];
     console.log("Combined projects", combinedProjects);
 
     return combinedProjects;
