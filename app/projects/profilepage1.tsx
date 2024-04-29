@@ -23,6 +23,7 @@ import AddContributionModal from './addContributionModal';
 import {useRouter} from 'next/router';
 import { useGlobalState } from '@/src/config/config';
 import { LuArrowUpRight } from 'react-icons/lu';
+import { NEXT_PUBLIC_URL } from '@/src/config/config';
 
 
 interface Props {
@@ -62,8 +63,8 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
   const addContribution = async (contribution: Contribution) => {
     try {
     //api call to save the contribution to db
-    const URL = process.env.NEXT_PUBLIC_URL;
-        const response = await fetch(`${URL}/api/addContributionDb`, {
+    
+        const response = await fetch(`${NEXT_PUBLIC_URL}/api/addContributionDb`, {
             method: 'POST',
             body: JSON.stringify(contribution),
             headers: {

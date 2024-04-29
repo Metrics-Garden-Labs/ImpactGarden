@@ -9,6 +9,7 @@ import { useGlobalState } from '../../src/config/config';
 import dotenv from 'dotenv';
 import { useRouter } from 'next/router';
 //import { insertUser } from 'app/lib/db';
+import { NEXT_PUBLIC_URL } from '../../src/config/config';
 dotenv.config();
 
 //this login step should  only have to happen once, then all the info will be stored in the db for when they login again
@@ -97,10 +98,10 @@ export default function Login() {
       fetchData(fid);
     }
   }, [fid])
-  const URL = process.env.NEXT_PUBLIC_URL;
+  
   async function fetchData(fid:string) {
     try{
-      const response = await fetch(`${URL}/api/login`, {
+      const response = await fetch(`${NEXT_PUBLIC_URL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -124,8 +125,8 @@ export default function Login() {
       };
 
       //call api to insert user
-      const URL = process.env.NEXT_PUBLIC_URL;
-      const dbResponse = await fetch(`${URL}/api/addUserDb`, {
+      
+      const dbResponse = await fetch(`${NEXT_PUBLIC_URL}/api/addUserDb`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

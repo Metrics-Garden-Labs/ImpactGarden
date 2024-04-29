@@ -2,6 +2,7 @@ import SearchProjects from "./searchProjects";
 import ProjectList1 from "./projectList1";
 import Navbar from "../components/navbar";
 import { Project } from '@/src/types'
+import { NEXT_PUBLIC_URL } from '@/src/config/config'
 
   
   interface Props {
@@ -18,9 +19,9 @@ const ProjectPage = async ({ searchParams }: Props) => {
   const filter = searchParams?.filter || '';
   const walletAddress = searchParams?.walletAddress || '';
   const endpoint = searchParams?.endpoint || '';
-  const URL = process.env.NEXT_PUBLIC_URL
+  
 
-  const res = await fetch(`${URL}/api/getProjects`, {
+  const res = await fetch(`${NEXT_PUBLIC_URL}/api/getProjects`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

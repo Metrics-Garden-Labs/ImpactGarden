@@ -13,3 +13,5 @@ const initialState = {
 const { useGlobalState } = createGlobalState(initialState);
 
 export { useGlobalState };
+
+export const NEXT_PUBLIC_URL = "https://module3-nu.vercel.app";

@@ -21,6 +21,7 @@ import { redirect } from 'next/navigation';
 import  { UploadDropzone} from '../../src/utils/uploadthing';
 import Navbar from '../components/navbar';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { NEXT_PUBLIC_URL } from '../../src/config/config';
 
 type AttestationData = {
     projectName: string;
@@ -114,8 +115,8 @@ export default function AttestDb() {
         };
 
         //api call to insert project into the database
-        const URL = process.env.NEXT_PUBLIC_URL;
-        const response = await fetch(`${URL}/api/addProjectDb`, {
+        
+        const response = await fetch(`${NEXT_PUBLIC_URL}/api/addProjectDb`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
