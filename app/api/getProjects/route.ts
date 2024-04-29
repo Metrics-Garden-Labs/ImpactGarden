@@ -10,6 +10,9 @@ export async function POST(request: NextRequest) {
       walletAddress as string,
       endpoint as string
     );
+    if (!projects || !Array.isArray(projects)) {
+      return NextResponse.json({ error: "No projects found" }, { status: 404 });
+    }
     return NextResponse.json(projects);
   } catch (error) {
     console.error("Error fetching projects:", error);

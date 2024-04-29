@@ -19,7 +19,8 @@ const ProjectPage = async ({ searchParams }: Props) => {
   const filter = searchParams?.filter || '';
   const walletAddress = searchParams?.walletAddress || '';
   const endpoint = searchParams?.endpoint || '';
-  
+  console.log("Wallet Address", walletAddress);
+  console.log("Endpoint", endpoint);
 
   const res = await fetch(`${NEXT_PUBLIC_URL}/api/getProjects`, {
     method: 'POST',
@@ -28,17 +29,23 @@ const ProjectPage = async ({ searchParams }: Props) => {
     },
     body: JSON.stringify({ walletAddress, endpoint }),
     });
-  const projects: Project[] = await res.json();
-  console.log("Projects", projects);
+    if (!res.ok) {
+      console.error('Failed to fetch projects:', res.statusText);
+      return;
+    } else {
+      const projects: Project[] = await res.json();
+      console.log("Projects", projects);
+  
 
-  return (
-    <div>
-      <Navbar />
-      <h1>Search Projects Here:</h1>
-      <SearchProjects />
-      <ProjectList1 projects={projects} query={query} filter={filter} walletAddress={walletAddress} endpoint={endpoint} />
-    </div>
-  );
+      return (
+        <div>
+          <Navbar />
+          <h1>Search Projects Here:</h1>
+          <SearchProjects />
+          <ProjectList1 projects={projects} query={query} filter={filter} walletAddress={walletAddress} endpoint={endpoint} />
+        </div>
+      );
+    }
 };
 
 export default ProjectPage;
