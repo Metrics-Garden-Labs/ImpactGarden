@@ -13,6 +13,7 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useGlobalState } from "../../src/config/config";
 import { NetworkType, networkEndpoints } from '../components/graphqlEndpoints';
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 
 const SearchProjects = () => {
@@ -51,6 +52,10 @@ const SearchProjects = () => {
 
     return (
         <>
+        <div className="relative">
+        <div className="absolute top-4 right-4">
+        <ConnectButton label="Connect Wallet" />
+      </div>
         <div className="sm:col-span-4 p-3">
             <label htmlFor="network" className="block text-sm font-medium leading-6 text-gray-900">What network would you like to query?</label>
             <div className="mt-2">
@@ -73,7 +78,8 @@ const SearchProjects = () => {
                 </select>
             </div>
             </div>
-            <div className='flex items-center space-x-4'>
+            <div className='flex items-center px-4 space-x-4'>
+            
                 <div className="relative flex-grow">
                     <label htmlFor="search" className="sr-only">
                         Search
@@ -103,6 +109,7 @@ const SearchProjects = () => {
                     </div>
                 </div>
             </div>
+        </div>
         </>
     )
 };

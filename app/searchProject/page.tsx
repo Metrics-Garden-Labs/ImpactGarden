@@ -1,30 +1,47 @@
 import SearchProjects from "./searchProjects";
-import ProjectList from "./projectList";
+import ProjectList1 from "./projectList1";
 import Navbar from "../components/navbar";
 
-const ProjectPage = ({
-    searchParams,
-  }: {
+interface Project {
+    id: number;
+    name: string;
+    website: string;
+    twitterUrl: string;
+  }
+  
+  interface Props {
     searchParams?: {
       query?: string;
       filter?: string;
       walletAddress?: string;
       endpoint?: string;
     };
-  }) => {
-    const query = searchParams?.query?.toString() || '';
-    const filter = searchParams?.filter?.toString() || '';
-    const walletAddress = searchParams?.walletAddress?.toString() || '';
-    const endpoint = searchParams?.endpoint?.toString() || '';
+  }
+
+const ProjectPage = async ({ searchParams }: Props) => {
+  const query = searchParams?.query || '';
+  const filter = searchParams?.filter || '';
+  const walletAddress = searchParams?.walletAddress || '';
+  const endpoint = searchParams?.endpoint || '';
+
+  const res = await fetch('http://localhost:3001/api/projects', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ walletAddress, endpoint }),
+    });
+  const projects: Project[] = await res.json();
+  console.log("Projects", projects);
 
   return (
     <div>
-        <Navbar />
-        <h1>Search Projects Here:</h1>
-        <SearchProjects />
-        <ProjectList query={query} filter={filter} walletAddress={walletAddress} endpoint={endpoint}/>
+      <Navbar />
+      <h1>Search Projects Here:</h1>
+      <SearchProjects />
+      <ProjectList1 projects={projects} query={query} filter={filter} walletAddress={walletAddress} endpoint={endpoint} />
     </div>
-  )
-}
+  );
+};
 
-export default ProjectPage
+export default ProjectPage;

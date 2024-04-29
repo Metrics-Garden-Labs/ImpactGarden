@@ -1,3 +1,5 @@
+//profilepage.tsx
+
 //this will be the project page from the lofi
 
 //split into two parts

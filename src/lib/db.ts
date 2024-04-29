@@ -4,6 +4,7 @@ import { sql } from "@vercel/postgres";
 import { users, projects } from "./schema";
 import * as schema from "./schema";
 import { getAttestationsByAttester } from "./eas";
+import { Waterfall } from "next/font/google";
 
 export const db = drizzle(sql, { schema });
 
@@ -48,10 +49,12 @@ export const getProjects = async (walletAddress: string, endpoint: string) => {
     console.log("Wallet Address db", walletAddress);
     console.log("Endpoint db", endpoint);
     const dbProjects = await db.select().from(projects);
-    const easProjects = await getAttestationsByAttester(
-      walletAddress,
-      endpoint
-    );
+    let easProjects: any[] = [];
+    //issue at the moment is that the easProjects does not show up by defaault, only when you query them
+    if (walletAddress && endpoint) {
+      easProjects = await getAttestationsByAttester(walletAddress, endpoint);
+    }
+
     console.log("eas projects", easProjects);
 
     //adding functionality to combine the projects from the db and eas scan
