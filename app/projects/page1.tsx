@@ -1,17 +1,16 @@
 'use client';
+
 import Image from "next/image";
+import Attestbox from "../components/attestbox";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-import Sidebar from "./sidebar1";
-import ProfilePage from "./profilepage1";
+import Sidebar from "./sidebar";
+import ProfilePage from "./profilepage";
 import { SetStateAction, useState } from "react";
-import { useGlobalState } from "@/src/config/config";
-import { Project} from '@/src/types';
-
+import { IoIosMenu } from "react-icons/io";
 
 export default function Projects() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useGlobalState('selectedProject');
 
   // Function to toggle the sidebar
   const toggleSidebar = () => {
@@ -22,13 +21,17 @@ export default function Projects() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
-        {selectedProject && (
-          <Sidebar isOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} project={selectedProject} />
-        )}
+        <Sidebar isOpen={false} setSidebarOpen={function (value: SetStateAction<boolean>): void {
+          throw new Error("Function not implemented.");
+        } } />
         <main className="flex-1 overflow-auto">
+          <ProfilePage />
         </main>
       </div>
       <Footer />
     </div>
   );
 }
+
+//TODO: make the footer just at the bottom once you have scrolled to the botto
+        //its taking too much space at the bottom of the pagex

@@ -1,13 +1,8 @@
 import SearchProjects from "./searchProjects";
 import ProjectList1 from "./projectList1";
 import Navbar from "../components/navbar";
+import { Project } from '@/src/types'
 
-interface Project {
-    id: number;
-    name: string;
-    website: string;
-    twitterUrl: string;
-  }
   
   interface Props {
     searchParams?: {
@@ -24,7 +19,7 @@ const ProjectPage = async ({ searchParams }: Props) => {
   const walletAddress = searchParams?.walletAddress || '';
   const endpoint = searchParams?.endpoint || '';
 
-  const res = await fetch('http://localhost:3001/api/projects', {
+  const res = await fetch('http://localhost:3001/api/getProjects', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

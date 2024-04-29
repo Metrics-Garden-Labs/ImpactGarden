@@ -7,32 +7,43 @@
 //there will be a sidebar that contains the project information
 
 //there will be a main section that contains the header bar and the project information 
+
+//async not supported in client components
+
 'use client'
 
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { IoIosMenu } from "react-icons/io";
 import Sidebar from './sidebar';
+import { getContributionsByProjectName } from '../../src/lib/db';
+import { Project, Contribution } from '@/src/types';
+import AddContributionModal from './addContributionModal';
+import {useRouter} from 'next/router';
+import { useGlobalState } from '@/src/config/config';
 
-interface Contribution {
-  id: number;
-  title: string;
-  content: string;
-}
 
 interface Props {
   sidebarOpen: boolean;
   setSidebarOpen: (isOpen: boolean) => void;
 }
 
-export default function ProfilePage() {
+interface ProfilePageProps {
+    contributions: Contribution[];
+    }
+
+
+export default function ProfilePage({ contributions }: ProfilePageProps) {
   const [activeTab, setActiveTab] = useState('attestations');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedContribution, setSelectedContribution] = useState<Contribution | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  
+    const [selectedProject] = useGlobalState('selectedProject');
+    const projectName = selectedProject?.projectName || "";
+    //need to make the route something like /projects/:projectName
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -45,22 +56,42 @@ export default function ProfilePage() {
       : 'text-gray-600 hover:text-black'
   }`;
 
-  const contributions: Contribution[] = [
-    { id: 1, title: 'Contribution #1', content: 'Enter some content here...' },
-    { id: 2, title: 'Epic ', content: 'Enter some content here...' },
-    { id: 3, title: 'Banana ', content: 'Enter some content here...' },
-    { id: 4, title: 'Metrics Garden Labs', content: 'Enter some content here...' },
-    { id: 5, title: 'Contribution #2', content: 'Enter some content here...' },
-    { id: 6, title: 'Contribution #6', content: 'Enter some content here...' },
-    { id: 7, title: 'Aztec', content: 'Enter some content here...' },
-  ];
+  //addinng conributions modal
+  const addContribution = async (contribution: Contribution) => {
+    //api call to save the contribution to db
+    const response = await fetch('/api/contributions', {
+        method: 'POST',
+        body: JSON.stringify(contribution),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        });
+        if (!response.ok) {
+            console.error('Failed to add contribution');
+            return;
+        } else {
+            //update the contributions state
+        }
+    };
+
+
+  // const contributions: Contribution[] = [
+  //   { id: 1, title: 'Contribution #1', content: 'Enter some content here...' },
+  //   { id: 2, title: 'Epic ', content: 'Enter some content here...' },
+  //   { id: 3, title: 'Banana ', content: 'Enter some content here...' },
+  //   { id: 4, title: 'Metrics Garden Labs', content: 'Enter some content here...' },
+  //   { id: 5, title: 'Contribution #2', content: 'Enter some content here...' },
+  //   { id: 6, title: 'Contribution #6', content: 'Enter some content here...' },
+  //   { id: 7, title: 'Aztec', content: 'Enter some content here...' },
+  // ];
 
   const filteredContributions = contributions.filter((contribution) =>
-  contribution.title.toLowerCase().includes(searchTerm.toLowerCase())
+  contribution.contribution.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const openmodal = (contribution:any) => {
+  const openmodal = (contribution: Contribution) => {
     setSelectedContribution(contribution);
+    //update selected project baased on the clicked contribution
   }
 
   const closeModal = () => {
@@ -77,16 +108,16 @@ export default function ProfilePage() {
           onClick={(e) => e.stopPropagation()}
         >
           <div className="text-center pt-8 p-2">
-            <h2 className="text-xl font-bold mb-4">{selectedContribution.title}</h2>
+            <h2 className="text-xl font-bold mb-4">{selectedContribution.contribution}</h2>
           </div>
           <hr className="border-1 border-gray-300 my-2 mx-auto w-1/2" />
           <div className="mb-4 items-center py-3">
             <h3 className="font-semibold text-center">Description</h3>
-            <p className='text-left'>{selectedContribution.content}</p>
+            <p className='text-left'>{selectedContribution.desc}</p>
           </div>
           <div className="mb-4 ">
             <h3 className="font-semibold text-center">Link/Evidence</h3>
-            <p>Evidence of the Contribution</p>
+            <p className='text-left'>{selectedContribution.link}</p>
           </div>
           <div className="mb-4 ">
             <h3 className="font-semibold text-center">Attestations</h3>
@@ -130,8 +161,8 @@ export default function ProfilePage() {
                         <div key={contribution.id} 
                              className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-xl w-full h-60 shadow-lg"
                              onClick={() => openmodal(contribution)}>
-                            <h3 className="mb-2 text-xl font-semibold ">{contribution.title}</h3>
-                            <p className='text-gray-500'>{contribution.content}</p>
+                            <h3 className="mb-2 text-xl font-semibold ">{contribution.contribution}</h3>
+                            <p className='text-gray-500'>{contribution.desc}</p>
                         </div>
                     ))}
                 </div>
@@ -147,7 +178,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <main className="flex-grow p-10 bg-backgroundgray w-fulll h-full">
+    <main className="flex-grow relative p-10 bg-backgroundgray w-fulll h-full">
      
       <div className="mb-4 border-b border-gray-200">
       
@@ -159,6 +190,14 @@ export default function ProfilePage() {
       >
         <IoIosMenu className="h-6 w-6" />
       </button>
+
+        {/* //add contribution button */}
+      <div className='absolute top-4 right-4'>
+        <button onClick={() => setModalOpen(true)}>
+            Add Contribution
+        </button>
+        <AddContributionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} addContribution={addContribution} />
+        </div>
       
           <button onClick={() => setActiveTab('attestations')} className={tabClasses('attestations')}>
             Contributions

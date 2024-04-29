@@ -84,6 +84,7 @@ export const contributions = pgTable(
     ethAddress: text("ethAddress")
       .references(() => projects.ethAddress)
       .notNull(),
+    createdAt: timestamp("createdAt").defaultNow(),
   },
   (contributions) => {
     return {
@@ -118,6 +119,7 @@ export const contributionAttestations = pgTable(
     attestationUID: text("attestationUID").notNull(),
     attesterAddy: text("attesterAddy").notNull(),
     attestationType: text("attestationType").notNull(),
+    createdAt: timestamp("createdAt").defaultNow(),
   },
   (contributionAttestations) => {
     return {

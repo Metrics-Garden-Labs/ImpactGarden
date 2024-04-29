@@ -15,6 +15,13 @@
       "when": 1714299039450,
       "tag": "0001_purple_adam_warlock",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1714391615690,
+      "tag": "0002_silent_scorpion",
+      "breakpoints": true
     }
   ]
 }

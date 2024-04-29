@@ -3,20 +3,13 @@
 // app/projects/projectList.tsx
 
 'use client';
+import Link from 'next/link';
 import React, { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
+import { useGlobalState } from '../../src/config/config';
+import { Project } from '../../src/types';
 
-interface Project {
-    id: number | string;
-    userFid?: string;
-    ethAddress: string;
-    projectName: string;
-    websiteUrl?: string;
-    twitterUrl?: string;
-    githubUrl?: string;
-    logoUrl?: string;
-    createdAt?: string;
-  }
+
 
 interface Props {
   projects: Project[];
@@ -27,7 +20,9 @@ interface Props {
 }
 
 export default function ProjectList({ projects, query, filter, walletAddress, endpoint }: Props) {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedProject, setSelectedProject] = useGlobalState('selectedProject');
+  const [selectedProjectName, setSelectedProjectName] = useGlobalState('selectedProjectName');
+
   // Placeholder data for projects
 //   const projects: Project[] = [
 //     { id: 1, name: 'Project #1', website: 'https://project1.com', twitterUrl: 'https://twitter.com/project1' },
@@ -47,18 +42,24 @@ export default function ProjectList({ projects, query, filter, walletAddress, en
     : projects;
 
   const openModal = (project: Project) => {
+    console.log('Opening modal for project:', project);
     setSelectedProject(project);
+    setSelectedProjectName(project.projectName);
   };
 
   const closeModal = () => {
     setSelectedProject(null);
+    setSelectedProjectName('');
   };
 
   const renderModal = () => {
     if (!selectedProject) return null;
 
+    console.log("Rendering modal with Selected Project", selectedProject);
+    console.log("Rendering modal with Selected Project Name", selectedProjectName);
+
     return (
-      <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+      <div className="fixed inset-0 bg-white bg-opacity-50 flex justify-center items-center">
         <div
           className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-1/4 h-1/2 mx-4 md:mx-20"
           onClick={(e) => e.stopPropagation()}
@@ -91,6 +92,15 @@ export default function ProjectList({ projects, query, filter, walletAddress, en
               </a>
             </p>
           </div>
+          <div className="mb-4 text-center">
+            <Link href={`/projects/${encodeURIComponent(selectedProject.projectName)}`}>
+              <button 
+                className='btn'
+                >
+                  View Contributions
+              </button>
+            </Link>
+          </div>
           <button onClick={closeModal} className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4">
             <RxCross2 className="w-5 h-5" />
           </button>
@@ -100,13 +110,15 @@ export default function ProjectList({ projects, query, filter, walletAddress, en
   };
 
   return (
-    <div className="p-6 bg-backgroundgray">
+    <div className="p-6 bg-white">
       <div className="grid grid-cols-3 gap-12">
         {filteredProjects.map((project) => (
           <div
             key={project.id}
             className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-xl w-full h-60 shadow-lg"
-            onClick={() => openModal(project)}
+            onClick={() => {
+              console.log('clicked project:', project);
+              openModal(project)}}
           >
             <h3 className="mb-2 text-xl font-semibold">{project.projectName}</h3>
           </div>

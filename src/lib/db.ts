@@ -1,10 +1,11 @@
 import "./config";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { sql } from "@vercel/postgres";
-import { users, projects } from "./schema";
+import { users, projects, contributions } from "./schema";
 import * as schema from "./schema";
 import { getAttestationsByAttester } from "./eas";
 import { Waterfall } from "next/font/google";
+import { eq } from "drizzle-orm";
 
 export const db = drizzle(sql, { schema });
 
@@ -103,6 +104,48 @@ export const insertProject = async (project: NewProject) => {
     return db.insert(projects).values(project).returning();
   } catch (error) {
     console.error("Error inserting project:", error);
+    throw error;
+  }
+};
+
+//for the contributions table
+export type NewContribution = typeof contributions.$inferInsert;
+
+export const getContributionsByProjectName = async (projectName: string) => {
+  try {
+    const dbcontributions = await db
+      .select()
+      .from(contributions)
+      .where(eq(contributions.projectName, projectName));
+    return dbcontributions;
+  } catch (error) {
+    console.error("Error retrieving contributions:", error);
+    throw error;
+  }
+};
+
+export const insertContribution = async (contribution: NewContribution) => {
+  try {
+    return db.insert(contributions).values(contribution).returning();
+  } catch (error) {
+    console.error("Error inserting contribution:", error);
+    throw error;
+  }
+};
+
+// src/lib/db.ts
+
+export const getProjectByName = async (projectName: string) => {
+  try {
+    const project = await db
+      .select()
+      .from(projects)
+      .where(eq(projects.projectName, projectName))
+      .limit(1);
+
+    return project[0] || null;
+  } catch (error) {
+    console.error("Error retrieving project:", error);
     throw error;
   }
 };
