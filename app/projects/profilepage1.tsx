@@ -16,12 +16,13 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { IoIosMenu } from "react-icons/io";
-import Sidebar from './sidebar';
+import Sidebar from './sidebar1';
 import { getContributionsByProjectName } from '../../src/lib/db';
 import { Project, Contribution } from '@/src/types';
 import AddContributionModal from './addContributionModal';
 import {useRouter} from 'next/router';
 import { useGlobalState } from '@/src/config/config';
+import { LuArrowUpRight } from 'react-icons/lu';
 
 
 interface Props {
@@ -59,19 +60,25 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
 
   //addinng conributions modal
   const addContribution = async (contribution: Contribution) => {
+    try {
     //api call to save the contribution to db
-    const response = await fetch('/api/addContributionDb', {
-        method: 'POST',
-        body: JSON.stringify(contribution),
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        });
-        if (!response.ok) {
-            console.error('Failed to add contribution');
-            return;
-        } else {
-            //update the contributions state
+        const response = await fetch('/api/addContributionDb', {
+            method: 'POST',
+            body: JSON.stringify(contribution),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            });
+            if (!response.ok) {
+                console.error('Failed to add contribution');
+                return;
+            }
+            console.log('Contribution added successfully', response);
+            //reload the window to show the new contribution
+            //maybe not the best as it signs me out of the app, gotta figure that out. 
+            window.location.reload();
+        } catch (error) {
+            console.error('Failed to add contribution', error);
         }
     };
 
@@ -106,16 +113,24 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
             <p className='text-left'>{selectedContribution.desc}</p>
           </div>
           <div className="mb-4 ">
-            <h3 className="font-semibold text-center">Link/Evidence</h3>
-            <p className='text-left'>{selectedContribution.link}</p>
+            <h3 className="font-semibold text-center">Link/Evidence</h3> 
+            <a href={selectedContribution.link} className="text-gray-500 text-left hover:text-gray-300 visited:text-indigo-600 flex items-center">
+                {selectedContribution.link}
+                <LuArrowUpRight className="ml-1" />
+                </a>
           </div>
           <div className="mb-4 ">
             <h3 className="font-semibold text-center">Attestations</h3>
             <p>Info on who has attested and maybe some more stuff</p>
           </div>
+          <div className='mb-4 text-center py-3'>
+          <button className='btn text-center bg-headerblack text-white hover:bg-blue-500'>
+            Attest to this Contribution
+          </button>
+          </div>
           <button onClick={closeModal} className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4">
           <RxCross2 className='w-5 h-5'/>
-        </button>
+            </button>
         </div>
         
       </div>
@@ -203,13 +218,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
     
 
       <div className="flex">
-      {sidebarOpen && (
-      <div className="fixed inset-0 z-20 bg-white w-64 lg:hidden overflow-y-auto">
-        <Sidebar isOpen={sidebarOpen} setSidebarOpen={function (value: React.SetStateAction<boolean>): void {
-              throw new Error('Function not implemented.');
-            } } />
-      </div>
-    )}
+      
 
     <div
         className={`flex-1 p-4 transition-transform duration-300 ease-in-out ${

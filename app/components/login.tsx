@@ -86,7 +86,7 @@ export default function Login() {
       document.getElementById(scriptId)?.remove();
     }
   },[setUser, setSignerUuid, setFid])
-  console.log("user", user)
+  
 
 
 

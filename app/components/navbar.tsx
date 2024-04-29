@@ -19,8 +19,8 @@ export default function Navbar() {
                     <Link href='/login' className='text-white text-lg hover:text-opacity-75'>LOGIN</Link>
                     <Link href='/about' className='text-white text-lg hover:text-opacity-75'>METRICS DATABASE</Link>
                     <Link href='/attest' className='text-white text-lg hover:text-opacity-75'>ATTEST</Link>
+                    <Link href='/projectSignUp' className='text-white text-lg hover:text-opacity-75'>REGISTER PROJECT</Link>
                     <Link href='/searchProject' className='text-white text-lg hover:text-opacity-75'>SEARCH PROJECTS</Link>
-                    <Link href='/projects' className='text-white text-lg hover:text-opacity-75'>PROJECTS</Link>
                     {/* <ConnectButton /> */}
                 </div>
             </div>

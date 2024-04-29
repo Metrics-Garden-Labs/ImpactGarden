@@ -19,6 +19,8 @@ import React, { useState, FormEvent } from 'react';
 import { useGlobalState } from '../../src/config/config';
 import { redirect } from 'next/navigation';
 import  { UploadDropzone} from '../../src/utils/uploadthing';
+import Navbar from '../components/navbar';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 type AttestationData = {
     projectName: string;
@@ -129,10 +131,15 @@ export default function AttestDb() {
         }
     };
     return (
-        <div data-theme="light" className="min-h-screen w-full flex justify-center items-center">
+      <>
+      <Navbar />
+        <div data-theme="light" className="min-h-screen w-full flex justify-center relative items-center">
         {/* <form onSubmit={onSubmit}> */}
+        <div className='absolute right-4 top-4'>
+          <ConnectButton />
+        </div>
         <form>
-          <h1 className="text-black">EAS</h1>
+          <h1 className="text-black">EAS, need to be logged in, fixed schema is sepolia</h1>
   
           <div className="sm:col-span-4 p-3">
             <label htmlFor="chain" className="block text-sm font-medium leading-6 text-gray-900">
@@ -247,5 +254,6 @@ export default function AttestDb() {
             </div>
         </form>
       </div>
+      </>
     );
     }
