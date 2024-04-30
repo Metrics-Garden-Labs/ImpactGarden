@@ -88,7 +88,7 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
         typeof value === 'bigint' ? '0x' + value.toString(16) : value
       );
 
-      const response = await fetch(`/api/delegateAttestation`, {
+      const response = await fetch(`${NEXT_PUBLIC_URL}/api/delegateAttestation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
         const updatedContribution = { ...contribution, easUid: attestationUID };
 
         // Submit the form data to the API
-        const response = await fetch(`/api/addContributionDb`, {
+        const response = await fetch(`${NEXT_PUBLIC_URL}/api/addContributionDb`, {
           method: 'POST',
           body: JSON.stringify(updatedContribution),
           headers: {

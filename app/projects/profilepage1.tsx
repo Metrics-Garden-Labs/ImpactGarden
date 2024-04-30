@@ -62,7 +62,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
   //addinng conributions modal
   const addContribution = async (contribution: Contribution) => {
     try {
-      const response = await fetch(`/api/addContributionDb`, {
+      const response = await fetch(`${NEXT_PUBLIC_URL}/api/addContributionDb`, {
         method: 'POST',
         body: JSON.stringify(contribution),
         headers: {
