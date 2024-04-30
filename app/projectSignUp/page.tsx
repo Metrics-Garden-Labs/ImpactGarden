@@ -1,164 +1,182 @@
-// this is just the demo i used before until i get the lofi for the project onboarding 
-
-//in this file, create an attestation with the project schema and add all of the fields to the database
-//this should create the attestations
-
-//TODO:  create a new schema for the database for the project data
-        //have it linked to the user's fid
-        //use their ethereum wallet as the attestor
-        // also include the ecosystem in that schema, got the logic just need to add in 
-
-//add image for project using uploadthing, store that in db
-
+// app/projectSignUp/page.tsx
 "use client";
 
-//change the paths of the imports
 import { AttestationNetworkType, networkContractAddresses } from '../components/networkContractAddresses';
 import { useEAS } from '../../src/hooks/useEAS';
-import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import React, { useState, FormEvent } from 'react';
+import { EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import React, { useState } from 'react';
 import { useGlobalState } from '../../src/config/config';
 import { redirect } from 'next/navigation';
-import  { UploadDropzone} from '../../src/utils/uploadthing';
+import { UploadDropzone } from '../../src/utils/uploadthing';
 import Navbar from '../components/navbar';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { NEXT_PUBLIC_URL } from '../../src/config/config';
+import { ethers } from 'ethers';
 
 type AttestationData = {
-    projectName: string;
-    websiteUrl: string;
-    twitterUrl: string;
-    githubURL: string;
-  };
+  projectName: string;
+  websiteUrl: string;
+  twitterUrl: string;
+  githubURL: string;
+};
 
 const networks: AttestationNetworkType[] = [
-    'Ethereum', 'Optimism', 'Base', 'Arbitrum One', 'Arbitrum Nova', 'Polygon',
-    'Scroll', 'Celo', 'Blast', 'Linea', 'Sepolia', 'Optimism Sepolia', 'Optimism Goerli',
-    'Base Sepolia', 'Base Goerli', 'Arbitrum Goerli'
+  'Ethereum', 'Optimism', 'Base', 'Arbitrum One', 'Arbitrum Nova', 'Polygon',
+  'Scroll', 'Celo', 'Blast', 'Linea', 'Sepolia', 'Optimism Sepolia', 'Optimism Goerli',
+  'Base Sepolia', 'Base Goerli', 'Arbitrum Goerli'
 ];
 
 export default function AttestDb() {
+  const [attestationData, setAttestationData] = useState<AttestationData>({
+    projectName: '',
+    websiteUrl: '',
+    twitterUrl: '',
+    githubURL: '',
+  });
+  console.log('Attestation Data:', attestationData);
 
-    const [attestationData, setAttestationData] = useState<AttestationData>({
-        projectName: '',
-        websiteUrl: '',
-        twitterUrl: '',
-        githubURL: '',
-      });
-      console.log('Attestation Data:', attestationData);
+  const [walletAddress] = useGlobalState('walletAddress');
+  const [fid] = useGlobalState('fid');
+  const [ethAddress] = useGlobalState('ethAddress');
+  const [attestationUID, setAttestationUID] = useState<string>('');
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [ecosystem, setEcosystem] = useState<string>('');
+  console.log('Ecosystem', ecosystem);
+  console.log('walletAddress', walletAddress);
+  console.log('Fid', fid);
+  console.log('ethAddress', ethAddress);
 
-    const [walletAddress] = useGlobalState('walletAddress');
-    const [fid] = useGlobalState('fid')
-    const [ ethAddress] = useGlobalState('ethAddress')
-    const [attestationUID, setAttestationUID] = useState<string>('');
-    const [imageUrl, setImageUrl] = useState<string>('');
-    const [ecosystem, setEcosystem] = useState<string>('');
-    console.log('Ecosystem', ecosystem);
-    console.log('walletAddress', walletAddress);
-    console.log('Fid', fid)
-    console.log('ethAddress', ethAddress)
+  const { eas, currentAddress, selectedNetwork, handleNetworkChange } = useEAS();
 
-    //redirect if they have not signed in 
-    // if (!fid) {
-    //     redirect("/login?callbackUrl=/AttestDb")
-    // }
-    
-    const { eas, schemaRegistry, currentAddress, selectedNetwork, handleNetworkChange } = useEAS();
-
-    const handleNetworkChangeEvent = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleNetworkChangeEvent = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value as AttestationNetworkType;
     handleNetworkChange(selectedValue);
     console.log('Selected Network', selectedValue);
-    };
+  };
 
-    const handleEcosystemChangeEvent = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedEcosystem = e.target.value as AttestationNetworkType
-        setEcosystem(selectedEcosystem);
-        console.log('Selected Ecosystem', selectedEcosystem);
-    }
+  const handleEcosystemChangeEvent = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedEcosystem = e.target.value as AttestationNetworkType;
+    setEcosystem(selectedEcosystem);
+    console.log('Selected Ecosystem', selectedEcosystem);
+  };
 
-    const handleAttestationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAttestationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setAttestationData((prevData) => ({
-        ...prevData,
-        [name]: value,
+      ...prevData,
+      [name]: value,
     }));
-    };
+  };
 
-    const createAttestation = async () => {
-        if (!eas || !currentAddress) {
-            console.error('EAS or currentAddress not available');
-            return;
-        }
+  const createAttestation = async () => {
+    if (!eas || !currentAddress) {
+      console.error('EAS or currentAddress not available');
+      return;
+    }
 
-        try {
-            // Create main attestation
-            //make this dynamic for the project needs
-        const mainSchemaUid = '0x3608fb19fbaef55860432c4961d03ec250ceaa3f38db067953611cee5b128f80';
-        const mainAttestation = await eas.attest({
+    try {
+      const mainSchemaUid = '0x45ea2d603b7dfcec03e1e4a5d65a22216e5f7a3c3bf1e61560c58c888f2c7f3f';
+      const schemaEncoder = new SchemaEncoder('string projectName, string websiteUrl, string twitterUrl, string githubURL, bool MGL');
+      const encodedData = schemaEncoder.encodeData([
+        { name: 'projectName', value: attestationData.projectName, type: 'string' },
+        { name: 'websiteUrl', value: attestationData.websiteUrl, type: 'string' },
+        { name: 'twitterUrl', value: attestationData.twitterUrl, type: 'string' },
+        { name: 'githubURL', value: attestationData.githubURL, type: 'string' },
+        { name: 'MGL', value: true, type: 'bool' }
+      ]);
+
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      eas.connect(signer);
+      const delegatedSigner = await eas.getDelegated();
+      console.log('Delegated Signer:', delegatedSigner);
+
+      const easnonce = await eas.getNonce(walletAddress);
+      console.log('EAS Nonce:', easnonce);
+
+      const attestation: EIP712AttestationParams = {
         schema: mainSchemaUid,
-        data: {
-            recipient: currentAddress,
-            expirationTime: undefined,
-            revocable: true,
-            data: new SchemaEncoder('string projectName, string websiteUrl, string twitterUrl, string githubURL, bytes32[] refUIDs').encodeData([
-            { name: 'projectName', value: attestationData.projectName, type: 'string' },
-            { name: 'websiteUrl', value: attestationData.websiteUrl, type: 'string' },
-            { name: 'twitterUrl', value: attestationData.twitterUrl, type: 'string' },
-            { name: 'githubURL', value: attestationData.githubURL, type: 'string' },
-            { name: 'refUIDs', value: [], type: 'bytes32[]'}
-            ]),
-        },
-        });
-        const mainAttestationUID = await mainAttestation.wait();
-        console.log('Main Attestation UID:', mainAttestationUID);
-        setAttestationUID(mainAttestationUID);
+        recipient: currentAddress,
+        expirationTime: BigInt(9973891048),
+        revocable: true,
+        refUID: '0xf346439091b62e1b0156fd9e86f73c4662007e751184173b61326ad53fb60f5f',
+        data: encodedData,
+        value: BigInt(0),
+        deadline: BigInt(9973891048),
+        nonce: easnonce,
+      };
+      console.log('Attestation:', attestation);
 
-        console.log('Attestations created successfully');
-        // Reset form fields or perform any other necessary actions
+      try {
+        const signDelegated = await delegatedSigner.signDelegatedAttestation(attestation, signer);
+        console.log('Sign Delegated:', signDelegated);
 
-        const newProject = {
-            userFid: fid,
-            ethAddress: currentAddress,
-            //or
-            //ethAddress: ethAddress,
-            projectName: attestationData.projectName,
-            websiteUrl: attestationData.websiteUrl,
-            twitterUrl: attestationData.twitterUrl,
-            githubUrl: attestationData.githubURL,
-            ecosystem: ecosystem,
-            logoUrl: imageUrl,
+        attestation.data = encodedData;
+        const signature = signDelegated.signature;
+
+        const dataToSend = {
+          ...attestation,
+          signature: signature,
+          attester: walletAddress,
         };
 
-        //api call to insert project into the database
-        
-        const response = await fetch(`${NEXT_PUBLIC_URL}/api/addProjectDb`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newProject)
+        const serialisedData = JSON.stringify(dataToSend, (key, value) =>
+          typeof value === 'bigint' ? "0x" + value.toString(16) : value
+        );
+        console.log('Serialised Data:', serialisedData);
+
+        const response = await fetch(`${NEXT_PUBLIC_URL}/api/delegateAttestation`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: serialisedData,
         });
-        const dbResponse = await response.json();
+        const responseData = await response.json();
+        console.log('Response Data:', responseData);
+
+        console.log('Attestations created successfully');
+
+        const newProject = {
+          userFid: fid,
+          ethAddress: currentAddress,
+          projectName: attestationData.projectName,
+          websiteUrl: attestationData.websiteUrl,
+          twitterUrl: attestationData.twitterUrl,
+          githubUrl: attestationData.githubURL,
+          ecosystem: ecosystem,
+          logoUrl: imageUrl,
+        };
+
+        const response1 = await fetch(`${NEXT_PUBLIC_URL}/api/addProjectDb`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newProject)
+        });
+        const dbResponse = await response1.json();
         console.log('insert project to db success', dbResponse);
-
-
-        } catch (error) {
+      } catch (error) {
         console.error('Failed to create attestations:', error);
         alert('An error occurred while creating attestations. Please try again.');
-        }
-    };
-    return (
-      <>
+      }
+    } catch (error) {
+      console.error('Failed to create attestations:', error);
+      alert('An error occurred while creating attestations. Please try again.');
+    }
+  };
+
+  return (
+    <>
       <Navbar />
-        <div data-theme="light" className="min-h-screen w-full flex justify-center relative items-center">
-        {/* <form onSubmit={onSubmit}> */}
+      <div data-theme="light" className="min-h-screen w-full flex justify-center relative items-center">
         <div className='absolute right-4 top-4'>
           <ConnectButton />
         </div>
         <form>
           <h1 className="text-black">EAS, need to be logged in, fixed schema is sepolia</h1>
-  
+
           <div className="sm:col-span-4 p-3">
             <label htmlFor="chain" className="block text-sm font-medium leading-6 text-gray-900">
               Select Attestation Network
@@ -182,7 +200,7 @@ export default function AttestDb() {
 
           <div className="sm:col-span-4 p-3">
             <label htmlFor="chain" className="block text-sm font-medium leading-6 text-gray-900">
-              What ecosysytem is your project contributing to?
+              What ecosystem is your project contributing to?
             </label>
             <div className="mt-2">
               <select
@@ -200,7 +218,7 @@ export default function AttestDb() {
               </select>
             </div>
           </div>
-  
+
           <div className="p-3">
             <h3>What is the name of your project?</h3>
             <input
@@ -212,7 +230,7 @@ export default function AttestDb() {
               className="input input-bordered w-full max-w-xs"
             />
           </div>
-  
+
           <div className="p-3">
             <h3>What is the website URL of your project?</h3>
             <input
@@ -224,7 +242,7 @@ export default function AttestDb() {
               className="input input-bordered w-full max-w-xs"
             />
           </div>
-  
+
           <div className="p-3">
             <h3>Please Input your Twitter URL</h3>
             <input
@@ -236,7 +254,7 @@ export default function AttestDb() {
               className="input input-bordered w-full max-w-xs"
             />
           </div>
-  
+
           <div className="p-3">
             <h3>Please input the Github URL of your Project</h3>
             <input
@@ -250,50 +268,50 @@ export default function AttestDb() {
           </div>
 
           <h2>Please upload the logo of your project</h2>
-          
+
           {imageUrl ? (
-                <img
-                    src={imageUrl}
-                    alt="Logo of the project"
-                    width={1000}
-                    height={667}
-                    className="w-full h-64 object-contain"
-                />
-            ) : (
-                <UploadDropzone
-                    endpoint="imageUploader"
-                    onClientUploadComplete={(res) => {
-                        setImageUrl(res[0].url);
-                        console.log("Files: ", res);
-                        console.log("Uploaded Image URL:", res[0].url);
-                        console.log(setImageUrl)
-                        alert("Upload Completed");
-                    }}
-                    onUploadError={(error) => {
-                        alert(`ERROR! ${error.message}`);
-                    }}
-                    data-ut-element="button"
-                />
-            )}
-  
+            <img
+              src={imageUrl}
+              alt="Logo of the project"
+              width={1000}
+              height={667}
+              className="w-full h-64 object-contain"
+            />
+          ) : (
+            <UploadDropzone
+              endpoint="imageUploader"
+              onClientUploadComplete={(res) => {
+                setImageUrl(res[0].url);
+                console.log("Files: ", res);
+                console.log("Uploaded Image URL:", res[0].url);
+                console.log(setImageUrl);
+                alert("Upload Completed");
+              }}
+              onUploadError={(error) => {
+                alert(`ERROR! ${error.message}`);
+              }}
+            />
+          )}
+
           <h2 className="flex justify-center items-center py-2">Get your Attestation</h2>
-  
+
           <div className="flex justify-center items-center py-2">
-            <button className="btn items-center" type='button' onClick={createAttestation}>
+            <button className="btn items-center" type="button" onClick={createAttestation}>
               Get your Attestation
             </button>
           </div>
+
           <h2 className="flex justify-center items-center py-2">Your Attestation Uid</h2>
-            <div className="flex justify-center items-center py-2">
-                <textarea
-                className="textarea textarea-bordered w-3/5 h-4/5"
-                placeholder="Attestation Uid"
-                value={attestationUID}
-                readOnly
-                />
-            </div>
+          <div className="flex justify-center items-center py-2">
+            <textarea
+              className="textarea textarea-bordered w-3/5 h-4/5"
+              placeholder="Attestation Uid"
+              value={attestationUID}
+              readOnly
+            />
+          </div>
         </form>
       </div>
-      </>
-    );
-    }
+    </>
+  );
+}
