@@ -16,7 +16,16 @@ export default function AddContributionModal({ isOpen, onClose, addContribution 
 
     const [fid] = useGlobalState('fid');
     const [ walletAddress] = useGlobalState('walletAddress');
-    const [formData, setFormData] = useState<Contribution>({userFid: fid, projectName: '', contribution: '', desc: '', link: '', ethAddress: walletAddress});
+    const [selectedProject] = useGlobalState('selectedProject');
+    const [formData, setFormData] = useState<Contribution>({
+        userFid: fid,
+        projectName: selectedProject?.projectName || '',
+        ecosystem: 'Optimism', 
+        contribution: '', 
+        desc: '', 
+        link: '', 
+        ethAddress: walletAddress});
+    //hard coding the ecosystem for now
 
     const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -31,13 +40,8 @@ export default function AddContributionModal({ isOpen, onClose, addContribution 
         <form className="bg-white p-8 rounded-lg" onSubmit={handleSubmit}>
         <h2>Add New Contribution</h2>
         {/* Input fields for contribution details */}
-        {/* at some point the projectname will be passed in as a prop, same with eth address */}
-        <input
-            value={formData.projectName}
-            onChange={e => setFormData({ ...formData, projectName: e.target.value })}
-            placeholder="Project Name"
-            required
-        />
+        {/* at some point the projectname will be passed in as a prop, same with eth address 
+        project name is now dynamic and doesnt have to be added manually*/}
         <input
             value={formData.contribution}
             onChange={e => setFormData({ ...formData, contribution: e.target.value })}
