@@ -14,16 +14,15 @@ interface Props {
 }
 
 const ProjectPage = async ({ params }: Props) => {
-  const projectName = params?.projectName || '';
-
+  const encodedProjectName = params?.projectName || '';
+  const decodedProjectName = decodeURIComponent(encodedProjectName);
+  
   try {
-    const contributions: Contribution[] = await getContributionsByProjectName(projectName);
+    const contributions: Contribution[] = await getContributionsByProjectName(decodedProjectName);
     console.log('Contributions:', contributions);
-    const project: Project | null = await getProjectByName(projectName);
+    console.log('decoded Project name:', decodedProjectName);
 
-    if (!project) {
-      return <div>Project not found</div>;
-    }
+    const project: Project = await getProjectByName(decodedProjectName);
 
     return (
       <div className="flex flex-col min-h-screen">
@@ -37,10 +36,15 @@ const ProjectPage = async ({ params }: Props) => {
         <Footer />
       </div>
     );
-  } catch (error) {
-    console.error('Error fetching project data:', error);
-    return <div>Error fetching project data</div>;
+
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Error fetching project data:', error);
+      // ...
+    }
   }
 };
 
 export default ProjectPage;
+
+

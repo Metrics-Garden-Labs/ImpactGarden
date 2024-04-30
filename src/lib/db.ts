@@ -160,9 +160,13 @@ export const getProjectByName = async (projectName: string) => {
       .where(eq(projects.projectName, projectName))
       .limit(1);
 
-    return project[0] || null;
+    if (project.length === 0) {
+      throw new Error(`Project not found: ${projectName}`);
+    }
+
+    return project[0];
   } catch (error) {
-    console.error("Error retrieving project:", error);
+    console.error(`Error retrieving project '${projectName}':`, error);
     throw error;
   }
 };
