@@ -147,11 +147,45 @@ export async function POST(request: NextRequest) {
     console.log(contractData);
 
     const tx = await contract.attestByDelegation(contractData);
+    const txHash = tx.hash;
+    console.log("Transaction Hash:", txHash);
+
     const receipt = await tx.wait();
+    console.log("Transaction Receipt:", receipt);
 
-    console.log("Transaction receipt", receipt);
+    // Get the transaction receipt using the transaction hash
+    const detailedReceipt = await provider.getTransactionReceipt(txHash);
+    console.log("Detailed Transaction Receipt:", detailedReceipt);
 
-    return NextResponse.json({ success: true });
+    if (detailedReceipt) {
+      // Find the log entry with the attestation UID
+      const attestationLog = detailedReceipt.logs.find(
+        (log) => log.data !== "0x"
+      );
+
+      if (attestationLog) {
+        const attestationUID = attestationLog.data;
+        console.log("Attestation UID:", attestationUID);
+
+        return NextResponse.json({
+          success: true,
+          attestationUID: attestationUID,
+          receipt: receipt,
+        });
+      } else {
+        console.error("Attestation UID not found in the transaction receipt");
+        return NextResponse.json({
+          success: false,
+          error: "Attestation UID not found",
+        });
+      }
+    } else {
+      console.error("Failed to retrieve the detailed transaction receipt");
+      return NextResponse.json({
+        success: false,
+        error: "Failed to retrieve the detailed transaction receipt",
+      });
+    }
   } catch (error) {
     console.error(error);
     return NextResponse.json(

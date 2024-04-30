@@ -126,7 +126,7 @@ export default function AttestDb() {
         );
         console.log('Serialised Data:', serialisedData);
 
-        const response = await fetch(`${NEXT_PUBLIC_URL}/api/delegateAttestation`, {
+        const response = await fetch(`/api/delegateAttestation`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -146,10 +146,11 @@ export default function AttestDb() {
           twitterUrl: attestationData.twitterUrl,
           githubUrl: attestationData.githubURL,
           ecosystem: ecosystem,
+          projectUid: responseData.attestationUID,
           logoUrl: imageUrl,
         };
 
-        const response1 = await fetch(`${NEXT_PUBLIC_URL}/api/addProjectDb`, {
+        const response1 = await fetch(`/api/addProjectDb`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

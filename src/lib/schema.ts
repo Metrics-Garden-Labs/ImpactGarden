@@ -42,12 +42,12 @@ export const projects = pgTable(
       .notNull(),
     ethAddress: text("ethAddress").notNull(),
     ecosystem: text("ecosystem").notNull(),
-    projectName: text("projectName").notNull(),
-    //projectName: text("projectName").notNull.unique(),
+    projectName: text("projectName").unique().notNull(),
     websiteUrl: text("websiteUrl"),
     twitterUrl: text("twitterUrl"),
     githubUrl: text("githubUrl"),
     logoUrl: text("logoUrl"),
+    projectUid: text("projectUid").unique(),
     createdAt: timestamp("createdAt").defaultNow(),
   },
   (projects) => {
@@ -69,6 +69,9 @@ export const projects = pgTable(
 //do i put in the ethAddy
 //see if contIdIdx makes sense
 //store the eth address that the project is using
+
+//need to store the uid of the contribution for reference
+//contribution uid: 0xc2b54ed545c65de9f5058c2893b8e8cb51ff731e2c90b189c2cf97bac04b5953
 export const contributions = pgTable(
   "contributions",
   {
@@ -88,6 +91,7 @@ export const contributions = pgTable(
     ethAddress: text("ethAddress")
       .references(() => projects.ethAddress)
       .notNull(),
+    easUid: text("easUid"),
     createdAt: timestamp("createdAt").defaultNow(),
   },
   (contributions) => {
@@ -117,13 +121,14 @@ export const contributionAttestations = pgTable(
     userFid: text("userFid")
       .references(() => users.fid)
       .notNull(),
+    projectName: text("projectName").references(() => projects.projectName),
     contribution: text("contribution")
       .references(() => contributions.contribution)
       .notNull(),
     ecosystem: text("ecosystem")
       .references(() => contributions.ecosystem)
       .notNull(),
-    attestationUID: text("attestationUID").notNull(),
+    attestationUID: text("attestationUID").notNull().unique(),
     attesterAddy: text("attesterAddy").notNull(),
     attestationType: text("attestationType").notNull(),
     createdAt: timestamp("createdAt").defaultNow(),

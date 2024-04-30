@@ -29,6 +29,20 @@
       "when": 1714468826542,
       "tag": "0003_violet_black_knight",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1714484304493,
+      "tag": "0004_quiet_photon",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1714487303630,
+      "tag": "0005_shallow_paibok",
+      "breakpoints": true
     }
   ]
 }
