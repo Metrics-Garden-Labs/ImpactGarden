@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import localFont from 'next/font/local'
 import { Manrope } from "next/font/google";
 import '@rainbow-me/rainbowkit/styles.css';
- 
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "../app/api/uploadthing/core";
 
 
 import "./globals.css";
@@ -33,6 +35,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={manrope.className}>
         <Providers>
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           {children}
         </Providers>
         </body>

@@ -4,17 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "../../../src/lib/db";
 import { eq } from "drizzle-orm";
 import { contributions } from "../../../src/lib/schema";
-
-interface NewContribution {
-  id: number;
-  userFid: string;
-  projectName: string;
-  contribution: string;
-  desc: string;
-  link: string;
-  ethAddress: string;
-  createdAt: Date;
-}
+import { NewContribution } from "../../../src/types";
 
 export const POST = async (request: Request) => {
   try {

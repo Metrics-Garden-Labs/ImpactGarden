@@ -126,6 +126,7 @@ export default function AttestDb() {
             websiteUrl: attestationData.websiteUrl,
             twitterUrl: attestationData.twitterUrl,
             githubUrl: attestationData.githubURL,
+            ecosystem: ecosystem,
             logoUrl: imageUrl,
         };
 
@@ -249,7 +250,7 @@ export default function AttestDb() {
           </div>
 
           <h2>Please upload the logo of your project</h2>
-
+          
           {imageUrl ? (
                 <img
                     src={imageUrl}
@@ -261,16 +262,17 @@ export default function AttestDb() {
             ) : (
                 <UploadDropzone
                     endpoint="imageUploader"
-                    onClientUploadComplete={(res:any) => {
+                    onClientUploadComplete={(res) => {
                         setImageUrl(res[0].url);
                         console.log("Files: ", res);
                         console.log("Uploaded Image URL:", res[0].url);
                         console.log(setImageUrl)
                         alert("Upload Completed");
                     }}
-                    onUploadError={(error:any) => {
+                    onUploadError={(error) => {
                         alert(`ERROR! ${error.message}`);
                     }}
+                    data-ut-element="button"
                 />
             )}
   

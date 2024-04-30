@@ -4,18 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "../../../src/lib/db";
 import { eq } from "drizzle-orm";
 import { projects } from "../../../src/lib/schema";
-
-interface NewProject {
-  userFid: string;
-  ethAddress: string;
-  projectName: string;
-  websiteUrl?: string;
-  twitterUrl?: string;
-  githubUrl?: string;
-  id?: number;
-  logoUrl?: string;
-  createdAt?: Date;
-}
+import { NewProject } from "../../../src/types";
 
 export const POST = async (request: Request) => {
   try {

@@ -51,6 +51,23 @@ export const getProjects = async (walletAddress: string, endpoint: string) => {
     console.log("Wallet Address db", walletAddress);
     console.log("Endpoint db", endpoint);
     const dbProjects: Project[] = await db.select().from(projects);
+    // const dbProjects: Project[] = await db
+    //   .select({
+    //     id: projects.id,
+    //     projectName: projects.projectName,
+    //     twitterUrl: projects.twitterUrl,
+    //     websiteUrl: projects.websiteUrl,
+    //     githubUrl: projects.githubUrl,
+    //     ethAddress: projects.ethAddress,
+    //     ecosystem: projects.ecosystem,
+    //     userFid: projects.userFid,
+    //     createdAt: projects.createdAt,
+    //     logoUrl: projects.logoUrl,
+    //     // Add any other required fields
+    //   })
+    //   .from(projects)
+    //   .execute();
+    console.log("DB Projects", dbProjects);
     let easProjects: Project[] = [];
     //issue at the moment is that the easProjects does not show up by defaault, only when you query them
     if (walletAddress && endpoint) {
