@@ -180,7 +180,13 @@ export const getAttestationsByContribution = async (contribution: string) => {
 
 export const insertAttestation = async (attestation: NewAttestation) => {
   try {
-    return db.insert(contributionAttestations).values(attestation).returning();
+    console.log("Inserting attestation into the database");
+    const result = await db
+      .insert(contributionAttestations)
+      .values(attestation)
+      .returning();
+    console.log("Attestation inserted successfully");
+    return result;
   } catch (error) {
     console.error("Error inserting attestation:", error);
     throw error;

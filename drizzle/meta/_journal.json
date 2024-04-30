@@ -43,6 +43,13 @@
       "when": 1714487303630,
       "tag": "0005_shallow_paibok",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1714508696801,
+      "tag": "0006_tricky_captain_america",
+      "breakpoints": true
     }
   ]
 }

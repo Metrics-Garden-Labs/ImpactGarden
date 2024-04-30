@@ -1,0 +1,1 @@
+ALTER TABLE "contributionAttestations" ADD COLUMN "feedback" text;

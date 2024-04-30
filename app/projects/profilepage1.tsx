@@ -162,7 +162,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
         typeof value === 'bigint' ? '0x' + value.toString(16) : value
         );
 
-        const response = await fetch(`/api/delegateAttestation`, {
+        const response = await fetch(`${NEXT_PUBLIC_URL}/api/delegateAttestation`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -174,7 +174,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
 
         if (responseData.success && responseData.attestationUID) {
           console.log('Attestation UID:', responseData.attestationUID);
-          return responseData.attestationUID;
+ 
         } else {
           console.error('Failed to retrieve attestation UID from the API response');
         }
@@ -188,22 +188,20 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
           attesterAddy: walletAddress,
           attestationType: isUseful ? 'Useful' : 'Not Useful',
         }
-
-        const response1 = await fetch(`/api/addContributionAttestationDb`, {
+   
+        const response1 = await fetch(`${NEXT_PUBLIC_URL}/api/addContributionAttestationDb`, {
           method: 'POST',
           body: JSON.stringify(newAttestation),
           headers: {
             'Content-Type': 'application/json',
           },
         });
+   
         const dbResponse = await response1.json();
         console.log('DB Response, insert attestation success:', dbResponse);
       } catch (error) {
         console.error('Error creating attestation/ adding to db:', error);
       }
-
-
-
     };
 
     return (
