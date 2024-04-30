@@ -3,6 +3,7 @@ export interface Project {
   createdAt: Date | null;
   userFid: string;
   ethAddress: string;
+  ecosystem: string;
   projectName: string;
   websiteUrl: string | null;
   twitterUrl: string | null;
@@ -15,6 +16,7 @@ export interface Contribution {
   userFid: string;
   projectName: string;
   contribution: string;
+  ecosystem: string;
   desc: string;
   link: string;
   ethAddress?: string;

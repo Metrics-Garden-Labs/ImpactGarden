@@ -22,6 +22,13 @@
       "when": 1714391615690,
       "tag": "0002_silent_scorpion",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1714468826542,
+      "tag": "0003_violet_black_knight",
+      "breakpoints": true
     }
   ]
 }

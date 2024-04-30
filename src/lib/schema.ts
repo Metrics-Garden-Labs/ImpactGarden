@@ -41,6 +41,7 @@ export const projects = pgTable(
       .references(() => users.fid)
       .notNull(),
     ethAddress: text("ethAddress").notNull(),
+    ecosystem: text("ecosystem").notNull(),
     projectName: text("projectName").notNull(),
     //projectName: text("projectName").notNull.unique(),
     websiteUrl: text("websiteUrl"),
@@ -77,6 +78,9 @@ export const contributions = pgTable(
       .notNull(),
     projectName: text("projectName")
       .references(() => projects.projectName)
+      .notNull(),
+    ecosystem: text("ecosystem")
+      .references(() => projects.ecosystem)
       .notNull(),
     contribution: text("contribution").notNull().unique(),
     desc: text("desc").notNull(),
@@ -115,6 +119,9 @@ export const contributionAttestations = pgTable(
       .notNull(),
     contribution: text("contribution")
       .references(() => contributions.contribution)
+      .notNull(),
+    ecosystem: text("ecosystem")
+      .references(() => contributions.ecosystem)
       .notNull(),
     attestationUID: text("attestationUID").notNull(),
     attesterAddy: text("attesterAddy").notNull(),
