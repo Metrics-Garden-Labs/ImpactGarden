@@ -62,27 +62,24 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
   //addinng conributions modal
   const addContribution = async (contribution: Contribution) => {
     try {
-    //api call to save the contribution to db
-    
-        const response = await fetch(`${NEXT_PUBLIC_URL}/api/addContributionDb`, {
-            method: 'POST',
-            body: JSON.stringify(contribution),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            });
-            if (!response.ok) {
-                console.error('Failed to add contribution');
-                return;
-            }
-            console.log('Contribution added successfully', response);
-            //reload the window to show the new contribution
-            //maybe not the best as it signs me out of the app, gotta figure that out. 
-            window.location.reload();
-        } catch (error) {
-            console.error('Failed to add contribution', error);
-        }
-    };
+      const response = await fetch(`/api/addContributionDb`, {
+        method: 'POST',
+        body: JSON.stringify(contribution),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        console.error('Failed to add contribution');
+        return;
+      }
+      console.log('Contribution added successfully', response);
+      // Reload the window to show the new contribution
+      // Maybe not the best as it signs me out of the app, gotta figure that out.
+    } catch (error) {
+      console.error('Failed to add contribution', error);
+    }
+  };
 
   const filteredContributions = contributions.filter((contribution) =>
   contribution.contribution.toLowerCase().includes(searchTerm.toLowerCase())
