@@ -155,7 +155,7 @@ console.log("FID", fid);
 return (
   <>
     <div className='relative min-h-screen bg-white'>
-      <Image src="/mglskel.png" alt="MGL Skeleton" className="absolute p-10 top-o left-0 h-25 w-60" />
+      <Image src="/mglskel.png" alt="MGL Skeleton" width={60} height={25} className="absolute p-10 top-o left-0 h-25 w-60" />
       <div className='flex justify-ceneter items-center h-screen'>
         <div className='card max-w-lg w-full mx-auto p-10 bg-white rounded-xl shadow-xl'>
           <div className='card-body justify-center items-center'>

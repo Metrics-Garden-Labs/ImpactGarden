@@ -9,7 +9,7 @@ export default function Navbar() {
         <div className="flex justify-between navbar bg-headerblack text-neutral-content p-4 md:p-8">
             <Link href='/'>
                 <button className="btn bg-headerblack text-xl border-none pl-10">
-                 <Image src='/mglwhite.png' alt='MGL Logo' className='h-12 w-12'/>
+                 <Image src='/mglwhite.png' alt='MGL Logo' width={12} height={12} className='h-12 w-12'/>
                 </button>
             </Link>
 
