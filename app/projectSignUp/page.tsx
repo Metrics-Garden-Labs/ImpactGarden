@@ -6,6 +6,7 @@
 //TODO:  create a new schema for the database for the project data
         //have it linked to the user's fid
         //use their ethereum wallet as the attestor
+        // also include the ecosystem in that schema, got the logic just need to add in 
 
 //add image for project using uploadthing, store that in db
 
@@ -30,6 +31,12 @@ type AttestationData = {
     githubURL: string;
   };
 
+const networks: AttestationNetworkType[] = [
+    'Ethereum', 'Optimism', 'Base', 'Arbitrum One', 'Arbitrum Nova', 'Polygon',
+    'Scroll', 'Celo', 'Blast', 'Linea', 'Sepolia', 'Optimism Sepolia', 'Optimism Goerli',
+    'Base Sepolia', 'Base Goerli', 'Arbitrum Goerli'
+];
+
 export default function AttestDb() {
 
     const [attestationData, setAttestationData] = useState<AttestationData>({
@@ -45,6 +52,8 @@ export default function AttestDb() {
     const [ ethAddress] = useGlobalState('ethAddress')
     const [attestationUID, setAttestationUID] = useState<string>('');
     const [imageUrl, setImageUrl] = useState<string>('');
+    const [ecosystem, setEcosystem] = useState<string>('');
+    console.log('Ecosystem', ecosystem);
     console.log('walletAddress', walletAddress);
     console.log('Fid', fid)
     console.log('ethAddress', ethAddress)
@@ -61,6 +70,12 @@ export default function AttestDb() {
     handleNetworkChange(selectedValue);
     console.log('Selected Network', selectedValue);
     };
+
+    const handleEcosystemChangeEvent = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedEcosystem = e.target.value as AttestationNetworkType
+        setEcosystem(selectedEcosystem);
+        console.log('Selected Ecosystem', selectedEcosystem);
+    }
 
     const handleAttestationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -158,6 +173,27 @@ export default function AttestDb() {
                 {Object.keys(networkContractAddresses).map((network) => (
                   <option key={network} value={network}>
                     {network}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="sm:col-span-4 p-3">
+            <label htmlFor="chain" className="block text-sm font-medium leading-6 text-gray-900">
+              What ecosysytem is your project contributing to?
+            </label>
+            <div className="mt-2">
+              <select
+                id="ecosystem"
+                name="ecosystem"
+                value={ecosystem}
+                onChange={handleEcosystemChangeEvent}
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+              >
+                {networks.map((network) => (
+                  <option key={network} value={network}>
+                    {network} Ecosystem
                   </option>
                 ))}
               </select>
