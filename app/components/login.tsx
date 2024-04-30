@@ -10,6 +10,7 @@ import dotenv from 'dotenv';
 import { useRouter } from 'next/router';
 //import { insertUser } from 'app/lib/db';
 import { NEXT_PUBLIC_URL } from '../../src/config/config';
+import Image from 'next/image';
 dotenv.config();
 
 //this login step should  only have to happen once, then all the info will be stored in the db for when they login again
@@ -154,7 +155,7 @@ console.log("FID", fid);
 return (
   <>
     <div className='relative min-h-screen bg-white'>
-      <img src="/mglskel.png" alt="MGL Skeleton" className="absolute p-10 top-o left-0 h-25 w-60" />
+      <Image src="/mglskel.png" alt="MGL Skeleton" className="absolute p-10 top-o left-0 h-25 w-60" />
       <div className='flex justify-ceneter items-center h-screen'>
         <div className='card max-w-lg w-full mx-auto p-10 bg-white rounded-xl shadow-xl'>
           <div className='card-body justify-center items-center'>

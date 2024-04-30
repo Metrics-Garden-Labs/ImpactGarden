@@ -2,6 +2,7 @@
 import { Fragment, SetStateAction, useState, Dispatch } from 'react';
 import { LuArrowUpRight } from "react-icons/lu";
 import { Project } from '../../src/types';
+import Image from 'next/image';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -35,7 +36,7 @@ export default function Sidebar({ project }: Props) {
             {/* Company image placeholder */}
             <div className="h-60 bg-gray-300 rounded-lg flex justify-center items-center">
               {/* Replace src with your image path */}
-              <img src={project.logoUrl || "/MGLIcon.png"} alt="Company Logo" className="h-full w-full object-cover rounded-lg" />
+              <Image src={project.logoUrl || "/MGLIcon.png"} alt="Company Logo" className="h-full w-full object-cover rounded-lg" />
             </div>
             {/* Project Name */}
             <h2 className="text-2xl font-bold text-gray-900">{project.projectName}</h2>

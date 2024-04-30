@@ -1,6 +1,7 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Link from 'next/link';
 import React from 'react';
+import Image from "next/image";
 
 export default function Navbar() {
   return (
@@ -8,7 +9,7 @@ export default function Navbar() {
         <div className="flex justify-between navbar bg-headerblack text-neutral-content p-4 md:p-8">
             <Link href='/'>
                 <button className="btn bg-headerblack text-xl border-none pl-10">
-                 <img src='/mglwhite.png' alt='MGL Logo' className='h-12 w-12'/>
+                 <Image src='/mglwhite.png' alt='MGL Logo' className='h-12 w-12'/>
                 </button>
             </Link>
 

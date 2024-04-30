@@ -12,6 +12,7 @@ import Navbar from '../components/navbar';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { NEXT_PUBLIC_URL } from '../../src/config/config';
 import { ethers } from 'ethers';
+import Image from 'next/image';
 
 type AttestationData = {
   projectName: string;
@@ -270,7 +271,7 @@ export default function AttestDb() {
           <h2>Please upload the logo of your project</h2>
 
           {imageUrl ? (
-            <img
+            <Image
               src={imageUrl}
               alt="Logo of the project"
               width={1000}

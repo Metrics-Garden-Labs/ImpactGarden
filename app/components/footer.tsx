@@ -2,6 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 import { FaDiscord } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -9,7 +10,7 @@ export default function Footer() {
     <footer className="footer p-12 bg-headerblack text-white">
         <div className='left-side'>
         <button className="btn bg-headerblack text-xl border-none pl-5">
-                <img src='/mglwhite.png' alt='MGL Logo' className='h-12 w-12'/>
+                <Image src='/mglwhite.png' alt='MGL Logo' className='h-12 w-12'/>
         </button>
 
         <div className='flex gap-x-8 py-8 pl-5'>
