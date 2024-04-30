@@ -1,7 +1,12 @@
 import "./config";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { sql } from "@vercel/postgres";
-import { users, projects, contributions } from "./schema";
+import {
+  users,
+  projects,
+  contributions,
+  contributionAttestations,
+} from "./schema";
 import * as schema from "./schema";
 import { getAttestationsByAttester } from "./eas";
 import { Waterfall } from "next/font/google";
@@ -51,22 +56,6 @@ export const getProjects = async (walletAddress: string, endpoint: string) => {
     console.log("Wallet Address db", walletAddress);
     console.log("Endpoint db", endpoint);
     const dbProjects: Project[] = await db.select().from(projects);
-    // const dbProjects: Project[] = await db
-    //   .select({
-    //     id: projects.id,
-    //     projectName: projects.projectName,
-    //     twitterUrl: projects.twitterUrl,
-    //     websiteUrl: projects.websiteUrl,
-    //     githubUrl: projects.githubUrl,
-    //     ethAddress: projects.ethAddress,
-    //     ecosystem: projects.ecosystem,
-    //     userFid: projects.userFid,
-    //     createdAt: projects.createdAt,
-    //     logoUrl: projects.logoUrl,
-    //     // Add any other required fields
-    //   })
-    //   .from(projects)
-    //   .execute();
     console.log("DB Projects", dbProjects);
     let easProjects: Project[] = [];
     //issue at the moment is that the easProjects does not show up by defaault, only when you query them
@@ -125,6 +114,25 @@ export const insertProject = async (project: NewProject) => {
   }
 };
 
+export const getProjectByName = async (projectName: string) => {
+  try {
+    const project = await db
+      .select()
+      .from(projects)
+      .where(eq(projects.projectName, projectName))
+      .limit(1);
+
+    if (project.length === 0) {
+      throw new Error(`Project not found: ${projectName}`);
+    }
+
+    return project[0];
+  } catch (error) {
+    console.error(`Error retrieving project '${projectName}':`, error);
+    throw error;
+  }
+};
+
 //for the contributions table
 export type NewContribution = typeof contributions.$inferInsert;
 
@@ -152,21 +160,29 @@ export const insertContribution = async (contribution: NewContribution) => {
 
 // src/lib/db.ts
 
-export const getProjectByName = async (projectName: string) => {
+//for the attest contributions table
+//same stuff as before, figure a way to make the attestations, make them delegated etc, and then insert them into the db, to store and fetch the number that have been made.
+
+export type NewAttestation = typeof contributionAttestations.$inferInsert;
+
+export const getAttestationsByContribution = async (contribution: string) => {
   try {
-    const project = await db
+    const dbAttestations = await db
       .select()
-      .from(projects)
-      .where(eq(projects.projectName, projectName))
-      .limit(1);
-
-    if (project.length === 0) {
-      throw new Error(`Project not found: ${projectName}`);
-    }
-
-    return project[0];
+      .from(contributionAttestations)
+      .where(eq(contributionAttestations.contribution, contribution));
+    return dbAttestations;
   } catch (error) {
-    console.error(`Error retrieving project '${projectName}':`, error);
+    console.error("Error retrieving attestations:", error);
+    throw error;
+  }
+};
+
+export const insertAttestation = async (attestation: NewAttestation) => {
+  try {
+    return db.insert(contributionAttestations).values(attestation).returning();
+  } catch (error) {
+    console.error("Error inserting attestation:", error);
     throw error;
   }
 };

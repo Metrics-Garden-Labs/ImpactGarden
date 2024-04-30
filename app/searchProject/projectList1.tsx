@@ -23,13 +23,6 @@ export default function ProjectList({ projects, query, filter, walletAddress, en
   const [selectedProject, setSelectedProject] = useGlobalState('selectedProject');
   const [selectedProjectName, setSelectedProjectName] = useGlobalState('selectedProjectName');
 
-  // Placeholder data for projects
-//   const projects: Project[] = [
-//     { id: 1, name: 'Project #1', website: 'https://project1.com', twitterUrl: 'https://twitter.com/project1' },
-//     { id: 2, name: 'Project #2', website: 'https://project2.com', twitterUrl: 'https://twitter.com/project2' },
-//     // Add more projects as needed
-//   ];
-
     const filteredProjects = query
     ? projects.filter((project) => {
         if (filter === 'projectName') {

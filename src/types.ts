@@ -59,3 +59,27 @@ export interface NewUser {
   id?: number;
   createdAt?: Date;
 }
+
+export interface NewContributionAttestation {
+  id: number;
+  userFid: string;
+  projectName: string;
+  contribution: string;
+  ecosystem: string;
+  attestationUID: string;
+  attesterAddy: string;
+  attestationType: string;
+  createdAt: Date;
+}
+
+export interface ContributionAttestation {
+  id: number;
+  userFid: string;
+  projectName: string | undefined;
+  contribution: string;
+  ecosystem: string | undefined;
+  attestationUID: string;
+  attesterAddy: string;
+  attestationType: string;
+  createdAt: Date;
+}

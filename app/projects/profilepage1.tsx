@@ -18,12 +18,15 @@ import { RxCross2 } from "react-icons/rx";
 import { IoIosMenu } from "react-icons/io";
 import Sidebar from './sidebar1';
 import { getContributionsByProjectName } from '../../src/lib/db';
-import { Project, Contribution } from '@/src/types';
+import { Project, Contribution, ContributionAttestation } from '@/src/types';
 import AddContributionModal from './addContributionModal';
 import {useRouter} from 'next/router';
 import { useGlobalState } from '@/src/config/config';
 import { LuArrowUpRight } from 'react-icons/lu';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
+import { ethers } from 'ethers';
+import { useEAS } from '@/src/hooks/useEAS';
+import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
 
 
 interface Props {
@@ -38,13 +41,18 @@ interface ProfilePageProps {
 
 export default function ProfilePage({ contributions }: ProfilePageProps) {
     console.log('Contributions in profile page:', contributions);
-  const [activeTab, setActiveTab] = useState('attestations');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedContribution, setSelectedContribution] = useState<Contribution | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-
+    const [activeTab, setActiveTab] = useState('attestations');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedContribution, setSelectedContribution] = useState<Contribution | null>(null);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
+    const { eas, currentAddress } = useEAS();
+    const [fid] = useGlobalState('fid');
+    const [walletAddress] = useGlobalState('walletAddress');
     const [selectedProject] = useGlobalState('selectedProject');
+    const [isUseful, setIsUseful] = useState(false);
+    const [feedback, setFeedback] = useState('');
+
     const projectName = selectedProject?.projectName || "";
     //need to make the route something like /projects/:projectName
 
@@ -62,7 +70,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
   //addinng conributions modal
   const addContribution = async (contribution: Contribution) => {
     try {
-      const response = await fetch(`${NEXT_PUBLIC_URL}/api/addContributionDb`, {
+      const response = await fetch(`/api/addContributionDb`, {
         method: 'POST',
         body: JSON.stringify(contribution),
         headers: {
@@ -96,6 +104,107 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
 
   const renderModal = () => {
     if (!selectedContribution) return null;
+    //could try make the contribution global state the same way the project is
+
+    const createAttestation = async () => {
+      if (!eas || !currentAddress) {
+        console.error('EAS or current address not available');
+        return null;
+      }
+
+      try {
+        //this schema is just a prototype to get the functionality working for now
+        const attestationSchema =  "0x0ea974daef377973de71b8a206247f436f67364853a10d460c2623d18035db12";
+        const schemaEncoder = new SchemaEncoder('string Contribution, bool Useful, string Feedback');
+        const encodedData = schemaEncoder.encodeData([
+          { name: 'Contribution', type: 'string', value: selectedContribution.contribution },
+          { name: 'Useful', type: 'bool', value: isUseful }, 
+          { name: 'Feedback', type: 'string', value: feedback },
+        ]);
+
+        const provider =  new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const easop = new EAS('0x4200000000000000000000000000000000000021');
+        easop.connect(signer);
+        const delegatedSigner = await easop.getDelegated();
+        console.log('Delegated Signer:', delegatedSigner);
+
+        const easnonce = await easop.getNonce(walletAddress);
+        console.log('EAS Nonce:', easnonce);
+
+        const attestation: EIP712AttestationParams = {
+          schema: attestationSchema,
+          recipient: selectedProject?.ethAddress || '', //this logic should hold, they have to be on the project to get here
+          expirationTime: BigInt(9973891048),
+          revocable: true,
+          refUID: selectedContribution.easUid || '',
+          data: encodedData,
+          value: BigInt(0),
+          deadline: BigInt(9973891048),
+          nonce: easnonce,
+        };
+        console.log('Attestation:', attestation);
+        
+
+        const signDelegated = await delegatedSigner.signDelegatedAttestation(attestation, signer);
+        console.log('Delegated Signature:', signDelegated);
+
+        attestation.data = encodedData;
+        const signature = signDelegated.signature;
+
+        const dataToSend = {
+          ...attestation,
+          signature: signature,
+          attester: walletAddress,
+        };
+
+        const serializedData = JSON.stringify(dataToSend, (key, value) =>
+        typeof value === 'bigint' ? '0x' + value.toString(16) : value
+        );
+
+        const response = await fetch(`/api/delegateAttestation`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: serializedData,
+        });
+        const responseData = await response.json();
+        console.log('Response:', responseData);
+
+        if (responseData.success && responseData.attestationUID) {
+          console.log('Attestation UID:', responseData.attestationUID);
+          return responseData.attestationUID;
+        } else {
+          console.error('Failed to retrieve attestation UID from the API response');
+        }
+
+        const newAttestation = {
+          userFid: fid,
+          projectName: selectedProject?.projectName,
+          contribution: selectedContribution.contribution,
+          ecosystem: selectedProject?.ecosystem,
+          attestationUID: responseData.attestationUID,
+          attesterAddy: walletAddress,
+          attestationType: isUseful ? 'Useful' : 'Not Useful',
+        }
+
+        const response1 = await fetch(`/api/addContributionAttestationDb`, {
+          method: 'POST',
+          body: JSON.stringify(newAttestation),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const dbResponse = await response1.json();
+        console.log('DB Response, insert attestation success:', dbResponse);
+      } catch (error) {
+        console.error('Error creating attestation/ adding to db:', error);
+      }
+
+
+
+    };
 
     return (
       <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
@@ -118,12 +227,35 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
                 <LuArrowUpRight className="ml-1" />
                 </a>
           </div>
-          <div className="mb-4 ">
+          {/* <div className="mb-4 ">
             <h3 className="font-semibold text-center">Attestations</h3>
             <p>Info on who has attested and maybe some more stuff</p>
+          </div> */}
+          <div className="mb-4">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={isUseful}
+                onChange={(e) => setIsUseful(e.target.checked)}
+                className="form-checkbox h-5 w-5 text-indigo-600"
+              />
+              <span className="ml-2 text-gray-700">Useful Contribution</span>
+            </label>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-bold mb-2">
+              Feedback:
+            </label>
+            <textarea
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+              className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
+              rows={4}
+            ></textarea>
           </div>
           <div className='mb-4 text-center py-3'>
-          <button className='btn text-center bg-headerblack text-white hover:bg-blue-500'>
+          <button className='btn text-center bg-headerblack text-white hover:bg-blue-500'
+            onClick={createAttestation}>
             Attest to this Contribution
           </button>
           </div>
