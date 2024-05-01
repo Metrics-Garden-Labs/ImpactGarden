@@ -138,35 +138,35 @@ export default function AttestDb() {
         const responseData = await response.json();
         console.log('Response Data:', responseData);
 
-        if(responseData.success) {
+        if (responseData.success) {
           setAttestationUID(responseData.attestationUID);
           console.log('Attestations created successfully');
         
-        const projectUid = attestationUID;
-        console.log('Project UID:', projectUid);
-
-        const newProject = {
-          userFid: fid,
-          ethAddress: currentAddress,
-          projectName: attestationData.projectName,
-          websiteUrl: attestationData.websiteUrl,
-          twitterUrl: attestationData.twitterUrl,
-          githubUrl: attestationData.githubURL,
-          ecosystem: ecosystem,
-          projectUid: projectUid,
-          logoUrl: imageUrl,
-        };
-
-        const response1 = await fetch(`${NEXT_PUBLIC_URL}/api/addProjectDb`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newProject)
-        });
-        const dbResponse = await response1.json();
-        console.log('insert project to db success', dbResponse);
-      }
+          const projectUid = responseData.attestationUID;
+          console.log('Project UID:', projectUid);
+        
+          const newProject = {
+            userFid: fid,
+            ethAddress: currentAddress,
+            projectName: attestationData.projectName,
+            websiteUrl: attestationData.websiteUrl,
+            twitterUrl: attestationData.twitterUrl,
+            githubUrl: attestationData.githubURL,
+            ecosystem: ecosystem,
+            projectUid: projectUid,
+            logoUrl: imageUrl,
+          };
+        
+          const response1 = await fetch(`${NEXT_PUBLIC_URL}/api/addProjectDb`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newProject)
+          });
+          const dbResponse = await response1.json();
+          console.log('insert project to db success', dbResponse);
+        }
       } catch (error) {
         console.error('Failed to create attestations:', error);
         alert('An error occurred while creating attestations. Please try again.');
