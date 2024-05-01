@@ -196,3 +196,18 @@ export const insertAttestation = async (attestation: NewAttestation) => {
     throw error;
   }
 };
+
+export const getAttestationCountByProject = async (projectName: string) => {
+  try {
+    const attestationCount = await db
+      .select({})
+      .from(contributionAttestations)
+      .where(eq(contributionAttestations.projectName, projectName))
+      .execute();
+
+    return attestationCount;
+  } catch (error) {
+    console.error("Error retrieving project attestation count:", error);
+    throw error;
+  }
+};

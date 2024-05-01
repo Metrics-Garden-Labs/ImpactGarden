@@ -30,6 +30,7 @@ import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestati
 import {getAttestationsByContribution} from '@/src/lib/db';
 
 
+
 interface Props {
   sidebarOpen: boolean;
   setSidebarOpen: (isOpen: boolean) => void;
@@ -62,7 +63,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
       const fetchAttestationCount = async () => {
         if (selectedContribution) {
           try {
-            const response = await fetch('/api/getAttestationCount', {
+            const response = await fetch(`/api/getAttestationCount`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

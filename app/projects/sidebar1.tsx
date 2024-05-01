@@ -1,8 +1,10 @@
 'use client';
-import { Fragment, SetStateAction, useState, Dispatch } from 'react';
+import { Fragment, SetStateAction, useState, Dispatch, useEffect } from 'react';
 import { LuArrowUpRight } from "react-icons/lu";
 import { Project } from '../../src/types';
 import Image from 'next/image';
+import { NEXT_PUBLIC_URL } from '@/src/config/config';
+import {useGlobalState} from '@/src/config/config';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -15,6 +17,34 @@ interface Props {
 
 export default function Sidebar({ project }: Props) {
   const categories = ['Onchain Builders', 'OP Stack', 'Governance', 'Dev Tooling'];
+  const [ attestationCount, setAttestationCount ] = useState(0);
+  const [selectedProject, setSelectedProject] = useGlobalState('selectedProject');
+
+  useEffect(() => {
+    const fetchAttestationCount = async () => {
+      if (!project) return;
+      try {
+        const response = await fetch(`/api/getProjectAttestationCount`, {
+          method: 'POST',
+          body: JSON.stringify({ project: selectedProject?.projectName }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log('sidebar data:', data.response);
+          const count = data.response.length;
+          setAttestationCount(count);
+        } else {
+          console.error('Failed to fetch attestation count');
+        }
+      } catch (error) {
+        console.error('Failed to fetch attestation count:', error);
+      }
+    }
+    fetchAttestationCount();
+  } , [selectedProject]);
 
   const getProjectDuration = (createdAt: Date | null | undefined) => {
     if (!createdAt) return 'Unknown';
@@ -49,7 +79,7 @@ export default function Sidebar({ project }: Props) {
             )}
             {/* Stats and Categories */}
             <div>
-              <div className="text-sm font-medium text-gray-500">Attester: 85</div>
+              <div className="text-sm font-medium text-gray-500">Attestations: {attestationCount}</div>
               <div className="text-sm font-medium text-gray-500">Length: {getProjectDuration(project.createdAt)}</div>
               <div className="text-sm py-2 font-medium text-gray-500">Categories:</div>
               {/* Categories */}
