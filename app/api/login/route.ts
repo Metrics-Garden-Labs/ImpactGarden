@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
   try {
     const fidData = await client.fetchBulkUsers([parseInt(fid)]);
     const userData = fidData.users[0];
-
+    console.log("User Data", userData);
     const response = {
       username: userData.username,
       ethAddress: userData.verified_addresses.eth_addresses[0],

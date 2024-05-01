@@ -1,10 +1,11 @@
 // app/users/attestationList.tsx
 
-// app/users/attestationList.tsx
-
 import React from 'react';
-import { getAttestationsByUserId } from '../../src/lib/db';
-import { Attestation } from '../../src/types';
+import { getAttestationsByUserId } from '@/src/lib/db';
+import { Attestation } from '@/src/types';
+import { formatDistanceToNow } from 'date-fns';
+import Link from 'next/link';
+
 
 interface Props {
   userFid: string;
@@ -12,7 +13,10 @@ interface Props {
 
 const AttestationList = async ({ userFid }: Props) => {
   try {
-    const attestations: Attestation[] = await getAttestationsByUserId(userFid);
+    let attestations: Attestation[] = await getAttestationsByUserId(userFid);
+
+    // Sort attestations by createdAt timestamp in descending order
+    attestations.sort((a, b) => new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime());
 
     // Extract unique project names and ecosystems
     const projectNames = [...new Set(attestations.map((attestation) => attestation.projectName))];
@@ -20,7 +24,6 @@ const AttestationList = async ({ userFid }: Props) => {
 
     return (
       <div>
-        <h2>Attestations:</h2>
         {attestations.length > 0 ? (
           <div>
             <div>
@@ -28,7 +31,11 @@ const AttestationList = async ({ userFid }: Props) => {
               {projectNames.length > 0 ? (
                 <ul>
                   {projectNames.map((projectName) => (
-                    <li key={projectName}>{projectName}</li>
+                    <li key={projectName}>
+                      <Link href={`/projects/${projectName}`}>
+                      {projectName}
+                      </Link>
+                      </li>
                   ))}
                 </ul>
               ) : (
@@ -51,12 +58,21 @@ const AttestationList = async ({ userFid }: Props) => {
               <h3>Attestation Details:</h3>
               <ul className='mt-2'>
                 {attestations.map((attestation) => (
-                  <li key={attestation.id}>
-                    <div className='mt-2'>
-                      <p>Project Name: {attestation.projectName}</p>
-                      <p>Contribution: {attestation.contribution}</p>
-                      <p>Attestation UID: {attestation.attestationUID}</p>
-                      <p>Attestation Type: {attestation.attestationType}</p>
+                  <li key={attestation.id} className='mb-4'>
+                    <div className='flex justify-between items-center'>
+                      <div>
+                        <Link href={`/projects/${attestation.projectName}`}>
+                          <p className='text-black hover:underline'>Project Name: {attestation.projectName}</p>
+                        </Link>
+                        <p>Contribution: {attestation.contribution}</p>
+                        <p>Attestation UID: {attestation.attestationUID}</p>
+                        <p>Attestation Type: {attestation.attestationType}</p>
+                      </div>
+                      <div>
+                        <span className='text-sm text-gray-600'>
+                          {formatDistanceToNow(new Date(attestation.createdAt || ''), { addSuffix: true })}
+                        </span>
+                      </div>
                     </div>
                   </li>
                 ))}
@@ -76,61 +92,3 @@ const AttestationList = async ({ userFid }: Props) => {
 };
 
 export default AttestationList;
-
-
-
-
-
-
-
-
-
-// const AttestationList = async ({ userFid }: Props) => {
-//   try {
-//     const attestations: Attestation[] = await getAttestationsByUserId(userFid);
-
-//     // Group attestations by project name
-//     const groupedAttestations: Record<string, Attestation[]> = attestations.reduce((acc, attestation) => {
-//       if (!acc[attestation.projectName]) {
-//         acc[attestation.projectName] = [];
-//       }
-//       acc[attestation.projectName].push(attestation);
-//       return acc;
-//     }, {} as Record<string, Attestation[]>);
-
-//     return (
-//       <div>
-//         <h2>Attestations:</h2>
-//         {Object.keys(groupedAttestations).length > 0 ? (
-//           <ul>
-//             {Object.entries(groupedAttestations).map(([projectName, projectAttestations]) => (
-//               <li key={projectName}>
-//                 <h3>Project Name: {projectName}</h3>
-//                 <ul>
-//                   {projectAttestations.map((attestation) => (
-//                     <li key={attestation.id}>
-//                       <div>
-//                         <p>Contribution: {attestation.contribution}</p>
-//                         <p>Ecosystem: {attestation.ecosystem}</p>
-//                         <p>Attestation Type: {attestation.attestationType}</p>
-//                         <p>Created At: {attestation.createdAt?.toString()}</p>
-//                       </div>
-//                     </li>
-//                   ))}
-//                 </ul>
-//               </li>
-//             ))}
-//           </ul>
-//         ) : (
-//           <p>No attestations found for this user.</p>
-//         )}
-//       </div>
-//     );
-//   } catch (error) {
-//     console.error('Failed to fetch attestations:', error);
-//     // Handle the error, display an error message, or return a fallback UI
-//     return <p>Failed to fetch attestations. Please try again later.</p>;
-//   }
-// };
-
-// export default AttestationList;
