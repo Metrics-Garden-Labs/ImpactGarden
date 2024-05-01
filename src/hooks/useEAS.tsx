@@ -107,7 +107,7 @@ export const useEAS = () => {
     const [ eas, setEAS] = useState<EAS>();
     const [ schemaRegistry, setSchemaRegistry ] = useState<SchemaRegistry>();
     const [ currentAddress, setCurrentAddress ] = useState("");
-    const [ selectedNetwork, setSelectedNetwork ] = useState<AttestationNetworkType>('Sepolia');
+    const [ selectedNetwork, setSelectedNetwork ] = useState<AttestationNetworkType>('Optimism');
     const signer = useSigner();
 
     console.log("network selected: ", selectedNetwork);

@@ -31,7 +31,7 @@ const ProjectPage = async ({ searchParams }: Props) => {
     return (
       <div>
         <Navbar />
-        <h1>Search Projects Here:</h1>
+        <h1 className="ml-4">Search Projects Here:</h1>
         <SearchProjects />
         <ProjectList1
           projects={projects}

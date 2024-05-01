@@ -13,6 +13,9 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { NEXT_PUBLIC_URL } from '../../src/config/config';
 import { ethers } from 'ethers';
 import Image from 'next/image';
+import Footer from '../components/footer';
+import Link from 'next/link';
+import FarcasterLogin from '../components/farcasterLogin';
 
 type AttestationData = {
   projectName: string;
@@ -41,7 +44,7 @@ export default function AttestDb() {
   const [ethAddress] = useGlobalState('ethAddress');
   const [attestationUID, setAttestationUID] = useState<string>('');
   const [imageUrl, setImageUrl] = useState<string>('');
-  const [ecosystem, setEcosystem] = useState<string>('');
+  const [ecosystem, setEcosystem] = useState<string>('Optimism');
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
   console.log('Ecosystem', ecosystem);
   console.log('walletAddress', walletAddress);
@@ -199,8 +202,11 @@ export default function AttestDb() {
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-lg">
             <h2 className="text-xl font-bold mb-4">Attestation Created</h2>
-            <p>Your attestation has been successfully created.</p>
+            <p>Your Project has Succesfully been created</p>
             <p>Attestation UID: {attestationUID}</p>
+            <Link href={`/projects/${attestationData.projectName}`}>
+                      Visit your Project!
+            </Link>
             <button
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
               onClick={() => setAttestationUID('')}
@@ -217,12 +223,16 @@ export default function AttestDb() {
   return (
     <>
       <Navbar />
-      <div data-theme="light" className="min-h-screen w-full flex justify-center relative items-center">
+      <div className="min-h-screen w-full flex justify-center relative items-center">
         <div className='absolute right-4 top-4'>
-          <ConnectButton />
+        {fid ? (
+            <ConnectButton />
+          ) : (
+            <FarcasterLogin />
+          )}
         </div>
         <form>
-          <h1 className="text-black">EAS, need to be logged in, fixed schema is sepolia</h1>
+          <h1 className="text-black">EAS, need to be logged in, fixed schema is optimism</h1>
 
           <div className="sm:col-span-4 p-3">
             <label htmlFor="chain" className="block text-sm font-medium leading-6 text-gray-900">
@@ -360,6 +370,7 @@ export default function AttestDb() {
         </form>
       </div>
       {renderModal()}
+      <Footer />
     </>
   );
 }

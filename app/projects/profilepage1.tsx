@@ -28,6 +28,8 @@ import { ethers } from 'ethers';
 import { useEAS } from '@/src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
 import {getAttestationsByContribution} from '@/src/lib/db';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import FarcasterLogin from '../components/farcasterLogin';
 
 
 
@@ -220,6 +222,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
           ecosystem: selectedProject?.ecosystem,
           attestationUID: responseData.attestationUID,
           attesterAddy: walletAddress,
+          feedback: feedback,
           attestationType: isUseful ? 'Useful' : 'Not Useful',
         }
    
@@ -366,12 +369,19 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
       </button>
 
         {/* //add contribution button */}
-      <div className='absolute top-4 right-4'>
+        <div className="absolute top-4 right-4">
+        {fid ? (
+            <ConnectButton />
+          ) : (
+            <FarcasterLogin />
+          )}
+        </div>
+      <div className='absolute top-20 right-5'>
         <button onClick={() => setModalOpen(true)}>
             Add Contribution
         </button>
         <AddContributionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} addContribution={addContribution} />
-        </div>
+      </div>
       
           <button onClick={() => setActiveTab('attestations')} className={tabClasses('attestations')}>
             Contributions

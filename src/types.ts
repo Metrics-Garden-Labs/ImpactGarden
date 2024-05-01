@@ -77,6 +77,7 @@ export interface NewContributionAttestation {
   attestationUID: string;
   attesterAddy: string;
   attestationType: string;
+  feedback: string | null;
   createdAt: Date;
 }
 
@@ -89,6 +90,7 @@ export interface ContributionAttestation {
   attestationUID: string;
   attesterAddy: string;
   attestationType: string;
+  feedback: string | null;
   createdAt: Date;
 }
 
@@ -101,5 +103,6 @@ export type Attestation = {
   attestationUID: string;
   attesterAddy: string;
   attestationType: string;
+  feedback: string | null;
   createdAt: Date | null;
 };

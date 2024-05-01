@@ -26,7 +26,7 @@ const SearchUsers = () => {
 
   return (
     <div className="flex items-center px-4 space-x-4">
-      <div className="relative flex-grow">
+      <div className="relative  flex-grow">
         <label htmlFor="search" className="sr-only">
           Search
         </label>
@@ -40,8 +40,8 @@ const SearchUsers = () => {
       </div>
 
       <div className="flex-initial">
-        <label htmlFor="shape" className="block text-sm font-medium leading-6 text-gray-900">Filter</label>
-        <div className="mt-2">
+        <label htmlFor="shape" className="block text-sm font-medium leading-6 text-gray-900 mt-3">Filter</label>
+        <div className="mb-8">
           <select
             id="filter"
             name="shape"

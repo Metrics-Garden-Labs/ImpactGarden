@@ -21,7 +21,9 @@ const AttestationList = async ({ userFid }: Props) => {
     // Extract unique project names and ecosystems
     const projectNames = [...new Set(attestations.map((attestation) => attestation.projectName))];
     const ecosystems = [...new Set(attestations.map((attestation) => attestation.ecosystem))];
-
+    console.log('attestations', attestations);
+    console.log('projectNames', projectNames);
+    console.log('ecosystems', ecosystems);
     return (
       <div>
         {attestations.length > 0 ? (
@@ -67,6 +69,7 @@ const AttestationList = async ({ userFid }: Props) => {
                         <p>Contribution: {attestation.contribution}</p>
                         <p>Attestation UID: {attestation.attestationUID}</p>
                         <p>Attestation Type: {attestation.attestationType}</p>
+                        <p>Feebaack: {attestation.feedback}</p>
                       </div>
                       <div>
                         <span className='text-sm text-gray-600'>

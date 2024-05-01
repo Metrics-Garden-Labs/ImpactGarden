@@ -1,0 +1,1 @@
+ALTER TABLE "contributionAttestations" ALTER COLUMN "projectName" SET NOT NULL;

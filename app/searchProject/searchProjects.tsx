@@ -15,6 +15,7 @@ import { useGlobalState } from "../../src/config/config";
 import { NetworkType, networkEndpoints } from '../components/graphqlEndpoints';
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import React from "react";
+import FarcasterLogin from "../components/farcasterLogin";
 
 
 const SearchProjects = () => {
@@ -23,6 +24,7 @@ const SearchProjects = () => {
     const { replace } = useRouter();
     const [ filter, setFilter ] = useState("projectName");
     const [ walletAddress ] = useGlobalState("walletAddress");
+    const [ fid ] = useGlobalState("fid");
     const [selectedNetwork, setSelectedNetwork] = useState<NetworkType>('Optimism');
 
     console.log('walletAddress', walletAddress);
@@ -55,9 +57,13 @@ const SearchProjects = () => {
         <>
         <div className="relative">
         <div className="absolute top-4 right-4">
-        <ConnectButton label="Connect Wallet" />
-      </div>
-        <div className="sm:col-span-4 p-3">
+        {fid ? (
+            <ConnectButton />
+          ) : (
+            <FarcasterLogin />
+          )}
+        </div>
+        <div className="sm:col-span-4 p-4">
             <label htmlFor="network" className="block text-sm font-medium leading-6 text-gray-900">What network would you like to query?</label>
             <div className="mt-2">
                 <select 
@@ -91,12 +97,12 @@ const SearchProjects = () => {
                         defaultValue={searchParams.get("query")?.toString() || ""}
                         onChange={(e) => handleSearch(e.target.value)}
                     />
-                    <FaSearch className="absolute left-3 top-1/2 h-[18px] w-[18px] -traanslate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                    <FaSearch className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
                 </div>
     
                 <div className="flex-initial">
                     <label htmlFor="shape" className="block text-sm font-medium leading-6 text-gray-900">Filter</label>
-                    <div className="mt-2">
+                    <div className="mb-6">
                         <select
                         id="filter"
                         name="shape"
