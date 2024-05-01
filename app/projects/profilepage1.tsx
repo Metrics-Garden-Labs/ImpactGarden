@@ -63,7 +63,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
       const fetchAttestationCount = async () => {
         if (selectedContribution) {
           try {
-            const response = await fetch(`/api/getAttestationCount`, {
+            const response = await fetch(`${NEXT_PUBLIC_URL}/api/getAttestationCount`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

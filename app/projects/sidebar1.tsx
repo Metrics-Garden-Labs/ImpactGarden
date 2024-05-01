@@ -24,7 +24,7 @@ export default function Sidebar({ project }: Props) {
     const fetchAttestationCount = async () => {
       if (!project) return;
       try {
-        const response = await fetch(`/api/getProjectAttestationCount`, {
+        const response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjectAttestationCount`, {
           method: 'POST',
           body: JSON.stringify({ project: selectedProject?.projectName }),
           headers: {
@@ -33,7 +33,6 @@ export default function Sidebar({ project }: Props) {
         });
         if (response.ok) {
           const data = await response.json();
-          console.log('sidebar data:', data.response);
           const count = data.response.length;
           setAttestationCount(count);
         } else {
