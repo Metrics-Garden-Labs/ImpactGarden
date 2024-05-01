@@ -112,7 +112,7 @@ export default function ProjectList({ projects, query, filter, walletAddress, en
 
   return (
     <div className="p-6 bg-white">
-      <div className="grid grid-cols-3 gap-12">
+      <div className="grid grid-cols-3 gap-12 overflow-y-auto">
         {filteredProjects.map((project) => (
           <div
             key={project.id}

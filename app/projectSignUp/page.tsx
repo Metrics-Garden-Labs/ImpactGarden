@@ -152,7 +152,7 @@ export default function AttestDb() {
           twitterUrl: attestationData.twitterUrl,
           githubUrl: attestationData.githubURL,
           ecosystem: ecosystem,
-          projectUid: responseData.attestationUID,
+          projectUid: attestationUID,
           logoUrl: imageUrl,
         };
 

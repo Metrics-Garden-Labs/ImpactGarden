@@ -6,7 +6,7 @@ import { Contribution } from '../../src/types';
 import { useEAS } from '../../src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
 import { ethers } from 'ethers';
-import { estimateGasQueryOptions } from 'wagmi/query';
+
 
 interface Props {
   isOpen: boolean;
@@ -18,6 +18,8 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
   const [fid] = useGlobalState('fid');
   const [walletAddress] = useGlobalState('walletAddress');
   const [selectedProject] = useGlobalState('selectedProject');
+  const [ isLoading, setIsLoading ] = useState(false);
+  const [ attestationUID, setAttestationUID ] = useState<string>("");
   const [formData, setFormData] = useState<Contribution>({
     userFid: fid,
     projectName: selectedProject?.projectName || '',
@@ -31,17 +33,18 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
 
   const { eas, currentAddress } = useEAS();
 
-  const createAttestation = async (): Promise<string | null> => {
+  const createAttestation = async (): Promise<string> => {
     if (!eas || !currentAddress) {
       console.error('EAS not initialized');
-      return null;
+      return ''; 
     }
 
     try {
+      setIsLoading(true);
       const contributionSchema = '0x132a4d5644fa6b85baf205fc25b069ba398bcecea7dc4b609c2ba20efb71da90';
       const schemaEncoder = new SchemaEncoder('uint24 userFid, string projectName, string contribution, string description, string link, string ecosystem');
       const encodedData = schemaEncoder.encodeData([
-        { name: 'userFid', type: 'uint24', value: fid },
+        { name: 'userFid', type: 'uint24', value: fid || 0},
         { name: 'projectName', type: 'string', value: selectedProject?.projectName || '' },
         { name: 'contribution', type: 'string', value: formData.contribution },
         { name: 'description', type: 'string', value: formData.desc },
@@ -103,12 +106,14 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
         return responseData.attestationUID;
       } else {
         console.error('Failed to retrieve attestation UID from the API response');
+        return ''; // Return an empty string if attestation UID is not available
       }
     } catch (error) {
       console.error('Error creating attestation:', error);
+      return ''; // Return an empty string if an error occurs
+    } finally {
+      setIsLoading(false);
     }
-
-    return null;
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -153,6 +158,41 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
 
   if (!isOpen) return null;
 
+  const renderModal = () => {
+    if (isLoading) {
+      return (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Processing Attestation</h2>
+            <div className="flex items-center">
+              <svg className="animate-spin h-5 w-5 mr-3 text-blue-500" viewBox="0 0 24 24">
+                {/* Loading spinner SVG */}
+              </svg>
+              <p>Please wait while your attestation is being processed...</p>
+            </div>
+          </div>
+        </div>
+      );
+    } else if (attestationUID) {
+      return (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Attestation Created</h2>
+            <p>Your attestation has been successfully created.</p>
+            <p>Attestation UID: {attestationUID}</p>
+            <button
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
+              onClick={() => setAttestationUID('')}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
       <form className="bg-white p-8 rounded-lg" onSubmit={handleSubmit}>
@@ -185,6 +225,7 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
         </button>
         <button onClick={onClose}>Cancel</button>
       </form>
+      {renderModal()}
     </div>
   );
 }
