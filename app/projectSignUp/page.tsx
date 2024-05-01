@@ -141,7 +141,7 @@ export default function AttestDb() {
         if(responseData.success) {
           setAttestationUID(responseData.attestationUID);
           console.log('Attestations created successfully');
-        }
+        
         const projectUid = attestationUID;
         console.log('Project UID:', projectUid);
 
@@ -166,6 +166,7 @@ export default function AttestDb() {
         });
         const dbResponse = await response1.json();
         console.log('insert project to db success', dbResponse);
+      }
       } catch (error) {
         console.error('Failed to create attestations:', error);
         alert('An error occurred while creating attestations. Please try again.');
