@@ -44,6 +44,7 @@ const UserProfilePage = async ({ params }: Props) => {
       username: userData.username,
       ethAddress: userData.verified_addresses.eth_addresses[0],
       pfp_url: userData.pfp_url,
+      powerbadge: userData.power_badge,
     };
 
     const coinbaseAddress = "0x357458739F90461b99789350868CD7CF330Dd7EE";
@@ -80,6 +81,11 @@ const UserProfilePage = async ({ params }: Props) => {
               <div className="flex items-center">
                 <span className={`text-sm font-semibold ${isOpBadgeholder ? 'text-green-500' : 'text-red-500'}`}>
                   {isOpBadgeholder ? 'Optimism Badgeholder' : 'Not Optimism Badgeholder'}
+                </span>
+              </div>
+              <div className="flex items-center">
+                <span className="text-sm font-semibold">
+                  {response.powerbadge ? 'Power Badge' : 'No Power Badge'}
                 </span>
               </div>
             </div>

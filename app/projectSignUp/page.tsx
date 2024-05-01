@@ -42,6 +42,7 @@ export default function AttestDb() {
   const [attestationUID, setAttestationUID] = useState<string>('');
   const [imageUrl, setImageUrl] = useState<string>('');
   const [ecosystem, setEcosystem] = useState<string>('');
+  const [ isLoading, setIsLoading ] = useState<boolean>(false);
   console.log('Ecosystem', ecosystem);
   console.log('walletAddress', walletAddress);
   console.log('Fid', fid);
@@ -76,6 +77,7 @@ export default function AttestDb() {
     }
 
     try {
+      setIsLoading(true);
       const mainSchemaUid = '0x45ea2d603b7dfcec03e1e4a5d65a22216e5f7a3c3bf1e61560c58c888f2c7f3f';
       const schemaEncoder = new SchemaEncoder('string projectName, string websiteUrl, string twitterUrl, string githubURL, bool MGL');
       const encodedData = schemaEncoder.encodeData([
@@ -136,7 +138,11 @@ export default function AttestDb() {
         const responseData = await response.json();
         console.log('Response Data:', responseData);
 
-        console.log('Attestations created successfully');
+        if(responseData.success) {
+          setAttestationUID(responseData.attestationUID);
+          console.log('Attestations created successfully');
+        }
+        
 
         const newProject = {
           userFid: fid,
@@ -166,7 +172,44 @@ export default function AttestDb() {
     } catch (error) {
       console.error('Failed to create attestations:', error);
       alert('An error occurred while creating attestations. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const renderModal = () => {
+    if (isLoading) {
+      return (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Processing Attestation</h2>
+            <div className="flex items-center">
+              <svg className="animate-spin h-5 w-5 mr-3 text-blue-500" viewBox="0 0 24 24">
+                {/* Loading spinner SVG */}
+              </svg>
+              <p>Please wait while your attestation is being processed...</p>
+            </div>
+          </div>
+        </div>
+      );
+    } else if (attestationUID) {
+      return (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Attestation Created</h2>
+            <p>Your attestation has been successfully created.</p>
+            <p>Attestation UID: {attestationUID}</p>
+            <button
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
+              onClick={() => setAttestationUID('')}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return null;
   };
 
   return (
@@ -314,6 +357,7 @@ export default function AttestDb() {
           </div>
         </form>
       </div>
+      {renderModal()}
     </>
   );
 }
