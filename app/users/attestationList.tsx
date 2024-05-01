@@ -3,8 +3,8 @@
 // app/users/attestationList.tsx
 
 import React from 'react';
-import { getAttestationsByUserId } from '@/src/lib/db';
-import { Attestation } from '@/src/types';
+import { getAttestationsByUserId } from '../../src/lib/db';
+import { Attestation } from '../../src/types';
 
 interface Props {
   userFid: string;

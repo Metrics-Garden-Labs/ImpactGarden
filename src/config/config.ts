@@ -1,5 +1,5 @@
 import { createGlobalState } from "react-hooks-global-state";
-import { Project } from "@/src/types";
+import { Project } from "../../src/types";
 
 const initialState = {
   walletAddress: "",

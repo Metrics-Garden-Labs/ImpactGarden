@@ -37,7 +37,7 @@ export default function Login() {
   const [user, setUser] = useLocalStorage("user");
   const [ signerUuid, setSignerUuid] = useGlobalState('signerUuid');
   const [ fid, setFid ] = useGlobalState('fid');
-  const [ username, setUsername] = useGlobalState("username");
+  const [ username, setUsername] = useState("");
   const [ firstVerifiedEthAddress, setFirstVerifiedEthAddress ] = useGlobalState("ethAddress");
 
 
@@ -195,7 +195,6 @@ return (
               </>
             )}
           </div>
-        
         </div>
       </div>
     </div>
@@ -204,7 +203,8 @@ return (
 }
           
 
+        {/* <p>FID: {fid}</p>
+        <p>Username: {username}</p>
+        <p>Eth Address: {firstVerifiedEthAddress}</p> */}
 
-// <p>FID: {fid}</p>
-//         <p>Username: {username}</p>
-//         <p>Eth Address: {firstVerifiedEthAddress}</p> 
+

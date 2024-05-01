@@ -1,11 +1,12 @@
 // app/projects/[projectName]/page.tsx
 
-import { getContributionsByProjectName, getProjectByName } from '@/src/lib/db';
-import { Contribution, Project } from '@/src/types';
+import { getContributionsByProjectName, getProjectByName } from '../../../src/lib/db';
+import { Contribution, Project } from '../../../src/types';
 import ProfilePage from '../profilepage1';
 import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
 import Sidebar from '../sidebar1';
+import React from 'react';
 
 interface Props {
   params?: {

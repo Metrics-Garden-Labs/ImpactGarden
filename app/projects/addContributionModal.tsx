@@ -1,9 +1,9 @@
 // AddContributionModal.tsx
 'use client';
 import React, { useState } from 'react';
-import { NEXT_PUBLIC_URL, useGlobalState } from '@/src/config/config';
-import { Contribution } from '@/src/types';
-import { useEAS } from '@/src/hooks/useEAS';
+import { NEXT_PUBLIC_URL, useGlobalState } from '../../src/config/config';
+import { Contribution } from '../../src/types';
+import { useEAS } from '../../src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
 import { ethers } from 'ethers';
 import { estimateGasQueryOptions } from 'wagmi/query';

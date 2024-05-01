@@ -8,12 +8,12 @@
 // userProfile.tsx
 
 import React from "react";
-import { useGlobalState } from "@/src/config/config";
+import { useGlobalState } from "../../src/config/config";
 import SearchUsers from "./searchUsers";
 import UserList from "./userList";
 import Navbar from "../components/navbar";
-import { User } from '@/src/types';
-import { getUsers } from '@/src/lib/db';
+import { User } from '../..//src/types';
+import { getUsers } from '../../src/lib/db';
 
 interface Props {
   searchParams?: {

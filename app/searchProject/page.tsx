@@ -2,8 +2,9 @@
 import SearchProjects from "./searchProjects";
 import ProjectList1 from "./projectList1";
 import Navbar from "../components/navbar";
-import { Project } from '@/src/types';
-import { getProjects } from '@/src/lib/db';
+import { Project } from '../../src/types';
+import { getProjects } from '../../src/lib/db';
+import React from "react";
 
 interface Props {
   searchParams?: {

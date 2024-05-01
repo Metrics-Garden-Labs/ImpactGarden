@@ -14,6 +14,7 @@ import { useState } from "react";
 import { useGlobalState } from "../../src/config/config";
 import { NetworkType, networkEndpoints } from '../components/graphqlEndpoints';
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import React from "react";
 
 
 const SearchProjects = () => {
