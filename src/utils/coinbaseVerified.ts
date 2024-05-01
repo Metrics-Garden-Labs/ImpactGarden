@@ -4,6 +4,9 @@ export const getAttestationsByCoinbaseVerified = async (
   endpoint: string
 ) => {
   try {
+    console.log("coinbaseAddress", coinbaseAddress);
+    console.log("address", address);
+    console.log("endpoint", endpoint);
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -11,20 +14,20 @@ export const getAttestationsByCoinbaseVerified = async (
       },
       body: JSON.stringify({
         query: `
-                query Attestations($coinbaseAddress: String!, $address: String!) {
-                  attestations(where: {
-                       attester: { equals: $coinbaseAddress },
-                      recipient: { equals: $address } 
-                  }) {
-                    id
-                    attester
-                    recipient
-                    refUID
-                    revocable
-                    data
-                  }
+              query Attestations($coinbaseAddress: String!, $address: String!) {
+                attestations(where: {
+                     attester: { equals: $coinbaseAddress },
+                    recipient: { equals: $address } 
+                }) {
+                  id
+                  attester
+                  recipient
+                  refUID
+                  revocable
+                  data
                 }
-              `,
+              }
+            `,
         variables: {
           coinbaseAddress,
           address,
