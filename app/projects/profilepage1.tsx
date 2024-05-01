@@ -27,6 +27,7 @@ import { NEXT_PUBLIC_URL } from '@/src/config/config';
 import { ethers } from 'ethers';
 import { useEAS } from '@/src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
+import {getAttestationsByContribution} from '@/src/lib/db';
 
 
 interface Props {
@@ -52,9 +53,40 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
     const [selectedProject] = useGlobalState('selectedProject');
     const [isUseful, setIsUseful] = useState(false);
     const [feedback, setFeedback] = useState('');
+    const [attestationCount, setAttestationCount] = useState(0);
 
     const projectName = selectedProject?.projectName || "";
     //need to make the route something like /projects/:projectName
+
+    useEffect(() => {
+      const fetchAttestationCount = async () => {
+        if (selectedContribution) {
+          try {
+            const response = await fetch('/api/getAttestationCount', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ contribution: selectedContribution.contribution }),
+            });
+    
+            if (response.ok) {
+              const data = await response.json();
+              console.log('data:', data);
+              const count = data.response.length;
+              console.log('Count:', count);
+              setAttestationCount(count);
+            } else {
+              console.error('Error fetching attestation count:', response.statusText);
+            }
+          } catch (error) {
+            console.error('Error fetching attestation count:', error);
+          }
+        }
+      };
+    
+      fetchAttestationCount();
+    }, [selectedContribution]);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -105,7 +137,8 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
   const renderModal = () => {
     if (!selectedContribution) return null;
     //could try make the contribution global state the same way the project is
-
+    console.log('Selected Contribution:', selectedContribution);
+    console.log('attestation count:', attestationCount);
     const createAttestation = async () => {
       if (!eas || !currentAddress) {
         console.error('EAS or current address not available');
@@ -207,14 +240,14 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
     return (
       <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
         <div 
-          className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-1/4 h-1/2 mx-4 md:mx-20"
+          className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-1/4 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="text-center pt-8 p-2">
             <h2 className="text-xl font-bold mb-4">{selectedContribution.contribution}</h2>
           </div>
           <hr className="border-1 border-gray-300 my-2 mx-auto w-1/2" />
-          <div className="mb-4 items-center py-3">
+          <div className="mb-4 items-center py-3 max-h-96 overflow-y-auto">
             <h3 className="font-semibold text-center">Description</h3>
             <p className='text-left'>{selectedContribution.desc}</p>
           </div>
@@ -229,6 +262,12 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
             <h3 className="font-semibold text-center">Attestations</h3>
             <p>Info on who has attested and maybe some more stuff</p>
           </div> */}
+          <div className='mb-4'>
+            <h3 className='font-semibold text-center'>Attestations</h3>
+            <p className='text-center'>
+              This contribution has been attested to {attestationCount} times
+            </p>
+          </div>
           <div className="mb-4">
             <label className="flex items-center">
               <input

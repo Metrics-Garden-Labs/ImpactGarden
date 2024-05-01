@@ -12,6 +12,7 @@ import { getAttestationsByAttester } from "./eas";
 import { Waterfall } from "next/font/google";
 import { eq } from "drizzle-orm";
 import { Project } from "@/src/types";
+import { count } from "console";
 
 export const db = drizzle(sql, { schema });
 
@@ -165,12 +166,15 @@ export const insertContribution = async (contribution: NewContribution) => {
 
 export type NewAttestation = typeof contributionAttestations.$inferInsert;
 
+//going to use this one to get the count of the attestations for a contribution
+
 export const getAttestationsByContribution = async (contribution: string) => {
   try {
     const dbAttestations = await db
       .select()
       .from(contributionAttestations)
       .where(eq(contributionAttestations.contribution, contribution));
+
     return dbAttestations;
   } catch (error) {
     console.error("Error retrieving attestations:", error);
