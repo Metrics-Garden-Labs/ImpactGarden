@@ -6,8 +6,9 @@ import { User } from '@/src/types';
 import Navbar from '../../components/navbar';
 import AttestationList from '../attestationList';
 import { getAttestationsByCoinbaseVerified } from '@/src/utils/coinbaseVerified';
+import { checkOpBadgeholder } from '@/src/utils/opBadgeholder';
 import { NetworkType, networkEndpoints } from '../../components/graphqlEndpoints';
-
+import { getAddress} from 'viem'; 
 
 interface Props {
   params: {
@@ -36,9 +37,16 @@ const UserProfilePage = async ({ params }: Props) => {
     const endpoint = networkEndpoints[selectedNetwork];
     console.log('endpoint', endpoint)
     console.log('ethaddress', user.ethaddress)
-    const attestationData = await getAttestationsByCoinbaseVerified(coinbaseAddress, user.ethaddress || '', endpoint);
+    const checkAddress = getAddress(user.ethaddress || '');
+    const attestationData = await getAttestationsByCoinbaseVerified(coinbaseAddress, checkAddress, endpoint);
     console.log('attestationData', attestationData)
     const isVerified = attestationData && attestationData.length > 0;
+
+    const OpAddress = '0x621477dBA416E12df7FF0d48E14c4D20DC85D7D9';
+    const selectedNetwork1: NetworkType = 'Optimism';
+    const endpoint1 = networkEndpoints[selectedNetwork1];
+    const opData = await checkOpBadgeholder(OpAddress, checkAddress, endpoint1);
+    const isOpBadgeholder = opData && opData.length > 0;
     
 
     return (
@@ -50,6 +58,13 @@ const UserProfilePage = async ({ params }: Props) => {
             <p className="text-green-500">This account is Coinbase verified.</p>
           ) : (
             <p className="text-red-500">This account is not Coinbase verified.</p>
+          )}
+        </div>
+        <div>
+          {isOpBadgeholder ? (
+            <p className="text-green-500">This account is an Optimism badgeholder.</p>
+          ) : (
+            <p className="text-red-500">This account is not an Optimism badgeholder.</p>
           )}
         </div>
         <AttestationList userFid={user.fid} />

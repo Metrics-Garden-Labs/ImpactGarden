@@ -195,6 +195,7 @@ return (
               </>
             )}
           </div>
+        
         </div>
       </div>
     </div>
@@ -203,8 +204,7 @@ return (
 }
           
 
-        {/* <p>FID: {fid}</p>
-        <p>Username: {username}</p>
-        <p>Eth Address: {firstVerifiedEthAddress}</p> */}
 
-
+// <p>FID: {fid}</p>
+//         <p>Username: {username}</p>
+//         <p>Eth Address: {firstVerifiedEthAddress}</p> 
