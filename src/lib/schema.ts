@@ -121,7 +121,9 @@ export const contributionAttestations = pgTable(
     userFid: text("userFid")
       .references(() => users.fid)
       .notNull(),
-    projectName: text("projectName").references(() => projects.projectName),
+    projectName: text("projectName")
+      .references(() => projects.projectName)
+      .notNull(),
     contribution: text("contribution")
       .references(() => contributions.contribution)
       .notNull(),

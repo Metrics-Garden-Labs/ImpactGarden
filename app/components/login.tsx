@@ -37,7 +37,7 @@ export default function Login() {
   const [user, setUser] = useLocalStorage("user");
   const [ signerUuid, setSignerUuid] = useGlobalState('signerUuid');
   const [ fid, setFid ] = useGlobalState('fid');
-  const [ username, setUsername] = useState("");
+  const [ username, setUsername] = useGlobalState("username");
   const [ firstVerifiedEthAddress, setFirstVerifiedEthAddress ] = useGlobalState("ethAddress");
 
 

@@ -6,6 +6,7 @@ const initialState = {
   signerUuid: "",
   fid: "",
   ethAddress: "",
+  username: "",
   selectedProjectName: "",
   selectedProject: null as Project | null,
 };

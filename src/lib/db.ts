@@ -49,6 +49,25 @@ export const getUsers2 = async () => {
   }
 };
 
+export const getUserByUsername = async (username: string) => {
+  try {
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.username, username))
+      .limit(1);
+
+    if (user.length === 0) {
+      return null;
+    }
+
+    return user[0];
+  } catch (error) {
+    console.error(`Error retrieving user '${username}':`, error);
+    throw error;
+  }
+};
+
 //for the projects table
 export type NewProject = typeof projects.$inferInsert;
 
@@ -208,6 +227,25 @@ export const getAttestationCountByProject = async (projectName: string) => {
     return attestationCount;
   } catch (error) {
     console.error("Error retrieving project attestation count:", error);
+    throw error;
+  }
+};
+
+// src/lib/db.ts
+
+export const getAttestationsByUserId = async (userFid: string) => {
+  try {
+    const attestations = await db
+      .select()
+      .from(contributionAttestations)
+      .where(eq(contributionAttestations.userFid, userFid))
+      .execute();
+    return attestations;
+  } catch (error) {
+    console.error(
+      `Error retrieving attestations for user '${userFid}':`,
+      error
+    );
     throw error;
   }
 };

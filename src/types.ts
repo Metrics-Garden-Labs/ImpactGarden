@@ -60,6 +60,14 @@ export interface NewUser {
   createdAt?: Date;
 }
 
+export type User = {
+  id: number;
+  fid: string;
+  username: string;
+  ethaddress: string | null;
+  createdAt: Date | null;
+};
+
 export interface NewContributionAttestation {
   id: number;
   userFid: string;
@@ -83,3 +91,15 @@ export interface ContributionAttestation {
   attestationType: string;
   createdAt: Date;
 }
+
+export type Attestation = {
+  id: number;
+  userFid: string;
+  projectName: string;
+  contribution: string;
+  ecosystem: string;
+  attestationUID: string;
+  attesterAddy: string;
+  attestationType: string;
+  createdAt: Date | null;
+};
