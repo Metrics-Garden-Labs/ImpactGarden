@@ -69,7 +69,7 @@ const AttestationList = async ({ userFid }: Props) => {
                         <p>Contribution: {attestation.contribution}</p>
                         <p>Attestation UID: {attestation.attestationUID}</p>
                         <p>Attestation Type: {attestation.attestationType}</p>
-                        <p>Feebaack: {attestation.feedback}</p>
+                        <p>Feedback: {attestation.feedback}</p>
                       </div>
                       <div>
                         <span className='text-sm text-gray-600'>
