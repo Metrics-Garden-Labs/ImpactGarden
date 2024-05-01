@@ -142,7 +142,8 @@ export default function AttestDb() {
           setAttestationUID(responseData.attestationUID);
           console.log('Attestations created successfully');
         }
-        
+        const projectUid = attestationUID;
+        console.log('Project UID:', projectUid);
 
         const newProject = {
           userFid: fid,
@@ -152,7 +153,7 @@ export default function AttestDb() {
           twitterUrl: attestationData.twitterUrl,
           githubUrl: attestationData.githubURL,
           ecosystem: ecosystem,
-          projectUid: attestationUID,
+          projectUid: projectUid,
           logoUrl: imageUrl,
         };
 
