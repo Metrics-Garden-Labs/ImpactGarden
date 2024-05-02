@@ -6,6 +6,7 @@ import { Contribution } from '../../src/types';
 import { useEAS } from '../../src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
 import { ethers } from 'ethers';
+import { RxCross2 } from 'react-icons/rx';
 
 
 
@@ -198,38 +199,63 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-      <form className="bg-white p-8 rounded-lg" onSubmit={handleSubmit}>
-        <h2>Add New Contribution</h2>
-        <input
-          value={formData.contribution}
-          onChange={e => setFormData({ ...formData, contribution: e.target.value })}
-          placeholder="Contribution Title"
-          required
-        />
-        <textarea
-          value={formData.desc}
-          onChange={e => setFormData({ ...formData, desc: e.target.value })}
-          placeholder="Description"
-        />
-        <input
-          value={formData.link}
-          onChange={e => setFormData({ ...formData, link: e.target.value })}
-          placeholder="Link/Evidence"
-        />
-        <button
-          className="btn"
-          type="button"
-          onClick={async () => {
-            await addContribution(formData);
-            onClose();
-          }}
-        >
-          Add Contribution
-        </button>
-        <button onClick={onClose}>Cancel</button>
-      </form>
-      {renderModal()}
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center"
+     onClick={onClose}>
+      <div 
+                className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-1/4 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
+                onClick={(e) => e.stopPropagation()}
+            >
+          <form className="bg-white p-8 rounded-lg" onSubmit={handleSubmit}>
+          <div className="text-center pt-8 p-2">
+            <h2 className="text-xl font-bold mb-4">Add New Contribution</h2>
+          </div>
+          <div className="mb-4 items-center py-3 max-h-96 overflow-y-auto">
+            <h3 className="font-semibold  p-2 text-center">Title</h3>
+            <textarea
+              value={formData.contribution}
+              onChange={e => setFormData({ ...formData, contribution: e.target.value })}
+              placeholder="Contribution Title"
+              className='h-20 w-full p-2 border border-gray-800 rounded-md'
+              required
+            />
+          </div>
+          <div className="mb-4 ">
+            <h3 className="font-semibold p-2 text-center">Description</h3>
+            <textarea
+              value={formData.desc}
+              onChange={e => setFormData({ ...formData, desc: e.target.value })}
+              placeholder="Description"
+              className='h-20 w-full p-2 border border-gray-800 rounded-md'
+            />
+          </div>
+          <div className="mb-4">
+            <h3 className="font-semibold p-2 text-center">Link/Evidence</h3>
+            <textarea
+              value={formData.link}
+              onChange={e => setFormData({ ...formData, link: e.target.value })}
+              placeholder="Link/Evidence"
+              className='h-20 w-full p-2 border border-gray-800 rounded-md'
+            />
+          </div>
+          <div className="mb-4 text-center">
+            <button
+              className="btn items-center"
+              type="button"
+              onClick={async () => {
+                await addContribution(formData);
+                onClose();
+              }}
+            >
+              Add Contribution
+            </button>
+          </div>
+          <button onClick={onClose} className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4">
+                <RxCross2 className='w-5 h-5'/>
+          </button>
+          </form>
+          {renderModal()}
+        </div>
+      
     </div>
   );
 }

@@ -232,7 +232,10 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
           )}
         </div>
       <div className='absolute top-20 right-5'>
-        <button onClick={() => setModalOpen(true)}>
+        <button 
+          className='btn bg-headerblack text-white hover:bg-gray-200 hover:text-black px-2 py-1'
+          onClick={() => setModalOpen(true)}
+          >
             Add Contribution
         </button>
         <AddContributionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} addContribution={addContribution} />

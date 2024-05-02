@@ -171,68 +171,68 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
       };
 
     return (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center"
+            onClick={onClose}>
             <div 
-                className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-1/4 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
+                className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-1/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="text-center pt-8 p-2">
-            <h2 className="text-xl font-bold mb-4">{contribution.contribution}</h2>
-          </div>
-          <hr className="border-1 border-gray-300 my-2 mx-auto w-1/2" />
-          <div className="mb-4 items-center py-3 max-h-96 overflow-y-auto">
-            <h3 className="font-semibold text-center">Description</h3>
-            <p className='text-left'>{contribution.desc}</p>
-          </div>
-          <div className="mb-4 ">
-            <h3 className="font-semibold text-center">Link/Evidence</h3> 
-            <a href={contribution.link} className="text-gray-500 text-left hover:text-gray-300 visited:text-indigo-600 flex items-center">
-                {contribution.link}
-                <LuArrowUpRight className="ml-1" />
-                </a>
-          </div>
-          {/* <div className="mb-4 ">
-            <h3 className="font-semibold text-center">Attestations</h3>
-            <p>Info on who has attested and maybe some more stuff</p>
-          </div> */}
-          <div className='mb-4'>
-            <h3 className='font-semibold text-center'>Attestations</h3>
-            <p className='text-center'>
-              This contribution has been attested to {attestationCount} times
-            </p>
-          </div>
-          <div className="mb-4">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={isUseful}
-                onChange={(e) => setIsUseful(e.target.checked)}
-                className="form-checkbox h-5 w-5 text-indigo-600"
-              />
-              <span className="ml-2 text-gray-700">Useful Contribution</span>
-            </label>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
-              Feedback:
-            </label>
-            <textarea
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
-              className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
-              rows={4}
-            ></textarea>
-          </div>
-          <div className='mb-4 text-center py-3'>
-          <button className='btn text-center bg-headerblack text-white hover:bg-blue-500'
-            onClick={createAttestation}>
-            Attest to this Contribution
-          </button>
-          </div>
-          <button onClick={onClose} className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4">
-          <RxCross2 className='w-5 h-5'/>
+                    <h2 className="text-xl font-bold mb-4">{contribution.contribution}</h2>
+                </div>
+                <hr className="border-1 border-gray-300 my-2 mx-auto w-1/2" />
+                <div className="mb-4 items-center py-3 max-h-96 overflow-y-auto">
+                    <h3 className="font-semibold text-center">Description</h3>
+                    <p className='text-center'>{contribution.desc}</p>
+                </div>
+                <div className="mb-4 ">
+                    <h3 className="font-semibold text-center">Link/Evidence</h3> 
+                    <a href={contribution.link} className="text-gray-500 text-center hover:text-gray-300 visited:text-indigo-600 flex items-center">
+                        {contribution.link}
+                        <LuArrowUpRight className="ml-1" />
+                    </a>
+                </div>
+                {/* <div className="mb-4 ">
+                    <h3 className="font-semibold text-center">Attestations</h3>
+                    <p>Info on who has attested and maybe some more stuff</p>
+                </div> */}
+                <div className='mb-4'>
+                    <h3 className='font-semibold text-center'>Attestations</h3>
+                    <p className='text-center'>
+                    This contribution has been attested to {attestationCount} times
+                    </p>
+                </div>
+                <div className="mb-4">
+                    <label className="flex items-center">
+                    <input
+                        type="checkbox"
+                        checked={isUseful}
+                        onChange={(e) => setIsUseful(e.target.checked)}
+                        className="form-checkbox h-5 w-5 text-indigo-600"
+                    />
+                    <span className="ml-2 text-gray-700">Useful Contribution</span>
+                    </label>
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 font-bold mb-2">
+                    Feedback:
+                    </label>
+                    <textarea
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                    className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
+                    rows={4}
+                    ></textarea>
+                </div>
+                <div className='mb-4 text-center py-3'>
+                    <button className='btn text-center bg-headerblack text-white hover:bg-blue-500'
+                        onClick={createAttestation}>
+                        Attest to this Contribution
+                    </button>
+                </div>
+            <button onClick={onClose} className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4">
+                <RxCross2 className='w-5 h-5'/>
             </button>
-                <button onClick={onClose}>Close</button>
             </div>
             {renderModal()}
         </div>
