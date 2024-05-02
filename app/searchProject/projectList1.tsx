@@ -4,10 +4,11 @@
 
 'use client';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import { useGlobalState } from '../../src/config/config';
 import { Project } from '../../src/types';
+import { useRouter } from 'next/router';
 
 
 
@@ -22,31 +23,47 @@ interface Props {
 export default function ProjectList({ projects, query, filter, walletAddress, endpoint }: Props) {
   const [selectedProject, setSelectedProject] = useGlobalState('selectedProject');
   const [selectedProjectName, setSelectedProjectName] = useGlobalState('selectedProjectName');
+  const router = useRouter();
+  const [modalOpen, setModalOpen] = useState(false);
 
-    const filteredProjects = query
-    ? projects.filter((project) => {
-        if (filter === 'projectName') {
-        return (project.projectName?.toLowerCase() || '').includes(query.toLowerCase());
-        } else if (filter === 'ethAddress') {
-        return (project.ethAddress?.toLowerCase() || '').includes(query.toLowerCase());
-        }
-        return false;
-    })
-    : projects;
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setModalOpen(false);
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [router]);
+
+  const filteredProjects = query
+  ? projects.filter((project) => {
+      if (filter === 'projectName') {
+      return (project.projectName?.toLowerCase() || '').includes(query.toLowerCase());
+      } else if (filter === 'ethAddress') {
+      return (project.ethAddress?.toLowerCase() || '').includes(query.toLowerCase());
+      }
+      return false;
+  })
+  : projects;
 
   const openModal = (project: Project) => {
     console.log('Opening modal for project:', project);
     setSelectedProject(project);
     setSelectedProjectName(project.projectName);
+    setModalOpen(true);
   };
 
   const closeModal = () => {
     setSelectedProject(null);
     setSelectedProjectName('');
+    setModalOpen(false);
   };
 
   const renderModal = () => {
-    if (!selectedProject) return null;
+    if (!modalOpen || !selectedProject) return null;
 
     console.log("Rendering modal with Selected Project", selectedProject);
     console.log("Rendering modal with Selected Project Name", selectedProjectName);

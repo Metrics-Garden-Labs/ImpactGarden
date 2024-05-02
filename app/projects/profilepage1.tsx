@@ -57,9 +57,22 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
     const [isUseful, setIsUseful] = useState(false);
     const [feedback, setFeedback] = useState('');
     const [attestationCount, setAttestationCount] = useState(0);
+    const router = useRouter();
+
 
     const projectName = selectedProject?.projectName || "";
     //need to make the route something like /projects/:projectName
+
+    //closes the modal when the route changes, think ive put this on the wrong page but should be grand for now 
+    useEffect(() => {
+      const handleCloseModal = () => {
+        setModalOpen(false);
+      };
+      router.events.on('routeChangeStart', handleCloseModal);
+      return () => {
+        router.events.off('routeChangeStart', handleCloseModal);
+      };
+    }, [router.events]);
 
     useEffect(() => {
       const fetchAttestationCount = async () => {

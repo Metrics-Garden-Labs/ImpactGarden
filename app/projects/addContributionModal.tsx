@@ -8,6 +8,7 @@ import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestati
 import { ethers } from 'ethers';
 
 
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -30,6 +31,7 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
     easUid: '',
     ethAddress: walletAddress,
   });
+
 
   const { eas, currentAddress } = useEAS();
 

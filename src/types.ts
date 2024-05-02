@@ -20,7 +20,7 @@ export interface Contribution {
   ecosystem: string;
   desc: string;
   link: string;
-  easUid?: string | null | undefined;
+  easUid: string;
   ethAddress?: string;
   createdAt?: Date | null;
 }
@@ -34,7 +34,7 @@ export interface NewProject {
   githubUrl?: string;
   id?: number;
   ecosystem: string;
-  projectUid?: string | null | undefined;
+  projectUid: string;
   logoUrl?: string;
   createdAt?: Date;
 }
@@ -47,7 +47,7 @@ export interface NewContribution {
   desc: string;
   link: string;
   ecosystem: string;
-  easUid?: string;
+  easUid: string;
   ethAddress: string;
   createdAt: Date;
 }

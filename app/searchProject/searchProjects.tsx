@@ -10,12 +10,13 @@
 
 import { FaSearch } from "react-icons/fa";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGlobalState } from "../../src/config/config";
 import { NetworkType, networkEndpoints } from '../components/graphqlEndpoints';
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import React from "react";
 import FarcasterLogin from "../components/farcasterLogin";
+
 
 
 const SearchProjects = () => {
@@ -52,6 +53,8 @@ const SearchProjects = () => {
         }
         replace(`${pathname}?${params.toString()}`);
     };
+
+    
 
     return (
         <>
