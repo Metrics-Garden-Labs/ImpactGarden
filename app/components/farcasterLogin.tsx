@@ -110,8 +110,12 @@ export default function FarcasterLogin() {
         console.log("Data", data);
         setUsername(data.username);
         setFirstVerifiedEthAddress(data.ethAddress);
-        console.log("Username", username);
-        console.log("Eth Address", firstVerifiedEthAddress);
+
+        setUser(prevUser => ({
+          ...prevUser,
+          username: data.username,
+          ethAddress: data.ethAddress
+        }));
 
       const newUser = {
         fid: fid.toString(),
@@ -119,6 +123,7 @@ export default function FarcasterLogin() {
         ethaddress: data.ethAddress || '',
         //this stores the first ethAddress they have verified, usually their public one
       };
+      console.log("New User, ", newUser);
 
       //call api to insert user
       
