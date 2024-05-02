@@ -114,7 +114,7 @@ export const contributions = pgTable(
 //for this maybe only one attestation towards a certain contribution per fid
 //pop up that says this user has already attested to this contibution
 
-export const contributionAttestations = pgTable(
+export const contributionattestations = pgTable(
   "contributionAttestations",
   {
     id: serial("id").primaryKey(),
