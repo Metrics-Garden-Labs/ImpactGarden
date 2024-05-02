@@ -111,11 +111,7 @@ export default function FarcasterLogin() {
         setUsername(data.username);
         setFirstVerifiedEthAddress(data.ethAddress);
 
-        setUser(prevUser => ({
-          ...prevUser,
-          username: data.username,
-          ethAddress: data.ethAddress
-        }));
+        setUser(current => ({ ...current, username: data.username, ethAddress: data.ethAddress }));
 
       const newUser = {
         fid: fid.toString(),

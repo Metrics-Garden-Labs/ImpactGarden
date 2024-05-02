@@ -121,6 +121,11 @@ export default function Login() {
         setFirstVerifiedEthAddress(data.ethAddress);
         console.log("Username", username);
         console.log("Eth Address", firstVerifiedEthAddress);
+        setUser(prevUser => ({
+          ...prevUser,
+          username: data.username,
+          ethAddress: data.ethAddress
+        }));
 
       const newUser = {
         fid: fid.toString(),
