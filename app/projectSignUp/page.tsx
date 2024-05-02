@@ -189,10 +189,8 @@ export default function AttestDb() {
           <div className="bg-white p-8 rounded-lg shadow-lg">
             <h2 className="text-xl font-bold mb-4">Processing Attestation</h2>
             <div className="flex items-center">
-              <svg className="animate-spin h-5 w-5 mr-3 text-blue-500" viewBox="0 0 24 24">
-                {/* Loading spinner SVG */}
-              </svg>
               <p>Please wait while your attestation is being processed...</p>
+              <span className="loading loading-spinner loading-lg"></span>
             </div>
           </div>
         </div>
@@ -205,7 +203,7 @@ export default function AttestDb() {
             <p>Your Project has Succesfully been created</p>
             <p>Attestation UID: {attestationUID}</p>
             <Link href={`/projects/${attestationData.projectName}`}>
-                      Visit your Project!
+              <p>Visit your Project!</p>
             </Link>
             <button
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"

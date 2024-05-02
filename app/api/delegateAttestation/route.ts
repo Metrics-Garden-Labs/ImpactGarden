@@ -2,6 +2,10 @@ import { ethers } from "ethers";
 import { NextRequest, NextResponse } from "next/server";
 import dotenv from "dotenv";
 
+export const maxDuration = 30; // This function can run for a maximum of 30, hopefully will solve the timeout issue
+export const dynamic = "force-dynamic";
+
+//if it keeps timing out, i will make multiple api routes for each operation that do the same thing.
 dotenv.config();
 
 export async function POST(request: NextRequest) {
