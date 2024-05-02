@@ -16,6 +16,7 @@ import { NetworkType, networkEndpoints } from '../components/graphqlEndpoints';
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import React from "react";
 import FarcasterLogin from "../components/farcasterLogin";
+import useLocalStorage from "@/src/hooks/use-local-storage-state";
 
 
 
@@ -27,7 +28,11 @@ const SearchProjects = () => {
     const [ walletAddress ] = useGlobalState("walletAddress");
     const [ fid ] = useGlobalState("fid");
     const [selectedNetwork, setSelectedNetwork] = useState<NetworkType>('Optimism');
-
+    const[ user ] = useLocalStorage("user", {
+        fid: '',
+        username: '',
+        ethAddress: '',
+    });
     console.log('walletAddress', walletAddress);
 
     const handleNetworkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -60,7 +65,7 @@ const SearchProjects = () => {
         <>
         <div className="relative">
         <div className="absolute top-4 right-4">
-        {fid ? (
+        {user.fid ? (
             <ConnectButton />
           ) : (
             <FarcasterLogin />

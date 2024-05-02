@@ -31,6 +31,7 @@ import {getAttestationsByContribution} from '@/src/lib/db';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import FarcasterLogin from '../components/farcasterLogin';
 import AttestationModal from './AttestationModal';
+import useLocalStorage from '@/src/hooks/use-local-storage-state';
 
 
 
@@ -59,6 +60,11 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
     const [feedback, setFeedback] = useState('');
     const [attestationCount, setAttestationCount] = useState(0);
     const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const [user] = useLocalStorage("user", {
+        fid: '',
+        username: '',
+        ethAddress: '',
+      });
     // const router = useRouter();
 
 
@@ -219,7 +225,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
 
         {/* //add contribution button */}
         <div className="absolute top-4 right-4">
-        {fid ? (
+        {user.fid ? (
             <ConnectButton />
           ) : (
             <FarcasterLogin />
