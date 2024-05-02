@@ -17,6 +17,7 @@ import Footer from '../components/footer';
 import Link from 'next/link';
 import FarcasterLogin from '../components/farcasterLogin';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
+import { FilterTypeNotSupportedError } from 'viem';
 
 type AttestationData = {
   projectName: string;
@@ -343,6 +344,8 @@ export default function AttestDb() {
             />
           ) : (
             <UploadDropzone
+              className="border-black bg-slate-300 ut-label:text-lg ut-allowed-content:ut-uploading:text-red-300"
+              
               endpoint="imageUploader"
               onClientUploadComplete={(res) => {
                 setImageUrl(res[0].url);
