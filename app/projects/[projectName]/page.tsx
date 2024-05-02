@@ -36,6 +36,7 @@ const ProjectPage = async ({ params }: Props) => {
         </div>
         <Footer />
       </div>
+      
     );
 
   } catch (error: unknown) {

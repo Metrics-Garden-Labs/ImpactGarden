@@ -34,7 +34,11 @@ interface SignInSuccessData {
 export default function Login() {
 
   //signerUuid and fid are global state variables once they are fetched from farcaster.
-  const [user, setUser] = useLocalStorage("user");
+  const [user, setUser, removeUser] = useLocalStorage("user", {
+    fid: '',
+    username: '',
+    ethAddress: '',
+    });
   const [ signerUuid, setSignerUuid] = useGlobalState('signerUuid');
   const [ fid, setFid ] = useGlobalState('fid');
   const [ username, setUsername] = useState("");
@@ -46,7 +50,7 @@ export default function Login() {
   //add signout function
   const handleSignout = () => {
     setFid("");
-    setUser("");
+    setUser({ fid: '', username: '', ethAddress: '' });
     setUsername("");
     setFirstVerifiedEthAddress("");
     window.location.reload();
@@ -75,10 +79,10 @@ export default function Login() {
     }
     window.onSignInSuccess = (data) => {
       setUser({
-        signerUuid: data.signer_uuid,
         fid: data.fid,
+        username: user.username,
+        ethAddress: user.ethAddress,
       });
-      setSignerUuid(data.signer_uuid);
       //signer uuid is private and part of the app
       setFid(data.fid);
     };
@@ -151,6 +155,8 @@ export default function Login() {
 
 
 console.log("FID", fid);
+console.log("userFid,", user.fid);
+console.log("user", user);
 
 return (
   <>
@@ -159,9 +165,9 @@ return (
       <div className='flex justify-ceneter items-center h-screen'>
         <div className='card max-w-lg w-full mx-auto p-10 bg-white rounded-xl shadow-xl'>
           <div className='card-body justify-center items-center'>
-            {fid ? (
+            {user.fid ? (
               <>
-                <h2 className="text-center font-semibold text-xl mb-4">Welcome, {username}!</h2>
+                <h2 className="text-center font-semibold text-xl mb-4">Welcome, {user.username}!</h2>
                 <p className="text-center text-gray-600 mb-6">You are logged in with Farcaster.</p>
                 <div className="flex items-center">
                   <button

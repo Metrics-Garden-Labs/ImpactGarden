@@ -26,24 +26,17 @@ interface SignInSuccessData {
 
 export default function FarcasterLogin() {
   //signerUuid and fid are global state variables once they are fetched from farcaster.
-  const [user, setUser] = useLocalStorage("user");
-  const [ signerUuid, setSignerUuid] = useGlobalState('signerUuid');
+  const [user, setUser, removeUser] = useLocalStorage("user", {
+    fid: '',
+    username: '',
+    ethAddress: '',
+  });
   const [ fid, setFid ] = useGlobalState('fid');
   const [ username, setUsername] = useState("");
   const [ firstVerifiedEthAddress, setFirstVerifiedEthAddress ] = useGlobalState("ethAddress");
 
 
   const client_id = process.env.NEXT_PUBLIC_NEYNAR_CLIENT_ID;
-
-  //add signout function
-  const handleSignout = () => {
-    setFid("");
-    setUser("");
-    setUsername("");
-    setFirstVerifiedEthAddress("");
-    window.location.reload();
-  };
-
 
   if (!client_id) {
     throw new Error("NEXT_PUBLIC_NEYNAR_CLIENT_ID is not defined in .env");
@@ -67,10 +60,10 @@ export default function FarcasterLogin() {
     }
     window.onSignInSuccess = (data) => {
       setUser({
-        signerUuid: data.signer_uuid,
         fid: data.fid,
+        username: user.username,
+        ethAddress: user.ethAddress,
       });
-      setSignerUuid(data.signer_uuid);
       //signer uuid is private and part of the app
       setFid(data.fid);
     };
@@ -79,11 +72,21 @@ export default function FarcasterLogin() {
       window.onSignInSuccess = undefined;
       document.getElementById(scriptId)?.remove();
     }
-  },[setUser, setSignerUuid, setFid])
+  },[setUser, setFid, user.username, user.ethAddress]);
+
+  console.log("user", user);
+
+
+  //add signout function
+  const handleSignout = () => {
+    removeUser();
+    setFid("");
+    setUser({ fid: '', username: '', ethAddress: '' });
+    setUsername("");
+    setFirstVerifiedEthAddress("");
+    window.location.reload();
+  };
   
-
-
-
   //lets se what i can get using neynar
   useEffect(() => {
     if(fid){
@@ -146,7 +149,7 @@ console.log("FID", fid);
 
   return (
     <>
-      {fid ? (
+      {user.fid ? (
         <div className="flex items-center">
         </div>
       ) : (

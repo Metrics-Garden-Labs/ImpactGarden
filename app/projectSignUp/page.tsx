@@ -16,6 +16,7 @@ import Image from 'next/image';
 import Footer from '../components/footer';
 import Link from 'next/link';
 import FarcasterLogin from '../components/farcasterLogin';
+import useLocalStorage from '@/src/hooks/use-local-storage-state';
 
 type AttestationData = {
   projectName: string;
@@ -40,6 +41,11 @@ export default function AttestDb() {
   console.log('Attestation Data:', attestationData);
 
   const [walletAddress] = useGlobalState('walletAddress');
+  const [ user, setUser, removeUser ] = useLocalStorage('user', {
+    fid: '',
+    username: '',
+    ethAddress: '',
+  });
   const [fid] = useGlobalState('fid');
   const [ethAddress] = useGlobalState('ethAddress');
   const [attestationUID, setAttestationUID] = useState<string>('');
@@ -90,6 +96,8 @@ export default function AttestDb() {
         { name: 'githubURL', value: attestationData.githubURL, type: 'string' },
         { name: 'MGL', value: true, type: 'bool' }
       ]);
+
+      console.log('user', user);
 
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
@@ -149,7 +157,8 @@ export default function AttestDb() {
           console.log('Project UID:', projectUid);
         
           const newProject = {
-            userFid: fid,
+            //userFid: fid,
+            userFid: user.fid,
             ethAddress: currentAddress,
             projectName: attestationData.projectName,
             websiteUrl: attestationData.websiteUrl,
