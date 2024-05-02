@@ -9,7 +9,7 @@ export interface Project {
   twitterUrl: string | null;
   githubUrl: string | null;
   logoUrl: string | null;
-  projectUid: string;
+  projectUid: string | null;
 }
 
 export interface Contribution {
@@ -20,7 +20,7 @@ export interface Contribution {
   ecosystem: string;
   desc: string;
   link: string;
-  easUid: string;
+  easUid: string | null;
   ethAddress?: string;
   createdAt?: Date | null;
 }
