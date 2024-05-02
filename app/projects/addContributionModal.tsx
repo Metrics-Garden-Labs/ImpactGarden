@@ -152,7 +152,8 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
 
         console.log('Contribution added successfully', response);
         // Reload the window to show the new contribution
-        // Maybe not the best as it signs me out of the app, gotta figure that out.
+        window.location.reload();
+        
       } else {
         console.error('Failed to create attestation');
       }
