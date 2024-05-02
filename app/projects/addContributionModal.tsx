@@ -35,6 +35,8 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
 
   const { eas, currentAddress } = useEAS();
 
+  console.log('Selected Project:', selectedProject);
+
   const createAttestation = async (): Promise<string> => {
     if (!eas || !currentAddress) {
       console.error('EAS not initialized');
@@ -63,7 +65,7 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
 
       const easnonce = await easop.getNonce(walletAddress);
       console.log('EAS Nonce:', easnonce);
-      console.log("refUID", selectedProject?.projectUid || '')
+      console.log("refUID", selectedProject?.projectUid )
 
       const attestation: EIP712AttestationParams = {
         schema: contributionSchema,

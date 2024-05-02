@@ -9,7 +9,7 @@ export interface Project {
   twitterUrl: string | null;
   githubUrl: string | null;
   logoUrl: string | null;
-  projectUid?: string | null | undefined;
+  projectUid: string;
 }
 
 export interface Contribution {
