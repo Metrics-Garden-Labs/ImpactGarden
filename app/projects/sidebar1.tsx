@@ -5,6 +5,7 @@ import { Project } from '../../src/types';
 import Image from 'next/image';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
 import {useGlobalState} from '@/src/config/config';
+import Link from 'next/link';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -19,6 +20,8 @@ export default function Sidebar({ project }: Props) {
   const categories = ['Onchain Builders', 'OP Stack', 'Governance', 'Dev Tooling'];
   const [ attestationCount, setAttestationCount ] = useState(0);
   const [selectedProject, setSelectedProject] = useGlobalState('selectedProject');
+
+ 
 
   useEffect(() => {
     const fetchAttestationCount = async () => {
@@ -44,6 +47,9 @@ export default function Sidebar({ project }: Props) {
     }
     fetchAttestationCount();
   } , [selectedProject]);
+
+  const websiteurl = project?.websiteUrl;
+  console.log('Selected website:', websiteurl);
 
   const getProjectDuration = (createdAt: Date | null | undefined) => {
     if (!createdAt) return 'Unknown';
@@ -71,10 +77,12 @@ export default function Sidebar({ project }: Props) {
             <h2 className="text-2xl font-bold text-gray-900">{project.projectName}</h2>
             {/* Project Link */}
             {project.websiteUrl && (
-                <a href={project.websiteUrl} className="text-gray-500 hover:text-gray-300 visited:text-indigo-600 flex items-center">
+              <Link href={`https://${websiteurl}`}>
+                <p className="text-gray-500 hover:text-gray-300 visited:text-indigo-600 flex items-center">
                 {project.websiteUrl}
                 <LuArrowUpRight className="ml-1" />
-                </a>
+                </p>
+              </Link>
             )}
             {/* Stats and Categories */}
             <div>
