@@ -32,6 +32,8 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     const [walletAddress] = useGlobalState('walletAddress');
     const [fid] = useGlobalState('fid');
     const [selectedProject] = useGlobalState('selectedProject');
+    const [ isLoading, setIsLoading ] = useState(false);
+    const [ attestationUID, setAttestationUID ] = useState<string>("");
 
     const createAttestation = async () => {
         if (!eas || !currentAddress) {
@@ -40,6 +42,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
         }
 
         try {
+            setIsLoading(true);
             const attestationSchema = "0x0ea974daef377973de71b8a206247f436f67364853a10d460c2623d18035db12";
             const schemaEncoder = new SchemaEncoder('string Contribution, bool Useful, string Feedback');
             const encodedData = schemaEncoder.encodeData([
@@ -93,11 +96,11 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             console.log('Response:', responseData);
     
             if (responseData.success && responseData.attestationUID) {
-              console.log('Attestation UID:', responseData.attestationUID);
-     
-            } else {
-              console.error('Failed to retrieve attestation UID from the API response');
-            }
+                console.log('Attestation UID:', responseData.attestationUID);
+                setAttestationUID(responseData.attestationUID);
+              } else {
+                console.error('Failed to retrieve attestation UID from the API response');
+              }
     
             const newAttestation = {
               userFid: fid,
@@ -122,11 +125,48 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             console.log('DB Response, insert attestation success:', dbResponse);
           } catch (error) {
             console.error('Error creating attestation/ adding to db:', error);
+          } finally {
+            setIsLoading(false);
           }
         };
 
             // Additional logic to handle the response, display errors, etc.
     if (!isOpen) return null;
+
+    const renderModal = () => {
+        if (isLoading) {
+          return (
+            <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+              <div className="bg-white p-8 rounded-lg shadow-lg">
+                <h2 className="text-xl font-bold mb-4">Processing Attestation</h2>
+                <div className="flex items-center">
+                  <svg className="animate-spin h-5 w-5 mr-3 text-blue-500" viewBox="0 0 24 24">
+                    {/* Loading spinner SVG */}
+                  </svg>
+                  <p>Please wait while your attestation is being processed...</p>
+                </div>
+              </div>
+            </div>
+          );
+        } else if (attestationUID) {
+          return (
+            <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+              <div className="bg-white p-8 rounded-lg shadow-lg">
+                <h2 className="text-xl font-bold mb-4">Attestation Created</h2>
+                <p>Your attestation has been successfully created.</p>
+                <p>Attestation UID: {attestationUID}</p>
+                <button
+                  className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
+                  onClick={() => setAttestationUID('')}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          );
+        }
+        return null;
+      };
 
     return (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
@@ -192,6 +232,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             </button>
                 <button onClick={onClose}>Close</button>
             </div>
+            {renderModal()}
         </div>
     );
 };
