@@ -61,6 +61,7 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
 
       const easnonce = await easop.getNonce(walletAddress);
       console.log('EAS Nonce:', easnonce);
+      console.log("refUID", selectedProject?.projectUid || '')
 
       const attestation: EIP712AttestationParams = {
         schema: contributionSchema,

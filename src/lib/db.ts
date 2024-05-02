@@ -5,7 +5,7 @@ import {
   users,
   projects,
   contributions,
-  contributionAttestations,
+  contributionattestations,
 } from "./schema";
 import * as schema from "./schema";
 import { getAttestationsByAttester } from "./eas";
@@ -183,7 +183,7 @@ export const insertContribution = async (contribution: NewContribution) => {
 //for the attest contributions table
 //same stuff as before, figure a way to make the attestations, make them delegated etc, and then insert them into the db, to store and fetch the number that have been made.
 
-export type NewAttestation = typeof contributionAttestations.$inferInsert;
+export type NewAttestation = typeof contributionattestations.$inferInsert;
 
 //going to use this one to get the count of the attestations for a contribution
 
@@ -191,8 +191,8 @@ export const getAttestationsByContribution = async (contribution: string) => {
   try {
     const dbAttestations = await db
       .select()
-      .from(contributionAttestations)
-      .where(eq(contributionAttestations.contribution, contribution));
+      .from(contributionattestations)
+      .where(eq(contributionattestations.contribution, contribution));
 
     return dbAttestations;
   } catch (error) {
@@ -205,7 +205,7 @@ export const insertAttestation = async (attestation: NewAttestation) => {
   try {
     console.log("Inserting attestation into the database");
     const result = await db
-      .insert(contributionAttestations)
+      .insert(contributionattestations)
       .values(attestation)
       .returning();
     console.log("Attestation inserted successfully");
@@ -220,8 +220,8 @@ export const getAttestationCountByProject = async (projectName: string) => {
   try {
     const attestationCount = await db
       .select({})
-      .from(contributionAttestations)
-      .where(eq(contributionAttestations.projectName, projectName))
+      .from(contributionattestations)
+      .where(eq(contributionattestations.projectName, projectName))
       .execute();
 
     return attestationCount;
@@ -237,8 +237,8 @@ export const getAttestationsByUserId = async (userFid: string) => {
   try {
     const attestations = await db
       .select()
-      .from(contributionAttestations)
-      .where(eq(contributionAttestations.userFid, userFid))
+      .from(contributionattestations)
+      .where(eq(contributionattestations.userFid, userFid))
       .execute();
     return attestations;
   } catch (error) {
