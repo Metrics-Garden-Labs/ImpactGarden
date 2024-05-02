@@ -65,6 +65,10 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
 
     //closes the modal when the route changes, think ive put this on the wrong page but should be grand for now 
     useEffect(() => {
+      if (router.isReady) {
+        // Now it's safe to use the router
+        console.log(router.query);
+      }
       const handleCloseModal = () => {
         setModalOpen(false);
       };

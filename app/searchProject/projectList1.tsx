@@ -28,6 +28,10 @@ export default function ProjectList({ projects, query, filter, walletAddress, en
 
   useEffect(() => {
     const handleRouteChange = () => {
+      if (router.isReady) {
+        // Now it's safe to use the router
+        console.log(router.query);
+      }
       setModalOpen(false);
     };
 
