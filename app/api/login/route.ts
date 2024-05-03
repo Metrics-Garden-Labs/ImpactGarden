@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     console.log("User Data", userData);
     const response = {
       username: userData.username,
-      ethAddress: userData.verified_addresses.eth_addresses[0],
+      ethAddress: userData.verified_addresses.eth_addresses,
     };
 
     return NextResponse.json(response);

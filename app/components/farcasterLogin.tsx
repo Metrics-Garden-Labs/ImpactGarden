@@ -29,7 +29,7 @@ export default function FarcasterLogin() {
   const [user, setUser, removeUser] = useLocalStorage("user", {
     fid: '',
     username: '',
-    ethAddress: '',
+    ethAddress: [],
   });
   const [ fid, setFid ] = useGlobalState('fid');
   const [ username, setUsername] = useState("");
@@ -85,7 +85,7 @@ export default function FarcasterLogin() {
   const handleSignout = () => {
     removeUser();
     setFid("");
-    setUser({ fid: '', username: '', ethAddress: '' });
+    setUser({ fid: '', username: '', ethAddress: [] });
     setUsername("");
     setFirstVerifiedEthAddress("");
     setIsSignedIn(false);

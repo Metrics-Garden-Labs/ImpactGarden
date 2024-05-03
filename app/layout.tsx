@@ -17,10 +17,6 @@ const manrope = Manrope({subsets: ["latin"]})
 
 //const gambetta = localFont({ src: './fonts/Gambetta-Italic.otf' })
 
-
-
-
-
 export const metadata: Metadata = {
   title: "Metrics Garden Labs Module 3",
   description: "Module 3 lofi of the Metrics Garden Labs project",

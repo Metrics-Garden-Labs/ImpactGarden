@@ -69,24 +69,38 @@ const UserProfilePage = async ({ params }: Props) => {
         <Navbar />
         <div className="container mx-auto px-4 py-8">
           <Image src={response.pfp_url || ''} alt="Profile Picture" width={100} height={100} />
-          <h1 className="text-2xl font-bold mb-4">User Profile: {user.username}</h1>
+          <h1 className="text-2xl font-bold mb-4 flex text-center">User Profile: {user.username}
+          <span className={`text-sm font-semibold ${isVerified ? 'text-green-500' : 'text-red-500'} flex items-center p-1`}>
+                  {isVerified ? 
+                  <>
+                    <div className='tooltip' data-tip="Coinbase Verified Wallet">
+                      <Image src="/coinbaseWallet.png" alt="Coinbase Wallet Badge" width={25} height={25} className="align-middle mr-3" />
+                    </div>
+                  </>
+                : ""}
+          </span>
+          <span className={`text-sm font-semibold ${isOpBadgeholder ? 'text-green-500' : 'text-red-500'} flex items-center p-1`}>
+                  {isOpBadgeholder? 
+                  <>
+                    <div className='tooltip' data-tip="OP Badgeholder">
+                      <Image src="/opLogo.png" alt="OP Badge" width={20} height={20} className="align-middle mr-3" />
+                    </div>
+                  </>
+                : ''}
+          </span>
+          <span className={`text-sm font-semibold ${response.powerbadge ? 'text-green-500' : 'text-red-500'} flex items-center p-1`}>
+                  {response.powerbadge? 
+                  <>
+                    <div className='tooltip' data-tip="Warpcast Power User">
+                      <Image src="/powerBadge.png" alt="Warpcast Power Badge" width={20} height={20} className="align-middle mr-3" />
+                    </div>
+                  </>
+                : ''}
+          </span>
+          </h1>
           <div className="mb-8">
-            <h2 className="text-xl font-semibold mb-2">Credenditals</h2>
             <div className="mb-4">
               <div className="flex items-center">
-                <span className={`text-sm font-semibold ${isVerified ? 'text-green-500' : 'text-red-500'}`}>
-                  {isVerified ? 'Coinbase Verified' : 'Not Coinbase Verified'}
-                </span>
-              </div>
-              <div className="flex items-center">
-                <span className={`text-sm font-semibold ${isOpBadgeholder ? 'text-green-500' : 'text-red-500'}`}>
-                  {isOpBadgeholder ? 'Optimism Badgeholder' : 'Not Optimism Badgeholder'}
-                </span>
-              </div>
-              <div className="flex items-center">
-                <span className="text-sm font-semibold">
-                  {response.powerbadge ? 'Power Badge' : 'No Power Badge'}
-                </span>
               </div>
             </div>
           </div>
