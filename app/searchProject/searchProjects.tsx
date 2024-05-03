@@ -28,6 +28,7 @@ const SearchProjects = () => {
     const [ walletAddress ] = useGlobalState("walletAddress");
     const [ fid ] = useGlobalState("fid");
     const [selectedNetwork, setSelectedNetwork] = useState<NetworkType>('Optimism');
+    const [ sortOrder, setSortOrder] = useState("asc");
     const[ user ] = useLocalStorage("user", {
         fid: '',
         username: '',
@@ -42,6 +43,11 @@ const SearchProjects = () => {
         console.log("Selected network", value);
     };
 
+    const handleSortOrderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSortOrder(e.target.value);
+        handleSearch(searchParams.get("query")?.toString() || "");
+      };
+
     const handleSearch = (searchTerm: string) => {
         const params = new URLSearchParams(searchParams);
         const endpoint = networkEndpoints[selectedNetwork];
@@ -50,14 +56,18 @@ const SearchProjects = () => {
             params.set("filter", filter);
             params.set("walletAddress", walletAddress);
             params.set("endpoint", endpoint);
+            params.set("sortOrder", sortOrder);
         } else {
             params.delete("query");
             params.delete("filter");
             params.delete("walletAddress");
             params.delete("endpoint");
+            params.delete("sortOrder");
         }
         replace(`${pathname}?${params.toString()}`);
     };
+
+    
 
     
 
@@ -71,8 +81,10 @@ const SearchProjects = () => {
             <FarcasterLogin />
           )}
         </div>
-        <div className="sm:col-span-4 p-4">
-            <label htmlFor="network" className="block text-sm font-medium leading-6 text-gray-900">What network would you like to query?</label>
+        <h1 className="ml-4 text-xl font-bold pt-5">Search Projects Here:</h1>
+
+        <div className="sm:col-span-4 p-6">
+            {/* <label htmlFor="network" className="block text-sm font-medium leading-6 text-gray-900">What network would you like to query?</label>
             <div className="mt-2">
                 <select 
                     id="network" 
@@ -91,7 +103,7 @@ const SearchProjects = () => {
                     <option>Optimism-Goerli</option>
                     <option>Base-Goerli</option>
                 </select>
-            </div>
+            </div> */}
             </div>
             <div className='flex items-center px-4 space-x-4'>
             
@@ -108,6 +120,8 @@ const SearchProjects = () => {
                     <FaSearch className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
                 </div>
     
+                
+                {/* keeping this just incase
                 <div className="flex-initial">
                     <label htmlFor="shape" className="block text-sm font-medium leading-6 text-gray-900">Filter</label>
                     <div className="mb-6">
@@ -121,6 +135,22 @@ const SearchProjects = () => {
                         <option value="projectName">Project Name</option>
                         <option value="ethAddress">Eth Address</option>
                         </select>
+                    </div>
+                </div> */}
+
+                <div className="flex-initial">
+                    <label htmlFor="sortOrder" className="block text-sm font-medium leading-6 text-gray-900">Sort Order</label>
+                    <div className="mb-6">
+                    <select
+                        id="sortOrder"
+                        name="sortOrder"
+                        value={sortOrder}
+                        onChange={handleSortOrderChange}
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                    >
+                        <option value="asc">A-Z</option>
+                        <option value="desc">Z-A</option>
+                    </select>
                     </div>
                 </div>
             </div>

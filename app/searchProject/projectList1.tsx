@@ -18,9 +18,10 @@ interface Props {
   filter: string;
   walletAddress: string;
   endpoint: string;
+  sortOrder: string;
 }
 
-export default function ProjectList({ projects, query, filter, walletAddress, endpoint }: Props) {
+export default function ProjectList({ projects, query, filter, walletAddress, endpoint, sortOrder }: Props) {
   const [selectedProject, setSelectedProject] = useGlobalState('selectedProject');
   const [selectedProjectName, setSelectedProjectName] = useGlobalState('selectedProjectName');
   const [modalOpen, setModalOpen] = useState(false);
@@ -51,6 +52,14 @@ export default function ProjectList({ projects, query, filter, walletAddress, en
       return false;
   })
   : projects;
+
+  const sortedProjects = filteredProjects.sort((a, b) => {
+    if (sortOrder === 'asc') {
+      return (a.projectName || '').localeCompare(b.projectName || '');
+    } else {
+      return (b.projectName || '').localeCompare(a.projectName || '');
+    }
+  });
 
   const openModal = (project: Project) => {
     console.log('Opening modal for project:', project);
@@ -133,7 +142,7 @@ export default function ProjectList({ projects, query, filter, walletAddress, en
   return (
     <div className="p-6 bg-white">
       <div className="grid grid-cols-3 gap-12 overflow-y-auto">
-        {filteredProjects.map((project) => (
+        {sortedProjects.map((project) => (
           <div
             key={project.id}
             className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-xl w-full h-60 shadow-lg"

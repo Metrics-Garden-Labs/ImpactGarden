@@ -31,7 +31,6 @@ const ProjectPage = async ({ searchParams }: Props) => {
     return (
       <div className="bg-backgroundgray text-black">
         <Navbar />
-        <h1 className="ml-4">Search Projects Here:</h1>
         <SearchProjects />
         <ProjectList1
           projects={projects}
@@ -39,6 +38,7 @@ const ProjectPage = async ({ searchParams }: Props) => {
           filter={filter}
           walletAddress={walletAddress}
           endpoint={endpoint}
+          sortOrder="asc"
         />
       </div>
     );
@@ -48,7 +48,6 @@ const ProjectPage = async ({ searchParams }: Props) => {
     return (
       <div className="bg-backgroundgray text-black">
         <Navbar />
-        <h1>Search Projects Here:</h1>
         <SearchProjects />
         <p>Failed to fetch projects. Please try again later.</p>
       </div>
