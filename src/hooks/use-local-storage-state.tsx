@@ -48,6 +48,21 @@ function useLocalStorage<T>(
     }
   }, [key, state, serialize]);
 
+  //to try fix the refreshing issue
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === key && event.newValue) {
+        setState(deserialize(event.newValue));
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [key, setState, deserialize]);
+  
   const removeItem = () => {
     window.localStorage.removeItem(key);
   };

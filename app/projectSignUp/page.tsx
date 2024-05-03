@@ -4,7 +4,7 @@
 import { AttestationNetworkType, networkContractAddresses } from '../components/networkContractAddresses';
 import { useEAS } from '../../src/hooks/useEAS';
 import { EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { useGlobalState } from '../../src/config/config';
 import { redirect } from 'next/navigation';
 import { UploadDropzone } from '../../src/utils/uploadthing';
@@ -17,7 +17,7 @@ import Footer from '../components/footer';
 import Link from 'next/link';
 import FarcasterLogin from '../components/farcasterLogin';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
-import { FilterTypeNotSupportedError } from 'viem';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 type AttestationData = {
   projectName: string;
@@ -33,6 +33,8 @@ const networks: AttestationNetworkType[] = [
 ];
 
 export default function AttestDb() {
+
+
   const [attestationData, setAttestationData] = useState<AttestationData>({
     projectName: '',
     websiteUrl: '',
@@ -47,6 +49,7 @@ export default function AttestDb() {
     username: '',
     ethAddress: '',
   });
+  const [captcha, setCaptcha] = useState<string | null>("");
   const [fid] = useGlobalState('fid');
   const [ethAddress] = useGlobalState('ethAddress');
   const [attestationUID, setAttestationUID] = useState<string>('');
@@ -80,7 +83,23 @@ export default function AttestDb() {
     }));
   };
 
+    //Captcha logic
+  const onSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    console.log("Captcha value:", captcha);
+    if (captcha) {
+      console.log("Captcha is valid");
+    }
+  };
+
   const createAttestation = async () => {
+
+    //check for captcha being solved
+    if (!captcha) {
+        alert("Please complete the captcha to continue");
+        return;//exit function if captcha not solved
+    }
+
     if (!eas || !currentAddress) {
       console.error('EAS or currentAddress not available');
       return;
@@ -362,6 +381,9 @@ export default function AttestDb() {
 
           <h2 className="flex justify-center items-center py-2">Get your Attestation</h2>
 
+          <div className='flex justify-center items-center py-2'>
+            <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha} />
+          </div>
           <div className="flex justify-center items-center py-2">
             <button className="btn items-center" type="button" onClick={createAttestation}>
               Get your Attestation

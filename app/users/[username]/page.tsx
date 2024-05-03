@@ -101,7 +101,7 @@ const UserProfilePage = async ({ params }: Props) => {
     console.error('Failed to fetch user:', error);
     // Handle the error, display an error message, or return a fallback UI
     return (
-      <div>
+      <div className='bg-white text-black'>
         <Navbar />
         <h1>User Profile</h1>
         <p>Failed to fetch user. Please try again later.</p>

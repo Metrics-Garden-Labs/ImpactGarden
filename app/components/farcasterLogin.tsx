@@ -7,8 +7,8 @@ import dotenv from 'dotenv';
 import { useRouter } from 'next/router';
 //import { insertUser } from 'app/lib/db';
 import { NEXT_PUBLIC_URL } from '../../src/config/config';
-import Image from 'next/image';
-import ConnectButton from '@rainbow-me/rainbowkit';
+
+
 dotenv.config();
 
 declare global {
@@ -34,6 +34,7 @@ export default function FarcasterLogin() {
   const [ fid, setFid ] = useGlobalState('fid');
   const [ username, setUsername] = useState("");
   const [ firstVerifiedEthAddress, setFirstVerifiedEthAddress ] = useGlobalState("ethAddress");
+  const [isSignedIn, setIsSignedIn] = useState(Boolean(user.fid));
 
 
   const client_id = process.env.NEXT_PUBLIC_NEYNAR_CLIENT_ID;
@@ -59,6 +60,7 @@ export default function FarcasterLogin() {
       document.body.appendChild(script);
     }
     window.onSignInSuccess = (data) => {
+      console.log("Sign in success", data);
       setUser({
         fid: data.fid,
         username: user.username,
@@ -66,6 +68,8 @@ export default function FarcasterLogin() {
       });
       //signer uuid is private and part of the app
       setFid(data.fid);
+      //trigger a seemless reload to ui update to register signed in state
+      window.location.reload();
     };
 
     return () => {
@@ -84,6 +88,7 @@ export default function FarcasterLogin() {
     setUser({ fid: '', username: '', ethAddress: '' });
     setUsername("");
     setFirstVerifiedEthAddress("");
+    setIsSignedIn(false);
     window.location.reload();
   };
   
@@ -150,7 +155,7 @@ console.log("FID", fid);
 
   return (
     <>
-      {user.fid ? (
+      {isSignedIn ? (
         <div className="flex items-center">
         </div>
       ) : (
