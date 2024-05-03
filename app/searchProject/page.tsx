@@ -29,7 +29,7 @@ const ProjectPage = async ({ searchParams }: Props) => {
     console.log("Projects", projects);
 
     return (
-      <div>
+      <div className="bg-backgroundgray text-black">
         <Navbar />
         <h1 className="ml-4">Search Projects Here:</h1>
         <SearchProjects />
@@ -46,7 +46,7 @@ const ProjectPage = async ({ searchParams }: Props) => {
     console.error('Failed to fetch projects:', error);
     // Handle the error, display an error message, or return a fallback UI
     return (
-      <div>
+      <div className="bg-backgroundgray text-black">
         <Navbar />
         <h1>Search Projects Here:</h1>
         <SearchProjects />

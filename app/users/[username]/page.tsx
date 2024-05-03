@@ -30,7 +30,7 @@ const UserProfilePage = async ({ params }: Props) => {
 
     if (!user) {
       return (
-        <div>
+        <div className='bg-white text-black'>
           <Navbar />
           <h1>User not found</h1>
         </div>
@@ -65,7 +65,7 @@ const UserProfilePage = async ({ params }: Props) => {
     const isOpBadgeholder = opData && opData.length > 0;
 
     return (
-      <div className="bg-white min-h-screen">
+      <div className="bg-white min-h-screen text-black">
         <Navbar />
         <div className="container mx-auto px-4 py-8">
           <Image src={response.pfp_url || ''} alt="Profile Picture" width={100} height={100} />

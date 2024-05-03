@@ -26,7 +26,7 @@ const ProjectPage = async ({ params }: Props) => {
     const project: Project = await getProjectByName(decodedProjectName);
 
     return (
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen bg-white text-black">
         <Navbar />
         <div className="flex flex-1 overflow-hidden">
           <Sidebar project={project} />

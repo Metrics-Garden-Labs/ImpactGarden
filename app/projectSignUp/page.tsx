@@ -229,7 +229,7 @@ export default function AttestDb() {
   };
 
   return (
-    <>
+    <div className='bg-white text-black'>
       <Navbar />
       <div className="min-h-screen w-full flex justify-center relative items-center">
         <div className='absolute right-4 top-4'>
@@ -381,6 +381,6 @@ export default function AttestDb() {
       </div>
       {renderModal()}
       <Footer />
-    </>
+    </div>
   );
 }

@@ -165,7 +165,7 @@ console.log("user", user);
 
 return (
   <>
-    <div className='relative min-h-screen bg-white'>
+    <div className='relative min-h-screen bg-white text-black'>
       <Image src="/mglskel.png" alt="MGL Skeleton" width={60} height={25} className="absolute p-10 top-o left-0 h-25 w-60" />
       <div className='flex justify-ceneter items-center h-screen'>
         <div className='card max-w-lg w-full mx-auto p-10 bg-white rounded-xl shadow-xl'>

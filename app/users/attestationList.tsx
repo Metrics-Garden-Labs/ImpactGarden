@@ -25,7 +25,7 @@ const AttestationList = async ({ userFid }: Props) => {
     console.log('projectNames', projectNames);
     console.log('ecosystems', ecosystems);
     return (
-      <div>
+      <div className='bg-white text-black'>
         {attestations.length > 0 ? (
           <div>
             <div>

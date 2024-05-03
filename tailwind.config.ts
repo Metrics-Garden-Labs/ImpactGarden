@@ -7,11 +7,20 @@ export default withUt({
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
         headerblack: "#353436",
         backgroundgray: "#F9F9F9",
+        primaryblack: "#1E211F",
+        primarygreen: "#2C3F2D",
+        primarylp: "#F4D3C3",
+        primaryorange: "#E27D39",
+        white: "#FFFFFF",
+        secondarygray: "#424242",
+        secondarygreen: "#24583C",
+        secondaryblue: "#CAEAEF",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -28,15 +37,33 @@ export default withUt({
   daisyui: {
     themes: [
       {
-        mytheme: {
-          primaryblack: "#1E211F",
-          primarygreen: "#2C3F2D",
-          primarylp: "#F4D3C3",
-          primaryorange: "#E27D39",
-          white: "#FFFFFF",
-          secondarygray: "#424242",
-          secondarygreen: "#24583C",
-          secondaryblue: "#CAEAEF",
+        light: {
+          ...{
+            headerblack: "#353436",
+            backgroundgray: "#F9F9F9",
+            primaryblack: "#1E211F",
+            primarygreen: "#2C3F2D",
+            primarylp: "#F4D3C3",
+            primaryorange: "#E27D39",
+            white: "#FFFFFF",
+            secondarygray: "#424242",
+            secondarygreen: "#24583C",
+            secondaryblue: "#CAEAEF",
+          },
+        },
+        dark: {
+          ...{
+            headerblack: "#353436",
+            backgroundgray: "#F9F9F9",
+            primaryblack: "#1E211F",
+            primarygreen: "#2C3F2D",
+            primarylp: "#F4D3C3",
+            primaryorange: "#E27D39",
+            white: "#FFFFFF",
+            secondarygray: "#424242",
+            secondarygreen: "#24583C",
+            secondaryblue: "#CAEAEF",
+          },
         },
       },
     ],

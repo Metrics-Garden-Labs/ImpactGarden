@@ -30,7 +30,7 @@ const UserProfilePage = async ({ searchParams }: Props) => {
     const users: User[] = await getUsers();
 
     return (
-      <div>
+      <div className="bg-white text-black">
         <Navbar />
         <h1 className="mt-1 ml-4">Search Users Here:</h1>
         <SearchUsers />
@@ -41,7 +41,7 @@ const UserProfilePage = async ({ searchParams }: Props) => {
     console.error('Failed to fetch users:', error);
     // Handle the error, display an error message, or return a fallback UI
     return (
-      <div>
+      <div className="bg-white text-black">
         <Navbar />
         <h1>Search Users Here:</h1>
         <SearchUsers />
