@@ -106,7 +106,7 @@ export default function Login() {
   
   async function fetchData(fid:string) {
     try{
-      const response = await fetch(`/api/login`, {
+      const response = await fetch(`${NEXT_PUBLIC_URL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -136,7 +136,7 @@ export default function Login() {
 
       //call api to insert user
       
-      const dbResponse = await fetch(`/api/addUserDb`, {
+      const dbResponse = await fetch(`${NEXT_PUBLIC_URL}/api/addUserDb`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
