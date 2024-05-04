@@ -6,7 +6,7 @@ import {
   projects,
   contributions,
   contributionattestations,
-  userAddresses,
+  user_addresses,
 } from "./schema";
 import * as schema from "./schema";
 import { getAttestationsByAttester } from "./eas";
@@ -65,6 +65,29 @@ export const getUserByUsername = async (username: string) => {
     return user[0];
   } catch (error) {
     console.error(`Error retrieving user '${username}':`, error);
+    throw error;
+  }
+};
+
+// Function to insert or update user data including `pfp_url`
+export const insertOrUpdateUser = async (user: NewUser) => {
+  try {
+    // Your logic to upsert a user record
+    // Ensure you insert or update the `pfp_url` field
+    return db
+      .insert(users)
+      .values(user)
+      .onConflictDoUpdate({
+        target: [users.fid],
+        set: {
+          username: user.username,
+          ethaddress: user.ethaddress,
+          pfp_url: user.pfp_url, // Ensure `pfp_url` is included here
+        },
+      })
+      .returning();
+  } catch (error) {
+    console.error("Error inserting or updating user:", error);
     throw error;
   }
 };
@@ -252,12 +275,12 @@ export const getAttestationsByUserId = async (userFid: string) => {
 };
 
 //for adding the user address to the db
-export type NewUserAddress = typeof schema.userAddresses.$inferInsert;
+export type NewUserAddress = typeof schema.user_addresses.$inferInsert;
 
 export const insertUserAddress = async (addresses: newUserAddresses[]) => {
   try {
     const userAddressInsert = await db
-      .insert(userAddresses)
+      .insert(user_addresses)
       .values(addresses)
       .returning();
     console.log("User Address Insert", userAddressInsert);
@@ -272,8 +295,8 @@ export const getUserAddressesByFid = async (userFid: string) => {
   try {
     const addresses = await db
       .select()
-      .from(userAddresses)
-      .where(eq(userAddresses.userFid, userFid))
+      .from(user_addresses)
+      .where(eq(user_addresses.userfid, userFid))
       .execute();
     return addresses;
   } catch (error) {
@@ -290,11 +313,11 @@ export const updateEthereumAddressStatus = async (
 ) => {
   try {
     const updated = await db
-      .update(userAddresses)
+      .update(user_addresses)
       .set(statusUpdates)
       .where(
-        eq(userAddresses.userFid, userFid) &&
-          eq(userAddresses.ethAddress, ethAddress)
+        eq(user_addresses.userfid, userFid) &&
+          eq(user_addresses.ethaddress, ethAddress)
       )
       .returning();
     return updated;

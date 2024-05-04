@@ -34,12 +34,15 @@ const UserProfilePage = async ({ params }: Props) => {
     }
 
     // Fetch the user addresses and verification statuses from the database
-    const userAddresses = await getUserAddressesByFid(user.fid);
+    const user_addresses = await getUserAddressesByFid(user.fid);
 
     // Extract individual verification statuses
-    const isCoinbaseVerified = userAddresses.some(address => address.coinbaseVerified);
-    const isOpBadgeholder = userAddresses.some(address => address.opBadgeHolder);
-    const isPowerBadgeholder = userAddresses.some(address => address.powerBadgeHolder);
+    const isCoinbaseVerified = user_addresses.some(address => address.coinbaseverified);
+    console.log('isCoinbaseVerified', isCoinbaseVerified);
+    const isOpBadgeholder = user_addresses.some(address => address.opbadgeholder);
+    console.log('isOpBadgeholder', isOpBadgeholder);
+    const isPowerBadgeholder = user_addresses.some(address => address.powerbadgeholder);
+    console.log('isPowerBadgeholder', isPowerBadgeholder);
 
     return (
       <div className="bg-white min-h-screen text-black">

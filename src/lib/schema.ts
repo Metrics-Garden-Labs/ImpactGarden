@@ -148,26 +148,26 @@ export const contributionattestations = pgTable(
 );
 
 //table for the eth addresses and verification of the wallets
-export const userAddresses = pgTable(
-  "userAddresses",
+export const user_addresses = pgTable(
+  "user_addresses",
   {
     id: serial("id").primaryKey().unique(),
-    userFid: text("userFid")
+    userfid: text("userfid")
       .references(() => users.fid)
       .notNull(),
-    ethAddress: text("ethAddress"),
-    addressOrder: text("addressOrder"),
-    coinbaseVerified: boolean("coinbaseVerified").default(false),
-    opBadgeHolder: boolean("opBadgeHolder").default(false),
-    powerBadgeHolder: boolean("powerBadgeHolder").default(false),
-    createdAt: timestamp("createdAt").defaultNow(),
+    ethaddress: text("ethaddress"),
+    addressorder: text("addressorder"),
+    coinbaseverified: boolean("coinbaseverified").default(false),
+    opbadgeholder: boolean("opbadgeholder").default(false),
+    powerbadgeholder: boolean("powerbadgeholder").default(false),
+    createdat: timestamp("createdat").defaultNow(),
   },
-  (userAddresses) => {
+  (user_addresses) => {
     return {
       uniqueUserAddressIdx: uniqueIndex("unique_user_address_idx").on(
-        userAddresses.userFid,
-        userAddresses.addressOrder,
-        userAddresses.ethAddress
+        user_addresses.userfid,
+        user_addresses.addressorder,
+        user_addresses.ethaddress
       ),
     };
   }

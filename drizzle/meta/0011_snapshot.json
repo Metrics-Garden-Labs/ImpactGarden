@@ -1,0 +1,566 @@
+{
+  "id": "b513d30c-160e-4f1f-a4bd-1605d225dc0a",
+  "prevId": "9ba51a24-7155-4a7e-b159-9cd1d6ffef0e",
+  "version": "5",
+  "dialect": "pg",
+  "tables": {
+    "contributionAttestations": {
+      "name": "contributionAttestations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userFid": {
+          "name": "userFid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectName": {
+          "name": "projectName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contribution": {
+          "name": "contribution",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ecosystem": {
+          "name": "ecosystem",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "attestationUID": {
+          "name": "attestationUID",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "attesterAddy": {
+          "name": "attesterAddy",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "attestationType": {
+          "name": "attestationType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "feedback": {
+          "name": "feedback",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "cont_attest_id_idx": {
+          "name": "cont_attest_id_idx",
+          "columns": [
+            "id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "contributionAttestations_userFid_users_fid_fk": {
+          "name": "contributionAttestations_userFid_users_fid_fk",
+          "tableFrom": "contributionAttestations",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userFid"
+          ],
+          "columnsTo": [
+            "fid"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "contributionAttestations_projectName_projects_projectName_fk": {
+          "name": "contributionAttestations_projectName_projects_projectName_fk",
+          "tableFrom": "contributionAttestations",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "projectName"
+          ],
+          "columnsTo": [
+            "projectName"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "contributionAttestations_contribution_contributions_contribution_fk": {
+          "name": "contributionAttestations_contribution_contributions_contribution_fk",
+          "tableFrom": "contributionAttestations",
+          "tableTo": "contributions",
+          "columnsFrom": [
+            "contribution"
+          ],
+          "columnsTo": [
+            "contribution"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "contributionAttestations_ecosystem_contributions_ecosystem_fk": {
+          "name": "contributionAttestations_ecosystem_contributions_ecosystem_fk",
+          "tableFrom": "contributionAttestations",
+          "tableTo": "contributions",
+          "columnsFrom": [
+            "ecosystem"
+          ],
+          "columnsTo": [
+            "ecosystem"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "contributionAttestations_attestationUID_unique": {
+          "name": "contributionAttestations_attestationUID_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "attestationUID"
+          ]
+        }
+      }
+    },
+    "contributions": {
+      "name": "contributions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userFid": {
+          "name": "userFid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectName": {
+          "name": "projectName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ecosystem": {
+          "name": "ecosystem",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contribution": {
+          "name": "contribution",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "desc": {
+          "name": "desc",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "link": {
+          "name": "link",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ethAddress": {
+          "name": "ethAddress",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "easUid": {
+          "name": "easUid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "cont_user_fid_idx": {
+          "name": "cont_user_fid_idx",
+          "columns": [
+            "id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "contributions_userFid_users_fid_fk": {
+          "name": "contributions_userFid_users_fid_fk",
+          "tableFrom": "contributions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userFid"
+          ],
+          "columnsTo": [
+            "fid"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "contributions_projectName_projects_projectName_fk": {
+          "name": "contributions_projectName_projects_projectName_fk",
+          "tableFrom": "contributions",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "projectName"
+          ],
+          "columnsTo": [
+            "projectName"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "contributions_ecosystem_projects_ecosystem_fk": {
+          "name": "contributions_ecosystem_projects_ecosystem_fk",
+          "tableFrom": "contributions",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "ecosystem"
+          ],
+          "columnsTo": [
+            "ecosystem"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "contributions_ethAddress_projects_ethAddress_fk": {
+          "name": "contributions_ethAddress_projects_ethAddress_fk",
+          "tableFrom": "contributions",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "ethAddress"
+          ],
+          "columnsTo": [
+            "ethAddress"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "contributions_contribution_unique": {
+          "name": "contributions_contribution_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "contribution"
+          ]
+        }
+      }
+    },
+    "projects": {
+      "name": "projects",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userFid": {
+          "name": "userFid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ethAddress": {
+          "name": "ethAddress",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ecosystem": {
+          "name": "ecosystem",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectName": {
+          "name": "projectName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "websiteUrl": {
+          "name": "websiteUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "twitterUrl": {
+          "name": "twitterUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "githubUrl": {
+          "name": "githubUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "logoUrl": {
+          "name": "logoUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "projectUid": {
+          "name": "projectUid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "projects_user_id_idx": {
+          "name": "projects_user_id_idx",
+          "columns": [
+            "id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "projects_userFid_users_fid_fk": {
+          "name": "projects_userFid_users_fid_fk",
+          "tableFrom": "projects",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userFid"
+          ],
+          "columnsTo": [
+            "fid"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "projects_projectName_unique": {
+          "name": "projects_projectName_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "projectName"
+          ]
+        },
+        "projects_projectUid_unique": {
+          "name": "projects_projectUid_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "projectUid"
+          ]
+        }
+      }
+    },
+    "user_addresses": {
+      "name": "user_addresses",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userfid": {
+          "name": "userfid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ethaddress": {
+          "name": "ethaddress",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "addressorder": {
+          "name": "addressorder",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "coinbaseVerified": {
+          "name": "coinbaseVerified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "opBadgeHolder": {
+          "name": "opBadgeHolder",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "powerBadgeHolder": {
+          "name": "powerBadgeHolder",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "unique_user_address_idx": {
+          "name": "unique_user_address_idx",
+          "columns": [
+            "userfid",
+            "addressorder",
+            "ethaddress"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "user_addresses_userfid_users_fid_fk": {
+          "name": "user_addresses_userfid_users_fid_fk",
+          "tableFrom": "user_addresses",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userfid"
+          ],
+          "columnsTo": [
+            "fid"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_addresses_id_unique": {
+          "name": "user_addresses_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
+    },
+    "users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "fid": {
+          "name": "fid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ethaddress": {
+          "name": "ethaddress",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pfp_url": {
+          "name": "pfp_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "fid_unique_idx": {
+          "name": "fid_unique_idx",
+          "columns": [
+            "fid"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_fid_unique": {
+          "name": "users_fid_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "fid"
+          ]
+        }
+      }
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

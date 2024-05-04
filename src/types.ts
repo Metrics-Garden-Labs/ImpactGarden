@@ -111,24 +111,24 @@ export type Attestation = {
 
 export interface userAddresses {
   id: number;
-  userFid: string;
+  userfid: string;
   ethAddress: string;
-  addressOrder: string;
-  coinbaseVerified: boolean;
-  opBadgeHolder: boolean;
-  powerBadgeHolder: boolean;
-  createdAt: Date | null;
+  addressorder: string;
+  coinbaseverified: boolean;
+  opbadgeholder: boolean;
+  powerbadgeholder: boolean;
+  createdat: Date | null;
 }
 
 export interface newUserAddresses {
   id: number;
-  userFid: string;
+  userfid: string;
   ethAddress: string;
-  addressOrder: string;
-  coinbaseVerified: boolean;
-  opBadgeHolder: boolean;
-  powerBadgeHolder: boolean;
-  createdAt: Date | null;
+  addressorder: string;
+  coinbaseverified: boolean;
+  opbadgeholder: boolean;
+  powerbadgeholder: boolean;
+  createdat: Date | null;
 }
 
 // Define type for insertion purposes
