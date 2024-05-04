@@ -39,6 +39,12 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
   console.log('Selected Project:', selectedProject);
 
   const createAttestation = async (): Promise<string> => {
+
+    if (fid) {
+      alert('User not logged in');
+      return '';
+    }
+
     if (!eas || !currentAddress) {
       console.error('EAS not initialized');
       return ''; 

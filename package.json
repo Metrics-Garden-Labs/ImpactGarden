@@ -10,7 +10,7 @@
     "generate": "drizzle-kit generate:pg"
   },
   "dependencies": {
-    "@ethereum-attestation-service/eas-sdk": "^2.1.1-beta.1",
+    "@ethereum-attestation-service/eas-sdk": "2.1.4",
     "@headlessui/react": "^1.7.19",
     "@heroicons/react": "^2.1.3",
     "@next/env": "^14.2.3",

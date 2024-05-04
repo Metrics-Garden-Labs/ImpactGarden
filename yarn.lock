@@ -349,7 +349,7 @@
   dependencies:
     hardhat "2.22.1"
 
-"@ethereum-attestation-service/eas-sdk@^2.1.1-beta.1":
+"@ethereum-attestation-service/eas-sdk@2.1.4":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@ethereum-attestation-service/eas-sdk/-/eas-sdk-2.1.4.tgz#f034d64b4dbc234eb4c97933c6839420119b8c9f"
   integrity sha512-y35b6EQVEsZojbhv8TM//kp4OlwJi5SfApsNkRPxpivWWpOT2kOSCHoOj6oAtEyOC4EJ9sTx/ssgSok1c7jdRA==

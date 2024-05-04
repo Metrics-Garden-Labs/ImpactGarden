@@ -3,7 +3,7 @@
 
 import { AttestationNetworkType, networkContractAddresses } from '../components/networkContractAddresses';
 import { useEAS } from '../../src/hooks/useEAS';
-import { EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import { EAS, EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import React, { FormEvent, useState } from 'react';
 import { useGlobalState } from '../../src/config/config';
 import { redirect } from 'next/navigation';
@@ -119,10 +119,16 @@ export default function ProjectSignUp() {
         return;//exit function if captcha not solved
     }
 
+    if (!user.fid) {
+      alert('User not logged in');
+      return;
+    }
+
     if (!eas || !currentAddress) {
       console.error('EAS or currentAddress not available');
       return;
     }
+    console.log('current address', currentAddress);
 
     try {
       setIsLoading(true);
@@ -139,7 +145,7 @@ export default function ProjectSignUp() {
       console.log('Encoded Data:', encodedData);
 
       console.log('user', user);
-
+  
       const provider = new ethers.BrowserProvider(window.ethereum);
       console.log('Provider:', provider);
       const signer = await provider.getSigner();

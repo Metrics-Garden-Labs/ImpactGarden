@@ -37,6 +37,11 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     const [ attestationUID, setAttestationUID ] = useState<string>("");
 
     const createAttestation = async () => {
+
+        if (!fid) {
+            alert('User not logged in');
+            return;
+        }
         if (!eas || !currentAddress) {
             console.error('EAS or current address not available');
             return;
