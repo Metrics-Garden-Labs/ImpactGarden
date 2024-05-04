@@ -128,6 +128,7 @@ export default function ProjectSignUp() {
       setIsLoading(true);
       const mainSchemaUid = '0x45ea2d603b7dfcec03e1e4a5d65a22216e5f7a3c3bf1e61560c58c888f2c7f3f';
       const schemaEncoder = new SchemaEncoder('string projectName, string websiteUrl, string twitterUrl, string githubURL, bool MGL');
+      console.log('Schema Encoder:', schemaEncoder);
       const encodedData = schemaEncoder.encodeData([
         { name: 'projectName', value: attestationData.projectName, type: 'string' },
         { name: 'websiteUrl', value: attestationData.websiteUrl, type: 'string' },
@@ -135,11 +136,14 @@ export default function ProjectSignUp() {
         { name: 'githubURL', value: attestationData.githubURL, type: 'string' },
         { name: 'MGL', value: true, type: 'bool' }
       ]);
+      console.log('Encoded Data:', encodedData);
 
       console.log('user', user);
 
       const provider = new ethers.BrowserProvider(window.ethereum);
+      console.log('Provider:', provider);
       const signer = await provider.getSigner();
+      console.log('Signer:', signer);
       eas.connect(signer);
       const delegatedSigner = await eas.getDelegated();
       console.log('Delegated Signer:', delegatedSigner);
