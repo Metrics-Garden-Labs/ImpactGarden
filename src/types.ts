@@ -56,6 +56,7 @@ export interface NewUser {
   fid: string;
   username: string;
   ethaddress?: string;
+  pfp_url?: string;
   id?: number;
   createdAt?: Date;
 }
@@ -64,6 +65,7 @@ export type User = {
   id: number;
   fid: string;
   username: string;
+  pfp_url: string | null;
   ethaddress: string | null;
   createdAt: Date | null;
 };
@@ -106,3 +108,28 @@ export type Attestation = {
   feedback: string | null;
   createdAt: Date | null;
 };
+
+export interface userAddresses {
+  id: number;
+  userFid: string;
+  ethAddress: string;
+  addressOrder: string;
+  coinbaseVerified: boolean;
+  opBadgeHolder: boolean;
+  powerBadgeHolder: boolean;
+  createdAt: Date | null;
+}
+
+export interface newUserAddresses {
+  id: number;
+  userFid: string;
+  ethAddress: string;
+  addressOrder: string;
+  coinbaseVerified: boolean;
+  opBadgeHolder: boolean;
+  powerBadgeHolder: boolean;
+  createdAt: Date | null;
+}
+
+// Define type for insertion purposes
+export type NewUserAddress = Omit<userAddresses, "id">;

@@ -4,6 +4,7 @@ import {
   pgTable,
   serial,
   text,
+  boolean,
   timestamp,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
@@ -22,6 +23,7 @@ export const users = pgTable(
     fid: text("fid").notNull().unique(),
     username: text("username").notNull(),
     ethaddress: text("ethaddress"),
+    pfp_url: text("pfp_url"),
     createdAt: timestamp("createdAt").defaultNow(),
   },
   (users) => {
@@ -145,5 +147,28 @@ export const contributionattestations = pgTable(
   }
 );
 
-//stuff that is easy to count and see the value of
-//this should do for now.
+//table for the eth addresses and verification of the wallets
+export const userAddresses = pgTable(
+  "userAddresses",
+  {
+    id: serial("id").primaryKey().unique(),
+    userFid: text("userFid")
+      .references(() => users.fid)
+      .notNull(),
+    ethAddress: text("ethAddress"),
+    addressOrder: text("addressOrder"),
+    coinbaseVerified: boolean("coinbaseVerified").default(false),
+    opBadgeHolder: boolean("opBadgeHolder").default(false),
+    powerBadgeHolder: boolean("powerBadgeHolder").default(false),
+    createdAt: timestamp("createdAt").defaultNow(),
+  },
+  (userAddresses) => {
+    return {
+      uniqueUserAddressIdx: uniqueIndex("unique_user_address_idx").on(
+        userAddresses.userFid,
+        userAddresses.addressOrder,
+        userAddresses.ethAddress
+      ),
+    };
+  }
+);

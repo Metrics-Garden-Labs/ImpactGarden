@@ -6,12 +6,13 @@ import {
   projects,
   contributions,
   contributionattestations,
+  userAddresses,
 } from "./schema";
 import * as schema from "./schema";
 import { getAttestationsByAttester } from "./eas";
 import { Waterfall } from "next/font/google";
 import { eq } from "drizzle-orm";
-import { Project } from "@/src/types";
+import { Project, newUserAddresses } from "@/src/types";
 import { count } from "console";
 
 export const db = drizzle(sql, { schema });
@@ -246,6 +247,59 @@ export const getAttestationsByUserId = async (userFid: string) => {
       `Error retrieving attestations for user '${userFid}':`,
       error
     );
+    throw error;
+  }
+};
+
+//for adding the user address to the db
+export type NewUserAddress = typeof schema.userAddresses.$inferInsert;
+
+export const insertUserAddress = async (addresses: newUserAddresses[]) => {
+  try {
+    const userAddressInsert = await db
+      .insert(userAddresses)
+      .values(addresses)
+      .returning();
+    console.log("User Address Insert", userAddressInsert);
+    return userAddressInsert;
+  } catch (error) {
+    console.error("Error inserting user address:", error);
+    throw error;
+  }
+};
+
+export const getUserAddressesByFid = async (userFid: string) => {
+  try {
+    const addresses = await db
+      .select()
+      .from(userAddresses)
+      .where(eq(userAddresses.userFid, userFid))
+      .execute();
+    return addresses;
+  } catch (error) {
+    console.error(`Error retrieving user addresses for '${userFid}':`, error);
+    throw error;
+  }
+};
+
+//not sure about this one.
+export const updateEthereumAddressStatus = async (
+  userFid: string,
+  ethAddress: string,
+  statusUpdates: Partial<newUserAddresses>
+) => {
+  try {
+    const updated = await db
+      .update(userAddresses)
+      .set(statusUpdates)
+      .where(
+        eq(userAddresses.userFid, userFid) &&
+          eq(userAddresses.ethAddress, ethAddress)
+      )
+      .returning();
+    return updated;
+  } catch (error) {
+    console.error("Error updating Ethereum address status:", error);
     throw error;
   }
 };
