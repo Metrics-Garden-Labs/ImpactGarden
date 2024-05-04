@@ -273,7 +273,9 @@ export default function ProjectSignUp() {
   return (
     <div className="min-h-screen flex flex-col bg-white text-black">
       <Navbar />
+      
       <div className="flex justify-center relative w-full mt-10 px-8">
+        <TopRightLogin user={user} />
         {/* Left Column */}
         { isPreview ? (
 
@@ -534,7 +536,8 @@ export default function ProjectSignUp() {
         )}
 
         {/* Right Column: Empty */}
-        <div className="w-1/4"></div>
+        <div className="w-1/4">
+        </div>
       </div>
       <ConfirmationSection
         attestationUID={attestationUID}
@@ -609,6 +612,26 @@ const ConfirmationSection: React.FC<ConfirmationSectionProps> = ({
           Visit your Project
         </button>
       </Link>
+    </div>
+  );
+};
+
+interface TopRightLoginProps {
+  user: {
+    fid: string;
+    username: string;
+    ethAddress: string;
+  };
+}
+
+const TopRightLogin: React.FC<TopRightLoginProps> = ({ user }) => {
+  return (
+    <div className="absolute top-4 right-4 z-10">
+      {user.fid ? (
+        <ConnectButton />
+      ) : (
+        <FarcasterLogin />
+      )}
     </div>
   );
 };

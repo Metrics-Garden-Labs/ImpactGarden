@@ -26,21 +26,6 @@ export default function ProjectList({ projects, query, filter, walletAddress, en
   const [selectedProjectName, setSelectedProjectName] = useGlobalState('selectedProjectName');
   const [modalOpen, setModalOpen] = useState(false);
   
-  //might revisit, this is to close the modal when the route changes, breaking atm
-  // const router = useRouter();
-  // useEffect(() => {
-    
-  //   const handleRouteChange = () => {
-   
-  //     setModalOpen(false);
-  //   };
-
-  //   router.events.on('routeChangeStart', handleRouteChange);
-
-  //   return () => {
-  //     router.events.off('routeChangeStart', handleRouteChange);
-  //   };
-  // }, [router]);
 
   const filteredProjects = query
   ? projects.filter((project) => {
