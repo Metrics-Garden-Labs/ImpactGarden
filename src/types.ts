@@ -39,6 +39,14 @@ export interface NewProject {
   createdAt?: Date;
 }
 
+export interface SearchResult {
+  address: string;
+  fname: string;
+  username: string;
+  fid: string;
+  score: number;
+}
+
 export interface NewContribution {
   id: number;
   userFid: string;

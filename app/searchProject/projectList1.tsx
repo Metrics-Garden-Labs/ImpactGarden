@@ -4,10 +4,10 @@
 
 'use client';
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import { useGlobalState } from '../../src/config/config';
-import { Project } from '../../src/types';
+import { Project, SearchResult } from '../../src/types';
 import { useRouter } from 'next/router';
 
 
@@ -19,9 +19,22 @@ interface Props {
   walletAddress: string;
   endpoint: string;
   sortOrder: string;
+  searchResults: SearchResult[];
 }
 
-export default function ProjectList({ projects, query, filter, walletAddress, endpoint, sortOrder }: Props) {
+export default function ProjectList({ 
+  projects,
+  query,
+  filter,
+  walletAddress,
+  endpoint,
+  sortOrder,
+  searchResults,
+}: Props) {
+    useEffect(() => {
+        console.log("Received sortOrder in ProjectList:", sortOrder);
+    }, [sortOrder]);
+
   const [selectedProject, setSelectedProject] = useGlobalState('selectedProject');
   const [selectedProjectName, setSelectedProjectName] = useGlobalState('selectedProjectName');
   const [modalOpen, setModalOpen] = useState(false);
@@ -30,21 +43,32 @@ export default function ProjectList({ projects, query, filter, walletAddress, en
   const filteredProjects = query
   ? projects.filter((project) => {
       if (filter === 'projectName') {
-      return (project.projectName?.toLowerCase() || '').includes(query.toLowerCase());
-      } else if (filter === 'ethAddress') {
-      return (project.ethAddress?.toLowerCase() || '').includes(query.toLowerCase());
+        return (project.projectName?.toLowerCase() || '').includes(query.toLowerCase());
+      } else if (filter === 'most-engaged') {
+        // Filter projects based on the Farcaster social graph data
+        return Array.isArray(searchResults) && searchResults.length > 0 && searchResults.some((result) => result.fid === project.userFid);
+      } else if (filter === 'recently-added') {
+        // Filter projects based on the creation date (assuming you have a createdAt field)
+        // Modify this logic based on your specific requirements
+        return (project?.createdAt || '') >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); // Last 7 days
       }
       return false;
-  })
+    })
   : projects;
 
-  const sortedProjects = filteredProjects.sort((a, b) => {
+  const sortedProjects = useMemo(() => {
+  console.log("Sorting with sortOrder:", sortOrder);
+  return filteredProjects.sort((a, b) => {
     if (sortOrder === 'asc') {
-      return (a.projectName || '').localeCompare(b.projectName || '');
-    } else {
-      return (b.projectName || '').localeCompare(a.projectName || '');
+      return (a.projectName || '').localeCompare(b.projectName || '', undefined, { sensitivity: 'base' });
+    } else if (sortOrder === 'desc') {
+      return (b.projectName || '').localeCompare(a.projectName || '', undefined, { sensitivity: 'base' });
     }
+    return 0;
   });
+}, [filteredProjects, sortOrder]);
+
+
 
   const openModal = (project: Project) => {
     console.log('Opening modal for project:', project);
@@ -133,9 +157,16 @@ export default function ProjectList({ projects, query, filter, walletAddress, en
             className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-xl w-full h-60 shadow-lg"
             onClick={() => {
               console.log('clicked project:', project);
-              openModal(project)}}
+              openModal(project);
+            }}
           >
             <h3 className="mb-2 text-xl font-semibold">{project.projectName}</h3>
+            {/* Display the username if available */}
+            {Array.isArray(searchResults) && searchResults.find((result) => result.fid === project.userFid)?.username && (
+              <p className="text-gray-500">
+                {searchResults.find((result) => result.fid === project.userFid)?.username}
+              </p>
+            )}
           </div>
         ))}
       </div>

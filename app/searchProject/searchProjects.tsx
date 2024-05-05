@@ -17,10 +17,16 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import React from "react";
 import FarcasterLogin from "../components/farcasterLogin";
 import useLocalStorage from "@/src/hooks/use-local-storage-state";
+import { getProjectsByFids } from "@/src/lib/db";
+import { SearchResult } from "@/src/types";
 
+interface Props {
+    onSearchResults: (results: SearchResult[]) => void;
+    onFilterChange: (filter: string) => void;
+    onSortOrderChange: (sortOrder: string) => void;
+  }
 
-
-const SearchProjects = () => {
+const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: Props) => {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
@@ -29,6 +35,8 @@ const SearchProjects = () => {
     const [ fid ] = useGlobalState("fid");
     const [selectedNetwork, setSelectedNetwork] = useState<NetworkType>('Optimism');
     const [ sortOrder, setSortOrder] = useState("asc");
+    const [ searchResults, setSearchResults ] = useState<SearchResult[]>([]);
+    const [ selectedFilter, setSelectedFilter ] = useState("");
     const[ user ] = useLocalStorage("user", {
         fid: '',
         username: '',
@@ -43,14 +51,27 @@ const SearchProjects = () => {
         console.log("Selected network", value);
     };
 
+    const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newFilter = e.target.value;
+        setSelectedFilter(newFilter);
+        onFilterChange(newFilter);
+        handleSearch(searchParams.get("query") || "");
+    };
+    
     const handleSortOrderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSortOrder(e.target.value);
-        handleSearch(searchParams.get("query")?.toString() || "");
+        const newSortOrder = e.target.value;
+        setSortOrder(newSortOrder);
+        console.log("Selected sortOrder:", newSortOrder);
+        onSortOrderChange(newSortOrder);
       };
+    
 
-    const handleSearch = (searchTerm: string) => {
+    const handleSearch = async (searchTerm : string) => {
+    // Only make an API call if a specific filter is selected
+    if (selectedFilter) {
         const params = new URLSearchParams(searchParams);
         const endpoint = networkEndpoints[selectedNetwork];
+
         if (searchTerm) {
             params.set("query", searchTerm);
             params.set("filter", filter);
@@ -65,11 +86,33 @@ const SearchProjects = () => {
             params.delete("sortOrder");
         }
         replace(`${pathname}?${params.toString()}`);
+        
+        const apifid = user.fid;
+        // Make a POST request to the internal API route
+        const response = await fetch('/api/karmalabfarcasterrep', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({apifid}),
+            // Adjust request body as needed
+        });
+        if (response.ok) {
+        const data: SearchResult[] = await response.json();
+        console.log('Farcaster Data:', data);
+        setSearchResults(data);
+        onSearchResults(data);
+        // Update the state with the fetched data
+        } else {
+        console.error('Error fetching farcaster data');
+        return null;
+        }
+    }
     };
-
     
-
     
+    useEffect(() => {
+    const initialQuery = searchParams.get("query") || "";
+    handleSearch(initialQuery);
+    }, []);
 
     return (
         <>
@@ -84,7 +127,8 @@ const SearchProjects = () => {
         <h1 className="ml-4 text-xl font-bold pt-5">Search Projects Here:</h1>
 
         <div className="sm:col-span-4 p-6">
-            {/* <label htmlFor="network" className="block text-sm font-medium leading-6 text-gray-900">What network would you like to query?</label>
+            {/*  this will allow people to search for a project based on the ecosystem they are in 
+            <label htmlFor="network" className="block text-sm font-medium leading-6 text-gray-900">What network would you like to query?</label>
             <div className="mt-2">
                 <select 
                     id="network" 
@@ -121,23 +165,29 @@ const SearchProjects = () => {
                 </div>
     
                 
-                {/* keeping this just incase
+                {/* keeping this just incase */}
                 <div className="flex-initial">
-                    <label htmlFor="shape" className="block text-sm font-medium leading-6 text-gray-900">Filter</label>
+                <label htmlFor="filter" className="block text-sm font-medium leading-6 text-gray-900">Filter</label>
                     <div className="mb-6">
                         <select
-                        id="filter"
-                        name="shape"
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                            id="filter"
+                            name="filter"
+                            value={selectedFilter}
+                            onChange={handleFilterChange}
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                         >
-                        <option value="projectName">Project Name</option>
-                        <option value="ethAddress">Eth Address</option>
+                            <option value="projectName">Project Name</option>
+                            <option value="most-engaged">Most Engaged</option>
+                            <option value="recently-added">Recently Added</option>
+                            {/* Add more filters as required */}
                         </select>
                     </div>
-                </div> */}
+                </div>
 
+                {/* ADD THE KARMA API FILTER HERE FOR FARCASTER ENGAGEMENT
+                the premise is that you can see projects based on your most engaged with profiles in farcaster
+                then based in the optimism channel
+                then based in the base channel */}
                 <div className="flex-initial">
                     <label htmlFor="sortOrder" className="block text-sm font-medium leading-6 text-gray-900">Sort Order</label>
                     <div className="mb-6">
@@ -154,6 +204,22 @@ const SearchProjects = () => {
                     </div>
                 </div>
             </div>
+            {/* Add display logic for search results here */}
+            {/* {searchResults.length > 0 ? (
+          <ul>
+            {searchResults.map((result, index) => (
+              <li key={index}>
+                <strong>Username:</strong> {result.username}<br />
+                <strong>Fname:</strong> {result.fname}<br />
+                <strong>Address:</strong> {result.address}<br />
+                <strong>FID:</strong> {result.fid}<br />
+                <strong>Score:</strong> {result.score}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No search results found.</p>
+        )} */}
         </div>
         </>
     )

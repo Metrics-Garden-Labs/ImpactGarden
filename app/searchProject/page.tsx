@@ -1,10 +1,9 @@
+// app/projects/page.tsx
 
-import SearchProjects from "./searchProjects";
-import ProjectList1 from "./projectList1";
-import Navbar from "../components/navbar";
-import { Project } from '../../src/types';
+import { Project, SearchResult } from '../../src/types';
 import { getProjects } from '../../src/lib/db';
-import React from "react";
+import ProjectPageClient from './ProjectPageClient';
+import { projects } from '@/src/lib/schema';
 
 interface Props {
   searchParams?: {
@@ -12,6 +11,8 @@ interface Props {
     filter?: string;
     walletAddress?: string;
     endpoint?: string;
+    sortOrder?: string;
+    searchResults?: SearchResult[];
   };
 }
 
@@ -20,38 +21,33 @@ const ProjectPage = async ({ searchParams }: Props) => {
   const filter = searchParams?.filter || '';
   const walletAddress = searchParams?.walletAddress || '';
   const endpoint = searchParams?.endpoint || '';
-
-  console.log("Wallet Address", walletAddress);
-  console.log("Endpoint", endpoint);
+  const sortOrder = searchParams?.sortOrder || 'asc';
 
   try {
     const projects: Project[] = await getProjects(walletAddress, endpoint);
     console.log("Projects", projects);
 
-    return (
-      <div className="bg-backgroundgray text-black">
-        <Navbar />
-        <SearchProjects />
-        <ProjectList1
-          projects={projects}
-          query={query}
-          filter={filter}
-          walletAddress={walletAddress}
-          endpoint={endpoint}
-          sortOrder="asc"
-        />
-      </div>
-    );
+      return <ProjectPageClient
+        projects={projects}
+        query={query}
+        filter={filter}
+        walletAddress={walletAddress}
+        endpoint={endpoint}
+        sortOrder={sortOrder}
+        searchResults={searchParams?.searchResults || []}
+      />;
   } catch (error) {
     console.error('Failed to fetch projects:', error);
     // Handle the error, display an error message, or return a fallback UI
-    return (
-      <div className="bg-backgroundgray text-black">
-        <Navbar />
-        <SearchProjects />
-        <p>Failed to fetch projects. Please try again later.</p>
-      </div>
-    );
+    return <ProjectPageClient
+      projects={[]}
+      query={query}
+      filter={filter}
+      walletAddress={walletAddress}
+      endpoint={endpoint}
+      sortOrder={sortOrder}
+      searchResults={[]}
+    />;
   }
 };
 

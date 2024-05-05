@@ -1,6 +1,6 @@
 import "./config";
 import { drizzle } from "drizzle-orm/vercel-postgres";
-import { sql } from "@vercel/postgres";
+import { sql as vercelsql } from "@vercel/postgres";
 import {
   users,
   projects,
@@ -14,8 +14,10 @@ import { Waterfall } from "next/font/google";
 import { eq } from "drizzle-orm";
 import { Project, newUserAddresses } from "@/src/types";
 import { count } from "console";
+import { sql as drizzlesql } from "drizzle-orm";
+import { inArray } from "drizzle-orm";
 
-export const db = drizzle(sql, { schema });
+export const db = drizzle(vercelsql, { schema });
 
 export const getUsers = async () => {
   try {
@@ -154,6 +156,21 @@ export const insertProject = async (project: NewProject) => {
     return db.insert(projects).values(project).returning();
   } catch (error) {
     console.error("Error inserting project:", error);
+    throw error;
+  }
+};
+
+// Function to fetch all projects associated with a specific FID
+export const getProjectsByFids = async (userFids: string[]) => {
+  try {
+    const projectsByFids = await db
+      .select()
+      .from(projects)
+      .where(inArray(projects.userFid, userFids));
+
+    return projectsByFids;
+  } catch (error) {
+    console.error(`Error retrieving projects for user FIDs:`, error);
     throw error;
   }
 };
