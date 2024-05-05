@@ -19,6 +19,7 @@ import FarcasterLogin from "../components/farcasterLogin";
 import useLocalStorage from "@/src/hooks/use-local-storage-state";
 import { getProjectsByFids } from "@/src/lib/db";
 import { SearchResult } from "@/src/types";
+import { NEXT_PUBLIC_URL } from "../../src/config/config";
 
 interface Props {
     onSearchResults: (results: SearchResult[]) => void;
@@ -89,7 +90,7 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
         
         const apifid = user.fid;
         // Make a POST request to the internal API route
-        const response = await fetch('/api/karmalabfarcasterrep', {
+        const response = await fetch(`${NEXT_PUBLIC_URL}/api/karmalabfarcasterrep`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({apifid}),
@@ -117,13 +118,13 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
     return (
         <>
         <div className="relative">
-        <div className="absolute top-4 right-4">
+        {/* <div className="absolute top-4 right-4">
         {user.fid ? (
             <ConnectButton />
           ) : (
             <FarcasterLogin />
           )}
-        </div>
+        </div> */}
         <h1 className="ml-4 text-xl font-bold pt-5">Search Projects Here:</h1>
 
         <div className="sm:col-span-4 p-6">

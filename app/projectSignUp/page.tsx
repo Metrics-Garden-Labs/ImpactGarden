@@ -8,7 +8,7 @@ import React, { FormEvent, useState } from 'react';
 import { useGlobalState } from '../../src/config/config';
 import { redirect } from 'next/navigation';
 import { UploadDropzone } from '../../src/utils/uploadthing';
-import Navbar from '../components/navbar';
+import Navbar from '../components/navbar1';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { NEXT_PUBLIC_URL } from '../../src/config/config';
 import { ethers } from 'ethers';
@@ -285,7 +285,6 @@ export default function ProjectSignUp() {
       <Navbar />
       
       <div className="flex justify-center relative w-full mt-10 px-8">
-        <TopRightLogin user={user} />
         {/* Left Column */}
         { isPreview ? (
 
