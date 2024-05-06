@@ -3,7 +3,7 @@
 import { getContributionsByProjectName, getProjectByName } from '../../../src/lib/db';
 import { Contribution, Project } from '../../../src/types';
 import ProfilePage from '../profilepage1';
-import Navbar from '../../components/navbar';
+import Navbar from '../../components/navbar1';
 import Footer from '../../components/footer';
 import Sidebar from '../sidebar1';
 import React from 'react';
