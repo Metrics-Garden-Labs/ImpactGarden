@@ -71,21 +71,6 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
     const projectName = selectedProject?.projectName || "";
     //need to make the route something like /projects/:projectName
 
-    //closes the modal when the route changes, revisit, brokenn 
-    // useEffect(() => {
-    //   if (router.isReady) {
-    //     // Now it's safe to use the router
-    //     console.log(router.query);
-    //   }
-    //   const handleCloseModal = () => {
-    //     setModalOpen(false);
-    //   };
-    //   router.events.on('routeChangeStart', handleCloseModal);
-    //   return () => {
-    //     router.events.off('routeChangeStart', handleCloseModal);
-    //   };
-    // }, [router.events]);
-
     useEffect(() => {
       const fetchAttestationCount = async () => {
         if (selectedContribution) {
@@ -224,13 +209,6 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
       </button>
 
         {/* //add contribution button */}
-        <div className="absolute top-4 right-4">
-        {user.fid ? (
-            <ConnectButton />
-          ) : (
-            <FarcasterLogin />
-          )}
-        </div>
       <div className='absolute top-20 right-5'>
         <button 
           className='btn bg-headerblack text-white hover:bg-gray-200 hover:text-black px-2 py-1'

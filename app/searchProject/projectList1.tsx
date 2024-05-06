@@ -9,6 +9,7 @@ import { RxCross2 } from 'react-icons/rx';
 import { useGlobalState } from '../../src/config/config';
 import { Project, SearchResult } from '../../src/types';
 import { useRouter } from 'next/router';
+import { LuArrowUpRight } from 'react-icons/lu';
 
 
 
@@ -83,6 +84,15 @@ export default function ProjectList({
     setModalOpen(false);
   };
 
+  const urlHelper = (url: string) => {
+    if (!url.match(/^https?:\/\//)) {
+      return `https://${url}`;
+    }
+    return url;
+  };
+
+  const checkwebsiteUrl = urlHelper(selectedProject?.websiteUrl || '');
+
   const renderModal = () => {
     if (!modalOpen || !selectedProject) return null;
 
@@ -101,11 +111,13 @@ export default function ProjectList({
           <hr className="border-1 border-gray-300 my-2 mx-auto w-1/2" />
           <div className="mb-4 items-center py-3">
             <h3 className="font-semibold text-center">Website</h3>
-            <p className="text-center">
+            <p className="text-center overflow-wrap break-words max-w-full mx-auto truncate">
               {selectedProject.websiteUrl   && (
-                <a href={selectedProject.websiteUrl} target="_blank" rel="noopener noreferrer">
-                {selectedProject.websiteUrl}
-                </a>
+                <Link href={`${checkwebsiteUrl}`}>
+                  <p className="text-blacl hover:text-gray-300 visited:text-indigo-600 ">
+                  {selectedProject.websiteUrl}
+                  </p>
+                </Link>
               )}
             </p>
             </div>
