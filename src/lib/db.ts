@@ -103,44 +103,48 @@ export const getProjects = async (walletAddress: string, endpoint: string) => {
     console.log("Endpoint db", endpoint);
     const dbProjects: Project[] = await db.select().from(projects);
     console.log("DB Projects", dbProjects);
-    let easProjects: Project[] = [];
-    //issue at the moment is that the easProjects does not show up by defaault, only when you query them
-    if (walletAddress && endpoint) {
-      const attestations = await getAttestationsByAttester(
-        walletAddress,
-        endpoint
-      );
-      easProjects = attestations
-        .map((attestation: any) => {
-          try {
-            const decodedData = JSON.parse(attestation.decodedDataJson);
-            return {
-              id: attestation.id,
-              projectName:
-                decodedData.find((item: any) => item.name === "projectName")
-                  ?.value?.value || "",
-              twitterUrl:
-                decodedData.find((item: any) => item.name === "twitterUrl")
-                  ?.value?.value || "",
-              websiteUrl:
-                decodedData.find((item: any) => item.name === "websiteUrl")
-                  ?.value?.value || "",
-              githubUrl:
-                decodedData.find((item: any) => item.name === "githubUrl")
-                  ?.value?.value || "",
-              ethAddress: attestation.recipient,
-            };
-          } catch (error) {
-            console.error("Error parsing attestation data:", error);
-            return null;
-          }
-        })
-        .filter(
-          (project: Project | null): project is Project => project !== null
-        );
-    }
 
-    const combinedProjects: Project[] = [...dbProjects, ...easProjects];
+    //do not want to show the eas proejcts at the minute but could be useful in the future
+    // let easProjects: Project[] = [];
+    // //issue at the moment is that the easProjects does not show up by defaault, only when you query them
+    // if (walletAddress && endpoint) {
+    //   const attestations = await getAttestationsByAttester(
+    //     walletAddress,
+    //     endpoint
+    //   );
+    //   easProjects = attestations
+    //     .map((attestation: any) => {
+    //       try {
+    //         const decodedData = JSON.parse(attestation.decodedDataJson);
+    //         return {
+    //           id: attestation.id,
+    //           projectName:
+    //             decodedData.find((item: any) => item.name === "projectName")
+    //               ?.value?.value || "",
+    //           twitterUrl:
+    //             decodedData.find((item: any) => item.name === "twitterUrl")
+    //               ?.value?.value || "",
+    //           websiteUrl:
+    //             decodedData.find((item: any) => item.name === "websiteUrl")
+    //               ?.value?.value || "",
+    //           githubUrl:
+    //             decodedData.find((item: any) => item.name === "githubUrl")
+    //               ?.value?.value || "",
+    //           ethAddress: attestation.recipient,
+    //         };
+    //       } catch (error) {
+    //         console.error("Error parsing attestation data:", error);
+    //         return null;
+    //       }
+    //     })
+    //     .filter(
+    //       (project: Project | null): project is Project => project !== null
+    //     );
+    // }
+    //const combinedProjects: Project[] = [...dbProjects, ...easProjects];
+
+    const combinedProjects: Project[] = [...dbProjects];
+
     console.log("Combined projects", combinedProjects);
 
     return combinedProjects;
