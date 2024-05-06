@@ -63,13 +63,28 @@ export default function ProjectSignUp() {
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
   const [isPreview, setIsPreview] = useState<boolean>(false);
   
-
-
   console.log('Ecosystem', ecosystem);
   console.log('walletAddress', walletAddress);
   console.log('Fid', fid);
   console.log('ethAddress', ethAddress);
   const { eas, currentAddress, selectedNetwork, handleNetworkChange } = useEAS();
+
+  useEffect(() => {
+    if (attestationUID) {
+      const project: Project = {
+        userFid: user.fid,
+        projectName: attestationData.projectName,
+        websiteUrl: attestationData.websiteUrl,
+        twitterUrl: attestationData.twitterUrl,
+        githubUrl: attestationData.githubURL,
+        logoUrl: imageUrl,
+        projectUid: attestationUID,
+        ecosystem: ecosystem,
+        // Add other relevant properties from the attestationData
+      };
+      setSelectedProject(project);
+    }
+  }, [attestationUID, attestationData, imageUrl, user.fid, ecosystem, setSelectedProject]);
 
   const handleNetworkChangeEvent = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value as AttestationNetworkType;
@@ -300,7 +315,7 @@ export default function ProjectSignUp() {
             attestationData={attestationData}
             imageUrl={imageUrl}
             ecosystem={ecosystem}
-            setSelectedProject={setSelectedProject}          />
+            selectedProject={selectedProject}         />
           <Footer />
         </div>
       );
@@ -585,7 +600,7 @@ export default function ProjectSignUp() {
         attestationData={attestationData}
         imageUrl={imageUrl}
         ecosystem={ecosystem}
-        setSelectedProject={setSelectedProject}
+        selectedProject={selectedProject}
       />
       <Footer />
       {renderModal()}
@@ -598,7 +613,7 @@ interface ConfirmationSectionProps {
   attestationData: AttestationData;
   imageUrl: string;
   ecosystem: string;
-  setSelectedProject: (project: Project) => void;
+  selectedProject: Project | null;
 }
 
 // ConfirmationSection Component Implementation
@@ -607,7 +622,7 @@ const ConfirmationSection: React.FC<ConfirmationSectionProps> = ({
   attestationData,
   imageUrl,
   ecosystem,
-  setSelectedProject
+  selectedProject
 }) => {
   const user = {
     fid: '',
@@ -617,7 +632,7 @@ const ConfirmationSection: React.FC<ConfirmationSectionProps> = ({
   if (!attestationUID) {
     return null; // If no attestationUID, don't show this section
   }
-  console.log('Selected Project:', attestationData, imageUrl, ecosystem, setSelectedProject);
+  console.log('Selected Project:', attestationData, imageUrl, ecosystem, selectedProject);
   // useEffect(() => {
   //   if (attestationUID) {
   //     const project: Project = {
