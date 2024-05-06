@@ -10,6 +10,7 @@ import { useGlobalState } from '../../src/config/config';
 import { Project, SearchResult } from '../../src/types';
 import { useRouter } from 'next/router';
 import { LuArrowUpRight } from 'react-icons/lu';
+import Image from 'next/image';
 
 
 
@@ -172,6 +173,22 @@ export default function ProjectList({
               openModal(project);
             }}
           >
+            <div className="rounded-full bg-gray-300 w-32 h-32 flex items-center justify-center overflow-hidden mb-4">
+              {project.logoUrl ? (
+                <Image
+                  src={project.logoUrl}
+                  alt="Project Logo"
+                  width={128}
+                  height={128}
+                  className="object-cover w-full h-full"
+                />
+              ) : (
+                <div className="flex items-center justify-center text-gray-500">
+                  {/* Add optional placeholder content if needed */}
+                  No Logo
+                </div>
+              )}
+            </div>  
             <h3 className="mb-2 text-xl font-semibold">{project.projectName}</h3>
             {/* Display the username if available */}
             {Array.isArray(searchResults) && searchResults.find((result) => result.fid === project.userFid)?.username && (
@@ -182,7 +199,8 @@ export default function ProjectList({
           </div>
         ))}
       </div>
+      
       {renderModal()}
-    </div>
+  </div>
   );
 }
