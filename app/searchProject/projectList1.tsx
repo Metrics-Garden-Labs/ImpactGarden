@@ -11,6 +11,7 @@ import { Project, SearchResult } from '../../src/types';
 import { useRouter } from 'next/router';
 import { LuArrowUpRight } from 'react-icons/lu';
 import Image from 'next/image';
+import useLocalStorage from '@/src/hooks/use-local-storage-state';
 
 
 
@@ -37,7 +38,9 @@ export default function ProjectList({
         console.log("Received sortOrder in ProjectList:", sortOrder);
     }, [sortOrder]);
 
-  const [selectedProject, setSelectedProject] = useGlobalState('selectedProject');
+  const [selectedProject, setSelectedProject] = useLocalStorage<Project | null>(
+    'selectedProject', null
+  );
   const [selectedProjectName, setSelectedProjectName] = useGlobalState('selectedProjectName');
   const [modalOpen, setModalOpen] = useState(false);
   

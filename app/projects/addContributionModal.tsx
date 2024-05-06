@@ -2,7 +2,7 @@
 'use client';
 import React, { useState } from 'react';
 import { NEXT_PUBLIC_URL, useGlobalState } from '../../src/config/config';
-import { Contribution } from '../../src/types';
+import { Contribution, Project } from '../../src/types';
 import { useEAS } from '../../src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
 import { ethers } from 'ethers';
@@ -20,7 +20,7 @@ interface Props {
 export default function AddContributionModal({ isOpen, onClose,}: Props) {
   const [fid] = useGlobalState('fid');
   const [walletAddress] = useGlobalState('walletAddress');
-  const [selectedProject] = useGlobalState('selectedProject');
+  const [selectedProject] = useLocalStorage<Project | null>('selectedProject', null);
   const [ isLoading, setIsLoading ] = useState(false);
   const [ attestationUID, setAttestationUID ] = useState<string>("");
   const [user] = useLocalStorage("user", {
@@ -64,11 +64,12 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
         { name: 'userFid', type: 'uint24', value: user.fid || 0},
         { name: 'projectName', type: 'string', value: selectedProject?.projectName || '' },
         { name: 'contribution', type: 'string', value: formData.contribution },
-        { name: 'description', type: 'string', value: formData.desc },
-        { name: 'link', type: 'string', value: formData.link },
+        { name: 'description', type: 'string', value: formData.desc || '' },
+        { name: 'link', type: 'string', value: formData.link || '' },
         { name: 'ecosystem', type: 'string', value: selectedProject?.ecosystem || '' },
       ]);
 
+      //console.log ("project name", project.projectName)
       
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
@@ -135,12 +136,6 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    await addContribution(formData);
-    onClose();
-  };
-
   const addContribution = async (contribution: Contribution) => {
     try {
       // Create the attestation
@@ -162,11 +157,13 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
         if (!response.ok) {
           console.error('Failed to add contribution');
           return;
+        } else {
+          console.log('Contribution added successfully', response);
+          //refresh the page
+          //add a 0.5s delay to allow the attestation to be processed
+          setTimeout(() => {
+          }, 500);
         }
-
-        console.log('Contribution added successfully', response);
-        // Reload the window to show the new contribution
-        window.location.reload();
         
       } else {
         console.error('Failed to create attestation');
@@ -174,6 +171,12 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
     } catch (error) {
       console.error('Failed to add contribution', error);
     }
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    await addContribution(formData);
+    onClose();
   };
 
   if (!isOpen) return null;
