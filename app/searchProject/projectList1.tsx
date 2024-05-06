@@ -80,8 +80,8 @@ export default function ProjectList({
   };
 
   const closeModal = () => {
-    setSelectedProject(null);
-    setSelectedProjectName('');
+    // setSelectedProject(null);
+    // setSelectedProjectName('');
     setModalOpen(false);
   };
 
