@@ -46,7 +46,7 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
 
   const createAttestation = async (): Promise<string> => {
 
-    if (!fid) {
+    if (!user.fid) {
       alert('User not logged in');
       return '';
     }

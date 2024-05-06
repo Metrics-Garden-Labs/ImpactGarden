@@ -65,9 +65,16 @@ export default function Sidebar({ project }: Props) {
   };
 
   const urlHelper = (url: string) => {
+    // Return null if the input URL is empty or just spaces
+    if (!url.trim()) {
+      return null;
+    }
+  
+    // Ensure the URL starts with http:// or https://
     if (!url.match(/^https?:\/\//)) {
       return `https://${url}`;
     }
+  
     return url;
   };
 
