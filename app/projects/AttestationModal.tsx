@@ -44,6 +44,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
 
     const createAttestation = async () => {
 
+        console.log('user.fid:', user.fid);
         if (!user.fid) {
             alert('User not logged in');
             return;
