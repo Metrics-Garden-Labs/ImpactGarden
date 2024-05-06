@@ -116,6 +116,18 @@ export default function ProjectSignUp() {
     }
   };
 
+  const urlHelper = (url: string) => {
+    if (!url.match(/^https?:\/\//)) {
+      return `https://${url}`;
+    }
+    return url;
+  };
+
+  const checkwebsiteUrl = urlHelper(attestationData?.websiteUrl || '');
+  console.log('Selected website:', checkwebsiteUrl);
+  const checktwitterUrl = urlHelper(attestationData?.twitterUrl || '');
+  const checkgithubUrl = urlHelper(attestationData?.githubURL || '');
+
   const createAttestation = async () => {
 
     //check for captcha being solved
@@ -356,9 +368,15 @@ export default function ProjectSignUp() {
               {attestationData.projectName || 'Project name'}
             </h3>
             <div className="flex justify-center py-4 items-center">
-              <BsGlobe2 className="text-black mx-2 text-lg" />
+              <Link href={checkwebsiteUrl || '#'}>
+                <BsGlobe2 className="text-black mx-2 text-lg" />
+              </Link>
+              <Link href={checktwitterUrl || '#'}>
               <FaXTwitter className="text-black mx-2 text-lg" />
-              <FaGithub className="text-black mx-2 text-lg" />
+              </Link>
+              <Link href={checkgithubUrl || '#'}>
+                <FaGithub className="text-black mx-2 text-lg" />
+              </Link>
             </div>
           </div>
 

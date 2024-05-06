@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
 import {useGlobalState} from '@/src/config/config';
 import Link from 'next/link';
+import { BsGlobe2 } from 'react-icons/bs';
+import { FaGithub, FaXTwitter } from 'react-icons/fa6';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -71,6 +73,8 @@ export default function Sidebar({ project }: Props) {
 
   const checkwebsiteUrl = urlHelper(project?.websiteUrl || '');
   console.log('Selected website:', websiteurl);
+  const checktwitterUrl = urlHelper(project?.twitterUrl || '');
+  const checkgithubUrl = urlHelper(project?.githubUrl || '');
     
 
   return (
@@ -87,14 +91,25 @@ export default function Sidebar({ project }: Props) {
             {/* Project Name */}
             <h2 className="text-2xl font-bold text-gray-900">{project.projectName}</h2>
             {/* Project Link */}
-            {project.websiteUrl && (
+            {/* {project.websiteUrl && (
               <Link href={`${checkwebsiteUrl}`}>
                 <p className="text-gray-500 hover:text-gray-300 visited:text-indigo-600 flex items-center">
                 {project.websiteUrl}
                 <LuArrowUpRight className="ml-1" />
                 </p>
               </Link>
-            )}
+            )} */}
+            <div className="flex justify-center py-4 items-center">
+              <Link href={checkwebsiteUrl || '#'}>
+                <BsGlobe2 className="text-black mx-2 text-lg" />
+              </Link>
+              <Link href={checktwitterUrl || '#'}>
+              <FaXTwitter className="text-black mx-2 text-lg" />
+              </Link>
+              <Link href={checkgithubUrl || '#'}>
+                <FaGithub className="text-black mx-2 text-lg" />
+              </Link>
+            </div>
             {/* Stats and Categories */}
             <div>
               <div className="text-sm font-medium text-gray-500">Attestations: {attestationCount}</div>

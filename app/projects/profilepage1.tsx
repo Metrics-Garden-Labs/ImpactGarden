@@ -55,7 +55,8 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
     const { eas, currentAddress } = useEAS();
     const [fid] = useGlobalState('fid');
     const [walletAddress] = useGlobalState('walletAddress');
-    const [selectedProject] = useGlobalState('selectedProject');
+    //const [selectedProject] = useGlobalState('selectedProject');
+    const [selectedProject] = useLocalStorage<Project | null>('selectedProject', null);
     const [isUseful, setIsUseful] = useState(false);
     const [feedback, setFeedback] = useState('');
     const [attestationCount, setAttestationCount] = useState(0);
@@ -69,6 +70,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
 
 
     const projectName = selectedProject?.projectName || "";
+    console.log('Selected project name:', projectName);
     //need to make the route something like /projects/:projectName
 
     useEffect(() => {
@@ -147,6 +149,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
   const closeModal = () => {
     setSelectedContribution(null);
   }
+
 
 
   const renderContent = () => {

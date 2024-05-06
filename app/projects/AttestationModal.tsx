@@ -54,6 +54,8 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             return;
         }
 
+        console.log('contribution:', contribution);
+        console.log('projectethAddress:', project.ethAddress);  
         try {
             setIsLoading(true);
             const attestationSchema = "0x0ea974daef377973de71b8a206247f436f67364853a10d460c2623d18035db12";
@@ -70,7 +72,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             easop.connect(signer);
             const delegatedSigner = await easop.getDelegated();
             const easnonce = await easop.getNonce(currentAddress);
-
+            
             const attestation: EIP712AttestationParams = {
                 schema: attestationSchema,
                 recipient: project.ethAddress || '',
