@@ -4,7 +4,7 @@ import { getProjectsByFids } from "@/src/lib/db";
 import { SearchResult } from "@/src/types";
 
 export const POST = async (request: NextRequest) => {
-  const url = `https://graph.cast.k3l.io/scores/personalized/engagement/fids?k=1&limit=10&lite=false`;
+  const url = `https://graph.cast.k3l.io/scores/personalized/engagement/fids?k=1&limit=50&lite=false`;
 
   try {
     // Parse the incoming request body to extract the `fid`
