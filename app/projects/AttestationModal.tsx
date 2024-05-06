@@ -72,7 +72,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
 
             const attestation: EIP712AttestationParams = {
                 schema: attestationSchema,
-                recipient: project.ethAddress,
+                recipient: project.ethAddress || '',
                 expirationTime: BigInt(9973891048),
                 revocable: true,
                 refUID: contribution.easUid || '',
