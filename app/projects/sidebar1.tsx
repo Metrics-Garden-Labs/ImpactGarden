@@ -62,6 +62,17 @@ export default function Sidebar({ project }: Props) {
     return `${diffInMonths} months`;
   };
 
+  const urlHelper = (url: string) => {
+    if (!url.match(/^https?:\/\//)) {
+      return `https://${url}`;
+    }
+    return url;
+  };
+
+  const checkwebsiteUrl = urlHelper(project?.websiteUrl || '');
+  console.log('Selected website:', websiteurl);
+    
+
   return (
     <>
       <div className='lg:block lg:w-72 bg-white h-screen pt-16 pb-8'>
@@ -77,7 +88,7 @@ export default function Sidebar({ project }: Props) {
             <h2 className="text-2xl font-bold text-gray-900">{project.projectName}</h2>
             {/* Project Link */}
             {project.websiteUrl && (
-              <Link href={`https://${websiteurl}`}>
+              <Link href={`${checkwebsiteUrl}`}>
                 <p className="text-gray-500 hover:text-gray-300 visited:text-indigo-600 flex items-center">
                 {project.websiteUrl}
                 <LuArrowUpRight className="ml-1" />
