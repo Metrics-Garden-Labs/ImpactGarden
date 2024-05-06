@@ -21,6 +21,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { FaXTwitter } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa";
 import { BsGlobe2 } from "react-icons/bs";
+import { Project } from '@/src/types';
 
 type AttestationData = {
   projectName: string;
@@ -52,6 +53,7 @@ export default function ProjectSignUp() {
     username: '',
     ethAddress: '',
   });
+  const [selectedProject] = useLocalStorage<Project | null>('selectedProject', null);
   const [captcha, setCaptcha] = useState<string | null>("");
   const [fid] = useGlobalState('fid');
   const [ethAddress] = useGlobalState('ethAddress');
@@ -60,6 +62,8 @@ export default function ProjectSignUp() {
   const [ecosystem, setEcosystem] = useState<string>('Optimism');
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
   const [isPreview, setIsPreview] = useState<boolean>(false);
+
+
   console.log('Ecosystem', ecosystem);
   console.log('walletAddress', walletAddress);
   console.log('Fid', fid);

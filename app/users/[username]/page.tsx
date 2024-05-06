@@ -3,7 +3,7 @@
 import React from 'react';
 import { getUserByUsername, getUserAddressesByFid  } from '../../../src/lib/db';
 import { User } from '../../../src/types';
-import Navbar from '../../components/navbar';
+import Navbar from '../../components/navbar1';
 import AttestationList from '../attestationList';
 import { getAttestationsByCoinbaseVerified } from '../../..//src/utils/coinbaseVerified';
 import { checkOpBadgeholder } from '../../..//src/utils/opBadgeholder';

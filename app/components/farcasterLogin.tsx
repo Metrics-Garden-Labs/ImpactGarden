@@ -107,7 +107,7 @@ export default function FarcasterLogin() {
   
   async function fetchData(fid:string) {
     try{
-      const response = await fetch(`/api/login`, {
+      const response = await fetch(`${NEXT_PUBLIC_URL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
