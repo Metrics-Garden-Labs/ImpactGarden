@@ -7,6 +7,7 @@ import { useEAS } from '../../src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
 import { ethers } from 'ethers';
 import { RxCross2 } from 'react-icons/rx';
+import useLocalStorage from '@/src/hooks/use-local-storage-state';
 
 
 
@@ -22,8 +23,13 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
   const [selectedProject] = useGlobalState('selectedProject');
   const [ isLoading, setIsLoading ] = useState(false);
   const [ attestationUID, setAttestationUID ] = useState<string>("");
+  const [user] = useLocalStorage("user", {
+    fid: '',
+    username: '',
+    ethAddress: '',
+  });
   const [formData, setFormData] = useState<Contribution>({
-    userFid: fid,
+    userFid: user.fid || '',
     projectName: selectedProject?.projectName || '',
     ecosystem: selectedProject?.ecosystem || '',
     contribution: '',
@@ -36,7 +42,7 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
 
   const { eas, currentAddress } = useEAS();
 
-  console.log('Selected Project:', selectedProject);
+  console.log('Selected Project:', formData);
 
   const createAttestation = async (): Promise<string> => {
 
@@ -55,7 +61,7 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
       const contributionSchema = '0x132a4d5644fa6b85baf205fc25b069ba398bcecea7dc4b609c2ba20efb71da90';
       const schemaEncoder = new SchemaEncoder('uint24 userFid, string projectName, string contribution, string description, string link, string ecosystem');
       const encodedData = schemaEncoder.encodeData([
-        { name: 'userFid', type: 'uint24', value: fid || 0},
+        { name: 'userFid', type: 'uint24', value: user.fid || 0},
         { name: 'projectName', type: 'string', value: selectedProject?.projectName || '' },
         { name: 'contribution', type: 'string', value: formData.contribution },
         { name: 'description', type: 'string', value: formData.desc },
@@ -63,6 +69,7 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
         { name: 'ecosystem', type: 'string', value: selectedProject?.ecosystem || '' },
       ]);
 
+      
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const easop = new EAS('0x4200000000000000000000000000000000000021');
