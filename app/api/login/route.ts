@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { NeynarAPIClient } from "@neynar/nodejs-sdk";
 import { db } from "../../../src/lib/db";
-import { user_addresses } from "../../../src/lib/schema";
+import { user_addresses, users } from "../../../src/lib/schema";
 import { getAttestationsByCoinbaseVerified } from "../../..//src/utils/coinbaseVerified";
 import { checkOpBadgeholder } from "../../..//src/utils/opBadgeholder";
 import { eq } from "drizzle-orm";
@@ -39,12 +39,45 @@ export async function POST(request: NextRequest) {
     console.log("pfp_url", pfp_url);
     console.log("ethAddresses", ethAddresses);
 
+    // Check if the user already exists in the database
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.fid, fid))
+      .limit(1)
+      .then((result) => result[0]);
+
+    console.log("Existing User:", existingUser);
+
+    if (!existingUser) {
+      // If the user doesn't exist, insert the user into the database
+      const newUser = {
+        fid: fid.toString(),
+        username: userData.username,
+        pfp_url: userData.pfp_url || "",
+      };
+      console.log("New User, ", newUser);
+      await db.insert(users).values(newUser);
+    }
+
+    // Check if the user's addresses are already stored in the database
+    const storedAddresses = await db
+      .select()
+      .from(user_addresses)
+      .where(eq(user_addresses.userfid, fid))
+      .then((result) => result.map((row) => row.ethaddress));
+
+    // Filter out the addresses that are already stored
+    const newAddresses = ethAddresses.filter(
+      (address) => !storedAddresses.includes(address)
+    );
+
     // Orders for the addresses
     const addressOrders = ["first", "second", "third"];
 
-    // Verify each address concurrently and prepare the results
+    // Verify each new address concurrently and prepare the results
     const addressInserts = await Promise.all(
-      ethAddresses.map(async (ethaddress, index) => {
+      newAddresses.map(async (ethaddress, index) => {
         const checkAddress = getAddress(ethaddress);
         console.log(`Processing Ethereum Address #${index + 1}:`, ethaddress);
 
@@ -94,11 +127,10 @@ export async function POST(request: NextRequest) {
       })
     );
 
-    // Insert the results into the `user_addresses` table
-    await db
-      .insert(user_addresses)
-      .values(addressInserts)
-      .onConflictDoNothing();
+    // Insert the new addresses into the `user_addresses` table
+    if (addressInserts.length > 0) {
+      await db.insert(user_addresses).values(addressInserts);
+    }
 
     // Return a successful response
     const response = {

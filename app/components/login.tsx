@@ -91,7 +91,7 @@ export default function Login() {
       window.onSignInSuccess = undefined;
       document.getElementById(scriptId)?.remove();
     }
-  },[setUser, setSignerUuid, setFid])
+  },[setUser, setSignerUuid, setFid]) 
   
 
 
@@ -106,7 +106,7 @@ export default function Login() {
   
   async function fetchData(fid:string) {
     try{
-      const response = await fetch(`${NEXT_PUBLIC_URL}/api/login`, {
+      const response = await fetch(`/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -133,10 +133,11 @@ export default function Login() {
         ethaddress: data.ethAddress || '',
         //this stores the first ethAddress they have verified, usually their public one
       };
+      console.log("New User", newUser);
 
       //call api to insert user
       
-      const dbResponse = await fetch(`${NEXT_PUBLIC_URL}/api/addUserDb`, {
+      const dbResponse = await fetch(`/api/addUserDb`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

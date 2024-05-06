@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
       throw new Error("BACKEND_METAMASK_PRIVATE_KEY is not set");
     }
     const provider = ethers.getDefaultProvider("optimism");
+    //this will have to change depending on the network
     const backendWallet = new ethers.Wallet(privateKey, provider);
 
     const contract = new ethers.Contract(
