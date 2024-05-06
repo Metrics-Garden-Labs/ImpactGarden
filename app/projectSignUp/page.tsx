@@ -4,7 +4,7 @@
 import { AttestationNetworkType, networkContractAddresses } from '../components/networkContractAddresses';
 import { useEAS } from '../../src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { useGlobalState } from '../../src/config/config';
 import { redirect } from 'next/navigation';
 import { UploadDropzone } from '../../src/utils/uploadthing';
@@ -53,7 +53,7 @@ export default function ProjectSignUp() {
     username: '',
     ethAddress: '',
   });
-  const [selectedProject] = useLocalStorage<Project | null>('selectedProject', null);
+  const [selectedProject, setSelectedProject] = useLocalStorage<Project | null>('selectedProject', null);
   const [captcha, setCaptcha] = useState<string | null>("");
   const [fid] = useGlobalState('fid');
   const [ethAddress] = useGlobalState('ethAddress');
@@ -62,6 +62,7 @@ export default function ProjectSignUp() {
   const [ecosystem, setEcosystem] = useState<string>('Optimism');
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
   const [isPreview, setIsPreview] = useState<boolean>(false);
+  
 
 
   console.log('Ecosystem', ecosystem);
@@ -279,7 +280,8 @@ export default function ProjectSignUp() {
             attestationUID={attestationUID}
             attestationData={attestationData}
             imageUrl={imageUrl}
-          />
+            ecosystem={ecosystem}
+            setSelectedProject={setSelectedProject}          />
           <Footer />
         </div>
       );
@@ -557,6 +559,8 @@ export default function ProjectSignUp() {
         attestationUID={attestationUID}
         attestationData={attestationData}
         imageUrl={imageUrl}
+        ecosystem={ecosystem}
+        setSelectedProject={setSelectedProject}
       />
       <Footer />
       {renderModal()}
@@ -568,6 +572,8 @@ interface ConfirmationSectionProps {
   attestationUID: string;
   attestationData: AttestationData;
   imageUrl: string;
+  ecosystem: string;
+  setSelectedProject: (project: Project) => void;
 }
 
 // ConfirmationSection Component Implementation
@@ -575,10 +581,34 @@ const ConfirmationSection: React.FC<ConfirmationSectionProps> = ({
   attestationUID,
   attestationData,
   imageUrl,
+  ecosystem,
+  setSelectedProject
 }) => {
+  const user = {
+    fid: '',
+    username: '',
+    ethAddress: '',
+  };
   if (!attestationUID) {
     return null; // If no attestationUID, don't show this section
   }
+  console.log('Selected Project:', attestationData, imageUrl, ecosystem, setSelectedProject);
+  useEffect(() => {
+    if (attestationUID) {
+      const project: Project = {
+        userFid: user.fid,
+        projectName: attestationData.projectName,
+        websiteUrl: attestationData.websiteUrl,
+        twitterUrl: attestationData.twitterUrl,
+        githubUrl: attestationData.githubURL,
+        logoUrl: imageUrl,
+        projectUid: attestationUID,
+        ecosystem: ecosystem,
+        // Add other relevant properties from the attestationData
+      };
+      setSelectedProject(project);
+    }
+  }, [attestationUID, attestationData, imageUrl, setSelectedProject]);
 
   return (
     <div className="w-full bg-white p-8 shadow-lg flex flex-col items-center mx-auto my-10 rounded-lg">
@@ -629,23 +659,7 @@ const ConfirmationSection: React.FC<ConfirmationSectionProps> = ({
     </div>
   );
 };
-
-interface TopRightLoginProps {
-  user: {
-    fid: string;
-    username: string;
-    ethAddress: string;
-  };
+function setSelectedProject(project: Project) {
+  throw new Error('Function not implemented.');
 }
 
-const TopRightLogin: React.FC<TopRightLoginProps> = ({ user }) => {
-  return (
-    <div className="absolute top-4 right-4 z-10">
-      {user.fid ? (
-        <ConnectButton />
-      ) : (
-        <FarcasterLogin />
-      )}
-    </div>
-  );
-};

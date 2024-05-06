@@ -1,8 +1,8 @@
 export interface Project {
-  id: number;
-  createdAt: Date | null;
+  id?: number | null;
+  createdAt?: Date | null;
   userFid: string;
-  ethAddress: string;
+  ethAddress?: string;
   ecosystem: string;
   projectName: string;
   websiteUrl: string | null;

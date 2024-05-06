@@ -9,6 +9,7 @@ import { useGlobalState } from '@/src/config/config';
 import { LuArrowUpRight } from 'react-icons/lu';
 import { RxCross2 } from 'react-icons/rx';
 import Link from 'next/link';
+import useLocalStorage from '@/src/hooks/use-local-storage-state';
 
 interface AttestationModalProps {
     isOpen: boolean;
@@ -35,10 +36,15 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     const [selectedProject] = useGlobalState('selectedProject');
     const [ isLoading, setIsLoading ] = useState(false);
     const [ attestationUID, setAttestationUID ] = useState<string>("");
+    const [user] = useLocalStorage( "user", {
+        fid: '',
+        username: '',
+        ethAddress: '',
+    });
 
     const createAttestation = async () => {
 
-        if (!fid) {
+        if (!user.fid) {
             alert('User not logged in');
             return;
         }
