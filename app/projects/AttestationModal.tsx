@@ -49,6 +49,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             alert('User not logged in');
             return;
         }
+        
         if (!eas || !currentAddress) {
             console.error('EAS or current address not available');
             return;
