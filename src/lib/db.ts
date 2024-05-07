@@ -277,7 +277,7 @@ export const getAttestationCountByProject = async (projectName: string) => {
 };
 
 // src/lib/db.ts
-
+//gets the attestations a user has made to different contributions
 export const getAttestationsByUserId = async (userFid: string) => {
   try {
     const attestations = await db
@@ -291,6 +291,21 @@ export const getAttestationsByUserId = async (userFid: string) => {
       `Error retrieving attestations for user '${userFid}':`,
       error
     );
+    throw error;
+  }
+};
+
+//gets the projects a user has made
+export const getProjectsByUserId = async (userFid: string) => {
+  try {
+    const userprojects = await db
+      .select()
+      .from(projects)
+      .where(eq(projects.userFid, userFid))
+      .execute();
+    return userprojects;
+  } catch (error) {
+    console.error(`Error retrieving projects for user '${userFid}':`, error);
     throw error;
   }
 };

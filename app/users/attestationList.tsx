@@ -1,8 +1,8 @@
 // app/users/attestationList.tsx
 
 import React from 'react';
-import { getAttestationsByUserId } from '@/src/lib/db';
-import { Attestation, AttestationNetworkType } from '@/src/types';
+import { getAttestationsByUserId, getProjectsByUserId } from '@/src/lib/db';
+import { Attestation, AttestationNetworkType, Project } from '@/src/types';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 import { easScanEndpoints } from '../components/easScan';
@@ -15,25 +15,33 @@ interface Props {
 const AttestationList = async ({ userFid }: Props) => {
   try {
     let attestations: Attestation[] = await getAttestationsByUserId(userFid);
+    let projects: Project[] = await getProjectsByUserId(userFid);
 
     // Sort attestations by createdAt timestamp in descending order
     attestations.sort((a, b) => new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime());
 
+    //extract the project names and ecosystems
+    const userProjects = [...new Set(projects.map((project) => project.projectName))]
+    const userEcosystems = [...new Set(projects.map((project) => project.ecosystem))]
+
     // Extract unique project names and ecosystems
-    const projectNames = [...new Set(attestations.map((attestation) => attestation.projectName))];
-    const ecosystems = [...new Set(attestations.map((attestation) => attestation.ecosystem))];
-    console.log('attestations', attestations);
-    console.log('projectNames', projectNames);
-    console.log('ecosystems', ecosystems);
+    const attestedProjectNames = [...new Set(attestations.map((attestation) => attestation.projectName))];
+    const attestedEcosystems = [...new Set(attestations.map((attestation) => attestation.ecosystem))];
+
+    // Combine ecosystems from attestations and created projects
+    const ecosystemsOfInterest = [...new Set([...attestedEcosystems, ...userEcosystems])];
+
+
     return (
       <div className='bg-white text-black'>
-        {attestations.length > 0 ? (
+        {attestations.length || projects.length > 0 ? (
           <div>
             <div>
+            {attestedProjectNames.length > 0 ? (
+              <div>
               <h3 className='mt-4'>Projects Attested To:</h3>
-              {projectNames.length > 0 ? (
                 <ul>
-                  {projectNames.map((projectName) => (
+                  {attestedProjectNames.map((projectName) => (
                     <li key={projectName}>
                       <Link href={`/projects/${projectName}`}>
                       {projectName}
@@ -41,15 +49,16 @@ const AttestationList = async ({ userFid }: Props) => {
                       </li>
                   ))}
                 </ul>
+              </div>
               ) : (
-                <p>No projects attested to.</p>
+                <p></p>
               )}
             </div>
             <div className='mt-4'>
               <h3>Ecosystems of Interest:</h3>
-              {ecosystems.length > 0 ? (
+              {ecosystemsOfInterest.length > 0 ? (
                 <ul>
-                  {ecosystems.map((ecosystem) => (
+                  {ecosystemsOfInterest.map((ecosystem) => (
                     <li key={ecosystem}>{ecosystem}</li>
                   ))}
                 </ul>
@@ -57,10 +66,29 @@ const AttestationList = async ({ userFid }: Props) => {
                 <p>No ecosystems of interest.</p>
               )}
             </div>
+            {/*include the projects they have created */}
             <div className='mt-4'>
-              <h3>Attestation Details:</h3>
+              <h3>Projects Created:</h3>
+              {userProjects.length > 0 ? (
+              <ul>
+                {userProjects.map((projectName) => (
+                  <li key={projectName}>
+                    <Link href={`/projects/${projectName}`}>
+                      <p className='text-black hover:underline'>{projectName}</p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No projects created.</p>
+            )}
+            </div>
+
+            <div className='mt-4'>
+            <h3>Attestation Details:</h3>
+            {attestations.map((attestation) => (
+            <div className='mt-4'>
               <ul className='mt-2'>
-                {attestations.map((attestation) => (
                   <li key={attestation.id} className='mb-4'>
                     <div className='flex justify-between items-center'>
                       <div>
@@ -81,14 +109,16 @@ const AttestationList = async ({ userFid }: Props) => {
                       </div>
                     </div>
                   </li>
-                ))}
               </ul>
             </div>
+            ))}
+          </div>
           </div>
         ) : (
-          <p>No attestations found for this user.</p>
+          <p>No projects attested to</p>
         )}
-      </div>
+      
+    </div>
     );
   } catch (error) {
     console.error('Failed to fetch attestations:', error);
