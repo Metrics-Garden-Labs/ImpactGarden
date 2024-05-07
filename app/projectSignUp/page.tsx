@@ -1,7 +1,7 @@
 // app/projectSignUp/page.tsx
 "use client";
 
-import { AttestationNetworkType, networkContractAddresses } from '../components/networkContractAddresses';
+import { AttestationNetworkType, networkContractAddresses, getChainId } from '../components/networkContractAddresses';
 import { useEAS } from '../../src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import React, { FormEvent, useEffect, useState } from 'react';
@@ -157,20 +157,6 @@ export default function ProjectSignUp() {
   const checktwitterUrl = urlHelper(attestationData?.twitterUrl || '');
   const checkgithubUrl = urlHelper(attestationData?.githubURL || '');
 
-  const getChainId = (networkType: AttestationNetworkType): number | undefined => {
-    const mapping: Record<AttestationNetworkType, number> = {
-      'Ethereum': 1, // Mainnet
-      'Optimism': 10, // Optimism
-      'Polygon': 137,
-      'Base': 8453,
-      'Arbitrum One': 42161,
-      'Scroll': 534352,
-      'Celo': 42220,
-      'Blast': 81457,
-      'Linea': 59144 ,
-    };
-    return mapping[networkType];
-  };
 
   //Create attestation logic
   //--------------------------------------------------------------------------------

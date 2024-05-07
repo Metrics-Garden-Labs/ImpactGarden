@@ -32,6 +32,8 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import FarcasterLogin from '../components/farcasterLogin';
 import AttestationModal from './AttestationModal';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
+import { AttestationNetworkType, getChainId } from '../components/networkContractAddresses';
+import { useSwitchChain } from 'wagmi';
 
 
 
@@ -61,6 +63,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
     const [feedback, setFeedback] = useState('');
     const [attestationCount, setAttestationCount] = useState(0);
     const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const { switchChain } = useSwitchChain();
     const [user] = useLocalStorage("user", {
         fid: '',
         username: '',
@@ -72,6 +75,23 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
     const projectName = selectedProject?.projectName || "";
     console.log('Selected project name:', projectName);
     //need to make the route something like /projects/:projectName
+
+    useEffect(() => {
+      const switchToProjectChain = async () => {
+        if (selectedProject) {
+          const chainId = getChainId(selectedProject.ecosystem as AttestationNetworkType);
+          if (chainId) {
+            try {
+              await switchChain({ chainId });
+            } catch (error) {
+              console.error('Failed to switch network:', error);
+            }
+          }
+        }
+      };
+  
+      switchToProjectChain();
+    }, [selectedProject, switchChain]);
 
     useEffect(() => {
       const fetchAttestationCount = async () => {

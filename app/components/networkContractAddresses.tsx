@@ -2,9 +2,6 @@
 //on different chains through changing of states, similar 
 //to changing the networks
 
-//first i will put int the contract addresses for the different chains
-
-//i've gone a bit over board with the number of chain, will make it easier later
 
 // Define network names as a type
 // export type AttestationNetworkType =
@@ -109,4 +106,20 @@ export const networkContractAddresses: Record<AttestationNetworkType, ContractAd
   //   attestAddress: "0xaEF4103A04090071165F78D45D83A0C0782c2B2a",
   //   schemaRegistryAddress: "0x55D26f9ae0203EF95494AE4C170eD35f4Cf77797",
   // }
+};
+
+// Function to get the chain ID based on the network type
+export const getChainId = (networkType: AttestationNetworkType): number | undefined => {
+  const mapping: Record<AttestationNetworkType, number> = {
+    'Ethereum': 1, // Mainnet
+    'Optimism': 10, // Optimism
+    'Polygon': 137,
+    'Base': 8453,
+    'Arbitrum One': 42161,
+    'Scroll': 534352,
+    'Celo': 42220,
+    'Blast': 81457,
+    'Linea': 59144,
+  };
+  return mapping[networkType];
 };

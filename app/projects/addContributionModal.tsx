@@ -40,8 +40,10 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
   });
 
 
+
   const { eas, currentAddress } = useEAS();
 
+  console.log('Project Ecosystem:', selectedProject?.ecosystem);
   console.log('Selected Project:', formData);
 
   const createAttestation = async (): Promise<string> => {
@@ -58,6 +60,7 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
 
     try {
       setIsLoading(true);
+
       const contributionSchema = '0x132a4d5644fa6b85baf205fc25b069ba398bcecea7dc4b609c2ba20efb71da90';
       const schemaEncoder = new SchemaEncoder('uint24 userFid, string projectName, string contribution, string description, string link, string ecosystem');
       const encodedData = schemaEncoder.encodeData([
