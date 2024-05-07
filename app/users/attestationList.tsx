@@ -2,9 +2,10 @@
 
 import React from 'react';
 import { getAttestationsByUserId } from '@/src/lib/db';
-import { Attestation } from '@/src/types';
+import { Attestation, AttestationNetworkType } from '@/src/types';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
+import { easScanEndpoints } from '../components/easScan';
 
 
 interface Props {
@@ -67,7 +68,9 @@ const AttestationList = async ({ userFid }: Props) => {
                           <p className='text-black hover:underline'>Project Name: {attestation.projectName}</p>
                         </Link>
                         <p>Contribution: {attestation.contribution}</p>
-                        <p>Attestation UID: {attestation.attestationUID}</p>
+                        <Link href={`${easScanEndpoints[attestation.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`}> 
+                          <p>Attestation UID: {attestation.attestationUID}</p>
+                        </Link>
                         <p>Attestation Type: {attestation.attestationType}</p>
                         <p>Feedback: {attestation.feedback}</p>
                       </div>

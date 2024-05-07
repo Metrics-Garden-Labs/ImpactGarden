@@ -2,6 +2,7 @@
 //on different chains through changing of states, similar 
 //to changing the networks
 
+import { ContractAddresses, AttestationNetworkType } from "@/src/types";
 
 // Define network names as a type
 // export type AttestationNetworkType =
@@ -22,23 +23,6 @@
 //   | 'Base Goerli'
 //   | 'Arbitrum Goerli';
 
-  export type AttestationNetworkType =
-  | 'Ethereum'
-  | 'Optimism'
-  | 'Base'
-  | 'Arbitrum One'
-  | 'Polygon'
-  | 'Scroll'
-  | 'Celo'
-  | 'Blast'
-  | 'Linea'
-
-
-// Define a type for the contract addresses
-export type ContractAddresses = {
-  attestAddress: string;
-  schemaRegistryAddress: string;
-};
 
 // Mapping network names to their contract addresses
 export const networkContractAddresses: Record<AttestationNetworkType, ContractAddresses> = {

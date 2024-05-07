@@ -16,11 +16,8 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { IoIosMenu } from "react-icons/io";
-import Sidebar from './sidebar1';
-import { getContributionsByProjectName } from '../../src/lib/db';
 import { Project, Contribution, ContributionAttestation } from '@/src/types';
 import AddContributionModal from './addContributionModal';
-import {useRouter} from 'next/router';
 import { useGlobalState } from '@/src/config/config';
 import { LuArrowUpRight } from 'react-icons/lu';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
@@ -28,11 +25,10 @@ import { ethers } from 'ethers';
 import { useEAS } from '@/src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
 import {getAttestationsByContribution} from '@/src/lib/db';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import FarcasterLogin from '../components/farcasterLogin';
+import { AttestationNetworkType } from '@/src/types';
 import AttestationModal from './AttestationModal';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
-import { AttestationNetworkType, getChainId } from '../components/networkContractAddresses';
+import {  getChainId } from '../components/networkContractAddresses';
 import { useSwitchChain } from 'wagmi';
 
 

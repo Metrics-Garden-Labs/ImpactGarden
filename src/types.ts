@@ -141,3 +141,21 @@ export interface newUserAddresses {
 
 // Define type for insertion purposes
 export type NewUserAddress = Omit<userAddresses, "id">;
+
+//Attestation Network Type
+export type AttestationNetworkType =
+  | "Ethereum"
+  | "Optimism"
+  | "Base"
+  | "Arbitrum One"
+  | "Polygon"
+  | "Scroll"
+  | "Celo"
+  | "Blast"
+  | "Linea";
+
+// Define a type for the contract addresses
+export type ContractAddresses = {
+  attestAddress: string;
+  schemaRegistryAddress: string;
+};

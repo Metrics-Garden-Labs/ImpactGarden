@@ -3,13 +3,14 @@
 import React, { useState } from 'react';
 import { ethers } from 'ethers';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
-import { Contribution, Project } from '@/src/types'; 
+import { AttestationNetworkType, Contribution, Project } from '@/src/types'; 
 import { NEXT_PUBLIC_URL } from '@/src/config/config'; 
 import { useGlobalState } from '@/src/config/config'; 
 import { LuArrowUpRight } from 'react-icons/lu';
 import { RxCross2 } from 'react-icons/rx';
 import Link from 'next/link';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
+import { easScanEndpoints } from '../components/easScan';
 
 interface AttestationModalProps {
     isOpen: boolean;
@@ -168,9 +169,8 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
               <div className="bg-white p-8 rounded-lg shadow-lg">
                 <h2 className="text-xl font-bold mb-4">Attestation Created</h2>
                 <p>Your attestation has been successfully created.</p>
-                <p>Attestation UID: {attestationUID}</p>
-                <Link href={`https://optimism.easscan.org/attestation/view/${attestationUID}`}>
-                    View your attestation here!
+                <Link href={`${easScanEndpoints[selectedProject?.ecosystem as AttestationNetworkType]}${attestationUID}`}>
+                  <p>Attestation UID: {attestationUID}</p>
                 </Link>
                 <button
                   className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"

@@ -1,7 +1,7 @@
 // app/projectSignUp/page.tsx
 "use client";
 
-import { AttestationNetworkType, networkContractAddresses, getChainId } from '../components/networkContractAddresses';
+import {  networkContractAddresses, getChainId } from '../components/networkContractAddresses';
 import { useEAS } from '../../src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import React, { FormEvent, useEffect, useState } from 'react';
@@ -21,8 +21,9 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { FaXTwitter } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa";
 import { BsGlobe2 } from "react-icons/bs";
-import { Project } from '@/src/types';
+import { Project, AttestationNetworkType } from '@/src/types';
 import { useSwitchChain } from 'wagmi';
+import {easScanEndpoints} from '../components/easScan';
 
 type AttestationData = {
   projectName: string;
@@ -90,7 +91,7 @@ export default function ProjectSignUp() {
   
     checkNetwork();
   }, [selectedNetwork, switchChain]);
-  
+
   useEffect(() => {
     if (attestationUID) {
       const project: Project = {
@@ -176,6 +177,7 @@ export default function ProjectSignUp() {
   console.log('Selected website:', checkwebsiteUrl);
   const checktwitterUrl = urlHelper(attestationData?.twitterUrl || '');
   const checkgithubUrl = urlHelper(attestationData?.githubURL || '');
+
 
 
   //Create attestation logic
@@ -353,7 +355,8 @@ export default function ProjectSignUp() {
             attestationData={attestationData}
             imageUrl={imageUrl}
             ecosystem={ecosystem}
-            selectedProject={selectedProject}         />
+            selectedProject={selectedProject}  
+            selectedNetwork={selectedNetwork}       />
           <Footer />
         </div>
       );
@@ -622,6 +625,7 @@ export default function ProjectSignUp() {
         imageUrl={imageUrl}
         ecosystem={ecosystem}
         selectedProject={selectedProject}
+        selectedNetwork={selectedNetwork}
       />
       <Footer />
       {renderModal()}
@@ -637,6 +641,7 @@ interface ConfirmationSectionProps {
   imageUrl: string;
   ecosystem: string;
   selectedProject: Project | null;
+  selectedNetwork: AttestationNetworkType;
 }
 
 // ConfirmationSection Component Implementation
@@ -645,7 +650,8 @@ const ConfirmationSection: React.FC<ConfirmationSectionProps> = ({
   attestationData,
   imageUrl,
   ecosystem,
-  selectedProject
+  selectedProject,
+  selectedNetwork
 }) => {
   const user = {
     fid: '',
@@ -690,18 +696,22 @@ const ConfirmationSection: React.FC<ConfirmationSectionProps> = ({
           <FaGithub className="text-black mx-2 text-2xl" />
         </div>
       </div>
-      <p className="text-lg mt-8">Attestation UID:</p>
-      <p className="text-lg p-2 underline">{attestationUID}</p>
 
-      {/* comment this back in when i have the eas scan link for each project
-      <Link href={`/projects/${attestationUID}`} passHref>
-        <p className="text-lg p-2 underline">{attestationUID}</p>
-      </Link> */}
       <Link href={`/projects/${attestationData.projectName}`} passHref className="pt-6">
         <button className="mt-4 px-6 py-3 bg-black text-white rounded-md text-lg">
           Visit your Project
         </button>
       </Link>
+
+      <p className="text-lg mt-8">Attestation UID:</p>
+      <Link href={`${easScanEndpoints[selectedNetwork]}${attestationUID}`} passHref>
+        <p className="text-lg p-2 underline">{attestationUID}</p>
+      </Link> 
+      
+
+      {/* comment this back in when i have the eas scan link for each project */}
+     
+      
     </div>
   );
 };
