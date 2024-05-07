@@ -17,8 +17,11 @@ import {
     mainnet,
     optimism,
     polygon,
-    sepolia,
-    zora,
+    scroll,
+    celo,
+    blast,
+    linea,
+    
 } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider, useAccount } from 'wagmi';
@@ -42,8 +45,10 @@ const config = getDefaultConfig({
         optimism,
         arbitrum,
         base,
-        zora,
-        sepolia
+        scroll,
+        celo,
+        blast,
+        linea,
         // ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true' ? [sepolia] : []),
     ],
     ssr: true,

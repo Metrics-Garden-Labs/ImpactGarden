@@ -7,23 +7,35 @@
 //i've gone a bit over board with the number of chain, will make it easier later
 
 // Define network names as a type
-export type AttestationNetworkType =
+// export type AttestationNetworkType =
+//   | 'Ethereum'
+//   | 'Optimism'
+//   | 'Base'
+//   | 'Arbitrum One'
+//   | 'Arbitrum Nova'
+//   | 'Polygon'
+//   | 'Scroll'
+//   | 'Celo'
+//   | 'Blast'
+//   | 'Linea'
+//   | 'Sepolia'
+//   | 'Optimism Sepolia'
+//   | 'Optimism Goerli'
+//   | 'Base Sepolia'
+//   | 'Base Goerli'
+//   | 'Arbitrum Goerli';
+
+  export type AttestationNetworkType =
   | 'Ethereum'
   | 'Optimism'
   | 'Base'
   | 'Arbitrum One'
-  | 'Arbitrum Nova'
   | 'Polygon'
   | 'Scroll'
   | 'Celo'
   | 'Blast'
   | 'Linea'
-  | 'Sepolia'
-  | 'Optimism Sepolia'
-  | 'Optimism Goerli'
-  | 'Base Sepolia'
-  | 'Base Goerli'
-  | 'Arbitrum Goerli';
+
 
 // Define a type for the contract addresses
 export type ContractAddresses = {
@@ -49,10 +61,10 @@ export const networkContractAddresses: Record<AttestationNetworkType, ContractAd
     attestAddress: "0xbD75f629A22Dc1ceD33dDA0b68c546A1c035c458",
     schemaRegistryAddress: "0xA310da9c5B885E7fb3fbA9D66E9Ba6Df512b78eB",
   },
-  "Arbitrum Nova": {
-    attestAddress: "0x6d3dC0Fe5351087E3Af3bDe8eB3F7350ed894fc3",
-    schemaRegistryAddress: "0x49563d0DA8DF38ef2eBF9C1167270334D72cE0AE",
-  },
+  // "Arbitrum Nova": {
+  //   attestAddress: "0x6d3dC0Fe5351087E3Af3bDe8eB3F7350ed894fc3",
+  //   schemaRegistryAddress: "0x49563d0DA8DF38ef2eBF9C1167270334D72cE0AE",
+  // },
   Polygon: {
     attestAddress: "0x5E634ef5355f45A855d02D66eCD687b1502AF790",
     schemaRegistryAddress: "0x7876EEF51A891E737AF8ba5A5E0f0Fd29073D5a7",
@@ -73,28 +85,28 @@ export const networkContractAddresses: Record<AttestationNetworkType, ContractAd
     attestAddress: "0xaEF4103A04090071165F78D45D83A0C0782c2B2a",
     schemaRegistryAddress: "0x55D26f9ae0203EF95494AE4C170eD35f4Cf77797",
   },
-  Sepolia: {
-    attestAddress: "0xC2679fBD37d54388Ce493F1DB75320D236e1815e",
-    schemaRegistryAddress: "0x0a7E2Ff54e76B8E6659aedc9103FB21c038050D0",
-  },
-  "Optimism Sepolia": {
-    attestAddress: "0x4200000000000000000000000000000000000021",
-    schemaRegistryAddress: "0x4200000000000000000000000000000000000020",
-  },
-  "Optimism Goerli": {
-    attestAddress: "0x4200000000000000000000000000000000000021",
-    schemaRegistryAddress: "0x4200000000000000000000000000000000000020",
-  },
-  "Base Sepolia": {
-    attestAddress: "0x4200000000000000000000000000000000000021",
-    schemaRegistryAddress: "0x4200000000000000000000000000000000000020",
-  },
-  "Base Goerli": {
-    attestAddress: "0x4200000000000000000000000000000000000021",
-    schemaRegistryAddress: "0x4200000000000000000000000000000000000020",
-  },
-  "Arbitrum Goerli": {
-    attestAddress: "0xaEF4103A04090071165F78D45D83A0C0782c2B2a",
-    schemaRegistryAddress: "0x55D26f9ae0203EF95494AE4C170eD35f4Cf77797",
-  }
+  // Sepolia: {
+  //   attestAddress: "0xC2679fBD37d54388Ce493F1DB75320D236e1815e",
+  //   schemaRegistryAddress: "0x0a7E2Ff54e76B8E6659aedc9103FB21c038050D0",
+  // },
+  // "Optimism Sepolia": {
+  //   attestAddress: "0x4200000000000000000000000000000000000021",
+  //   schemaRegistryAddress: "0x4200000000000000000000000000000000000020",
+  // },
+  // "Optimism Goerli": {
+  //   attestAddress: "0x4200000000000000000000000000000000000021",
+  //   schemaRegistryAddress: "0x4200000000000000000000000000000000000020",
+  // },
+  // "Base Sepolia": {
+  //   attestAddress: "0x4200000000000000000000000000000000000021",
+  //   schemaRegistryAddress: "0x4200000000000000000000000000000000000020",
+  // },
+  // "Base Goerli": {
+  //   attestAddress: "0x4200000000000000000000000000000000000021",
+  //   schemaRegistryAddress: "0x4200000000000000000000000000000000000020",
+  // },
+  // "Arbitrum Goerli": {
+  //   attestAddress: "0xaEF4103A04090071165F78D45D83A0C0782c2B2a",
+  //   schemaRegistryAddress: "0x55D26f9ae0203EF95494AE4C170eD35f4Cf77797",
+  // }
 };

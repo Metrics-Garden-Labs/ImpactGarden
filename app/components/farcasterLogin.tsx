@@ -190,7 +190,7 @@ console.log("FID", fid);
       <div className="inline-block ml-4">
         <ConnectButton
           accountStatus="address"
-          chainStatus="none"
+          chainStatus="icon"
           showBalance={false}
         />
       </div>

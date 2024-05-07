@@ -22,6 +22,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa";
 import { BsGlobe2 } from "react-icons/bs";
 import { Project } from '@/src/types';
+import { useSwitchChain } from 'wagmi';
 
 type AttestationData = {
   projectName: string;
@@ -31,7 +32,7 @@ type AttestationData = {
 };
 
 const networks: AttestationNetworkType[] = [
-  'Ethereum', 'Optimism', 'Base', 'Arbitrum One', 'Arbitrum Nova', 'Polygon',
+  'Ethereum', 'Optimism', 'Base', 'Arbitrum One', 'Polygon',
   'Scroll', 'Celo', 'Blast', 'Linea'
 ];
 
@@ -61,13 +62,15 @@ export default function ProjectSignUp() {
   const [ecosystem, setEcosystem] = useState<string>('Optimism');
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
   const [isPreview, setIsPreview] = useState<boolean>(false);
+  const { switchChain } = useSwitchChain();
   
   console.log('Ecosystem', ecosystem);
   console.log('walletAddress', walletAddress);
   console.log('Fid', fid);
   console.log('ethAddress', ethAddress);
-  const { eas, currentAddress, selectedNetwork, handleNetworkChange } = useEAS();
 
+  const { eas, currentAddress, selectedNetwork, handleNetworkChange } = useEAS();
+  console.log('selectedNetwork', networkContractAddresses[selectedNetwork]?.attestAddress);
   useEffect(() => {
     if (attestationUID) {
       const project: Project = {
@@ -85,11 +88,20 @@ export default function ProjectSignUp() {
     }
   }, [attestationUID, attestationData, imageUrl, user.fid, ecosystem, setSelectedProject]);
 
-  const handleNetworkChangeEvent = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleNetworkChangeEvent = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value as AttestationNetworkType;
     handleNetworkChange(selectedValue);
     setEcosystem(selectedValue);
     console.log('Selected Network', selectedValue);
+  
+    const chainId = getChainId(selectedValue);
+    if (chainId) {
+      try {
+        await switchChain({ chainId });
+      } catch (error) {
+        console.error('Failed to switch network:', error);
+      }
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,6 +116,7 @@ export default function ProjectSignUp() {
       [name]: value,
     }));
   };
+
 
   const handleNext = () => {
     // Ensure required fields are filled before allowing a preview
@@ -144,6 +157,21 @@ export default function ProjectSignUp() {
   const checktwitterUrl = urlHelper(attestationData?.twitterUrl || '');
   const checkgithubUrl = urlHelper(attestationData?.githubURL || '');
 
+  const getChainId = (networkType: AttestationNetworkType): number | undefined => {
+    const mapping: Record<AttestationNetworkType, number> = {
+      'Ethereum': 1, // Mainnet
+      'Optimism': 10, // Optimism
+      'Polygon': 137,
+      'Base': 8453,
+      'Arbitrum One': 42161,
+      'Scroll': 534352,
+      'Celo': 42220,
+      'Blast': 81457,
+      'Linea': 59144 ,
+    };
+    return mapping[networkType];
+  };
+
   //Create attestation logic
   //--------------------------------------------------------------------------------
 
@@ -165,7 +193,7 @@ export default function ProjectSignUp() {
       return;
     }
     console.log('current address', currentAddress);
-
+    {/* schema is just for OP at the minute would have to make a schema for each network */}
     try {
       setIsLoading(true);
       const mainSchemaUid = '0x45ea2d603b7dfcec03e1e4a5d65a22216e5f7a3c3bf1e61560c58c888f2c7f3f';
@@ -181,16 +209,17 @@ export default function ProjectSignUp() {
       console.log('Encoded Data:', encodedData);
 
       console.log('user', user);
-  
+      const eas1 = new EAS(networkContractAddresses[selectedNetwork]?.attestAddress);
       const provider = new ethers.BrowserProvider(window.ethereum);
       console.log('Provider:', provider);
       const signer = await provider.getSigner();
       console.log('Signer:', signer);
-      eas.connect(signer);
-      const delegatedSigner = await eas.getDelegated();
+      eas1.connect(signer);
+      console.log('EAS:', eas1);
+      const delegatedSigner = await eas1.getDelegated();
       console.log('Delegated Signer:', delegatedSigner);
 
-      const easnonce = await eas.getNonce(walletAddress);
+      const easnonce = await eas1.getNonce(walletAddress);
       console.log('EAS Nonce:', easnonce);
 
       const attestation: EIP712AttestationParams = {
@@ -435,7 +464,7 @@ export default function ProjectSignUp() {
           <form className="w-1/3 bg-white p-6 shadow rounded space-y-6">
         <div>
           <label htmlFor="attestationChain" className="block text-sm font-medium leading-6 text-gray-900">
-            Select Attestation Network and Ecosystem *
+            Ecosystem and Network of Contribution * (Only Optimism is supported at the moment)
           </label>
           <div className="mt-2">
             <select
