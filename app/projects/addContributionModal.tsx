@@ -206,7 +206,7 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
             <h2 className="text-xl font-bold mb-4">Attestation Created</h2>
             <p>Your attestation has been successfully created.</p>
             <Link href={`${easScanEndpoints[selectedProject?.ecosystem as AttestationNetworkType]}${attestationUID}`}>
-            <p>Attestation UID: {attestationUID}</p>
+              <p className='text-black hover:underline'>Attestation UID: {attestationUID}</p>
             </Link>
             <button
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"

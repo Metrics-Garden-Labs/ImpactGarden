@@ -93,7 +93,18 @@ export default function Sidebar({ project }: Props) {
             {/* Company image placeholder */}
             <div className="h-60 bg-gray-300 rounded-lg flex justify-center items-center">
               {/* Replace src with your image path */}
-              <Image src={project.logoUrl || "/MGLIcon.png"} alt="Company Logo" width={12} height={12} className="h-full w-full object-cover rounded-lg" />
+              {project.logoUrl ? (
+                    <Image
+                      src={project.logoUrl}
+                      alt="Project Logo"
+                      width={12}
+                      height={12}
+                      className="h-full w-full object-cover rounded-lg"
+                    />
+                  ) : (
+                    <div className="mx-auto w-12 h-12 bg-gray-300 rounded-md flex items-center justify-center">
+                    </div>
+                  )}
             </div>
             {/* Project Name */}
             <h2 className="text-2xl font-bold text-gray-900">{project.projectName}</h2>

@@ -170,7 +170,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                 <h2 className="text-xl font-bold mb-4">Attestation Created</h2>
                 <p>Your attestation has been successfully created.</p>
                 <Link href={`${easScanEndpoints[selectedProject?.ecosystem as AttestationNetworkType]}${attestationUID}`}>
-                  <p>Attestation UID: {attestationUID}</p>
+                  <p className='text-black hover:underline'>Attestation UID: {attestationUID}</p>
                 </Link>
                 <button
                   className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
@@ -204,7 +204,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                     <h3 className="font-semibold text-center">Link/Evidence</h3> 
                     <a href={contribution.link} className="text-gray-500 text-center hover:text-gray-300 visited:text-indigo-600 flex items-center">
                         {contribution.link}
-                        <LuArrowUpRight className="ml-1" />
+                        {contribution.link.length > 0 && <LuArrowUpRight className="ml-1" />}
                     </a>
                 </div>
                 {/* <div className="mb-4 ">
