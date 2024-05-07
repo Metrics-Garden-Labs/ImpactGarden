@@ -651,8 +651,8 @@ const ConfirmationSection: React.FC<ConfirmationSectionProps> = ({
       <Image
         src="/star.png"
         alt="Attestation Created"
-        width={100}
-        height={100}
+        width={75}
+        height={75}
         className="object-contain mb-10 mt-10"
       />
       <h2 className="text-4xl font-bold mb-10">Attestation Created</h2>

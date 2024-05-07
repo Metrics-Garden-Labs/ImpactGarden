@@ -9,14 +9,14 @@ export default function Footer() {
     <>
     <footer className="footer p-12 bg-headerblack text-white">
         <div className='left-side'>
-        <button className="btn bg-headerblack text-xl border-none pl-5">
-                <Image src='/mglwhite.png' alt='MGL Logo' width={12} height={12} className='h-12 w-12'/>
-        </button>
+        
 
         <div className='flex gap-x-8 py-8 pl-5'>
+            <button className="btn bg-headerblack text-xl border-none pl-5">
+                    <Image src='/mglwhite.png' alt='MGL Logo' width={12} height={12} className='h-12 w-12'/>
+            </button>
             <Link href='/' className='text-white text-lg hover:text-opactiy-75'>HOME</Link>
             <Link href='/about' className='text-white text-lg hover:text-opactiy-75'>METRICS DATABASE</Link>
-            <Link href='/about' className='text-white text-lg hover:text-opactiy-75'>ATTEST</Link>
             <Link href='/about' className='text-white text-lg hover:text-opactiy-75'>PROJECTS</Link>
         </div>
         </div>

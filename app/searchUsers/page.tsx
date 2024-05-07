@@ -14,6 +14,7 @@ import UserList from "./userList";
 import Navbar from "../components/navbar1";
 import { User } from '../..//src/types';
 import { getUsers } from '../../src/lib/db';
+import Footer from "../components/footer";
 
 interface Props {
   searchParams?: {
@@ -32,7 +33,6 @@ const UserProfilePage = async ({ searchParams }: Props) => {
     return (
       <div className="bg-white text-black">
         <Navbar />
-        <h1 className="mt-1 ml-4">Search Users Here:</h1>
         <SearchUsers />
         <UserList users={users} query={query} filter={filter} />
       </div>
