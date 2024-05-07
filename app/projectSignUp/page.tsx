@@ -71,6 +71,26 @@ export default function ProjectSignUp() {
 
   const { eas, currentAddress, selectedNetwork, handleNetworkChange } = useEAS();
   console.log('selectedNetwork', networkContractAddresses[selectedNetwork]?.attestAddress);
+
+  useEffect(() => {
+    const checkNetwork = async () => {
+      if (selectedNetwork) {
+        const chainId = getChainId(selectedNetwork);
+        if (chainId) {
+          try {
+            await switchChain({ chainId });
+          } catch (error) {
+            console.error('Failed to switch network:', error);
+            // Show an error message or prompt to the user indicating the need to switch networks
+            alert('Please switch to the correct network in your wallet.');
+          }
+        }
+      }
+    };
+  
+    checkNetwork();
+  }, [selectedNetwork, switchChain]);
+  
   useEffect(() => {
     if (attestationUID) {
       const project: Project = {
