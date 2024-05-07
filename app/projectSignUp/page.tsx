@@ -632,23 +632,6 @@ const ConfirmationSection: React.FC<ConfirmationSectionProps> = ({
   if (!attestationUID) {
     return null; // If no attestationUID, don't show this section
   }
-  console.log('Selected Project:', attestationData, imageUrl, ecosystem, selectedProject);
-  // useEffect(() => {
-  //   if (attestationUID) {
-  //     const project: Project = {
-  //       userFid: user.fid,
-  //       projectName: attestationData.projectName,
-  //       websiteUrl: attestationData.websiteUrl,
-  //       twitterUrl: attestationData.twitterUrl,
-  //       githubUrl: attestationData.githubURL,
-  //       logoUrl: imageUrl,
-  //       projectUid: attestationUID,
-  //       ecosystem: ecosystem,
-  //       // Add other relevant properties from the attestationData
-  //     };
-  //     setSelectedProject(project);
-  //   }
-  // }, [attestationUID, attestationData, imageUrl, setSelectedProject]);
 
   return (
     <div className="w-full bg-white p-8 shadow-lg flex flex-col items-center mx-auto my-10 rounded-lg">

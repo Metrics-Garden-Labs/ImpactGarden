@@ -212,6 +212,8 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
       </button>
 
         {/* //add contribution button */}
+        {/* if the users fid matches the fid that registered the project they can add contributions */}
+      {user.fid === selectedProject?.userFid && (
       <div className='absolute top-20 right-5'>
         <button 
           className='btn bg-headerblack text-white hover:bg-gray-200 hover:text-black px-2 py-1'
@@ -220,7 +222,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
             Add Contribution
         </button>
         <AddContributionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} addContribution={addContribution} />
-      </div>
+      </div>)}
       
           <button onClick={() => setActiveTab('attestations')} className={tabClasses('attestations')}>
             Contributions
