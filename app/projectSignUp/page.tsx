@@ -32,8 +32,7 @@ type AttestationData = {
 
 const networks: AttestationNetworkType[] = [
   'Ethereum', 'Optimism', 'Base', 'Arbitrum One', 'Arbitrum Nova', 'Polygon',
-  'Scroll', 'Celo', 'Blast', 'Linea', 'Sepolia', 'Optimism Sepolia', 'Optimism Goerli',
-  'Base Sepolia', 'Base Goerli', 'Arbitrum Goerli'
+  'Scroll', 'Celo', 'Blast', 'Linea'
 ];
 
 export default function ProjectSignUp() {
@@ -89,18 +88,13 @@ export default function ProjectSignUp() {
   const handleNetworkChangeEvent = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value as AttestationNetworkType;
     handleNetworkChange(selectedValue);
+    setEcosystem(selectedValue);
     console.log('Selected Network', selectedValue);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setAttestationData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  const handleEcosystemChangeEvent = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedEcosystem = e.target.value as AttestationNetworkType;
-    setEcosystem(selectedEcosystem);
-    console.log('Selected Ecosystem', selectedEcosystem);
   };
 
   const handleAttestationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -149,6 +143,9 @@ export default function ProjectSignUp() {
   console.log('Selected website:', checkwebsiteUrl);
   const checktwitterUrl = urlHelper(attestationData?.twitterUrl || '');
   const checkgithubUrl = urlHelper(attestationData?.githubURL || '');
+
+  //Create attestation logic
+  //--------------------------------------------------------------------------------
 
   const createAttestation = async () => {
 
@@ -257,6 +254,8 @@ export default function ProjectSignUp() {
             projectUid: projectUid,
             logoUrl: imageUrl,
           };
+
+          //Add project to database
         
           const response1 = await fetch(`${NEXT_PUBLIC_URL}/api/addProjectDb`, {
             method: 'POST',
@@ -280,6 +279,8 @@ export default function ProjectSignUp() {
     }
   };
 
+  //Modal for when the attestation is being processed
+  //--------------------------------------------------------------------------------
   const renderModal = () => {
     if (isLoading) {
       return (
@@ -306,6 +307,8 @@ export default function ProjectSignUp() {
     return null;
   };
 
+  //When attestation is created it shows the confirmation page
+  //--------------------------------------------------------------------------------
   if(attestationUID) {
       return (
         <div className="min-h-screen flex flex-col bg-white text-black">
@@ -326,7 +329,8 @@ export default function ProjectSignUp() {
       <Navbar />
       
       <div className="flex justify-center relative w-full mt-10 px-8">
-        {/* Left Column */}
+        {/* Left Column------------------------------------------------- */}
+        {/* Project Card view section on the left hand side */}
         { isPreview ? (
 
         <div className="w-1/4 pr-8">
@@ -368,7 +372,10 @@ export default function ProjectSignUp() {
                </div>
         )}
 
-        {/* Center Column */}
+        {/* Center Column ------------------------------------------------------------*/}
+        {/* Form section in the middle */}
+        {/* If isPreview is true, show the preview section */}
+        {/* If isPreview is false, show the form section */}
         {isPreview ? (
           <div className="w-2/3 bg-white p-8 shadow-lg rounded mx-auto">
           <h2 className="font-semibold mt-6 text-center text-lg">Project card preview</h2>
@@ -428,7 +435,7 @@ export default function ProjectSignUp() {
           <form className="w-1/3 bg-white p-6 shadow rounded space-y-6">
         <div>
           <label htmlFor="attestationChain" className="block text-sm font-medium leading-6 text-gray-900">
-            Select Attestation Network *
+            Select Attestation Network and Ecosystem *
           </label>
           <div className="mt-2">
             <select
@@ -438,30 +445,9 @@ export default function ProjectSignUp() {
               onChange={handleNetworkChangeEvent}
               className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             >
-              {Object.keys(networkContractAddresses).map((network) => (
-                <option key={network} value={network}>
-                  {network}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-          <div>
-          <label htmlFor="ecosystem" className="block text-sm font-medium leading-6 text-gray-900">
-            What ecosystem is your project contributing to? *
-          </label>
-          <div className="mt-2">
-            <select
-              id="ecosystem"
-              name="ecosystem"
-              value={ecosystem}
-              onChange={handleEcosystemChangeEvent}
-              className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            >
               {networks.map((network) => (
                 <option key={network} value={network}>
-                  {network} Ecosystem
+                  {network}
                 </option>
               ))}
             </select>
@@ -591,7 +577,7 @@ export default function ProjectSignUp() {
         </form>
         )}
 
-        {/* Right Column: Empty */}
+        {/* Right Column: Empty --------------------------------------------------------------*/}
         <div className="w-1/4">
         </div>
       </div>
@@ -608,6 +594,8 @@ export default function ProjectSignUp() {
   );
 }
 
+//--------------------------------------------------------------------------------------------
+//Logic for conditionally rendering the confirmation page
 interface ConfirmationSectionProps {
   attestationUID: string;
   attestationData: AttestationData;
