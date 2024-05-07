@@ -85,34 +85,34 @@ const AttestationList = async ({ userFid }: Props) => {
             </div>
 
             <div className='mt-4'>
-            <h3>Attestation Details:</h3>
-            {attestations.map((attestation) => (
-            <div className='mt-4'>
-              <ul className='mt-2'>
-                  <li key={attestation.id} className='mb-4'>
-                    <div className='flex justify-between items-center'>
-                      <div>
-                        <Link href={`/projects/${attestation.projectName}`}>
-                          <p className='text-black hover:underline'>Project Name: {attestation.projectName}</p>
-                        </Link>
-                        <p>Contribution: {attestation.contribution}</p>
-                        <Link href={`${easScanEndpoints[attestation.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`}> 
-                          <p className='text-black hover:underline'>Attestation UID: {attestation.attestationUID}</p>
-                        </Link>
-                        <p>Attestation Type: {attestation.attestationType}</p>
-                        <p>Feedback: {attestation.feedback}</p>
+              <h3>Attestation Details:</h3>
+              {attestations.map((attestation) => (
+                <div key={attestation.id} className='mt-4'>
+                  <ul className='mt-2'>
+                    <li className='mb-4'>
+                      <div className='flex justify-between items-center'>
+                        <div>
+                          <Link href={`/projects/${attestation.projectName}`}>
+                            <p className='text-black hover:underline'>Project Name: {attestation.projectName}</p>
+                          </Link>
+                          <p>Contribution: {attestation.contribution}</p>
+                          <Link href={`${easScanEndpoints[attestation.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`}> 
+                            <p className='text-black hover:underline'>Attestation UID: {attestation.attestationUID}</p>
+                          </Link>
+                          <p>Attestation Type: {attestation.attestationType}</p>
+                          <p>Feedback: {attestation.feedback}</p>
+                        </div>
+                        <div>
+                          <span className='text-sm text-gray-600'>
+                            {formatDistanceToNow(new Date(attestation.createdAt || ''), { addSuffix: true })}
+                          </span>
+                        </div>
                       </div>
-                      <div>
-                        <span className='text-sm text-gray-600'>
-                          {formatDistanceToNow(new Date(attestation.createdAt || ''), { addSuffix: true })}
-                        </span>
-                      </div>
-                    </div>
-                  </li>
-              </ul>
+                    </li>
+                  </ul>
+                </div>
+              ))}
             </div>
-            ))}
-          </div>
           </div>
         ) : (
           <p>No projects attested to</p>
