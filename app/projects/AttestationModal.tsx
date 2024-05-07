@@ -11,6 +11,7 @@ import { RxCross2 } from 'react-icons/rx';
 import Link from 'next/link';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import { easScanEndpoints } from '../components/easScan';
+import AttestationCreationModal from '../components/attestationCreationModal';
 
 interface AttestationModalProps {
     isOpen: boolean;
@@ -153,15 +154,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     const renderModal = () => {
         if (isLoading) {
           return (
-            <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-              <div className="bg-white p-8 rounded-lg shadow-lg">
-                <h2 className="text-xl font-bold mb-4">Processing Attestation</h2>
-                <div className="flex items-center">
-                  <p>Please wait while your attestation is being processed...</p>
-                  <span className="loading loading-spinner loading-lg"></span>
-                </div>
-              </div>
-            </div>
+            AttestationCreationModal()
           );
         } else if (attestationUID) {
           return (
@@ -206,6 +199,10 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                         {contribution.link}
                         {contribution.link.length > 0 && <LuArrowUpRight className="ml-1" />}
                     </a>
+                </div>
+                <div className="mb-4 ">
+                    <h3 className="font-semibold text-center">Ecosystem</h3> 
+                    <p className="text-center text-black">{project.ecosystem}</p>
                 </div>
                 {/* <div className="mb-4 ">
                     <h3 className="font-semibold text-center">Attestations</h3>

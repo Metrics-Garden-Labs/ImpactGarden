@@ -78,6 +78,22 @@ export type User = {
   createdAt: Date | null;
 };
 
+export type UserBadgeVerification = {
+  users: {
+    id: number;
+    fid: string;
+    username: string;
+    pfp_url: string | null;
+    ethaddress: string | null;
+    createdAt: Date | null;
+  };
+  userAddresses: {
+    coinbaseVerified: boolean | null;
+    opBadgeholder: boolean | null;
+    powerBadgeholder: boolean | null;
+  } | null;
+};
+
 export interface NewContributionAttestation {
   id: number;
   userFid: string;

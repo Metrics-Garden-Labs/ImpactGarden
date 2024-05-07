@@ -71,6 +71,38 @@ export const getUserByUsername = async (username: string) => {
   }
 };
 
+//get user badge for the verification and searchusers page
+// src/lib/db.ts
+
+export const getUsersVerification = async () => {
+  try {
+    const selectResult = await db
+      .select({
+        users: {
+          id: users.id,
+          fid: users.fid,
+          username: users.username,
+          ethaddress: users.ethaddress,
+          pfp_url: users.pfp_url,
+          createdAt: users.createdAt,
+        },
+        userAddresses: {
+          coinbaseVerified: user_addresses.coinbaseverified,
+          opBadgeholder: user_addresses.opbadgeholder,
+          powerBadgeholder: user_addresses.powerbadgeholder,
+        },
+      })
+      .from(users)
+      .leftJoin(user_addresses, eq(users.fid, user_addresses.userfid));
+
+    console.log("Results", selectResult);
+    return selectResult;
+  } catch (error) {
+    console.error("Error retrieving users:", error);
+    throw error;
+  }
+};
+
 // Function to insert or update user data including `pfp_url`
 export const insertOrUpdateUser = async (user: NewUser) => {
   try {

@@ -11,6 +11,7 @@ const SearchUsers = () => {
   const pathname = usePathname();
   const { replace } = useRouter();
   const [filter, setFilter] = useState("username");
+ const [verificationFilter, setVerificationFilter] = useState("");
 
   const handleSearch = (searchTerm: string) => {
     const params = new URLSearchParams(searchParams);
@@ -21,6 +22,7 @@ const SearchUsers = () => {
       params.delete("query");
       params.delete("filter");
     }
+    params.set("verificationFilter", verificationFilter)
     replace(`${pathname}?${params.toString()}`);
   };
 
@@ -50,7 +52,9 @@ const SearchUsers = () => {
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
           >
             <option value="username">Username</option>
-            <option value="fid">FID</option>
+            <option value="coinbaseVerified">Coinbase Verified</option>
+            <option value="opBadgeholder">Optimism Badgeholder</option>
+            <option value="powerBadgeholder">Farcaster Power User</option>
           </select>
         </div>
       </div>
