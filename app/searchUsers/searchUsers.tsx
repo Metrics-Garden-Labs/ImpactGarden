@@ -28,7 +28,7 @@ const SearchUsers = () => {
 
   return (
     <>
-      <div className="container mx-auto  pt-5">
+      <div className="container mx-auto pt-5 ">
         <h1 className="text-3xl font-semibold mt-10 mb-10">Explore Attestors</h1>
         <hr className="border-t border-gray-300 my-4"/>
         <div className="flex justify-start items-center max-w-4xl">  

@@ -38,7 +38,7 @@ const ProjectPageClient = ({ projects, query, filter, walletAddress, endpoint, s
   };
 
   return (
-    <div className="bg-backgroundgray text-black">
+    <div className="bg-white text-black">
       <Navbar />
       <SearchProjects 
         onSearchResults={handleSearchResults}

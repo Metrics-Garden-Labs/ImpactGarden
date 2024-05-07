@@ -166,7 +166,7 @@ export default function ProjectList({
 
   return (
     <div className="p-6 bg-white">
-      <div className="grid grid-cols-3 gap-12 overflow-y-auto">
+      <div className="grid grid-cols-4 gap-12 mr-64 ml-64 overflow-y-auto">
         {sortedProjects.map((project) => (
           <div
             key={project.id}

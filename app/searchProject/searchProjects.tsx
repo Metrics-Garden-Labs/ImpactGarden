@@ -116,113 +116,67 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
     }, []);
 
     return (
-        <>
-        <div className="relative">
-        {/* <div className="absolute top-4 right-4">
-        {user.fid ? (
-            <ConnectButton />
-          ) : (
-            <FarcasterLogin />
-          )}
-        </div> */}
-        <h1 className="ml-4 text-xl font-bold pt-5">Search Projects Here:</h1>
+        <div className="bg-white">
+        <div className='container mx-auto pt-5 bg-white'>
+        <h1 className="text-3xl font-semibold mt-10 mb-10">Explore Projects</h1>
+        <hr className="border-t borger-gray-300 my-4"/>
 
-        <div className="sm:col-span-4 p-6">
-            {/*  this will allow people to search for a project based on the ecosystem they are in 
-            <label htmlFor="network" className="block text-sm font-medium leading-6 text-gray-900">What network would you like to query?</label>
-            <div className="mt-2">
-                <select 
-                    id="network" 
-                    name="network"
-                    value={selectedNetwork}
-                    onChange={handleNetworkChange} 
-                    autoComplete="Network" 
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+        <div className='flex justify-between bg-white items-center px-4 mt-6 mb-10'>
+            <div className="flex flex-grow space-x-4 bg-white">
+                <div className=" relative w-1/2 mr-4">
+                <label htmlFor="search" className="sr-only">
+                    Search
+                </label>
+                <input
+                    className="peer block w-full rounded-md border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                    placeholder="Search projects"
+                    defaultValue={searchParams.get("query")?.toString() || ""}
+                    onChange={(e) => handleSearch(e.target.value)}
+                />
+                <FaSearch className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                </div>
 
-                    <option>Ethereum</option>
-                    <option>Arbitrum</option>
-                    <option>Optimism</option>
-                    <option>Linea</option>
-                    <option>Sepolia</option>
-                    <option>Base</option>
-                    <option>Optimism-Goerli</option>
-                    <option>Base-Goerli</option>
+                <div className="relative w-1/6">
+                <select
+                    id="filter"
+                    name="filter"
+                    value={selectedFilter}
+                    onChange={handleFilterChange}
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                >
+                    <option value="">Filters</option>
+                    <option value="projectName">Project Name</option>
+                    <option value="most-engaged">Most Engaged</option>
+                    <option value="recently-added">Recently Added</option>
+                    {/* Add more filters as required */}
                 </select>
-            </div> */}
-            </div>
-            <div className='flex items-center px-4 space-x-4'>
-            
-                <div className="relative flex-grow">
-                    <label htmlFor="search" className="sr-only">
-                        Search
-                    </label>
-                    <input
-                        className="peer block w-full rounded-md border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-                        placeholder="Search projects"
-                        defaultValue={searchParams.get("query")?.toString() || ""}
-                        onChange={(e) => handleSearch(e.target.value)}
-                    />
-                    <FaSearch className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
                 </div>
-    
-                
-                {/* keeping this just incase */}
+                </div>
+
                 <div className="flex-initial">
-                <label htmlFor="filter" className="block text-sm font-medium leading-6 text-gray-900">Filter</label>
-                    <div className="mb-6">
-                        <select
-                            id="filter"
-                            name="filter"
-                            value={selectedFilter}
-                            onChange={handleFilterChange}
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                        >
-                            <option value="projectName">Project Name</option>
-                            <option value="most-engaged">Most Engaged</option>
-                            <option value="recently-added">Recently Added</option>
-                            {/* Add more filters as required */}
-                        </select>
-                    </div>
+                    <select
+                    id="sortOrder"
+                    name="sortOrder"
+                    value={sortOrder}
+                    onChange={handleSortOrderChange}
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                    >
+                    <option value="">Sort by: A-Z</option>
+                    <option value="asc">A-Z</option>
+                    <option value="desc">Z-A</option>
+                    </select>
                 </div>
+            </div>
 
                 {/* ADD THE KARMA API FILTER HERE FOR FARCASTER ENGAGEMENT
                 the premise is that you can see projects based on your most engaged with profiles in farcaster
                 then based in the optimism channel
                 then based in the base channel */}
-                <div className="flex-initial">
-                    <label htmlFor="sortOrder" className="block text-sm font-medium leading-6 text-gray-900">Sort Order</label>
-                    <div className="mb-6">
-                    <select
-                        id="sortOrder"
-                        name="sortOrder"
-                        value={sortOrder}
-                        onChange={handleSortOrderChange}
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                    >
-                        <option value="asc">A-Z</option>
-                        <option value="desc">Z-A</option>
-                    </select>
-                    </div>
-                </div>
-            </div>
-            {/* Add display logic for search results here */}
-            {/* {searchResults.length > 0 ? (
-          <ul>
-            {searchResults.map((result, index) => (
-              <li key={index}>
-                <strong>Username:</strong> {result.username}<br />
-                <strong>Fname:</strong> {result.fname}<br />
-                <strong>Address:</strong> {result.address}<br />
-                <strong>FID:</strong> {result.fid}<br />
-                <strong>Score:</strong> {result.score}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No search results found.</p>
-        )} */}
+            
+
         </div>
-        </>
+        </div>
+      
     )
 };
 
