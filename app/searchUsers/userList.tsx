@@ -27,7 +27,7 @@ export default async function UserList({ users, query, filter }: Props) {
 
   return (
     <div className="p-6 bg-white">
-      <div className="grid grid-cols-4 gap-12 ml-64 mr-64">
+      <div className="grid grid-cols-4 gap-12 ml-40 mr-40">
         {filteredUsers.map(async (user) => {
           // Fetch the user addresses and verification statuses from the database
           const user_addresses = await getUserAddressesByFid(user.fid);
