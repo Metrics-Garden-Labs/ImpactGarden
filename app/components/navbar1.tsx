@@ -18,10 +18,10 @@ export default function Navbar() {
             {/* Buttons on the Right Side */}
             <div className="flex justify-end">
                 <div className='flex items-center gap-x-8'>
+                    <Link href='/projectSignUp' className='text-white text-lg hover:text-opacity-75'>REGISTER PROJECT</Link>
                     <Link href='/metricsdb' className='text-white text-lg hover:text-opacity-75'>METRICS DATABASE</Link>
-
-                    <details className="dropdown">
-                    <summary className="m-1 btn bg-headerblack font-normal border-none text-lg text-white">
+                    {/*<details className="dropdown">
+                     <summary className="m-1 btn bg-headerblack font-normal border-none text-lg text-white">
                         PROJECTS
                         <FaChevronDown className='inline-block text-xs'/>
                     </summary>
@@ -29,8 +29,8 @@ export default function Navbar() {
                         <li className='hover:bg-gray-200 rounded'><Link href="/projectSignUp">REGISTER PROJECT</Link></li>
                         <li className='hover:bg-gray-200 rounded'><Link href="/searchProject">SEARCH PROJECTS</Link></li>
                     </ul>
-                    </details>
-
+                    </details> */}
+                    <Link href='/searchProject' className='text-white text-lg hover:text-opacity-75'>SEARCH PROJECTS</Link>
                     <Link href='/searchUsers' className='text-white text-lg hover:text-opacity-75'>SEARCH USERS</Link>
                     
                     <div className='inline-block'>
