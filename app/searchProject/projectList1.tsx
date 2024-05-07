@@ -165,8 +165,9 @@ export default function ProjectList({
   };
 
   return (
-    <div className="p-6 bg-white">
-      <div className="grid grid-cols-4 gap-12 mr-40 ml-40 overflow-y-auto">
+    <div className=" bg-white">
+      <div className="grid grid-cols-4 gap-12 mx-auto max-w-6xl overflow-y-auto">
+        
         {sortedProjects.map((project) => (
           <div
             key={project.id}
@@ -202,6 +203,7 @@ export default function ProjectList({
           </div>
         ))}
       </div>
+    
       
       {renderModal()}
   </div>

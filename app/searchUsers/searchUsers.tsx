@@ -28,41 +28,45 @@ const SearchUsers = () => {
 
   return (
     <>
-      <div className="container mx-auto pt-5 ">
-        <h1 className="text-3xl font-semibold mt-10 mb-10">Explore Attestors</h1>
+      <div className="container mx-auto px-4 max-w-6xl bg-white ">
+        <h1 className="text-2xl font-semibold mt-10 mb-10">Explore Attestors</h1>
         <hr className="border-t border-gray-300 my-4"/>
-        <div className="flex justify-start items-center max-w-4xl">  
-          <div className="relative flex-1 mr-4">
-            <input
-              type="text"
-              className="w-full h-12 pl-12 pr-4 border border-gray-300 rounded-lg text-md placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Search attestors..."
-              defaultValue={searchParams.get("query")?.toString() || ""}
-              onChange={(e) => handleSearch(e.target.value)}
-            />
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-          </div>
+
+        <div className='flex justify-between bg-white items-center mt-6 mb-10 px-0'>  {/* Adjusted padding here */}
+          <div className="flex flex-grow space-x-4 bg-white">
+            <div className="relative w-1/3">
+                <label htmlFor="search" className="sr-only">
+                        Search
+                    </label>
+                    <input
+                        className="w-full rounded-md border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                        placeholder="Search projects"
+                        defaultValue={searchParams.get("query")?.toString() || ""}
+                        onChange={(e) => handleSearch(e.target.value)}
+                    />
+                    <FaSearch className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                </div>
          
-          <div className="flex-initial">
-            <label htmlFor="filter" className="block text-md font-medium text-gray-900 mt-8"></label>
-            <div className="mb-8">          
-              <select
-                id="filter"
-                name="filter"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className="w-48 h-12 border rounded-lg text-gray-900 bg-white"
-              >
-                <option value="filter">Filter</option>
-                <option value="username">Username</option>
-                <option value="coinbaseVerified">Coinbase Verified</option>
-                <option value="opBadgeholder">Optimism Badgeholder</option>
-                <option value="powerBadgeholder">Farcaster Power User</option>
-              </select>
+                <div className="w-1/6">
+                        <select
+                            id="filter"
+                            name="filter"
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                >
+                  <option value="filter">Filter</option>
+                  <option value="username">Username</option>
+                  <option value="coinbaseVerified">Coinbase Verified</option>
+                  <option value="opBadgeholder">Optimism Badgeholder</option>
+                  <option value="powerBadgeholder">Farcaster Power User</option>
+                </select>
+              </div>
+
             </div>
           </div>
         </div>
-      </div>
+      
     </>
   );
 };
