@@ -75,7 +75,7 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
         { name: 'ecosystem', type: 'string', value: selectedProject?.ecosystem || '' },
       ]);
 
-      //console.log ("project name", project.projectName)
+      console.log ("encodedData", encodedData)
       
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();

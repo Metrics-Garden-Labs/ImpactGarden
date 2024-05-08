@@ -130,6 +130,8 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
       : 'text-gray-600 hover:text-black'
   }`;
 
+  console.log('selected contribution:', selectedContribution);
+
   //addinng conributions modal
   const addContribution = async (contribution: Contribution) => {
     try {

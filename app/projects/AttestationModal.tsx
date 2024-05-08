@@ -1,4 +1,4 @@
-'use client ';
+'use client';
 
 import React, { useState } from 'react';
 import { ethers } from 'ethers';
@@ -44,8 +44,36 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
         ethAddress: '',
     });
 
-    const createAttestation = async () => {
+    const addContributionAttestation = async (attestationUID: string) => {
+      try {
+        const newAttestation = {
+          userFid: user.fid,
+          projectName: contribution?.projectName,
+          contribution: contribution.contribution,
+          ecosystem: contribution?.ecosystem,
+          attestationUID: attestationUID,
+          attesterAddy: walletAddress,
+          feedback: feedback,
+          attestationType: isUseful ? 'Useful' : 'Not Useful',
+        };
+        console.log('New Attestation:', newAttestation);
+    
+        const response = await fetch(`${NEXT_PUBLIC_URL}/api/addContributionAttestationDb`, {
+          method: 'POST',
+          body: JSON.stringify(newAttestation),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+    
+        const dbResponse = await response.json();
+        console.log('DB Response, insert attestation success:', dbResponse);
+      } catch (error) {
+        console.error('Error adding attestation to db:', error);
+      }
+    };
 
+    const createAttestation = async () => {
         console.log('user.fid:', user.fid);
         if (!user.fid) {
             alert('User not logged in');
@@ -87,6 +115,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                 deadline: BigInt(9973891048),
                 nonce: easnonce,
             };
+            console.log('Attestation:', attestation);
 
             const signDelegated = await delegatedSigner.signDelegatedAttestation(attestation, signer);
 
@@ -114,42 +143,21 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             console.log('Response:', responseData);
     
             if (responseData.success && responseData.attestationUID) {
-                console.log('Attestation UID:', responseData.attestationUID);
-                setAttestationUID(responseData.attestationUID);
-              } else {
-                console.error('Failed to retrieve attestation UID from the API response');
-              }
-    
-            const newAttestation = {
-              userFid: fid,
-              projectName: contribution?.projectName,
-              contribution: contribution.contribution,
-              ecosystem: contribution?.ecosystem,
-              attestationUID: responseData.attestationUID,
-              attesterAddy: walletAddress,
-              feedback: feedback,
-              attestationType: isUseful ? 'Useful' : 'Not Useful',
+              console.log('Attestation UID:', responseData.attestationUID);
+              setAttestationUID(responseData.attestationUID);
+              await addContributionAttestation(responseData.attestationUID);
+            } else {
+              console.error('Failed to retrieve attestation UID from the API response');
             }
-       
-            const response1 = await fetch(`${NEXT_PUBLIC_URL}/api/addContributionAttestationDb`, {
-              method: 'POST',
-              body: JSON.stringify(newAttestation),
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-       
-            const dbResponse = await response1.json();
-            console.log('DB Response, insert attestation success:', dbResponse);
           } catch (error) {
-            console.error('Error creating attestation/ adding to db:', error);
+            console.error('Error creating attestation:', error);
           } finally {
             setIsLoading(false);
           }
-        };
+    };
 
-            // Additional logic to handle the response, display errors, etc.
     if (!isOpen) return null;
+
 
     const renderModal = () => {
         if (isLoading) {
@@ -162,7 +170,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
               <div className="bg-white p-8 rounded-lg shadow-lg">
                 <h2 className="text-xl font-bold mb-4">Attestation Created</h2>
                 <p>Your attestation has been successfully created.</p>
-                <Link href={`${easScanEndpoints[selectedProject?.ecosystem as AttestationNetworkType]}${attestationUID}`}>
+                <Link href={`${easScanEndpoints[contribution?.ecosystem as AttestationNetworkType]}${attestationUID}`}>
                   <p className='text-black hover:underline'>Attestation UID: {attestationUID}</p>
                 </Link>
                 <button
@@ -204,10 +212,6 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                     <h3 className="font-semibold text-center">Ecosystem</h3> 
                     <p className="text-center text-black">{project.ecosystem}</p>
                 </div>
-                {/* <div className="mb-4 ">
-                    <h3 className="font-semibold text-center">Attestations</h3>
-                    <p>Info on who has attested and maybe some more stuff</p>
-                </div> */}
                 <div className='mb-4'>
                     <h3 className='font-semibold text-center'>Attestations</h3>
                     <p className='text-center'>
