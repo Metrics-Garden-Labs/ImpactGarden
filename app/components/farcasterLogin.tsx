@@ -73,8 +73,6 @@ export default function FarcasterLogin() {
       });
       //signer uuid is private and part of the app
       setFid(data.fid);
-      //trigger a seemless reload to ui update to register signed in state
-      //window.location.reload();
     };
 
     return () => {
@@ -107,7 +105,7 @@ export default function FarcasterLogin() {
   
   async function fetchData(fid:string) {
     try{
-      const response = await fetch(`${NEXT_PUBLIC_URL}/api/login`, {
+      const response = await fetch(`/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +130,8 @@ export default function FarcasterLogin() {
       console.log("New User, ", newUser);
 
       //reload
-      window.location.reload();
+      setIsSignedIn(true)
+     
     }
     } catch (error) {
       console.error('Error fetching data', error);
