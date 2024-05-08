@@ -122,9 +122,9 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     
             const newAttestation = {
               userFid: fid,
-              projectName: selectedProject?.projectName,
+              projectName: contribution?.projectName,
               contribution: contribution.contribution,
-              ecosystem: selectedProject?.ecosystem,
+              ecosystem: contribution?.ecosystem,
               attestationUID: responseData.attestationUID,
               attesterAddy: walletAddress,
               feedback: feedback,
