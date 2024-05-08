@@ -16,6 +16,7 @@ const AttestationList = async ({ userFid }: Props) => {
   try {
     let attestations: Attestation[] = await getAttestationsByUserId(userFid);
     let projects: Project[] = await getProjectsByUserId(userFid);
+    console.log('projects:', projects);
 
     // Sort attestations by createdAt timestamp in descending order
     attestations.sort((a, b) => new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime());
@@ -36,36 +37,6 @@ const AttestationList = async ({ userFid }: Props) => {
       <div className='bg-white text-black'>
         {attestations.length || projects.length > 0 ? (
           <div>
-            <div>
-            {attestedProjectNames.length > 0 ? (
-              <div>
-              <h3 className='mt-4'>Projects Attested To:</h3>
-                <ul>
-                  {attestedProjectNames.map((projectName) => (
-                    <li key={projectName}>
-                      <Link href={`/projects/${projectName}`}>
-                      {projectName}
-                      </Link>
-                      </li>
-                  ))}
-                </ul>
-              </div>
-              ) : (
-                <p></p>
-              )}
-            </div>
-            <div className='mt-4'>
-              <h3>Ecosystems of Interest:</h3>
-              {ecosystemsOfInterest.length > 0 ? (
-                <ul>
-                  {ecosystemsOfInterest.map((ecosystem) => (
-                    <li key={ecosystem}>{ecosystem}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No ecosystems of interest.</p>
-              )}
-            </div>
             {/*include the projects they have created */}
             <div className='mt-4'>
               <h3>Projects Created:</h3>

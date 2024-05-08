@@ -1,4 +1,10 @@
 'use client';
+
+//thinking about making this a server component that gets the attestation count when you visit and
+//doenst update until you refresh the page when you make a contribution.
+//otherwise its too much hassle to make it a client component and have it update in real time.
+//TODO: make this a server component
+
 import { Fragment, SetStateAction, useState, Dispatch, useEffect } from 'react';
 import { LuArrowUpRight } from "react-icons/lu";
 import { Project } from '../../src/types';

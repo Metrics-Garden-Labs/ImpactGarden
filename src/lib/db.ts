@@ -11,11 +11,10 @@ import {
 import * as schema from "./schema";
 import { getAttestationsByAttester } from "./eas";
 import { Waterfall } from "next/font/google";
-import { eq } from "drizzle-orm";
 import { Project, newUserAddresses } from "@/src/types";
 import { count } from "console";
 import { sql as drizzlesql } from "drizzle-orm";
-import { inArray } from "drizzle-orm";
+import { inArray, eq } from "drizzle-orm";
 
 export const db = drizzle(vercelsql, { schema });
 
@@ -338,6 +337,28 @@ export const getProjectsByUserId = async (userFid: string) => {
     return userprojects;
   } catch (error) {
     console.error(`Error retrieving projects for user '${userFid}':`, error);
+    throw error;
+  }
+};
+
+//gets the attestations for each project a user has made
+//include contributionattestation attestations for project name
+//the prop will be the project name array from the user projects
+export const getUserProjectAttestations = async (
+  userProjectNames: string[]
+) => {
+  try {
+    const userprojectsattestations = await db
+      .select()
+      .from(contributionattestations)
+      .where(inArray(contributionattestations.projectName, userProjectNames))
+      .execute();
+    return userprojectsattestations;
+  } catch (error) {
+    console.error(
+      `Error retrieving projects for user '${userProjectNames.join(",")}':`,
+      error
+    );
     throw error;
   }
 };
