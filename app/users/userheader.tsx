@@ -37,12 +37,15 @@ const UserHeader = async ({ user}: Props) => {
     const userProjectsNames = [...new Set(projects.map((project) => project.projectName))]
     const userEcosystems = [...new Set(projects.map((project) => project.ecosystem))]
 
+    let projectAttestations: Attestation[] = [];
     //this will be the number of attestations their projcts have received
-    let projectAttestations: Attestation[] = await getUserProjectAttestations(userProjectsNames);
-    console.log('projectAttestations:', projectAttestations);
-
+    if (userProjectsNames.length > 0) {
+        let projectAttestations: Attestation[] = await getUserProjectAttestations(userProjectsNames);
+        console.log('projectAttestations:', projectAttestations);
+    }
+ 
     //total attestations
-    const totalAttestations = attestations.length + projectAttestations.length;
+    const totalAttestations = attestations.length + projectAttestations?.length;
 
      // Combine ecosystems from attestations and created projects for ecosystems of interest
      const ecosystemsOfInterest = [...new Set([...attestedEcosystems, ...userEcosystems])];
@@ -68,7 +71,7 @@ const UserHeader = async ({ user}: Props) => {
         <Image
           src={user.pfp_url || ''}
           alt={user.username}
-          className="rounded-md"
+          className="rounded-md max-w-48 max-h-48"
           width={200}
           height={200}
         />
