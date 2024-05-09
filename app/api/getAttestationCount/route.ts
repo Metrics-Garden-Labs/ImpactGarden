@@ -9,9 +9,10 @@ export const POST = async (request: Request) => {
     console.log("Contribution:", contribution);
 
     const response = await getAttestationsByContribution(contribution);
-    console.log("Attestation count:");
+    console.log("Attestation count:", response.length);
+    const count = response.length;
 
-    return NextResponse.json({ response }, { status: 200 });
+    return NextResponse.json({ count }, { status: 200 });
   } catch (error) {
     console.error("Error fetching attestation count:", error);
     return NextResponse.json(

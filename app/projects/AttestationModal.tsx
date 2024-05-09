@@ -20,6 +20,7 @@ interface AttestationModalProps {
     project: Project;
     currentAddress: string;
     eas: EAS | null;
+    attestationCount: number;
 }
 
 const AttestationModal: React.FC<AttestationModalProps> = ({
@@ -28,11 +29,11 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     contribution,
     project,
     currentAddress,
+    attestationCount,
     eas
 }) => {
     const [isUseful, setIsUseful] = useState(false);
     const [feedback, setFeedback] = useState('');
-    const [attestationCount, setAttestationCount] = useState(0);
     const [walletAddress] = useGlobalState('walletAddress');
     const [fid] = useGlobalState('fid');
     const [selectedProject] = useGlobalState('selectedProject');

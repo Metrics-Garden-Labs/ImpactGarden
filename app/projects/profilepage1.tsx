@@ -126,8 +126,8 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
             if (response.ok) {
               const data = await response.json();
               console.log('data:', data);
-              const count = data.response.length;
-              console.log('Count:', count);
+              const count = data.count;
+              console.log('Attestation count:', count);
               setAttestationCount(count);
             } else {
               console.error('Error fetching attestation count:', response.statusText);
@@ -174,7 +174,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
   //addinng conributions modal
   const addContribution = async (contribution: Contribution) => {
     try {
-      const response = await fetch(`/api/addContributionDb`, {
+      const response = await fetch(`${NEXT_PUBLIC_URL}/api/addContributionDb`, {
         method: 'POST',
         body: JSON.stringify(contribution),
         headers: {
@@ -316,6 +316,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         contribution={selectedContribution!}
+        attestationCount={attestationCount}
         project={selectedProject!}
         currentAddress={walletAddress}
         eas={eas || null}
