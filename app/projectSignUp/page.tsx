@@ -180,12 +180,12 @@ export default function ProjectSignUp() {
   const createAttestation = async () => {
 
     //check for captcha being solved
-    // if (!captcha) {
-    //     alert("Please complete the captcha to continue");
-    //     return;//exit function if captcha not solved
-    // }
+    if (!captcha) {
+        alert("Please complete the captcha to continue");
+        return;//exit function if captcha not solved
+    }
 
-    if (!user.fid) {
+    if (!user.fid || user.fid === '') {
       alert('User not logged in');
       return;
     }

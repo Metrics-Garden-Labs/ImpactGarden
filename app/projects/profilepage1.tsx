@@ -93,7 +93,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
     useEffect(() => {
       const fetchContributions = async () => {
         if (selectedProject) {
-          const res = await fetch(`${NEXT_PUBLIC_URL}/api/getContributions`, {
+          const res = await fetch(`${NEXT_PUBLIC_URL}/api/getProjectContributions`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
