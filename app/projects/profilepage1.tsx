@@ -60,6 +60,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
     const [attestationCount, setAttestationCount] = useState(0);
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const { switchChain } = useSwitchChain();
+    const [ contributionCards, setContributionCards ] = useState<Contribution[]>([]);
     const [user] = useLocalStorage("user", {
         fid: '',
         username: '',
@@ -88,6 +89,19 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
   
       switchToProjectChain();
     }, [selectedProject, switchChain]);
+
+    useEffect(() => {
+      const fetchContributions = async () => {
+        const res = await fetch(`/api/getContributions`);
+        const data = await res.json();
+        if(res.ok) {
+          setContributionCards(data);
+        } else {
+          console.error('Failed to fetch contributions:', res.statusText);
+        }
+      };
+      fetchContributions();
+    }, [setContributionCards]);
 
     useEffect(() => {
       const fetchAttestationCount = async () => {
@@ -123,6 +137,23 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
     setSidebarOpen(!sidebarOpen);
   };
 
+  const handleContributionAdded = (newContribution: string) => {
+    // Create a new contribution object with the received string
+    const addedContribution: Contribution = {
+      userFid: user.fid || '',
+      projectName: selectedProject?.projectName || '',
+      ecosystem: selectedProject?.ecosystem || '',
+      contribution: newContribution,
+      desc: '',
+      link: '',
+      easUid: '',
+      ethAddress: walletAddress,
+    };
+
+    // Update the contributionCards state by adding the new contribution
+    setContributionCards((prevContributions) => [...prevContributions, addedContribution]);
+  };
+
   const tabClasses = (tabName:string) =>
   `cursor-pointer px-4 py-2 text-sm font-semibold  mr-2 ${
     activeTab === tabName
@@ -145,6 +176,9 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
       if (!response.ok) {
         console.error('Failed to add contribution');
         return;
+      } else {
+        console.log('Contribution added successfully', response);
+        setContributionCards(prev => [...prev, contribution])
       }
       console.log('Contribution added successfully', response);
       // Reload the window to show the new contribution
@@ -239,7 +273,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
             >
               Add Contribution
           </button>
-          <AddContributionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} addContribution={addContribution} />
+          <AddContributionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} addContribution={addContribution} addContributionCallback={handleContributionAdded}  />
         </div>
       )}
       

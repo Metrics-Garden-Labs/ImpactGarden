@@ -18,9 +18,10 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   addContribution: (contribution: Contribution) => Promise<void>;
+  addContributionCallback: (contribution: string) => void;
 }
 
-export default function AddContributionModal({ isOpen, onClose,}: Props) {
+export default function AddContributionModal({ isOpen, onClose, addContributionCallback}: Props) {
   const [fid] = useGlobalState('fid');
   const [walletAddress] = useGlobalState('walletAddress');
   const [selectedProject] = useLocalStorage<Project | null>('selectedProject', null);
@@ -142,15 +143,15 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
     }
   };
 
-  const addContribution = async (contribution: Contribution) => {
+  const addContribution = async (contribution: Contribution): Promise<Contribution> => {
     try {
       // Create the attestation
       const attestationUID = await createAttestation();
-
+  
       if (attestationUID) {
         // Update the form data with the attestation UID
         const updatedContribution = { ...contribution, easUid: attestationUID };
-
+  
         // Submit the form data to the API
         const response = await fetch(`${NEXT_PUBLIC_URL}/api/addContributionDb`, {
           method: 'POST',
@@ -159,30 +160,36 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
             'Content-Type': 'application/json',
           },
         });
-
+  
         if (!response.ok) {
-          console.error('Failed to add contribution');
-          return;
-        } else {
-          console.log('Contribution added successfully', response);
-          //refresh the page
-          //add a 0.5s delay to allow the attestation to be processed
-          setTimeout(() => {
-          }, 500);
+          throw new Error('Failed to add contribution');
         }
-        
+  
+        const addedContribution: Contribution = await response.json();
+        return addedContribution;
       } else {
-        console.error('Failed to create attestation');
+        throw new Error('Failed to create attestation');
       }
     } catch (error) {
       console.error('Failed to add contribution', error);
+      throw error;
     }
   };
-
+  
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    await addContribution(formData);
-    onClose();
+    try {
+      const newContribution = await addContribution(formData);
+      if (newContribution) {
+        addContributionCallback(newContribution.contribution); // Pass the contribution property as a string
+      } else {
+        console.error('Failed to add contribution');
+       
+      }
+    } catch (error) {
+      console.error('Failed to add contribution', error);
+      // Optionally handle the error case in your UI, such as showing an error message
+    }
   };
 
   if (!isOpen) return null;

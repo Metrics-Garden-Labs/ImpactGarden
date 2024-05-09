@@ -93,7 +93,6 @@ export default function FarcasterLogin() {
     setUsername(""); 
     setFirstVerifiedEthAddress("");
     setIsSignedIn(false);
-    window.location.reload();
   };
   
   //lets se what i can get using neynar
