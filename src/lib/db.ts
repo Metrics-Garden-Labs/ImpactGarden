@@ -13,7 +13,7 @@ import { getAttestationsByAttester } from "./eas";
 import { Waterfall } from "next/font/google";
 import { Project, newUserAddresses } from "@/src/types";
 import { count } from "console";
-import { sql as drizzlesql } from "drizzle-orm";
+import { desc, sql as drizzlesql } from "drizzle-orm";
 import { inArray, eq } from "drizzle-orm";
 
 export const db = drizzle(vercelsql, { schema });
@@ -273,6 +273,28 @@ export const getAttestationsByContribution = async (contribution: string) => {
     return dbAttestations;
   } catch (error) {
     console.error("Error retrieving attestations:", error);
+    throw error;
+  }
+};
+
+export const getContributionAttestationList = async (contribution: string) => {
+  try {
+    const contributionAttestationsList = await db
+      .select({
+        id: contributionattestations.id,
+        username: users.username,
+        feedback: contributionattestations.feedback,
+        createdAt: contributionattestations.createdAt,
+      })
+      .from(contributionattestations)
+      .innerJoin(users, eq(contributionattestations.userFid, users.fid))
+      .where(eq(contributionattestations.contribution, contribution))
+      .orderBy(desc(contributionattestations.createdAt))
+      .limit(3);
+
+    return contributionAttestationsList;
+  } catch (error) {
+    console.error("Error fetching attestation count:", error);
     throw error;
   }
 };

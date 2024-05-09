@@ -182,3 +182,8 @@ export type AttestationData = {
   twitterUrl: string;
   githubURL: string;
 };
+
+export interface ContributionAttestationWithUsername
+  extends ContributionAttestation {
+  username: string;
+}

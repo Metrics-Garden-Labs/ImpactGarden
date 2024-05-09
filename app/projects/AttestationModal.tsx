@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
-import { AttestationNetworkType, Contribution, Project } from '@/src/types'; 
+import { Attestation, EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
+import { AttestationNetworkType, Contribution, ContributionAttestation, ContributionAttestationWithUsername, Project } from '@/src/types'; 
 import { NEXT_PUBLIC_URL } from '@/src/config/config'; 
 import { useGlobalState } from '@/src/config/config'; 
 import { LuArrowUpRight } from 'react-icons/lu';
@@ -39,11 +39,37 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     const [selectedProject] = useGlobalState('selectedProject');
     const [ isLoading, setIsLoading ] = useState(false);
     const [ attestationUID, setAttestationUID ] = useState<string>("");
+    const [recentAttestations, setRecentAttestations] = useState<ContributionAttestationWithUsername[]>([]);
     const [user] = useLocalStorage( "user", {
         fid: '',
         username: '',
         ethAddress: '',
     });
+
+    useEffect(() => {
+      const getContributionAttestations = async () => {
+        try {
+          const response = await fetch(`${NEXT_PUBLIC_URL}/api/getContributionAttestations`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ contribution: contribution.contribution }),
+          });
+          const responseData = await response.json();
+          console.log('Response:', responseData);
+          if (responseData && responseData.response) {
+            setRecentAttestations(responseData.response);
+          }
+        } catch (error) {
+          console.error('Error fetching attestations:', error);
+        }
+      };
+  
+      if (contribution) {
+        getContributionAttestations();
+      }
+    }, [contribution]);
 
     const addContributionAttestation = async (attestationUID: string) => {
       try {
@@ -219,6 +245,28 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                     This contribution has been attested to {attestationCount} times
                     </p>
                 </div>
+
+                {/* Show the three most recent attestations */}
+                <div className='mb-4'>
+                  <h3 className='font-semibold text-center'>Recent Attestations</h3>
+                  {recentAttestations.length > 0 ? (
+                    <ul className='space-y-2'>
+                      {recentAttestations.map((attestation, index) => (
+                        <li key={index} className="p-2 ">
+                          <p> 
+                          <strong>{attestation.username}</strong> said: "{attestation.feedback}"
+                          </p>
+                          {/* <p><strong>Feedback:</strong> {attestation.feedback}</p>
+                          <p><strong>Date:</strong> {new Date(attestation.createdAt).toLocaleDateString()}</p> */}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No recent attestations found.</p>
+                  )}
+                </div>
+
+
                 <div className="mb-4">
                     <label className="flex items-center">
                     <input
