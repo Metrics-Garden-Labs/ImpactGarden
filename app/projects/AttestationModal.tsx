@@ -254,7 +254,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                       {recentAttestations.map((attestation, index) => (
                         <li key={index} className="p-2 ">
                           <p> 
-                          <strong>{attestation.username}</strong> said: "{attestation.feedback}"
+                          <strong>{attestation.username}</strong> said: `&quot`{attestation.feedback}`&quot`
                           </p>
                           {/* <p><strong>Feedback:</strong> {attestation.feedback}</p>
                           <p><strong>Date:</strong> {new Date(attestation.createdAt).toLocaleDateString()}</p> */}
