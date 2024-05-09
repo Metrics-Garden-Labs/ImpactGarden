@@ -1,4 +1,4 @@
-'use client';
+
 
 //thinking about making this a server component that gets the attestation count when you visit and
 //doenst update until you refresh the page when you make a contribution.
@@ -14,6 +14,7 @@ import {useGlobalState} from '@/src/config/config';
 import Link from 'next/link';
 import { BsGlobe2 } from 'react-icons/bs';
 import { FaGithub, FaXTwitter } from 'react-icons/fa6';
+import { getAttestationCountByProject } from '@/src/lib/db';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -24,37 +25,39 @@ interface Props {
   project: Project;
 }
 
-export default function Sidebar({ project }: Props) {
+const Sidebar = async ({ project }: Props)=> {
   const categories = ['Onchain Builders', 'OP Stack', 'Governance', 'Dev Tooling'];
-  const [ attestationCount, setAttestationCount ] = useState(0);
-  const [selectedProject, setSelectedProject] = useGlobalState('selectedProject');
+  //const [ attestationCount, setAttestationCount ] = useState(0);
+  //const [selectedProject, setSelectedProject] = useGlobalState('selectedProject');
 
- 
+ const projectAttestations = await getAttestationCountByProject(project.projectName);
+ const projectAttestationCount = projectAttestations.length;
 
-  useEffect(() => {
-    const fetchAttestationCount = async () => {
-      if (!project) return;
-      try {
-        const response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjectAttestationCount`, {
-          method: 'POST',
-          body: JSON.stringify({ project: selectedProject?.projectName }),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        if (response.ok) {
-          const data = await response.json();
-          const count = data.response.length;
-          setAttestationCount(count);
-        } else {
-          console.error('Failed to fetch attestation count');
-        }
-      } catch (error) {
-        console.error('Failed to fetch attestation count:', error);
-      }
-    }
-    fetchAttestationCount();
-  } , [selectedProject]);
+ //maybe make it dynamic in the future
+  // useEffect(() => {
+  //   const fetchAttestationCount = async () => {
+  //     if (!project) return;
+  //     try {
+  //       const response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjectAttestationCount`, {
+  //         method: 'POST',
+  //         body: JSON.stringify({ project: selectedProject?.projectName }),
+  //         headers: {
+  //           'Content-Type': 'application/json'
+  //         }
+  //       });
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         const count = data.response.length;
+  //         setAttestationCount(count);
+  //       } else {
+  //         console.error('Failed to fetch attestation count');
+  //       }
+  //     } catch (error) {
+  //       console.error('Failed to fetch attestation count:', error);
+  //     }
+  //   }
+  //   fetchAttestationCount();
+  // } , [selectedProject]);
 
   const websiteurl = project?.websiteUrl;
   console.log('Selected website:', websiteurl);
@@ -123,24 +126,39 @@ export default function Sidebar({ project }: Props) {
                 </p>
               </Link>
             )} */}
-            <div className="flex justify-center py-4 items-center">
+            <div className="">
               <Link href={checkwebsiteUrl || '#'}>
+                <p className='flex items-center '>
                 <BsGlobe2 className="text-black mx-2 text-lg" />
+                <span>Website</span>
+                </p>
               </Link>
+            
+            </div>
+            <div>
               <Link href={checktwitterUrl || '#'}>
-              <FaXTwitter className="text-black mx-2 text-lg" />
+                <p className='flex items-center'>
+                <FaXTwitter className="text-black mx-2 text-lg" />
+                <span>Twitter</span>
+                </p>
               </Link>
+            </div>
+            <div>
               <Link href={checkgithubUrl || '#'}>
-                <FaGithub className="text-black mx-2 text-lg" />
+                <p className='flex items-center'>
+                  <FaGithub className="text-black mx-2 text-lg" />
+                  <span>Github</span>
+                </p>
               </Link>
             </div>
             {/* Stats and Categories */}
             <div>
-              <div className="text-sm font-medium text-gray-500">Attestations: {attestationCount}</div>
-              <div className="text-sm font-medium text-gray-500">Length: {getProjectDuration(project.createdAt)}</div>
-              <div className="text-sm py-2 font-medium text-gray-500">Categories:</div>
-              {/* Categories */}
-              <div className='mt-4'>
+              <div className="text-sm font-medium text-gray-500">Attestations: {projectAttestationCount}</div>
+              <div className="text-sm font-medium text-gray-500">Created {getProjectDuration(project.createdAt)} <span>ago</span></div>
+              {/* <div className="text-sm py-2 font-medium text-gray-500">Categories:</div> */}
+              {/* Categories
+              The categories dont really have a use at the minute */}
+              {/* <div className='mt-4'>
                 {categories.map((category) => (
                   <div key={category} className='mb-2'>
                     <span className="inline-block bg-gray-100 rounded-md px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
@@ -148,7 +166,7 @@ export default function Sidebar({ project }: Props) {
                     </span>
                   </div>
                 ))}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -157,3 +175,5 @@ export default function Sidebar({ project }: Props) {
     </>
   );
 }
+
+export default Sidebar;

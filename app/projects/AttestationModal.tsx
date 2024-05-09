@@ -238,7 +238,11 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                     onChange={(e) => setFeedback(e.target.value)}
                     className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
                     rows={4}
-                    ></textarea>
+                    maxLength={200}
+                    />
+                    <div className="text-right mr-2">
+                      {feedback.length}/200
+                    </div>
                 </div>
                 <div className='mb-4 text-center py-3'>
                     <button className='btn text-center bg-headerblack text-white hover:bg-blue-500'

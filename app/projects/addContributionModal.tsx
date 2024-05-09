@@ -233,7 +233,11 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
               placeholder="Contribution Title"
               className='h-20 w-full p-2 border border-gray-800 rounded-md'
               required
-            />
+              maxLength={100}
+              />
+              <div className="text-right mr-2">
+                {formData.contribution.length}/100
+              </div>
           </div>
           <div className="mb-4 ">
             <h3 className="font-semibold p-2 text-center">Description</h3>
@@ -242,7 +246,12 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
               onChange={e => setFormData({ ...formData, desc: e.target.value })}
               placeholder="Description"
               className='h-20 w-full p-2 border border-gray-800 rounded-md'
-            />
+              maxLength={200}
+          />
+          <div className="text-right mr-2">
+            {formData.desc.length}/200
+          </div>
+          
           </div>
           <div className="mb-4">
             <h3 className="font-semibold p-2 text-center">Link/Evidence</h3>
@@ -251,7 +260,11 @@ export default function AddContributionModal({ isOpen, onClose,}: Props) {
               onChange={e => setFormData({ ...formData, link: e.target.value })}
               placeholder="Link/Evidence"
               className='h-20 w-full p-2 border border-gray-800 rounded-md'
-            />
+              maxLength={200}
+              />
+              <div className="text-right mr-2">
+                {formData.link.length}/200
+              </div>
           </div>
           <div className="mb-4 text-center">
             <button

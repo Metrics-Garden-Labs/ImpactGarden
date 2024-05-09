@@ -175,3 +175,10 @@ export type ContractAddresses = {
   attestAddress: string;
   schemaRegistryAddress: string;
 };
+
+export type AttestationData = {
+  projectName: string;
+  websiteUrl: string;
+  twitterUrl: string;
+  githubURL: string;
+};
