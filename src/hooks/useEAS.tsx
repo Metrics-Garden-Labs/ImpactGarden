@@ -109,6 +109,7 @@ export const useEAS = () => {
     const [ currentAddress, setCurrentAddress ] = useState("");
     const [ selectedNetwork, setSelectedNetwork ] = useState<AttestationNetworkType>('Optimism');
     const signer = useSigner();
+    const [address, setAddress] = useState<string>("");
 
     console.log("network selected: ", selectedNetwork);
 
@@ -142,6 +143,7 @@ export const useEAS = () => {
                 console.log(signer.provider)
 
                 const address = await signer.getAddress();
+                setAddress(address);
                 console.log("Address obtained: ", address);
 
                 //Connects an ethers style provider/signingProvider to perform read/write functions.
@@ -168,7 +170,7 @@ export const useEAS = () => {
     }
     
 
-    return { eas, schemaRegistry, currentAddress, selectedNetwork, handleNetworkChange };
+    return { eas, schemaRegistry, currentAddress, selectedNetwork, address,  handleNetworkChange };
 };
 
 // export function clientToProvider(client: Client<Transport, Chain>) {

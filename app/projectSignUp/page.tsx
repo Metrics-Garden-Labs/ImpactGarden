@@ -68,7 +68,7 @@ export default function ProjectSignUp() {
   console.log('Fid', fid);
   console.log('ethAddress', ethAddress);
 
-  const { eas, currentAddress, selectedNetwork, handleNetworkChange } = useEAS();
+  const { eas, currentAddress, selectedNetwork, address, handleNetworkChange } = useEAS();
   console.log('selectedNetwork', networkContractAddresses[selectedNetwork]?.attestAddress);
 
   useEffect(() => {
@@ -180,10 +180,10 @@ export default function ProjectSignUp() {
   const createAttestation = async () => {
 
     //check for captcha being solved
-    if (!captcha) {
-        alert("Please complete the captcha to continue");
-        return;//exit function if captcha not solved
-    }
+    // if (!captcha) {
+    //     alert("Please complete the captcha to continue");
+    //     return;//exit function if captcha not solved
+    // }
 
     if (!user.fid) {
       alert('User not logged in');
@@ -191,7 +191,7 @@ export default function ProjectSignUp() {
     }
 
     if (!eas || !currentAddress) {
-      console.error('EAS or currentAddress not available');
+      console.error('Please connect your wallet to continue');
       return;
     }
     console.log('current address', currentAddress);
@@ -310,34 +310,46 @@ export default function ProjectSignUp() {
     }
   };
 
-  //Captcha logic
+  
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
     console.log("Captcha value:", captcha);
-    if (captcha) {
-      try {
-        const response = await fetch(`${NEXT_PUBLIC_URL}/api/verifyCaptcha`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ captchaResponse: captcha }),
+  
+    // First, check if the CAPTCHA has been completed
+    if (!captcha) {
+      alert("Please complete the CAPTCHA to continue.");
+      return;  // Stop the function if there's no CAPTCHA response
+    }
+  
+    // Next, check if the wallet address is connected and is a non-empty string
+    if (!address || address.trim() === "") {
+      alert("Please connect your wallet to proceed.");
+      return;  // Stop the function if there's no wallet address or if it's empty
+    }
+  
+    // If both CAPTCHA and wallet address are valid, proceed to verify the CAPTCHA with the backend
+    try {
+      const response = await fetch(`${NEXT_PUBLIC_URL}/api/verifyCaptcha`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ captchaResponse: captcha }),
       });
-
-      if( response.ok ) {
-        console.log('Captcha is valid');
+  
+      if (response.ok) {
+        console.log('Captcha is valid and wallet is connected');
         createAttestation();
       } else {
+        // If the response is not OK, assume the CAPTCHA was invalid
         console.error('Captcha is invalid');
-        alert('Captcha is invalid');
-      } 
+        alert('Captcha is invalid. Please try again.');
+      }
     } catch (error) {
       console.error('Failed to verify captcha:', error);
       alert('An error occurred while verifying the captcha. Please try again.');
     }
   };
-};
-
 
   //Modal for when the attestation is being processed
   //--------------------------------------------------------------------------------

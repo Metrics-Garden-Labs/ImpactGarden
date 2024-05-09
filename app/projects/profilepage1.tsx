@@ -189,8 +189,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
         setContributionCards(prev => [...prev, contribution])
       }
       console.log('Contribution added successfully', response);
-      // Reload the window to show the new contribution
-      // Maybe not the best as it signs me out of the app, gotta figure that out.
+    
     } catch (error) {
       console.error('Failed to add contribution', error);
     }

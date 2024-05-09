@@ -45,7 +45,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
 
 
 
-  const { eas, currentAddress } = useEAS();
+  const { eas, currentAddress, address } = useEAS();
 
   console.log('Project Ecosystem:', selectedProject?.ecosystem);
   console.log('Selected Project:', formData);
@@ -58,7 +58,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     }
 
     if (!eas || !currentAddress) {
-      console.error('EAS not initialized');
+      alert('Please connect wallet to continue');
       return ''; 
     }
 
@@ -166,6 +166,9 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
         }
   
         const addedContribution: Contribution = await response.json();
+        //refresh to show the new contribution
+        //window.location.reload();
+
         return addedContribution;
       } else {
         throw new Error('Failed to create attestation');
@@ -179,9 +182,15 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
+      // Next, check if the wallet address is connected and is a non-empty string
+      if (!address || address.trim() === "") {
+      alert("Please connect your wallet to proceed.");
+      return;  // Stop the function if there's no wallet address or if it's empty
+      }
       const newContribution = await addContribution(formData);
       if (newContribution) {
         addContributionCallback(newContribution.contribution); // Pass the contribution property as a string
+        onClose();
       } else {
         console.error('Failed to add contribution');
        

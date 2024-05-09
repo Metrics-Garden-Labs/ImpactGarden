@@ -81,7 +81,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
         }
         
         if (!eas || !currentAddress) {
-            console.error('EAS or current address not available');
+            alert('Please connect your wallet to continue');
             return;
         }
 

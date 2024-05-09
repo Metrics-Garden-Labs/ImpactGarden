@@ -37,6 +37,7 @@ export default function FarcasterLogin() {
     username: '',
     ethAddress: [],
   });
+  
   const [ fid, setFid ] = useGlobalState('fid');
   const [ username, setUsername] = useState("");
   const [ firstVerifiedEthAddress, setFirstVerifiedEthAddress ] = useGlobalState("ethAddress");
