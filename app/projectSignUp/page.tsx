@@ -316,7 +316,7 @@ export default function ProjectSignUp() {
     console.log("Captcha value:", captcha);
     if (captcha) {
       try {
-        const response = await fetch(`/api/verifyCaptcha`, {
+        const response = await fetch(`${NEXT_PUBLIC_URL}/api/verifyCaptcha`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
