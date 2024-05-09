@@ -92,16 +92,24 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
 
     useEffect(() => {
       const fetchContributions = async () => {
-        const res = await fetch(`/api/getContributions`);
-        const data = await res.json();
-        if(res.ok) {
-          setContributionCards(data);
-        } else {
-          console.error('Failed to fetch contributions:', res.statusText);
+        if (selectedProject) {
+          const res = await fetch(`${NEXT_PUBLIC_URL}/api/getContributions`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ projectName: selectedProject.projectName }),
+          });
+          const data = await res.json();
+          if (res.ok) {
+            setContributionCards(data.response);
+          } else {
+            console.error('Failed to fetch contributions:', data.error);
+          }
         }
       };
       fetchContributions();
-    }, [setContributionCards]);
+    }, [selectedProject, setContributionCards]);
 
     useEffect(() => {
       const fetchAttestationCount = async () => {
