@@ -12,6 +12,7 @@ import Link from 'next/link';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import { easScanEndpoints } from '../components/easScan';
 import AttestationCreationModal from '../components/attestationCreationModal';
+import { contributionattestations } from '@/src/lib/schema';
 
 interface AttestationModalProps {
     isOpen: boolean;
@@ -40,6 +41,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     const [ isLoading, setIsLoading ] = useState(false);
     const [ attestationUID, setAttestationUID ] = useState<string>("");
     const [recentAttestations, setRecentAttestations] = useState<ContributionAttestationWithUsername[]>([]);
+    const [showAttestationForm, setShowAttestationForm] = useState(false);
     const [user] = useLocalStorage( "user", {
         fid: '',
         username: '',
@@ -49,7 +51,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     useEffect(() => {
       const getContributionAttestations = async () => {
         try {
-          const response = await fetch(`${NEXT_PUBLIC_URL}/api/getContributionAttestations`, {
+          const response = await fetch(`/api/getContributionAttestations`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -99,6 +101,9 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
         console.error('Error adding attestation to db:', error);
       }
     };
+    const toggleAttestationForm = () => {
+        setShowAttestationForm(!showAttestationForm);
+    }
 
     const createAttestation = async () => {
         console.log('user.fid:', user.fid);
@@ -213,51 +218,115 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
         return null;
       };
 
-    return (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center"
-            onClick={onClose}>
-            <div 
-                className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-1/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
-                onClick={(e) => e.stopPropagation()}
-            >
+      return (
+        <div
+          className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center"
+          onClick={onClose}
+        >
+          <div
+            className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-1/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {showAttestationForm ? (
+              <>
+              <h2 className="text-xl font-bold mb-4 text-center">
+                  Attest to Contribution
+                </h2>
+                <div className="mb-4">
+                  <label className="flex items-center text-center">
+                    <input
+                      type="checkbox"
+                      checked={isUseful}
+                      onChange={(e) => setIsUseful(e.target.checked)}
+                      className="form-checkbox h-5 w-5 text-indigo-600"
+                    />
+                    <span className="ml-2 text-gray-700">Was this contribution useful?</span>
+                  </label>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-bold mb-2">
+                    Feedback:
+                  </label>
+                  <textarea
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                    className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
+                    rows={4}
+                    maxLength={200}
+                  />
+                  <div className="text-right mr-2">{feedback.length}/200</div>
+                </div>
+                <div className="mb-4 text-center py-3 p-3">
+                <button 
+                    className='btn text-center bg-headerblack text-white hover:bg-blue-500 mr-4'
+                    onClick={toggleAttestationForm}
+                  >
+                    Back
+                  </button>
+                  <button
+                    className="btn text-center bg-headerblack text-white hover:bg-blue-500 "
+                    onClick={createAttestation}
+                  >
+                    Submit Attestation
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
                 <div className="text-center pt-8 p-2">
-                    <h2 className="text-xl font-bold mb-4">{contribution.contribution}</h2>
+                  <h2 className="text-xl font-bold mb-4">
+                    {contribution.contribution}
+                  </h2>
                 </div>
                 <hr className="border-1 border-gray-300 my-2 mx-auto w-1/2" />
                 <div className="mb-4 items-center py-3 max-h-96 overflow-y-auto">
-                    <h3 className="font-semibold text-center">Description</h3>
-                    <p className='text-center'>{contribution.desc}</p>
+                  <h3 className="font-semibold text-center">Description</h3>
+                  <p className="text-center">{contribution.desc}</p>
                 </div>
-                <div className="mb-4 ">
-                    <h3 className="font-semibold text-center">Link/Evidence</h3> 
-                    <a href={contribution.link} className="text-gray-500 text-center hover:text-gray-300 visited:text-indigo-600 flex items-center">
-                        {contribution.link}
-                        {contribution.link.length > 0 && <LuArrowUpRight className="ml-1" />}
-                    </a>
+                <div className="mb-4">
+                  <h3 className="font-semibold text-center">Link/Evidence</h3>
+                  <a
+                    href={contribution.link}
+                    className="text-gray-500 text-center hover:text-gray-300 visited:text-indigo-600 flex items-center"
+                  >
+                    {contribution.link}
+                    {contribution.link.length > 0 && (
+                      <LuArrowUpRight className="ml-1" />
+                    )}
+                  </a>
                 </div>
-                <div className="mb-4 ">
-                    <h3 className="font-semibold text-center">Ecosystem</h3> 
-                    <p className="text-center text-black">{project.ecosystem}</p>
+                <div className="mb-4">
+                  <h3 className="font-semibold text-center">Ecosystem</h3>
+                  <p className="text-center text-black">{project.ecosystem}</p>
                 </div>
-                <div className='mb-4'>
-                    <h3 className='font-semibold text-center'>Attestations</h3>
-                    <p className='text-center'>
+                <div className="mb-4">
+                  <h3 className="font-semibold text-center">Attestations</h3>
+                  <p className="text-center">
                     This contribution has been attested to {attestationCount} times
-                    </p>
+                  </p>
                 </div>
-
+    
                 {/* Show the three most recent attestations */}
-                <div className='mb-4'>
-                  <h3 className='font-semibold text-center'>Recent Attestations</h3>
+                <div className="mb-4">
+                  <h3 className="font-semibold text-center">
+                    Recent Attestations
+                  </h3>
                   {recentAttestations.length > 0 ? (
-                    <ul className='space-y-2'>
+                    <ul className="space-y-2">
                       {recentAttestations.map((attestation, index) => (
-                        <li key={index} className="p-2 ">
-                          <p> 
-                          <strong>{attestation.username}</strong> said: {attestation.feedback}
-                          </p>
-                          {/* <p><strong>Feedback:</strong> {attestation.feedback}</p>
-                          <p><strong>Date:</strong> {new Date(attestation.createdAt).toLocaleDateString()}</p> */}
+                        <li key={index} className="p-2">
+                          <Link
+                            href={`${
+                              easScanEndpoints[
+                                contribution?.ecosystem as AttestationNetworkType
+                              ]
+                            }${attestation.attestationUID}`}
+                          >
+                            <p>
+                              <strong>{attestation.username}</strong> said:{' '}
+                              {attestation.feedback}
+                            </p>
+                          </Link>
                         </li>
                       ))}
                     </ul>
@@ -265,47 +334,29 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                     <p>No recent attestations found.</p>
                   )}
                 </div>
-
-
-                <div className="mb-4">
-                    <label className="flex items-center">
-                    <input
-                        type="checkbox"
-                        checked={isUseful}
-                        onChange={(e) => setIsUseful(e.target.checked)}
-                        className="form-checkbox h-5 w-5 text-indigo-600"
-                    />
-                    <span className="ml-2 text-gray-700">Useful Contribution</span>
-                    </label>
+    
+                <div className="mb-4 text-center py-3">
+                    
+                  <button
+                    className="btn text-center bg-headerblack text-white hover:bg-blue-500"
+                    onClick={toggleAttestationForm}
+                  >
+                    Attest to this Contribution
+                  </button>
                 </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 font-bold mb-2">
-                    Feedback:
-                    </label>
-                    <textarea
-                    value={feedback}
-                    onChange={(e) => setFeedback(e.target.value)}
-                    className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
-                    rows={4}
-                    maxLength={200}
-                    />
-                    <div className="text-right mr-2">
-                      {feedback.length}/200
-                    </div>
-                </div>
-                <div className='mb-4 text-center py-3'>
-                    <button className='btn text-center bg-headerblack text-white hover:bg-blue-500'
-                        onClick={createAttestation}>
-                        Attest to this Contribution
-                    </button>
-                </div>
-            <button onClick={onClose} className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4">
-                <RxCross2 className='w-5 h-5'/>
+              </>
+            )}
+    
+            <button
+              onClick={onClose}
+              className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4"
+            >
+              <RxCross2 className="w-5 h-5" />
             </button>
-            </div>
-            {renderModal()}
+          </div>
+          {renderModal()}
         </div>
-    );
-};
+      );
+    };
 
 export default AttestationModal;
