@@ -100,7 +100,7 @@ const Sidebar = async ({ project }: Props)=> {
           {/* Sidebar content */}
           <div className="py-10 px-8 flex grow flex-col gap-y-5 bg-white overflow-y-auto px-6 pb-4">
             {/* Company image placeholder */}
-            <div className="h-60 bg-gray-300 rounded-lg flex justify-center items-center">
+            <div className="h-60 bg-gray-300 rounded-full flex justify-center items-center">
               {/* Replace src with your image path */}
               {project.logoUrl ? (
                     <Image
@@ -108,10 +108,10 @@ const Sidebar = async ({ project }: Props)=> {
                       alt="Project Logo"
                       width={12}
                       height={12}
-                      className="h-full w-full object-cover rounded-lg"
+                      className="h-full w-full object-cover rounded-full"
                     />
                   ) : (
-                    <div className="mx-auto w-12 h-12 bg-gray-300 rounded-md flex items-center justify-center">
+                    <div className="mx-auto w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
                     </div>
                   )}
             </div>

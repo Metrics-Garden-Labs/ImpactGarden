@@ -215,30 +215,30 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
     switch (activeTab) {
       case 'attestations':
         return (
-            <div className="p-6 bg-backgroundgray">
-                <div className="mb-4 flex justify-end">
-                    <div className="flex items-center space-x-4">
-                    <select className="px-4 py-2 bg-backgroundgray text-black rounded-full w-60 border-none focus:ring-0 focus:border-none">
-                        <option>Sort by: Most Attestations</option>
-                        {/* ...other sorting options */}
-                    </select>
-                    <div className="relative w-80">
-                        <input
-                        type="text"
-                        placeholder="Search for a contribution..."
-                        className="px-4 py-2 border border-gray-300 rounded-full w-full"
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                        <span className="absolute right-3 top-3 text-black">
-                        <FaSearch />
-                        </span>
-                        </div>
-                    </div>
+            <div className="px-3 bg-backgroundgray">
+                <div className="mb-4 flex justify-between items-center">
+                <div className="relative w-1/2">
+                  <input
+                    type="text"
+                    placeholder="Search for a contribution..."
+                    className="px-4 py-2 border border-gray-300 rounded-md w-full"
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <span className="absolute right-3 top-3 text-black">
+                    <FaSearch />
+                  </span>
+                </div>
+                <select className="px-4 py-2 bg-backgroundgray text-black rounded-full w-60 border-none focus:ring-0 focus:border-none">
+                  <option>Sort by: Most Attestations</option>
+                  {/* ...other sorting options */}
+                </select>
+              </div>
+                <div className="mb-4">
                     </div>
                     <div className="grid grid-cols-3 gap-12">
                         {filteredContributions.map((contribution) => (
                         <div key={contribution.id} 
-                             className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-xl w-full h-60 shadow-lg"
+                             className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-lg w-full h-56 shadow-lg"
                              onClick={() => openmodal(contribution)}>
                             <h3 className="mb-2 text-xl font-semibold ">{contribution.contribution}</h3>
                             <p className='text-gray-500'>{contribution.desc}</p>

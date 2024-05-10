@@ -171,25 +171,25 @@ export default function ProjectList({
         {sortedProjects.map((project) => (
           <div
             key={project.id}
-            className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-xl w-full h-60 shadow-lg"
+            className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-md w-full h-60 shadow-xl"
             onClick={() => {
               console.log('clicked project:', project);
               openModal(project);
             }}
           >
-            <div className="rounded-full bg-gray-300 w-32 h-32 flex items-center justify-center overflow-hidden mb-4">
+            <div className="rounded-md bg-gray-300 w-24 h-24 flex items-center justify-center overflow-hidden mb-4">
               {project.logoUrl ? (
                 <Image
                   src={project.logoUrl}
                   alt="Project Logo"
-                  width={128}
-                  height={128}
+                  width={64}
+                  height={64}
                   className="object-cover w-full h-full"
                 />
               ) : (
                 <div className="flex items-center justify-center text-gray-500">
                   {/* Add optional placeholder content if needed */}
-                  No Logo
+                 
                 </div>
               )}
             </div>  

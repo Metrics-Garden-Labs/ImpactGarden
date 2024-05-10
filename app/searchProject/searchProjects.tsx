@@ -21,6 +21,7 @@ import { getProjectsByFids } from "@/src/lib/db";
 import { SearchResult } from "@/src/types";
 import { NEXT_PUBLIC_URL } from "../../src/config/config";
 
+
 interface Props {
     onSearchResults: (results: SearchResult[]) => void;
     onFilterChange: (filter: string) => void;
@@ -43,7 +44,15 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
         username: '',
         ethAddress: '',
     });
+
+    const options = ["Proejct Name" ,"Farcaster Engagement" ,"Recently Added","Projects on Optimism", "Projects on Celo", "Projects on Base"]
     console.log('walletAddress', walletAddress);
+
+    useEffect(() => {
+        const initialQuery = searchParams.get("query") || "";
+        handleSearch(initialQuery);
+        }, []);
+        
 
     const handleNetworkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value as NetworkType;
@@ -110,10 +119,7 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
     };
     
     
-    useEffect(() => {
-    const initialQuery = searchParams.get("query") || "";
-    handleSearch(initialQuery);
-    }, []);
+   
 
     return (
         <div className="bg-white">
@@ -121,36 +127,82 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
             <h1 className="text-2xl font-semibold mt-10 mb-10">Explore Projects</h1>
             <hr className="border-t border-gray-300 my-4"/>
     
-            <div className='flex justify-between bg-white items-center mt-6 mb-10 px-0'>  {/* Adjusted padding here */}
+            <div className='flex justify-between bg-white items-center mt-6 mb-5 px-0'>  {/* Adjusted padding here */}
                 <div className="flex flex-grow space-x-4 bg-white">
-                    <div className="relative w-1/3">
+                    <div className="relative w-5/12 ">
                         <label htmlFor="search" className="sr-only">
                             Search
                         </label>
                         <input
-                            className="w-full rounded-md border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                            className="w-full rounded-md border-gray-200 py-3 pl-10 text-sm outline-2 placeholder:text-gray-500"
                             placeholder="Search projects"
                             defaultValue={searchParams.get("query")?.toString() || ""}
                             onChange={(e) => handleSearch(e.target.value)}
                         />
-                        <FaSearch className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                        <FaSearch className="absolute left-3 top-1/2 h-[20px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
                     </div>
-    
-                    <div className="w-1/6">
-                        <select
-                            id="filter"
-                            name="filter"
-                            value={selectedFilter}
-                            onChange={handleFilterChange}
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                        >
-                            <option value="">Filters</option>
-                            <option value="projectName">Project Name</option>
-                            <option value="most-engaged">Most Engaged</option>
-                            <option value="recently-added">Recently Added</option>
+                    
+                    <div className="w-48 border border-gray-300 rounded-md">
+                    <select
+                        id="filter"
+                        name="filter"
+                        value={selectedFilter}
+                        onChange={handleFilterChange}
+                        className="block w-full px-4 py-2 text-gray-900 bg-white border-0 rounded-md focus:outline-none focus:ring-0 focus:border-0 appearance-none"
+                    >
+                        <option value="">Filters</option>
+                        <option value="Project Name" className="flex items-center">
+                        <span className="w-4 h-4 border border-gray-400 rounded-full mr-2 flex items-center justify-center">
+                            {selectedFilter === 'Project Name' && (
+                            <span className="w-2 h-2 bg-black rounded-full"></span>
+                            )}
+                        </span>
+                        Project Name
+                        </option>
+                        <option value="Most Engaged" className="flex items-center">
+                        <span className="w-4 h-4 border border-gray-400 rounded-full mr-2 flex items-center justify-center">
+                            {selectedFilter === 'Most Engaged' && (
+                            <span className="w-2 h-2 bg-black rounded-full"></span>
+                            )}
+                        </span>
+                        Farcaster Engagement 
+                        </option>
+                        <option value="Recently Added" className="flex items-center">
+                        <span className="w-4 h-4 border border-gray-400 rounded-full mr-2 flex items-center justify-center">
+                            {selectedFilter === 'Recently Added' && (
+                            <span className="w-2 h-2 bg-black rounded-full"></span>
+                            )}
+                        </span>
+                        Recently Added
+                        </option>
+
+                        <option value="Projects on Optimism" className="relative flex items-center py-2">
+                            <span className={`w-4 h-4 border border-gray-400 rounded-full mr-2 flex items-center justify-center ${selectedFilter === 'Projects on Optimism' ? 'bg-black' : ''}`}>
+                            {selectedFilter === 'Projects on Optimism' && (
+                                <span className="w-2 h-2 bg-white rounded-full"></span>
+                            )}
+                            </span>
+                            Projects on Optimism
+                        </option>
+                        <option value="Projects on Celo" className="relative flex items-center py-2">
+                            <span className={`w-4 h-4 border border-gray-400 rounded-full mr-2 flex items-center justify-center ${selectedFilter === 'Projects on Celo' ? 'bg-black' : ''}`}>
+                            {selectedFilter === 'Projects on Celo' && (
+                                <span className="w-2 h-2 bg-white rounded-full"></span>
+                            )}
+                            </span>
+                            Projects on Celo
+                        </option>
+                        <option value="Projects on Base" className="relative flex items-center py-2">
+                            <span className={`w-4 h-4 border border-gray-400 rounded-full mr-2 flex items-center justify-center ${selectedFilter === 'Projects on Base' ? 'bg-black' : ''}`}>
+                            {selectedFilter === 'Projects on Base' && (
+                                <span className="w-2 h-2 bg-white rounded-full"></span>
+                            )}
+                            </span>
+                            Projects on Base
+                        </option>
                         </select>
                     </div>
-                </div>
+
 
                         <div className="flex-initial">
                             <select
@@ -158,7 +210,7 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
                             name="sortOrder"
                             value={sortOrder}
                             onChange={handleSortOrderChange}
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                            className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                             >
                             <option value="">Sort by: A-Z</option>
                             <option value="asc">A-Z</option>
@@ -167,6 +219,9 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
                         </div>
                     </div>
 
+                    
+
+
                 {/* ADD THE KARMA API FILTER HERE FOR FARCASTER ENGAGEMENT
                 the premise is that you can see projects based on your most engaged with profiles in farcaster
                 then based in the optimism channel
@@ -174,9 +229,22 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
             
 
                 </div>
+                {/* Display active filters */}
+                {selectedFilter && (
+                            <div className="mb-10">
+                                <div className="inline-block bg-white text-gray-800 text-sm font-medium py-2 px-4 rounded-md border">
+                                    {selectedFilter}
+                                    <button className="ml-2 text-gray-600 hover:text-gray-800" onClick={() => setSelectedFilter('')}>✕</button>
+                                </div>
+                            </div>
+                        )}
             </div>
+            </div>
+
       
     )
+
 };
+
 
 export default SearchProjects;
