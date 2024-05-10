@@ -308,13 +308,10 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     
                 {/* Show the three most recent attestations */}
                 <div className="mb-4">
-                  <h3 className="font-semibold text-center">
-                    Recent Attestations
-                  </h3>
                   {recentAttestations.length > 0 ? (
-                    <ul className="space-y-2">
+                    <ul >
                       {recentAttestations.map((attestation, index) => (
-                        <li key={index} className="p-2">
+                        <li key={index} >
                           <Link
                             href={`${
                               easScanEndpoints[
@@ -331,7 +328,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                       ))}
                     </ul>
                   ) : (
-                    <p>No recent attestations found.</p>
+                    <p></p>
                   )}
                 </div>
     
