@@ -1,7 +1,7 @@
 // AddContributionModal.tsx
 'use client';
 import React, { useState } from 'react';
-import { NEXT_PUBLIC_URL, useGlobalState } from '../../src/config/config';
+import { NEXT_PUBLIC_URL, WHITELISTED_USERS, useGlobalState } from '../../src/config/config';
 import { AttestationNetworkType, Contribution, Project } from '../../src/types';
 import { useEAS } from '../../src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
@@ -60,6 +60,11 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     if (!eas || !currentAddress) {
       alert('Please connect wallet to continue');
       return ''; 
+    }
+
+    if (!WHITELISTED_USERS.includes(user.fid)) {
+      alert('Access denied. Still in Alpha testing phase.');
+      return ''; // Exit function if user is not whitelisted
     }
 
     try {

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { Attestation, EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
 import { AttestationNetworkType, Contribution, ContributionAttestation, ContributionAttestationWithUsername, Project } from '@/src/types'; 
-import { NEXT_PUBLIC_URL } from '@/src/config/config'; 
+import { NEXT_PUBLIC_URL, WHITELISTED_USERS } from '@/src/config/config'; 
 import { useGlobalState } from '@/src/config/config'; 
 import { LuArrowUpRight } from 'react-icons/lu';
 import { RxCross2 } from 'react-icons/rx';
@@ -115,6 +115,11 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
         if (!eas || !currentAddress) {
             alert('Please connect your wallet to continue');
             return;
+        }
+
+        if (!WHITELISTED_USERS.includes(user.fid)) {
+          alert('Access denied. Still in Alpha testing phase.');
+          return; // Exit function if user is not whitelisted
         }
 
         console.log('contribution:', contribution);
