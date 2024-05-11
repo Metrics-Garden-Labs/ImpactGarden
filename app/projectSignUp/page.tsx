@@ -248,10 +248,12 @@ export default function ProjectSignUp() {
         attestation.data = encodedData;
         const signature = signDelegated.signature;
 
+        const backendWallet = '0xE27a079BcE042d7163A47eB35D591D241eA7196b';
+
         const dataToSend = {
           ...attestation,
           signature: signature,
-          attester: walletAddress,
+          attester: backendWallet,
         };
 
         const serialisedData = JSON.stringify(dataToSend, (key, value) =>
@@ -282,6 +284,7 @@ export default function ProjectSignUp() {
             ethAddress: currentAddress,
             projectName: attestationData.projectName,
             websiteUrl: attestationData.websiteUrl,
+            oneliner: attestationData.oneliner,
             twitterUrl: attestationData.twitterUrl,
             githubUrl: attestationData.githubURL,
             ecosystem: ecosystem,
