@@ -151,6 +151,8 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
       userFid: user.fid || '',
       projectName: selectedProject?.projectName || '',
       ecosystem: selectedProject?.ecosystem || '',
+      governancetype: '',
+      secondaryEcosystem: '',
       contribution: newContribution,
       desc: '',
       link: '',
