@@ -29,6 +29,7 @@ type AttestationData = {
   websiteUrl: string;
   twitterUrl: string;
   githubURL: string;
+  farcaster: string;
 };
 
 const networks: AttestationNetworkType[] = [
@@ -39,14 +40,7 @@ const networks: AttestationNetworkType[] = [
 export default function ProjectSignUp() {
 
 
-  const [attestationData, setAttestationData] = useState<AttestationData>({
-    projectName: '',
-    oneliner: '',
-    websiteUrl: '',
-    twitterUrl: '',
-    githubURL: '',
-  });
-  console.log('Attestation Data:', attestationData);
+  
 
   const [walletAddress] = useGlobalState('walletAddress');
   const [ user, setUser, removeUser ] = useLocalStorage('user', {
@@ -54,6 +48,16 @@ export default function ProjectSignUp() {
     username: '',
     ethAddress: '',
   });
+  const [attestationData, setAttestationData] = useState<AttestationData>({
+    projectName: '',
+    oneliner: '',
+    websiteUrl: '',
+    twitterUrl: '',
+    githubURL: '',
+    farcaster: user.fid,
+  });
+  console.log('Attestation Data:', attestationData);
+
   const [selectedProject, setSelectedProject] = useLocalStorage<Project | null>('selectedProject', null);
   const [captcha, setCaptcha] = useState<string | null>("");
   const [fid] = useGlobalState('fid');
@@ -201,15 +205,18 @@ export default function ProjectSignUp() {
     {/* schema is just for OP at the minute would have to make a schema for each network */}
     try {
       setIsLoading(true);
-      const mainSchemaUid = '0x45ea2d603b7dfcec03e1e4a5d65a22216e5f7a3c3bf1e61560c58c888f2c7f3f';
-      const schemaEncoder = new SchemaEncoder('string projectName, string websiteUrl, string twitterUrl, string githubURL, bool MGL');
+      const mainSchemaUid = '0x6b4a2e50104d9b69e49c6a19a2054b78c7e87c9c924cba237ebbd5bb0a50a5c4';
+      const schemaEncoder = new SchemaEncoder(
+          'string Project, string Description, string Website, string Twitter, string Github, string Farcsater'
+      );
       console.log('Schema Encoder:', schemaEncoder);
       const encodedData = schemaEncoder.encodeData([
-        { name: 'projectName', value: attestationData.projectName, type: 'string' },
-        { name: 'websiteUrl', value: attestationData.websiteUrl, type: 'string' },
-        { name: 'twitterUrl', value: attestationData.twitterUrl, type: 'string' },
+        { name: 'Project', value: attestationData.projectName, type: 'string' },
+        { name: 'Description', value: attestationData.oneliner, type: 'string' },
+        { name: 'Website', value: attestationData.websiteUrl, type: 'string' },
+        { name: 'Twitter', value: attestationData.twitterUrl, type: 'string' },
         { name: 'githubURL', value: attestationData.githubURL, type: 'string' },
-        { name: 'MGL', value: true, type: 'bool' }
+        { name: 'Farcaster', value: user.fid, type: 'string' },
       ]);
       console.log('Encoded Data:', encodedData);
 

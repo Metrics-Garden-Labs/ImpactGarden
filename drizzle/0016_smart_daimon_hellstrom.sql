@@ -1,0 +1,1 @@
+ALTER TABLE "projects" ALTER COLUMN "oneliner" DROP NOT NULL;
