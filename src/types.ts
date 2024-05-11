@@ -111,7 +111,7 @@ export interface NewContributionAttestation {
   attestationType: string;
   feedback: string | null;
   isdelegate: boolean;
-  rating: number;
+  rating: string;
   improvementareas: string | null;
   extrafeedback: string | null;
   createdAt: Date;
@@ -128,7 +128,7 @@ export interface ContributionAttestation {
   attestationType: string;
   feedback: string | null;
   isdelegate: boolean;
-  rating: number;
+  rating: string;
   improvementareas: string | null;
   extrafeedback: string | null;
   createdAt: Date;
