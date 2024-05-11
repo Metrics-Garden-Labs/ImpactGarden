@@ -20,11 +20,11 @@ export interface Contribution {
   contribution: string;
   governancetype: string;
   ecosystem: string;
-  secondaryEcosystem: string | null;
+  secondaryEcosystem?: string;
   desc: string;
   link: string;
   easUid: string | null;
-  ethAddress?: string;
+  ethAddress: string;
   createdAt?: Date | null;
 }
 
@@ -58,11 +58,11 @@ export interface NewContribution {
   contribution: string;
   governancetype: string;
   ecosystem: string;
-  secondaryEcosystem: string | null;
+  secondaryEcosystem?: string;
   desc: string;
   link: string;
   easUid: string | null;
-  ethAddress?: string;
+  ethAddress: string;
   createdAt?: Date | null;
 }
 

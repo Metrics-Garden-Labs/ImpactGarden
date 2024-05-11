@@ -134,8 +134,8 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
         { name: 'Ecosystem', type: 'string', value: formData.ecosystem },
         { name: 'SecondaryEcosystem', type: 'string', value: formData.secondaryEcosystem || '' },
         { name: 'Contribution', type: 'string', value: formData.contribution },
-        { name: 'Description', type: 'string', value: formData.desc },
-        { name: 'Evidence', type: 'string', value: formData.link },  
+        { name: 'Description', type: 'string', value: formData.desc || "" },
+        { name: 'Evidence', type: 'string', value: formData.link || "" },  
       ]);
 
       console.log ("encodedData", encodedData)
@@ -370,7 +370,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
           <div className="mb-4 ">
             <h3 className="font-semibold p-2 text-center">Description</h3>
             <textarea
-              value={formData.desc}
+              value={formData.desc ?? ''}
               onChange={e => setFormData({ ...formData, desc: e.target.value })}
               placeholder="Description"
               className='h-20 w-full p-2 border border-gray-800 rounded-md'
@@ -384,7 +384,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
           <div className="mb-4">
             <h3 className="font-semibold p-2 text-center">Link/Evidence</h3>
             <textarea
-              value={formData.link}
+              value={formData.link ?? ''}
               onChange={e => setFormData({ ...formData, link: e.target.value })}
               placeholder="Link/Evidence"
               className='h-20 w-full p-2 border border-gray-800 rounded-md'
