@@ -120,7 +120,7 @@ export const contributions = pgTable(
 //pop up that says this user has already attested to this contibution
 
 export const contributionattestations = pgTable(
-  "contributionAttestations",
+  "contributionattestations",
   {
     id: serial("id").primaryKey(),
     userFid: text("userFid")
@@ -144,10 +144,10 @@ export const contributionattestations = pgTable(
     extrafeedback: text("extrafeedback"),
     createdAt: timestamp("createdAt").defaultNow(),
   },
-  (contributionAttestations) => {
+  (contributionattestations) => {
     return {
       contAttestIdIdx: uniqueIndex("cont_attest_id_idx").on(
-        contributionAttestations.id
+        contributionattestations.id
       ),
     };
   }
