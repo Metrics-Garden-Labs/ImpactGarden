@@ -5,6 +5,7 @@ export interface Project {
   ethAddress?: string;
   ecosystem: string;
   projectName: string;
+  oneliner: string | null;
   websiteUrl: string | null;
   twitterUrl: string | null;
   githubUrl: string | null;
@@ -29,6 +30,7 @@ export interface NewProject {
   userFid: string;
   ethAddress: string;
   projectName: string;
+  oneliner: string | null;
   websiteUrl?: string;
   twitterUrl?: string;
   githubUrl?: string;

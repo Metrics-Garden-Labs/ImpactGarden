@@ -44,6 +44,7 @@ export const projects = pgTable(
       .notNull(),
     ethAddress: text("ethAddress").notNull(),
     ecosystem: text("ecosystem").notNull(),
+    oneliner: text("oneliner").notNull(),
     projectName: text("projectName").unique().notNull(),
     websiteUrl: text("websiteUrl"),
     twitterUrl: text("twitterUrl"),

@@ -25,7 +25,7 @@ import ConfirmationSection from './confirmationPage';
 
 type AttestationData = {
   projectName: string;
-  oneLiner: string | "";
+  oneliner: string | "";
   websiteUrl: string;
   twitterUrl: string;
   githubURL: string;
@@ -41,7 +41,7 @@ export default function ProjectSignUp() {
 
   const [attestationData, setAttestationData] = useState<AttestationData>({
     projectName: '',
-    oneLiner: '',
+    oneliner: '',
     websiteUrl: '',
     twitterUrl: '',
     githubURL: '',
@@ -456,7 +456,7 @@ export default function ProjectSignUp() {
               {attestationData.projectName || 'Project name'}
             </h3>
             <p className='text-center mt-2 mb-2 text-gray-400'> 
-              {attestationData.oneLiner || 'Project description'}
+              {attestationData.oneliner || 'Project description'}
             </p>
             <div className="flex justify-center py-4 items-center">
               <Link href={checkwebsiteUrl || '#'}>
@@ -542,7 +542,7 @@ export default function ProjectSignUp() {
               type="text"
               id="projectName"
               name="projectName"
-              value={attestationData.oneLiner}
+              value={attestationData.oneliner}
               onChange={handleAttestationChange}
               className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="Type Project Description Here"
