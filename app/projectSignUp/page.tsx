@@ -5,7 +5,7 @@ import {  networkContractAddresses, getChainId } from '../components/networkCont
 import { useEAS } from '../../src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import React, { FormEvent, useEffect, useState } from 'react';
-import { useGlobalState } from '../../src/config/config';
+import { WHITELISTED_USERS, useGlobalState } from '../../src/config/config';
 import { UploadDropzone } from '../../src/utils/uploadthing';
 import Navbar from '../components/navbar1';
 import { NEXT_PUBLIC_URL } from '../../src/config/config';
@@ -187,6 +187,7 @@ export default function ProjectSignUp() {
   const createAttestation = async () => {
 
     //check for captcha being solved
+
     if (!captcha) {
         alert("Please complete the captcha to continue");
         return;//exit function if captcha not solved
@@ -202,6 +203,15 @@ export default function ProjectSignUp() {
       return;
     }
     console.log('current address', currentAddress);
+
+     // Check if the user's fid is in the whitelist
+     if (!WHITELISTED_USERS.includes(user.fid)) {
+      alert('Access denied. Still in Alpha testing phase.');
+      return; // Exit function if user is not whitelisted
+    }
+
+    // If all checks pass, continue with the function
+    console.log('All checks passed, continuing with function...');
     {/* schema is just for OP at the minute would have to make a schema for each network */}
     try {
       setIsLoading(true);

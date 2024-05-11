@@ -115,11 +115,11 @@ export default function ProjectList({
           <hr className="border-1 border-gray-300 my-2 mx-auto w-1/2" />
           
           <div className="mb-4 items-center py-3">
-            {/* <h3 className="font-semibold text-center">Description</h3>
+            <h3 className="font-semibold text-center">Description</h3>
             <p className="text-center">{selectedProject.oneliner}</p>
           </div>
           
-          <div className="mb-4"> */}
+          <div className="mb-4">
             <h3 className="font-semibold text-center">Website</h3>
             <p className="text-center overflow-wrap break-words max-w-full mx-auto truncate">
               {selectedProject.websiteUrl   && (
@@ -200,7 +200,7 @@ export default function ProjectList({
               )}
             </div>  
             <h3 className="mb-2 text-xl font-semibold">{project.projectName}</h3>
-            {/* <p className="mb-2 text-md text-gray-500">{project.oneliner}</p> */}
+            <p className="mb-2 text-md text-gray-500">{project.oneliner}</p>
             {/* Display the username if available */}
             {Array.isArray(searchResults) && searchResults.find((result) => result.fid === project.userFid)?.username && (
               <p className="text-gray-500">

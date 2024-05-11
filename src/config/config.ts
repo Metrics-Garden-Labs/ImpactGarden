@@ -17,3 +17,11 @@ export { useGlobalState };
 
 export const NEXT_PUBLIC_URL = "https://www.metricsgarden.xyz/";
 //export const NEXT_PUBLIC_URL = "http://localhost:3001";
+
+export const WHITELISTED_USERS = [
+  "453987",
+  "11596",
+  "429828",
+  "18391",
+  "10610",
+];
