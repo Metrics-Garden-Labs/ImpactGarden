@@ -117,10 +117,10 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       return ''; 
     }
 
-    if (!WHITELISTED_USERS.includes(user.fid)) {
-      alert('Access denied. Still in Alpha testing phase.');
-      return ''; // Exit function if user is not whitelisted
-    }
+    // if (!WHITELISTED_USERS.includes(user.fid)) {
+    //   alert('Access denied. Still in Alpha testing phase.');
+    //   return ''; // Exit function if user is not whitelisted
+    // }
 
     try {
       setIsLoading(true);

@@ -205,10 +205,10 @@ export default function ProjectSignUp() {
     console.log('current address', currentAddress);
 
      // Check if the user's fid is in the whitelist
-     if (!WHITELISTED_USERS.includes(user.fid)) {
-      alert('Access denied. Still in Alpha testing phase.');
-      return; // Exit function if user is not whitelisted
-    }
+    //  if (!WHITELISTED_USERS.includes(user.fid)) {
+    //   alert('Access denied. Still in Alpha testing phase.');
+    //   return; // Exit function if user is not whitelisted
+    // }
 
     // If all checks pass, continue with the function
     console.log('All checks passed, continuing with function...');

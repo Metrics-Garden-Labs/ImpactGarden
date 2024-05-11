@@ -163,10 +163,10 @@ const handleClick = (key: string) => {
             return;
         }
 
-        if (!WHITELISTED_USERS.includes(user.fid)) {
-          alert('Access denied. Still in Alpha testing phase.');
-          return; // Exit function if user is not whitelisted
-        }
+        // if (!WHITELISTED_USERS.includes(user.fid)) {
+        //   alert('Access denied. Still in Alpha testing phase.');
+        //   return; // Exit function if user is not whitelisted
+        // }
 
         console.log('contribution:', contribution);
         console.log('projectethAddress:', project.ethAddress);  
