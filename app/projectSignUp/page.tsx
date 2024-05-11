@@ -215,7 +215,7 @@ export default function ProjectSignUp() {
         { name: 'Description', value: attestationData.oneliner, type: 'string' },
         { name: 'Website', value: attestationData.websiteUrl, type: 'string' },
         { name: 'Twitter', value: attestationData.twitterUrl, type: 'string' },
-        { name: 'githubURL', value: attestationData.githubURL, type: 'string' },
+        { name: 'Github', value: attestationData.githubURL, type: 'string' },
         { name: 'Farcaster', value: user.fid, type: 'string' },
       ]);
       console.log('Encoded Data:', encodedData);
