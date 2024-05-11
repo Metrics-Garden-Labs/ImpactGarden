@@ -30,7 +30,7 @@ export interface NewProject {
   userFid: string;
   ethAddress: string;
   projectName: string;
-  oneliner: string;
+  oneliner?: string;
   websiteUrl?: string;
   twitterUrl?: string;
   githubUrl?: string;
