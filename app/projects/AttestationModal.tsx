@@ -24,6 +24,8 @@ interface AttestationModalProps {
     attestationCount: number;
 }
 
+type ImprovementAreaKey = 'participation' | 'understanding' | 'collaboration' | 'information' | 'models';
+
 const AttestationModal: React.FC<AttestationModalProps> = ({
     isOpen,
     onClose,
@@ -33,7 +35,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     attestationCount,
     eas
 }) => {
-    const [isUseful, setIsUseful] = useState(false);
+    const [isdelegate, setIsDelegate] = useState(false);
     const [feedback, setFeedback] = useState('');
     const [walletAddress] = useGlobalState('walletAddress');
     const [fid] = useGlobalState('fid');
@@ -42,11 +44,47 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     const [ attestationUID, setAttestationUID ] = useState<string>("");
     const [recentAttestations, setRecentAttestations] = useState<ContributionAttestationWithUsername[]>([]);
     const [showAttestationForm, setShowAttestationForm] = useState(false);
+    const [rating, setRating] = useState(0);
     const [user] = useLocalStorage( "user", {
         fid: '',
         username: '',
         ethAddress: '',
     });
+    const [improvementareas, setImprovementAreas] = useState<{ [key in ImprovementAreaKey]: boolean }>({
+      participation: false,
+      understanding: false,
+      collaboration: false,
+      information: false,
+      models: false
+  });
+  const [extrafeedback, setExtraFeedback] = useState('');
+
+  const labels: { [key in ImprovementAreaKey]: string } = {
+    participation: 'Improve my participation in governance',
+    understanding: 'Understand how governance works',
+    collaboration: 'Collaborate with other governance members',
+    information: 'Have more information for decision making',
+    models: 'Improve governance models'
+};
+  
+  const handleToggle = (area: ImprovementAreaKey) => {
+    setImprovementAreas(prev => ({
+        ...prev,
+        [area]: !prev[area]
+    }));
+  };
+
+  const isValidKey = (key: any): key is ImprovementAreaKey => {
+    return ['participation', 'understanding', 'collaboration', 'information', 'models'].includes(key);
+}
+
+const handleClick = (key: string) => {
+    if (isValidKey(key)) {
+        handleToggle(key);
+    } else {
+        console.error("Invalid key:", key);
+    }
+};
 
     useEffect(() => {
       const getContributionAttestations = async () => {
@@ -73,6 +111,11 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
       }
     }, [contribution]);
 
+    const handleRating = (rate: number) => {
+      setRating(rate); // Update the rating state
+      console.log("Rating set to: ", rate); // Debugging or further use
+  };
+
     const addContributionAttestation = async (attestationUID: string) => {
       try {
         const newAttestation = {
@@ -82,8 +125,11 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
           ecosystem: contribution?.ecosystem,
           attestationUID: attestationUID,
           attesterAddy: walletAddress,
+          rating: rating,
+          improvementareas: improvementareas,
           feedback: feedback,
-          attestationType: isUseful ? 'Useful' : 'Not Useful', 
+          extrafeedback: extrafeedback,
+          attestationType: isdelegate ? 'Useful' : 'Not Useful', 
         };
         console.log('New Attestation:', newAttestation);
     
@@ -126,11 +172,14 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
         console.log('projectethAddress:', project.ethAddress);  
         try {
             setIsLoading(true);
-            const attestationSchema = "0x0ea974daef377973de71b8a206247f436f67364853a10d460c2623d18035db12";
-            const schemaEncoder = new SchemaEncoder('string Contribution, bool Useful, string Feedback');
+            const attestationSchema = "0x5f5afd9626d9d0cd46c7de120032c2470da00c4be9bcef1dd75fa8c074f17e70";
+            const schemaEncoder = new SchemaEncoder('string Farcaster, string Contribution, uint8 Rating, string HowItHelped, bool IsDelegate, string Feedback');
             const encodedData = schemaEncoder.encodeData([
+                { name: 'Farcaster', type: 'string', value: user.fid },
                 { name: 'Contribution', type: 'string', value: contribution.contribution },
-                { name: 'Useful', type: 'bool', value: isUseful }, 
+                { name: 'Rating', type: 'uint8', value: rating },
+                { name: 'HowItHelped', type: 'string', value: improvementareas },
+                { name: 'IsDelegate', type: 'bool', value: isdelegate },
                 { name: 'Feedback', type: 'string', value: feedback },
             ]);
 
@@ -237,20 +286,60 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
               <h2 className="text-xl font-bold mb-4 text-center">
                   Attest to Contribution
                 </h2>
+
+                <div className="mb-4">
+                    <h3 className="font-semibold text-center">Rate this Contribution</h3>
+                    <div className="rating mb-4 flex justify-center">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <label key={star}>
+                            <input 
+                                type="radio" 
+                                name="rating" 
+                                className="mask mask-star-2 bg-gray-300 hidden" // Hide default radio button
+                                onChange={() => handleRating(star)}
+                                checked={rating === star}
+                            />
+                            <div
+                                className={`inline-block cursor-pointer p-1 ${rating >= star ? 'text-black' : 'text-gray-300'}`}
+                                onClick={() => handleRating(star)}
+                                style={{ fontSize: "36px" }}
+                            >
+                                &#9733; {/* Star icon */}
+                            </div>
+                        </label>
+                    ))}
+                    </div>
+                </div>
+
+                <h3 className="font-semibold text-center mt-4">This contribution helped me to:</h3>
+                <div className="flex flex-col items-start mt-2 mb-4 px-4">
+                  {Object.entries(improvementareas).map(([key, value]) => (
+                      <button
+                          key={key}
+                          onClick={() => handleClick(key)}
+                          className={`mb-2 px-4 py-2 rounded-lg w-full text-left text-sm ${value ? 'bg-black text-white' : 'bg-gray-200 text-gray-800'}`}
+                      >
+                          {value ? '✓' : '+'} {labels[key as ImprovementAreaKey]}
+                      </button>
+                  ))}
+              </div>
+   
+
                 <div className="mb-4">
                   <label className="flex items-center text-center">
                     <input
                       type="checkbox"
-                      checked={isUseful}
-                      onChange={(e) => setIsUseful(e.target.checked)}
+                      checked={isdelegate}
+                      onChange={(e) => setIsDelegate(e.target.checked)}
                       className="form-checkbox h-5 w-5 text-indigo-600"
                     />
-                    <span className="ml-2 text-gray-700">Was this contribution useful?</span>
+                    <span className="ml-2 text-gray-700">I am a delegate in this ecosystem</span>
                   </label>
                 </div>
+
                 <div className="mb-4">
                   <label className="block text-gray-700 font-bold mb-2">
-                    Feedback:
+                    How did it help you improve your participation:
                   </label>
                   <textarea
                     value={feedback}
@@ -261,6 +350,19 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                   />
                   <div className="text-right mr-2">{feedback.length}/200</div>
                 </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-bold mb-2">
+                      Anything else you would like to share?
+                  </label>
+                  <textarea
+                      value={extrafeedback}
+                      onChange={(e) => setExtraFeedback(e.target.value)}
+                      className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
+                      rows={4}
+                      maxLength={500}  // Set maximum length for additional feedback
+                  />
+                  <div className="text-right mr-2">{extrafeedback.length}/500</div>
+              </div>
                 <div className="mb-4 text-center py-3 p-3">
                 <button 
                     className='btn text-center bg-headerblack text-white hover:bg-blue-500 mr-4'

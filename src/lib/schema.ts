@@ -137,8 +137,11 @@ export const contributionattestations = pgTable(
       .notNull(),
     attestationUID: text("attestationUID").notNull().unique(),
     attesterAddy: text("attesterAddy").notNull(),
-    attestationType: text("attestationType").notNull(),
+    rating: text("rating"),
+    improvementareas: text("improvementareas"),
+    isdelegate: boolean("isdelegate").default(false),
     feedback: text("feedback"),
+    extrafeedback: text("extrafeedback"),
     createdAt: timestamp("createdAt").defaultNow(),
   },
   (contributionAttestations) => {

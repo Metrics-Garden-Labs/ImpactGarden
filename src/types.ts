@@ -110,19 +110,27 @@ export interface NewContributionAttestation {
   attesterAddy: string;
   attestationType: string;
   feedback: string | null;
+  isdelegate: boolean;
+  rating: number;
+  improvementareas: string | null;
+  extrafeedback: string | null;
   createdAt: Date;
 }
 
 export interface ContributionAttestation {
   id: number;
   userFid: string;
-  projectName: string | undefined;
+  projectName: string;
   contribution: string;
-  ecosystem: string | undefined;
+  ecosystem: string;
   attestationUID: string;
   attesterAddy: string;
   attestationType: string;
   feedback: string | null;
+  isdelegate: boolean;
+  rating: number;
+  improvementareas: string | null;
+  extrafeedback: string | null;
   createdAt: Date;
 }
 
