@@ -130,7 +130,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       const encodedData = schemaEncoder.encodeData([
         { name: 'Farcaster', type: 'string', value: user.fid },
         { name: 'Project', type: 'string', value: selectedProject?.projectName || '' },
-        { name: 'GovernanceType', type: 'string', value: formData.governancetype },
+        { name: 'GovernanceType', type: 'string', value: formData.governancetype || '' },
         { name: 'Ecosystem', type: 'string', value: formData.ecosystem },
         { name: 'SecondaryEcosystem', type: 'string', value: formData.secondaryEcosystem || '' },
         { name: 'Contribution', type: 'string', value: formData.contribution },
@@ -312,7 +312,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
               <select
                 id="contributionType"
                 name="contributionType"
-                value={formData.governancetype}
+                value={formData.governancetype || ''}
                 onChange={e => setFormData({ ...formData, governancetype: e.target.value })}
                 className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               >

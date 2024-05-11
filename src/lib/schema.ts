@@ -88,6 +88,8 @@ export const contributions = pgTable(
     ecosystem: text("ecosystem")
       .references(() => projects.ecosystem)
       .notNull(),
+    governancetype: text("governancetype"),
+    secondaryEcosystem: text("secondaryEcosystem"),
     contribution: text("contribution").notNull().unique(),
     desc: text("desc").notNull(),
     link: text("link").notNull(),

@@ -18,9 +18,9 @@ export interface Contribution {
   userFid: string;
   projectName: string;
   contribution: string;
-  governancetype: string;
+  governancetype: string | null;
   ecosystem: string;
-  secondaryEcosystem?: string;
+  secondaryEcosystem: string | null;
   desc: string;
   link: string;
   easUid: string | null;
@@ -56,7 +56,7 @@ export interface NewContribution {
   userFid: string;
   projectName: string;
   contribution: string;
-  governancetype: string;
+  governancetype?: string;
   ecosystem: string;
   secondaryEcosystem?: string;
   desc: string;
