@@ -1,0 +1,1 @@
+ALTER TABLE "contributions" RENAME COLUMN "secondaryEcosystem" TO "secondaryecosystem";
