@@ -97,6 +97,7 @@ export default function ProjectSignUp() {
       const project: Project = {
         userFid: user.fid,
         projectName: attestationData.projectName,
+        oneliner: attestationData.oneliner,
         websiteUrl: attestationData.websiteUrl,
         twitterUrl: attestationData.twitterUrl,
         githubUrl: attestationData.githubURL,
@@ -420,6 +421,9 @@ export default function ProjectSignUp() {
                      <h3 className="text-center mt-2 font-semibold text-gray-500">
                        {attestationData.projectName || 'Project name'}
                      </h3>
+                     <p className='text-center mt-2 text-gray-400'>
+                        {attestationData.oneliner || 'Project description'}
+                      </p>
                      <div className="flex justify-center py-4 items-center">
                        <BsGlobe2 className="text-black mx-2 text-lg" />
                        <FaXTwitter className="text-black mx-2 text-lg" />
@@ -540,8 +544,8 @@ export default function ProjectSignUp() {
           <div className="mt-2">
             <input
               type="text"
-              id="projectName"
-              name="projectName"
+              id="oneliner"
+              name="oneliner"
               value={attestationData.oneliner}
               onChange={handleAttestationChange}
               className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
