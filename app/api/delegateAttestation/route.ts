@@ -24,10 +24,14 @@ export async function POST(request: NextRequest) {
     } = req;
 
     console.log("Signature", signature);
-    console.log("Attester Address", recipient);
+    console.log("Attester", attester);
+    console.log("Recipient", recipient);
     console.log("Schema UID", schema);
     console.log("Ref UID", refUID);
     console.log("Encoded Data", data);
+    console.log("Deadline", deadline);
+    console.log("Value", value);
+    console.log("Expiration Time", expirationTime);
 
     const privateKey = process.env.BACKEND_METAMASK_PRIVATE_KEY;
     if (!privateKey) {
