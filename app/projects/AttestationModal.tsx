@@ -86,6 +86,17 @@ const handleClick = (key: string) => {
     }
 };
 
+const formatImprovementAreas = (areas:any) => {
+  // Extract keys where the value is true
+  const activeAreas = Object.keys(areas).filter(key => areas[key]);
+  // Join the active areas into a single string separated by commas
+  return activeAreas.join(', ');
+};
+
+const improvementareasstring = formatImprovementAreas(improvementareas);
+console.log('How It Helped:', improvementareasstring);
+
+
     useEffect(() => {
       const getContributionAttestations = async () => {
         try {
@@ -126,7 +137,7 @@ const handleClick = (key: string) => {
           attestationUID: attestationUID,
           attesterAddy: walletAddress,
           rating: rating,
-          improvementareas: improvementareas,
+          improvementareas: improvementareasstring,
           feedback: feedback,
           extrafeedback: extrafeedback,
           attestationType: isdelegate ? 'Useful' : 'Not Useful', 
@@ -170,15 +181,26 @@ const handleClick = (key: string) => {
 
         console.log('contribution:', contribution);
         console.log('projectethAddress:', project.ethAddress);  
+
         try {
+          
             setIsLoading(true);
+
+            console.log('Faracaster:', user.fid);
+            console.log('Contribution:', contribution.contribution);
+            console.log('Rating:', rating);
+            console.log('HowItHelped:', improvementareasstring);
+            console.log('IsDelegate:', isdelegate);
+            console.log('Feedback:', feedback);
+            console.log('ExtraFeedback:', extrafeedback);
+
             const attestationSchema = "0x5f5afd9626d9d0cd46c7de120032c2470da00c4be9bcef1dd75fa8c074f17e70";
             const schemaEncoder = new SchemaEncoder('string Farcaster, string Contribution, uint8 Rating, string HowItHelped, bool IsDelegate, string Feedback');
             const encodedData = schemaEncoder.encodeData([
                 { name: 'Farcaster', type: 'string', value: user.fid },
                 { name: 'Contribution', type: 'string', value: contribution.contribution },
                 { name: 'Rating', type: 'uint8', value: rating },
-                { name: 'HowItHelped', type: 'string', value: improvementareas },
+                { name: 'HowItHelped', type: 'string', value: improvementareasstring },
                 { name: 'IsDelegate', type: 'bool', value: isdelegate },
                 { name: 'Feedback', type: 'string', value: feedback },
             ]);
