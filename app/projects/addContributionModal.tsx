@@ -70,7 +70,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     projectName: selectedProject?.projectName || '',
     governancetype: '',
     ecosystem: selectedNetwork,
-    secondaryEcosystem: '',
+    secondaryecosystem: '',
     contribution: '',
     desc: '',
     link: '',
@@ -132,7 +132,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
         { name: 'Project', type: 'string', value: selectedProject?.projectName || '' },
         { name: 'GovernanceType', type: 'string', value: formData.governancetype || '' },
         { name: 'Ecosystem', type: 'string', value: formData.ecosystem },
-        { name: 'SecondaryEcosystem', type: 'string', value: formData.secondaryEcosystem || '' },
+        { name: 'SecondaryEcosystem', type: 'string', value: formData.secondaryecosystem || '' },
         { name: 'Contribution', type: 'string', value: formData.contribution },
         { name: 'Description', type: 'string', value: formData.desc || "" },
         { name: 'Evidence', type: 'string', value: formData.link || "" },  
@@ -347,8 +347,8 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
           </div>
             <h3 className='font-semibold text-center'>Secondary Ecosystems</h3>
             <input
-              value={formData.secondaryEcosystem || ''}
-              onChange={e => setFormData({ ...formData, secondaryEcosystem: e.target.value })}
+              value={formData.secondaryecosystem || ''}
+              onChange={e => setFormData({ ...formData, secondaryecosystem: e.target.value })}
               placeholder="Ecosystem"
               className='h-20 w-full p-2 border border-gray-800 rounded-md'
               />

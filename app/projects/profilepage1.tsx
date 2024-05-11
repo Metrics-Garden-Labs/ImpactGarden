@@ -152,7 +152,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
       projectName: selectedProject?.projectName || '',
       ecosystem: selectedProject?.ecosystem || '',
       governancetype: '',
-      secondaryEcosystem: '',
+      secondaryecosystem: '',
       contribution: newContribution,
       desc: '',
       link: '',

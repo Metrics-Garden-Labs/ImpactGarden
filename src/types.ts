@@ -20,7 +20,7 @@ export interface Contribution {
   contribution: string;
   governancetype: string | null;
   ecosystem: string;
-  secondaryEcosystem: string | null;
+  secondaryecosystem: string | null;
   desc: string;
   link: string;
   easUid: string | null;
@@ -58,7 +58,7 @@ export interface NewContribution {
   contribution: string;
   governancetype?: string;
   ecosystem: string;
-  secondaryEcosystem?: string;
+  secondaryecosystem?: string;
   desc: string;
   link: string;
   easUid: string | null;
