@@ -1,6 +1,6 @@
 // AddContributionModal.tsx
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NEXT_PUBLIC_URL, WHITELISTED_USERS, useGlobalState } from '../../src/config/config';
 import { AttestationNetworkType, Contribution, Project } from '../../src/types';
 import { useEAS } from '../../src/hooks/useEAS';
@@ -11,6 +11,9 @@ import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import Link from 'next/link';
 import { easScanEndpoints } from '../components/easScan';
 import AttestationCreationModal from '../components/attestationCreationModal';
+import { useSwitchChain } from 'wagmi';
+import { getChainId } from '../components/networkContractAddresses';
+
 
 
 
@@ -21,21 +24,53 @@ interface Props {
   addContributionCallback: (contribution: string) => void;
 }
 
+const networks: AttestationNetworkType[] = [
+  'Ethereum', 'Optimism', 'Base', 'Arbitrum One', 'Polygon',
+  'Scroll', 'Celo', 'Blast', 'Linea'
+];
+
 export default function AddContributionModal({ isOpen, onClose, addContributionCallback}: Props) {
   const [fid] = useGlobalState('fid');
   const [walletAddress] = useGlobalState('walletAddress');
   const [selectedProject] = useLocalStorage<Project | null>('selectedProject', null);
   const [ isLoading, setIsLoading ] = useState(false);
   const [ attestationUID, setAttestationUID ] = useState<string>("");
+  const [ ecosystem, setEcosystem ] = useState<AttestationNetworkType>('Optimism');
+  const { switchChain } = useSwitchChain();
   const [user] = useLocalStorage("user", {
     fid: '',
     username: '',
     ethAddress: '',
   });
+
+  const { eas, currentAddress, address , handleNetworkChange, selectedNetwork} = useEAS();
+
+
+  useEffect(() => {
+    const checkNetwork = async () => {
+      if (selectedNetwork) {
+        const chainId = getChainId(selectedNetwork);
+        if (chainId) {
+          try {
+            await switchChain({ chainId });
+          } catch (error) {
+            console.error('Failed to switch network:', error);
+            // Show an error message or prompt to the user indicating the need to switch networks
+            alert('Please switch to the correct network in your wallet.');
+          }
+        }
+      }
+    };
+  
+    checkNetwork();
+  }, [selectedNetwork, switchChain]);
+
   const [formData, setFormData] = useState<Contribution>({
     userFid: user.fid || '',
     projectName: selectedProject?.projectName || '',
-    ecosystem: selectedProject?.ecosystem || '',
+    governancetype: '',
+    ecosystem: selectedNetwork,
+    secondaryEcosystem: '',
     contribution: '',
     desc: '',
     link: '',
@@ -43,9 +78,29 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     ethAddress: walletAddress,
   });
 
+  const handleNetworkChangeEvent = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    let selectedValue = e.target.value as AttestationNetworkType;
+    setEcosystem(selectedValue);
+    // Check if the selected network is 'mainnet' and adjust to 'Optimism', this will do for now
+    if (selectedValue === 'Ethereum') {
+      selectedValue = 'Optimism';
+      alert('Mainnet is not supported at the moment, switching to Optimism.');
+    }
+    handleNetworkChange(selectedValue);
+    console.log('Selected Network', selectedValue);
+  
+    const chainId = getChainId(selectedValue);
+    if (chainId) {
+      try {
+        await switchChain({ chainId });
+      } catch (error) {
+        console.error('Failed to switch network:', error);
+      }
+    }
+  };
 
 
-  const { eas, currentAddress, address } = useEAS();
+
 
   console.log('Project Ecosystem:', selectedProject?.ecosystem);
   console.log('Selected Project:', formData);
@@ -70,15 +125,17 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     try {
       setIsLoading(true);
 
-      const contributionSchema = '0x132a4d5644fa6b85baf205fc25b069ba398bcecea7dc4b609c2ba20efb71da90';
-      const schemaEncoder = new SchemaEncoder('uint24 userFid, string projectName, string contribution, string description, string link, string ecosystem');
+      const contributionSchema = '0xd13f3b9aa3f4e9ec3b70a76cd767fa64f4f7eb7a6a59e4b1e330d7dac6ec2ae9';
+      const schemaEncoder = new SchemaEncoder('string Farcaster, string Project, string GovernanceType, string Ecosystem, string SecondaryEcosystem, string Contribution, string Description, string Evidence');
       const encodedData = schemaEncoder.encodeData([
-        { name: 'userFid', type: 'uint24', value: user.fid || 0},
-        { name: 'projectName', type: 'string', value: selectedProject?.projectName || '' },
-        { name: 'contribution', type: 'string', value: formData.contribution },
-        { name: 'description', type: 'string', value: formData.desc || '' },
-        { name: 'link', type: 'string', value: formData.link || '' },
-        { name: 'ecosystem', type: 'string', value: selectedProject?.ecosystem || '' },
+        { name: 'Farcaster', type: 'string', value: user.fid },
+        { name: 'Project', type: 'string', value: selectedProject?.projectName || '' },
+        { name: 'GovernanceType', type: 'string', value: formData.governancetype },
+        { name: 'Ecosystem', type: 'string', value: formData.ecosystem },
+        { name: 'SecondaryEcosystem', type: 'string', value: formData.secondaryEcosystem || '' },
+        { name: 'Contribution', type: 'string', value: formData.contribution },
+        { name: 'Description', type: 'string', value: formData.desc },
+        { name: 'Evidence', type: 'string', value: formData.link },  
       ]);
 
       console.log ("encodedData", encodedData)
@@ -156,6 +213,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       if (attestationUID) {
         // Update the form data with the attestation UID
         const updatedContribution = { ...contribution, easUid: attestationUID };
+        console.log('Updated Contribution:', updatedContribution);
   
         // Submit the form data to the API
         const response = await fetch(`${NEXT_PUBLIC_URL}/api/addContributionDb`, {
@@ -239,7 +297,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
      onClick={onClose}>
       <div 
-                className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-1/4 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
+                className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-1/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
                 onClick={(e) => e.stopPropagation()}
             >
           <form className="bg-white p-8 rounded-lg" onSubmit={handleSubmit}>
@@ -247,6 +305,55 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
             <h2 className="text-xl font-bold mb-4">Add New Contribution</h2>
           </div>
           <div className="mb-4 items-center py-3 max-h-96 overflow-y-auto">
+            {/* dropdown for type of contribution */}
+            <div>
+            <h3 className="font-semibold text-center mb-2">Type of Governance Contribution</h3>
+            <div className="mb-4">
+              <select
+                id="contributionType"
+                name="contributionType"
+                value={formData.governancetype}
+                onChange={e => setFormData({ ...formData, governancetype: e.target.value })}
+                className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              >
+                <option value="">Select Contribution Type</option>
+                <option value="Education">Education</option>
+                <option value="Research">Research</option>
+                <option value="Tooling">Tooling</option>
+                <option value="Awareness">Awareness</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="attestationChain" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
+              Main Ecosystem (Optimism only supported)
+            </label>
+            <div className=" mb-4">
+              <select
+                id="attestationChain"
+                name="attestationChain"
+                value={selectedNetwork}
+                onChange={handleNetworkChangeEvent}
+                className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              >
+                {networks.map((network) => (
+                  <option key={network} value={network}>
+                    {network}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+            <h3 className='font-semibold text-center'>Secondary Ecosystems</h3>
+            <input
+              value={formData.secondaryEcosystem || ''}
+              onChange={e => setFormData({ ...formData, secondaryEcosystem: e.target.value })}
+              placeholder="Ecosystem"
+              className='h-20 w-full p-2 border border-gray-800 rounded-md'
+              />
+          </div>
+          <div className="mb-4">
             <h3 className="font-semibold  p-2 text-center">Title</h3>
             <textarea
               value={formData.contribution}

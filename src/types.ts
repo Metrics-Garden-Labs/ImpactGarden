@@ -18,7 +18,9 @@ export interface Contribution {
   userFid: string;
   projectName: string;
   contribution: string;
+  governancetype: string;
   ecosystem: string;
+  secondaryEcosystem: string | null;
   desc: string;
   link: string;
   easUid: string | null;
@@ -50,16 +52,18 @@ export interface SearchResult {
 }
 
 export interface NewContribution {
-  id: number;
+  id?: number;
   userFid: string;
   projectName: string;
   contribution: string;
+  governancetype: string;
+  ecosystem: string;
+  secondaryEcosystem: string | null;
   desc: string;
   link: string;
-  ecosystem: string;
-  easUid: string;
-  ethAddress: string;
-  createdAt: Date;
+  easUid: string | null;
+  ethAddress?: string;
+  createdAt?: Date | null;
 }
 
 export interface NewUser {
