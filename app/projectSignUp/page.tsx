@@ -260,7 +260,7 @@ export default function ProjectSignUp() {
         const dataToSend = {
           ...attestation,
           signature: signature,
-          attester: backendWallet,
+          attester: walletAddress,
         };
 
         const serialisedData = JSON.stringify(dataToSend, (key, value) =>
