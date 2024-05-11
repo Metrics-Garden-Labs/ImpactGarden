@@ -203,8 +203,8 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
                         </select>
                     </div>
 
-
-                        <div className="flex-initial">
+                    </div>
+                    <div className="flex-initial">
                             <select
                             id="sortOrder"
                             name="sortOrder"
@@ -217,8 +217,6 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
                             <option value="desc">Z-A</option>
                             </select>
                         </div>
-                    </div>
-
                     
 
 

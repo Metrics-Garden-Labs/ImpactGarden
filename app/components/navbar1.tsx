@@ -19,7 +19,7 @@ export default function Navbar() {
             <div className="flex justify-end">
                 <div className='flex items-center gap-x-8'>
                     <Link href='/projectSignUp' className='text-white text-md hover:text-opacity-75'>REGISTER PROJECT</Link>
-                    <Link href='/metricsdb' className='text-white text-md hover:text-opacity-75'>METRICS DATABASE</Link>
+                    {/* <Link href='/metricsdb' className='text-white text-md hover:text-opacity-75'>METRICS DATABASE</Link> */}
                     {/*<details className="dropdown">
                      <summary className="m-1 btn bg-headerblack font-normal border-none text-lg text-white">
                         PROJECTS

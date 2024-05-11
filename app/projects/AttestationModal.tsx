@@ -83,7 +83,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
           attestationUID: attestationUID,
           attesterAddy: walletAddress,
           feedback: feedback,
-          attestationType: isUseful ? 'Useful' : 'Not Useful',
+          attestationType: isUseful ? 'Useful' : 'Not Useful', 
         };
         console.log('New Attestation:', newAttestation);
     
@@ -267,7 +267,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                     className="btn text-center bg-headerblack text-white hover:bg-blue-500 "
                     onClick={createAttestation}
                   >
-                    Submit Attestation
+                    Share your Insight
                   </button>
                 </div>
               </>
@@ -300,7 +300,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                   <p className="text-center text-black">{project.ecosystem}</p>
                 </div>
                 <div className="mb-4">
-                  <h3 className="font-semibold text-center">Attestations</h3>
+                  <h3 className="font-semibold text-center">Insights</h3>
                   <p className="text-center">
                     This contribution has been attested to {attestationCount} times
                   </p>
@@ -338,7 +338,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                     className="btn text-center bg-headerblack text-white hover:bg-blue-500"
                     onClick={toggleAttestationForm}
                   >
-                    Attest to this Contribution
+                    Share your Insights
                   </button>
                 </div>
               </>

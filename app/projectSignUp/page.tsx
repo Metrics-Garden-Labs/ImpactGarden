@@ -25,6 +25,7 @@ import ConfirmationSection from './confirmationPage';
 
 type AttestationData = {
   projectName: string;
+  oneLiner: string | "";
   websiteUrl: string;
   twitterUrl: string;
   githubURL: string;
@@ -40,6 +41,7 @@ export default function ProjectSignUp() {
 
   const [attestationData, setAttestationData] = useState<AttestationData>({
     projectName: '',
+    oneLiner: '',
     websiteUrl: '',
     twitterUrl: '',
     githubURL: '',
@@ -453,6 +455,9 @@ export default function ProjectSignUp() {
             <h3 className="text-center mt-6 mb-6 font-semibold text-gray-500">
               {attestationData.projectName || 'Project name'}
             </h3>
+            <p className='text-center mt-2 mb-2 text-gray-400'> 
+              {attestationData.oneLiner || 'Project description'}
+            </p>
             <div className="flex justify-center py-4 items-center">
               <Link href={checkwebsiteUrl || '#'}>
                 <BsGlobe2 className="text-black mx-2 text-lg" />
@@ -529,9 +534,25 @@ export default function ProjectSignUp() {
         </div>
 
         <div>
+          <label htmlFor="projectName" className="block text-sm font-medium leading-6 text-gray-900">
+            A brief one line description of your project *
+          </label>
+          <div className="mt-2">
+            <input
+              type="text"
+              id="projectName"
+              name="projectName"
+              value={attestationData.oneLiner}
+              onChange={handleAttestationChange}
+              className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="Type Project Description Here"
+            />
+          </div>
+        </div>
+
+        <div>
           <label htmlFor="websiteUrl" className="block text-sm font-medium leading-6 text-gray-900">
-              <span>What is the website URL of your project? </span>
-              <span className="text-gray-500 text-sm">(Optional)</span>
+              What is the website URL of your project? * 
               
           </label>
           <div className="mt-2">

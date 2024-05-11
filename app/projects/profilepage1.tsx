@@ -216,6 +216,7 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
       case 'attestations':
         return (
             <div className="px-3 bg-backgroundgray">
+      
                 <div className="mb-4 flex justify-between items-center">
                 <div className="relative w-1/2">
                   <input
@@ -257,7 +258,21 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
   };
 
   return (
-    <main className="flex-grow relative p-10 bg-backgroundgray w-fulll h-full">
+    <main className="flex-grow relative p-10 bg-backgroundgray w-full h-full">
+                {/* //add contribution button */}
+        {/* if the users fid matches the fid that registered the project they can add contributions */}
+        {user.fid === selectedProject?.userFid && (
+        <div className='absolute top-1.5 right-5'>
+          <button 
+            className='btn bg-headerblack text-white hover:bg-gray-200 hover:text-black px-2 py-1'
+            onClick={() => setModalOpen(true)}
+            >
+              Add Contribution
+          </button>
+          <AddContributionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} addContribution={addContribution} addContributionCallback={handleContributionAdded}  />
+        </div>
+      )}
+   
      
       <div className="mb-4 border-b border-gray-200">
       
@@ -269,20 +284,6 @@ export default function ProfilePage({ contributions }: ProfilePageProps) {
       >
         <IoIosMenu className="h-6 w-6" />
       </button>
-
-        {/* //add contribution button */}
-        {/* if the users fid matches the fid that registered the project they can add contributions */}
-      {user.fid === selectedProject?.userFid && (
-        <div className='absolute top-20 right-5'>
-          <button 
-            className='btn bg-headerblack text-white hover:bg-gray-200 hover:text-black px-2 py-1'
-            onClick={() => setModalOpen(true)}
-            >
-              Add Contribution
-          </button>
-          <AddContributionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} addContribution={addContribution} addContributionCallback={handleContributionAdded}  />
-        </div>
-      )}
       
           <button onClick={() => setActiveTab('attestations')} className={tabClasses('attestations')}>
             Contributions
