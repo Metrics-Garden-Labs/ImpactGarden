@@ -75,7 +75,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     desc: '',
     link: '',
     easUid: '',
-    ethAddress: walletAddress,
+    ethAddress: currentAddress || '',
   });
 
   const handleNetworkChangeEvent = async (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -230,7 +230,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   
         const addedContribution: Contribution = await response.json();
         //refresh to show the new contribution
-        //window.location.reload();
+        window.location.reload();
 
         return addedContribution;
       } else {
@@ -349,7 +349,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
             <input
               value={formData.secondaryecosystem || ''}
               onChange={e => setFormData({ ...formData, secondaryecosystem: e.target.value })}
-              placeholder="Ecosystem"
+              placeholder="Ecosystems"
               className='h-20 w-full p-2 border border-gray-800 rounded-md'
               />
           </div>
