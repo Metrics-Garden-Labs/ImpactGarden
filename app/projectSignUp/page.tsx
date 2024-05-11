@@ -207,7 +207,7 @@ export default function ProjectSignUp() {
       setIsLoading(true);
       const mainSchemaUid = '0x6b4a2e50104d9b69e49c6a19a2054b78c7e87c9c924cba237ebbd5bb0a50a5c4';
       const schemaEncoder = new SchemaEncoder(
-          'string Project, string Description, string Website, string Twitter, string Github, string Farcsater'
+          'string Project, string Description, string Website, string Twitter, string Github, string Farcaster'
       );
       console.log('Schema Encoder:', schemaEncoder);
       const encodedData = schemaEncoder.encodeData([
