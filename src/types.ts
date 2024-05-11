@@ -108,7 +108,6 @@ export interface NewContributionAttestation {
   ecosystem: string;
   attestationUID: string;
   attesterAddy: string;
-  attestationType: string;
   feedback: string | null;
   isdelegate: boolean;
   rating: string;
@@ -125,7 +124,6 @@ export interface ContributionAttestation {
   ecosystem: string;
   attestationUID: string;
   attesterAddy: string;
-  attestationType: string;
   feedback: string | null;
   isdelegate: boolean;
   rating: string;
@@ -134,7 +132,7 @@ export interface ContributionAttestation {
   createdAt: Date;
 }
 
-export type Attestation = {
+export interface Attestation {
   id: number;
   userFid: string;
   projectName: string;
@@ -142,10 +140,13 @@ export type Attestation = {
   ecosystem: string;
   attestationUID: string;
   attesterAddy: string;
-  attestationType: string;
   feedback: string | null;
+  isdelegate: boolean | null;
+  rating: string | null;
+  improvementareas: string | null;
+  extrafeedback: string | null;
   createdAt: Date | null;
-};
+}
 
 export interface userAddresses {
   id: number;

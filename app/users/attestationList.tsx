@@ -70,7 +70,6 @@ const AttestationList = async ({ userFid }: Props) => {
                           <Link href={`${easScanEndpoints[attestation.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`}> 
                             <p className='text-black hover:underline'>Attestation UID: {attestation.attestationUID}</p>
                           </Link>
-                          <p>Attestation Type: {attestation.attestationType}</p>
                           <p>Feedback: {attestation.feedback}</p>
                         </div>
                         <div>
