@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { NextRequest, NextResponse } from "next/server";
 import dotenv from "dotenv";
+import { Alchemy, Network, Utils, Wallet } from "alchemy-sdk";
 
 export const maxDuration = 30; // This function can run for a maximum of 30, hopefully will solve the timeout issue
 export const dynamic = "force-dynamic";
@@ -37,9 +38,26 @@ export async function POST(request: NextRequest) {
     if (!privateKey) {
       throw new Error("BACKEND_METAMASK_PRIVATE_KEY is not set");
     }
-    const provider = ethers.getDefaultProvider("optimism");
+    //using alchemy as the provider
+    const settings = {
+      apiKey: process.env.ALCHEMY_API_KEY,
+      network: Network.OPT_MAINNET,
+    };
+    const network = new ethers.Network("optimism", 10);
+    const alchemy = new Alchemy(settings);
+    console.log("Alchemy", alchemy);
+    const alchemyProvider = new ethers.AlchemyProvider(
+      network,
+      settings.apiKey
+    );
+    let backendWallet = new ethers.Wallet(privateKey, alchemyProvider);
+    console.log("Backend Wallet", backendWallet);
+
+    //let backendWallet = new Wallet(privateKey);
+
+    //const provider = ethers.getDefaultProvider("optimism");
     //this will have to change depending on the network
-    const backendWallet = new ethers.Wallet(privateKey, provider);
+    //const backendWallet = new ethers.Wallet(privateKey, provider);
 
     const contract = new ethers.Contract(
       "0x4200000000000000000000000000000000000021",
@@ -163,7 +181,9 @@ export async function POST(request: NextRequest) {
     console.log("Transaction Receipt:", receipt);
 
     // Get the transaction receipt using the transaction hash
-    const detailedReceipt = await provider.getTransactionReceipt(txHash);
+    const detailedReceipt = await alchemyProvider.getTransactionReceipt(txHash);
+
+    //const detailedReceipt = await provider.getTransactionReceipt(txHash);
     console.log("Detailed Transaction Receipt:", detailedReceipt);
 
     if (detailedReceipt) {

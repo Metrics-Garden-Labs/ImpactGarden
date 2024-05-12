@@ -328,7 +328,7 @@ export default function ProjectSignUp() {
     } catch (error) {
       console.error('Failed to create attestations:', error);
       alert('An error occurred while creating attestations. Please try again.');
-    } finally {
+    } finally { 
       setIsLoading(false);
     }
   };
