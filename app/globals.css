@@ -31,3 +31,32 @@ body {
     text-wrap: balance;
   }
 }
+
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip:before {
+  content: attr(data-tip);
+  visibility: hidden;
+  position: absolute;
+  z-index: 999;
+  bottom: 100%;
+  left: 50%;
+  margin-bottom: 5px;
+  transform: translateX(-50%);
+  padding: 7px;
+  width: 160px;
+  border-radius: 3px;
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.tooltip:hover:before {
+  visibility: visible;
+}

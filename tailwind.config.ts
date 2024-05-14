@@ -22,6 +22,10 @@ export default withUt({
         secondarygreen: "#24583C",
         secondaryblue: "#CAEAEF",
       },
+      tooltip: {
+        backgroundColor: 'theme("colors.headerblack")',
+        color: 'theme("colors.white")',
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
