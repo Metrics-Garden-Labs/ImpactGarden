@@ -45,7 +45,6 @@ const UserProfilePage = async ({ params }: Props) => {
         <UserHeader user={user} />
         <div className="container mx-auto px-4 py-8">
           <div>
-            <h2 className="text-xl font-semibold mb-2">Activity</h2>
             <AttestationList user={user} />
           </div>
         </div>

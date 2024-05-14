@@ -1,11 +1,10 @@
-// app/users/attestationList.tsx
-
 import React from 'react';
-import { getAttestationsByUserId, getProjectsByUserId } from '@/src/lib/db';
-import { Attestation, AttestationNetworkType, Project, User } from '@/src/types';
+import { fetchAttestationsWithLogos, getProjectsByUserId } from '@/src/lib/db';
+import { Attestation, AttestationNetworkType, User } from '@/src/types';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { easScanEndpoints } from '../components/easScan';
+import Image from 'next/image';
 
 interface Props {
   user: User;
@@ -13,8 +12,8 @@ interface Props {
 
 const AttestationList = async ({ user }: Props) => {
   try {
-    let attestations: Attestation[] = await getAttestationsByUserId(user.fid);
-    let projects: Project[] = await getProjectsByUserId(user.fid);
+    const attestations: Attestation[] = await fetchAttestationsWithLogos(user.fid);
+    const projects = await getProjectsByUserId(user.fid);
 
     // Sort attestations by createdAt timestamp in descending order
     attestations.sort((a, b) => new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime());
@@ -68,19 +67,31 @@ const AttestationList = async ({ user }: Props) => {
             {attestations.length > 0 ? (
               attestations.map((attestation) => (
                 <div key={attestation.id} className='p-4 bg-white border rounded-lg shadow-md'>
-                  <div className='mb-2'>
-                    <h3 className='text-lg font-semibold'>{attestation.projectName}</h3>
-                    <p className='text-sm text-gray-500'>Contribution: {attestation.contribution}</p>
+                  <div className='flex items-start mb-2'>
+                    {attestation.logoUrl && (
+                      <Image
+                        src={attestation.logoUrl}
+                        alt={attestation.projectName}
+                        width={40}
+                        height={40}
+                        className='mr-2 rounded-full'
+                      />
+                    )}
+                    <div>
+                      <h3 className='text-lg font-semibold'>{attestation.projectName}</h3>
+                      <p className='text-sm text-gray-500'> {attestation.contribution}</p>
+                      <p className='text-gray-700 mb-2'>
+                        “{attestation.feedback}”
+                      </p>
+                      <p className='text-sm text-gray-500'>
+                        {format(new Date(attestation.createdAt || ''), 'MMMM dd, yyyy')}
+                      </p>
+                      <Link href={`${easScanEndpoints[attestation.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`}>
+                        <p className='text-black hover:underline'>View Attestation</p>
+                      </Link>
+                    </div>
                   </div>
-                  <p className='text-gray-700 mb-2'>
-                    {attestation.feedback}
-                  </p>
-                  <p className='text-sm text-gray-500'>
-                    {format(new Date(attestation.createdAt || ''), 'MMMM dd, yyyy')}
-                  </p>
-                  <Link href={`${easScanEndpoints[attestation.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`}>
-                    <p className='text-black hover:underline'>View Attestation</p>
-                  </Link>
+                
                 </div>
               ))
             ) : (

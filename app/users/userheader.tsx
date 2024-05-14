@@ -64,7 +64,7 @@ const UserHeader = async ({ user}: Props) => {
 
     return (
     
-<div className='bg-gray-50'>
+<div className='bg-gray-50 pb-8'>
   <div className="flex items-end justify-between mb-8 bg-gray-50 px-16 pt-40">
     <div className="flex items-end space-x-6">
       <div className="flex-shrink-0">

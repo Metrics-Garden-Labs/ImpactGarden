@@ -146,6 +146,7 @@ export interface Attestation {
   improvementareas: string | null;
   extrafeedback: string | null;
   createdAt: Date | null;
+  logoUrl?: string | null;
 }
 
 export interface userAddresses {

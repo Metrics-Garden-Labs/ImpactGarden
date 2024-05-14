@@ -11,7 +11,7 @@ import {
 import * as schema from "./schema";
 import { getAttestationsByAttester } from "./eas";
 import { Waterfall } from "next/font/google";
-import { Project, newUserAddresses } from "@/src/types";
+import { Project, newUserAddresses, Attestation } from "@/src/types";
 import { count } from "console";
 import { desc, sql as drizzlesql } from "drizzle-orm";
 import { inArray, eq } from "drizzle-orm";
@@ -436,4 +436,34 @@ export const updateEthereumAddressStatus = async (
     console.error("Error updating Ethereum address status:", error);
     throw error;
   }
+};
+
+export const fetchAttestationsWithLogos = async (
+  userFid: string
+): Promise<Attestation[]> => {
+  const attestationsWithLogos = await db
+    .select({
+      id: contributionattestations.id,
+      userFid: contributionattestations.userFid,
+      projectName: contributionattestations.projectName,
+      contribution: contributionattestations.contribution,
+      ecosystem: contributionattestations.ecosystem,
+      attestationUID: contributionattestations.attestationUID,
+      attesterAddy: contributionattestations.attesterAddy,
+      rating: contributionattestations.rating,
+      improvementareas: contributionattestations.improvementareas,
+      isdelegate: contributionattestations.isdelegate,
+      feedback: contributionattestations.feedback,
+      extrafeedback: contributionattestations.extrafeedback,
+      createdAt: contributionattestations.createdAt,
+      logoUrl: projects.logoUrl,
+    })
+    .from(contributionattestations)
+    .leftJoin(
+      projects,
+      eq(contributionattestations.projectName, projects.projectName)
+    )
+    .where(eq(contributionattestations.userFid, userFid));
+
+  return attestationsWithLogos;
 };
