@@ -112,32 +112,7 @@ const UserHeader = async ({ user}: Props) => {
   </div>
 
 
-
-   
-        {/* Projects and Ecosystems sections side by side */}
-<div className="bg-white py-8 px-16">
-  <div className="grid grid-cols-6 gap-4">
-    <div>
-      <h2 className="text-md text-gray-500">Projects Attested To:</h2>
-      <ul className="list-disc text-sm pl-5">
-        {attestedProjectNames.map(projectName => (
-          <ul key={projectName} className="mt-2">
-            <Link href={`/projects/${projectName}`}>{projectName}</Link>
-          </ul>
-        ))}
-      </ul>
-    </div>
-    <div>
-      <h2 className="text-md text-gray-500">Ecosystems of Interest:</h2>
-      <ul className="list-disc text-sm pl-5">
-        {ecosystemsOfInterest.map(ecosystem => (
-          <ul key={ecosystem} className="mt-2">{ecosystem}</ul>
-        ))}
-      </ul>
-    </div>
   </div>
-</div>
-</div>
        
       );
     };
