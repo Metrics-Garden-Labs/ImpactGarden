@@ -140,7 +140,7 @@ console.log('How It Helped:', improvementareasstring);
           improvementareas: improvementareasstring,
           feedback: feedback,
           extrafeedback: extrafeedback,
-          attestationType: isdelegate ? 'Useful' : 'Not Useful', 
+          isdelegate: isdelegate ? 'Useful' : 'Not Useful', 
         };
         console.log('New Attestation:', newAttestation);
     

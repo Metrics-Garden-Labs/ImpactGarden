@@ -1,17 +1,11 @@
-// // app/users/[username].tsx
+// app/users/[username].tsx
 
 import React from 'react';
-import { getUserByUsername, getUserAddressesByFid  } from '../../../src/lib/db';
+import { getUserByUsername, getUserAddressesByFid } from '../../../src/lib/db';
 import { User } from '../../../src/types';
 import Navbar from '../../components/navbar1';
-import AttestationList from '../attestationList';
-import { getAttestationsByCoinbaseVerified } from '../../..//src/utils/coinbaseVerified';
-import { checkOpBadgeholder } from '../../..//src/utils/opBadgeholder';
-import { NetworkType, networkEndpoints } from '../../components/graphqlEndpoints';
-import { getAddress } from 'viem';
-import { NeynarAPIClient } from "@neynar/nodejs-sdk";
-import Image from 'next/image';
 import UserHeader from '../userheader';
+import AttestationList from '../attestationList';
 
 interface Props {
   params: {
@@ -52,7 +46,7 @@ const UserProfilePage = async ({ params }: Props) => {
         <div className="container mx-auto px-4 py-8">
           <div>
             <h2 className="text-xl font-semibold mb-2">Activity</h2>
-            <AttestationList userFid={user.fid} />
+            <AttestationList user={user} />
           </div>
         </div>
       </div>
@@ -70,5 +64,3 @@ const UserProfilePage = async ({ params }: Props) => {
 };
 
 export default UserProfilePage;
-
-
