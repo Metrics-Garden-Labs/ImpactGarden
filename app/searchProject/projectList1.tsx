@@ -199,8 +199,8 @@ export default function ProjectList({
                 </div>
               )}
             </div>  
-            <h3 className="mb-2 text-xl font-semibold">{project.projectName}</h3>
-            <p className="mb-2 text-md text-gray-500">{project.oneliner}</p>
+            <h3 className="mb-2 text-xl font-semibold truncate max-w-full">{project.projectName}</h3>
+            <p className="mb-2 text-md text-gray-500 text-center truncate max-w-full">{project.oneliner}</p>
             {/* Display the username if available */}
             {Array.isArray(searchResults) && searchResults.find((result) => result.fid === project.userFid)?.username && (
               <p className="text-gray-500">
