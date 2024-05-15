@@ -14,7 +14,7 @@ import { Waterfall } from "next/font/google";
 import { Project, newUserAddresses, Attestation } from "@/src/types";
 import { count } from "console";
 import { desc, sql as drizzlesql } from "drizzle-orm";
-import { inArray, eq } from "drizzle-orm";
+import { inArray, eq, sql } from "drizzle-orm";
 
 export const db = drizzle(vercelsql, { schema });
 
@@ -466,4 +466,39 @@ export const fetchAttestationsWithLogos = async (
     .where(eq(contributionattestations.userFid, userFid));
 
   return attestationsWithLogos;
+};
+
+//sorting projects by their ecosystem
+
+export const getProjectsByEcosystem = async (
+  ecosystem: string,
+  endpoint: string,
+  filter: string,
+  sortOrder: string
+): Promise<Project[]> => {
+  try {
+    let query = db.select().from(projects);
+
+    // Filtering by ecosystem
+    if (filter === "Projects on Optimism") {
+      query = query.where(eq(projects.ecosystem, "Optimism")) as typeof query;
+    } else if (filter === "Projects on Base") {
+      query = query.where(eq(projects.ecosystem, "Base")) as typeof query;
+    }
+
+    // Sorting logic
+    if (sortOrder === "asc") {
+      query = query.orderBy(sql`${projects.projectName} ASC`) as typeof query;
+    } else if (sortOrder === "desc") {
+      query = query.orderBy(sql`${projects.projectName} DESC`) as typeof query;
+    }
+
+    const dbProjectsEcosystem: Project[] = await query.execute();
+    console.log("DB Projects Ecosystem", dbProjectsEcosystem);
+
+    return dbProjectsEcosystem;
+  } catch (error) {
+    console.error(`Error retrieving projects for ecosystem:`, error);
+    throw error;
+  }
 };

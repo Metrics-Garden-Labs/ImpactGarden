@@ -49,10 +49,10 @@ export default function ProjectList({
   ? projects.filter((project) => {
       if (filter === 'projectName') {
         return (project.projectName?.toLowerCase() || '').includes(query.toLowerCase());
-      } else if (filter === 'most-engaged') {
+      } else if (filter === 'Most Engaged') {
         // Filter projects based on the Farcaster social graph data
         return Array.isArray(searchResults) && searchResults.length > 0 && searchResults.some((result) => result.fid === project.userFid);
-      } else if (filter === 'recently-added') {
+      } else if (filter === 'Recently Added') {
         // Filter projects based on the creation date (assuming you have a createdAt field)
         // Modify this logic based on your specific requirements
         return (project?.createdAt || '') >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); // Last 7 days

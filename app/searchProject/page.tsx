@@ -3,7 +3,7 @@
 import { Project, SearchResult } from '../../src/types';
 import { getProjects } from '../../src/lib/db';
 import ProjectPageClient from './ProjectPageClient';
-import { projects } from '@/src/lib/schema';
+
 
 interface Props {
   searchParams?: {
@@ -27,15 +27,15 @@ const ProjectPage = async ({ searchParams }: Props) => {
     const projects: Project[] = await getProjects(walletAddress, endpoint);
     console.log("Projects", projects);
 
-      return <ProjectPageClient
-        projects={projects}
-        query={query}
-        filter={filter}
-        walletAddress={walletAddress}
-        endpoint={endpoint}
-        sortOrder={sortOrder}
-        searchResults={searchParams?.searchResults || []}
-      />;
+    return <ProjectPageClient
+      projects={projects}
+      query={query}
+      filter={filter}
+      walletAddress={walletAddress}
+      endpoint={endpoint}
+      sortOrder={sortOrder}
+      searchResults={searchParams?.searchResults || []}
+    />;
   } catch (error) {
     console.error('Failed to fetch projects:', error);
     // Handle the error, display an error message, or return a fallback UI

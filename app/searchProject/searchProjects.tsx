@@ -18,7 +18,7 @@ import React from "react";
 import FarcasterLogin from "../components/farcasterLogin";
 import useLocalStorage from "@/src/hooks/use-local-storage-state";
 import { getProjectsByFids } from "@/src/lib/db";
-import { SearchResult } from "@/src/types";
+import { Project, SearchResult } from "@/src/types";
 import { NEXT_PUBLIC_URL } from "../../src/config/config";
 
 
@@ -96,27 +96,55 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
             params.delete("sortOrder");
         }
         replace(`${pathname}?${params.toString()}`);
-        
-        const apifid = user.fid;
-        // Make a POST request to the internal API route
-        const response = await fetch(`${NEXT_PUBLIC_URL}/api/karmalabfarcasterrep`, {
+
+        console.log(`Filter selected: ${selectedFilter}`);
+        console.log(`Making API call with query: ${searchTerm}, filter: ${selectedFilter}, walletAddress: ${walletAddress}, endpoint: ${endpoint}, sortOrder: ${sortOrder}`);
+
+       
+  try {
+    let response;
+    if (selectedFilter === "Projects on Optimism") {
+      response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjectsEcosystem`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({apifid}),
-            // Adjust request body as needed
-        });
-        if (response.ok) {
-        const data: SearchResult[] = await response.json();
-        console.log('Farcaster Data:', data);
-        setSearchResults(data);
-        onSearchResults(data);
-        // Update the state with the fetched data
-        } else {
-        console.error('Error fetching farcaster data');
-        return null;
-        }
+        body: JSON.stringify({
+          query: searchTerm,
+          filter: selectedFilter,
+          walletAddress,
+          endpoint,
+          sortOrder,
+        }),
+      });
+    } else if (selectedFilter === "Most Engaged") {
+      const apifid = user.fid;
+      response = await fetch(`${NEXT_PUBLIC_URL}/api/karmalabfarcasterrep`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apifid }),
+      });
     }
-    };
+
+    if (response && response.ok) {
+      const data = await response.json();
+      console.log('Fetched Data:', data);
+        if (selectedFilter === "Most Engaged") {
+          // Handle Farcaster Engagement data
+          const farcasterData: SearchResult[] = data.farcasterData;
+          setSearchResults(farcasterData);
+          onSearchResults(farcasterData);
+        } else {
+          const searchData = data;
+          setSearchResults(searchData);
+          onSearchResults(searchData);
+        }
+    } else {
+        console.error('Error fetching data');
+      }
+  } catch (error) {
+    console.error('Error during fetch operation:', error);
+  }
+};
+};
     
     
    
