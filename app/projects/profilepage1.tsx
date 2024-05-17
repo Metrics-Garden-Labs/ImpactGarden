@@ -195,7 +195,7 @@ export default function ProfilePage({
                           </select>
                         </div>
                         <div className="mb-4"></div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mx-3 lg:gap-8 max-w-6xl overflow-y-auto">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-3 lg:gap-8 max-w-6xl overflow-y-auto">
                           {filteredContributions.map((contribution) => (
                             <div
                               key={contribution.id}

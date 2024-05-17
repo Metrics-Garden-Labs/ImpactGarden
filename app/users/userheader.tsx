@@ -55,9 +55,9 @@ const UserHeader = async ({ user }: Props) => {
 
   return (
     <div className='bg-gray-50 pb-8'>
-      <div className="flex items-end justify-between mb-8 bg-gray-50 px-16 pt-40">
-        <div className="flex items-end space-x-6">
-          <div className="flex-shrink-0">
+      <div className="flex flex-col items-center sm:flex-row sm:items-end justify-between mb-8 bg-gray-50 px-4 sm:px-8 md:px-12 pt-20 sm:pt-28 md:pt-32">
+        <div className="flex flex-col items-center sm:flex-row sm:items-end space-x-0 sm:space-x-6 mb-6 sm:mb-0">
+          <div className="flex-shrink-0 mb-4 sm:mb-0">
             <Image
               src={user.pfp_url || ''}
               alt={user.username}
@@ -67,7 +67,7 @@ const UserHeader = async ({ user }: Props) => {
             />
           </div>
           <div>
-            <h1 className="text-5xl font-bold text-gray-900 flex pl-6 items-center">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 flex items-center">
               {user.username}
               <span className="ml-2 flex items-center">
               <span
@@ -113,19 +113,19 @@ const UserHeader = async ({ user }: Props) => {
             </h1>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-8">
-          <div className="bg-white p-4 rounded-lg shadow text-center">
-            <p className="text-4xl font-bold text-left">{totalAttestations}</p>
-            <p className="text-sm text-gray-500 font-light text-left">TOTAL REVIEWS</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow text-center">
-            <p className="text-4xl font-bold text-left">{attestations.length}</p>
-            <p className="text-sm text-gray-500 font-light text-left">REVIEWS GIVEN</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow text-center">
-            <p className="text-4xl font-bold text-left">{projectAttestations.length}</p>
-            <p className="text-sm text-gray-500 font-light text-left">REVIEWS RECEIVED</p>
-          </div>
+        <div className="grid grid-cols-3   gap-4 sm:gap-6 md:gap-8">
+        <div className="bg-white p-2 sm:p-3 md:p-4 rounded-lg shadow text-center">
+          <p className="text-xl sm:text-2xl md:text-3xl font-bold text-left">{totalAttestations}</p>
+          <p className="text-xs sm:text-sm text-gray-500 font-light text-left">TOTAL REVIEWS</p>
+        </div>
+        <div className="bg-white p-2 sm:p-3 md:p-4 rounded-lg shadow text-center">
+          <p className="text-xl sm:text-2xl md:text-3xl font-bold text-left">{attestations.length}</p>
+          <p className="text-xs sm:text-sm text-gray-500 font-light text-left">REVIEWS GIVEN</p>
+        </div>
+        <div className="bg-white p-2 sm:p-3 md:p-4 rounded-lg shadow text-center">
+          <p className="text-xl sm:text-2xl md:text-3xl font-bold text-left">{projectAttestations.length}</p>
+          <p className="text-xs sm:text-sm text-gray-500 font-light text-left">REVIEWS RECEIVED</p>
+        </div>
         </div>
       </div>
     </div>
