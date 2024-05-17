@@ -95,7 +95,7 @@ const Sidebar = ({ project, projectAttestationCount }: Props)=> {
 
   return (
     <>
-      <div className='hidden lg:block lg:w-72 bg-white h-screen pt-16 pb-8'>
+      <div className='block w-72 bg-white h-screen pt-16 pb-8'>
         <div className="flex flex-col h-full overflow-y-auto">
           {/* Sidebar content */}
           <div className="py-10 px-8 flex grow flex-col gap-y-5 bg-white overflow-y-auto px-6 pb-4">

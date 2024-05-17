@@ -1,6 +1,6 @@
 // app/projects/[projectName]/page.tsx
 
-import { getContributionsByProjectName, getProjectByName } from '../../../src/lib/db';
+import { getAttestationCountByProject, getContributionsByProjectName, getProjectByName } from '../../../src/lib/db';
 import { Contribution, Project } from '../../../src/types';
 import ProfilePage from '../profilepage1';
 import Navbar from '../../components/navbar1';
@@ -24,14 +24,21 @@ const ProjectPage = async ({ params }: Props) => {
     console.log('decoded Project name:', decodedProjectName);
 
     const project: Project = await getProjectByName(decodedProjectName);
+    const projectAttestations = await getAttestationCountByProject(project.projectName);
+    const projectAttestationCount = projectAttestations.length;
+
 
     return (
       <div className="flex flex-col min-h-screen bg-white text-black">
         <Navbar />
         <div className="flex flex-1 overflow-hidden">
-          <Sidebar project={project} />
+          <Sidebar project={project} projectAttestationCount={projectAttestationCount} />
           <main className="flex-1 overflow-auto">
-            <ProfilePage contributions={contributions} />
+            <ProfilePage 
+              contributions={contributions} 
+              project={project} 
+              projectAttestationCount={projectAttestationCount} 
+              />
           </main>
         </div>
         <Footer />

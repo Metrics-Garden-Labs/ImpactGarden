@@ -300,7 +300,7 @@ console.log('How It Helped:', improvementareasstring);
           onClick={onClose}
         >
           <div
-            className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-1/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
+            className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-1/4 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
             onClick={(e) => e.stopPropagation()}
           >
             {showAttestationForm ? (

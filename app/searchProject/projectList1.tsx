@@ -172,7 +172,7 @@ export default function ProjectList({
 
   return (
     <div className=" bg-white mx-auto gap-12 max-w-6xl">
-      <div className="grid grid-cols-2 gap-4 mx-3 md:grid-cols-3 md:mx-8 md:mx-8 lg:grid-cols-4 lg:gap-12 max-w-6xl overflow-y-auto">
+      <div className="grid grid-cols-1 gap-4 mx-3 md:grid-cols-3 md:mx-8 md:mx-8 lg:grid-cols-4 lg:gap-12 max-w-6xl overflow-y-auto">
         
         {sortedProjects.map((project) => (
           <div
