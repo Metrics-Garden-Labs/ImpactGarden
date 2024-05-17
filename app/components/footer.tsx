@@ -6,37 +6,35 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <>
-    <footer className="footer p-12 bg-headerblack text-white">
-        <div className='left-side'>
-        
-
-        <div className='flex gap-x-8 py-8 pl-5'>
-            <button className="btn bg-headerblack text-xl border-none pl-5">
-                    <Image src='/mglwhite.png' alt='MGL Logo' width={12} height={12} className='h-12 w-12'/>
-            </button>
-            <Link href='/' className='text-white text-lg hover:text-opactiy-75'>HOME</Link>
-            <Link href='/about' className='text-white text-lg hover:text-opactiy-75'>METRICS DATABASE</Link>
-            <Link href='/about' className='text-white text-lg hover:text-opactiy-75'>PROJECTS</Link>
-        </div>
-        </div>
-
-        <div className="right-side flex flex-col items-end pr-10 pb-4 w-full">
-            <div className='spacer flex-grow py-12'>
-            <div className='spacer flex-grow py-10'>
-            <div className='links flex justify-end space-x-4 w-full'>
-                <Link href="https://discord.com/invite/" target="_blank" className="flex items-center">
-                    <FaDiscord className='text-white text-lg w-6 h-6'/>
-                    <p className="ml-1 text-lg px-3">Discord</p>
-                </Link>
-                <Link href="https://twitter.com/" target="_blank" className="flex items-center px-4">
-                    <FaXTwitter className='text-white text-lg w-6 h-6'/>
-                    <p className="ml-1 text-lg px-3 ">Twitter</p>
-                </Link>
-          </div>
-          </div>
+    <footer className="footer p-6 sm:p-8 md:p-12 bg-headerblack text-white">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
+          <button className="btn bg-headerblack text-xl border-none">
+            <Image src="/mglwhite.png" alt="MGL Logo" width={12} height={12} className="h-12 w-12" />
+          </button>
+          <div className="flex flex-col md:flex-row gap-2 md:gap-8">
+            <Link href="/" className="text-white text-lg hover:text-opacity-75">
+              HOME
+            </Link>
+            <Link href="/about" className="text-white text-lg hover:text-opacity-75">
+              METRICS DATABASE
+            </Link>
+            <Link href="/about" className="text-white text-lg hover:text-opacity-75">
+              PROJECTS
+            </Link>
           </div>
         </div>
+        <div className="flex flex-1 justify-end items-center gap-2 sm:gap-8 mt-4 md:mt-0 pl-70">
+          <Link href="https://discord.com/invite/" target="_blank" className="flex items-center">
+            <FaDiscord className="text-white text-lg w-6 h-6" />
+            <p className="ml-1 text-lg">Discord</p>
+          </Link>
+          <Link href="https://twitter.com/" target="_blank" className="flex items-center">
+            <FaXTwitter className="text-white text-lg w-6 h-6" />
+            <p className="ml-1 text-lg">Twitter</p>
+          </Link>
+        </div>
+      </div>
     </footer>
-    </>
-  );};
+  );
+}
