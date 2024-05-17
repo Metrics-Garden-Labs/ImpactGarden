@@ -405,121 +405,121 @@ export default function ProjectSignUp() {
       );
     }
 
-  return (
-    <div className="min-h-screen flex flex-col bg-white text-black">
-      <Navbar />
-      
-      <div className="flex justify-center relative w-full mt-10 px-8">
-        {/* Left Column------------------------------------------------- */}
-        {/* Project Card view section on the left hand side */}
-        { isPreview ? (
+    return (
 
-        <div className="w-1/4 pr-8">
+  <div className="min-h-screen flex flex-col bg-white text-black">
+  <Navbar />
+  
+  <div className="flex flex-col md:flex-row lg:flex-row justify-center items-start w-full mt-10 px-8 md:px-8">
+    {/* Left Column------------------------------------------------- */}
+    {/* Project Card view section on the left hand side */}
+    {/* Hide the left column on small screens*/}
+    {isPreview ? (
+      <div className="hidden md:block md:w-1/2 lg:w-1/3 pr-0 md:pr-8 mb-8 md:mb-0">
+        <h1 className="font-bold text-2xl">Register a project</h1>
+        <p className="text-gray-600 mt-2">Project preview & confirmation</p>
+      </div>
+    ) : (
+      <div className="hidden md:block md:w-1/2 lg:w-1/3 pr-8">
+        <div className="sticky top-0">
           <h1 className="font-bold text-2xl">Register a project</h1>
-          <p className="text-gray-600 mt-2">Project preview & confirmation</p>
-        </div>
-        ) : (
-          <div className="w-1/4 pr-8 flex flex-col items-center">
-               <div>
-                 <h1 className="font-bold text-2xl text-center">Register a project</h1>
-                 <p className="text-gray-600 mt-2 text-center">Tell us more about your project</p>
-                 <h2 className="font-semibold mt-10 pb-10 text-center text-lg">Project card preview</h2>
+          <p className="text-gray-600 mt-2">Tell us more about your project</p>
+          <h2 className="font-semibold mt-10 pb-10 text-lg">Project card preview</h2>
           
-                 <div className="shadow-2xl rounded mx-auto mt-6">
-                   <div className="pt-6 pb-6">
-                   {imageUrl ? (
-                    <Image
-                      src={imageUrl}
-                      alt="Project Logo"
-                      width={100}
-                      height={100}
-                      className="mx-auto object-contain"
-                    />
-                  ) : (
-                    <div className="mx-auto w-32 h-32 bg-gray-300 rounded-md flex items-center justify-center">
-                    </div>
-                  )}
-                     <h3 className="text-center mt-2 font-semibold text-gray-500">
-                       {attestationData.projectName || 'Project name'}
-                     </h3>
-                     <p className='text-center mt-2 text-gray-400'>
-                        {attestationData.oneliner || 'Project description'}
-                      </p>
-                     <div className="flex justify-center py-4 items-center">
-                       <BsGlobe2 className="text-black mx-2 text-lg" />
-                       <FaXTwitter className="text-black mx-2 text-lg" />
-                       <FaGithub className="text-black mx-2 text-lg" />
-                     </div>
-                   </div>
-                 </div>
-               </div>
-               </div>
-        )}
-
-        {/* Center Column ------------------------------------------------------------*/}
-        {/* Form section in the middle */}
-        {/* If isPreview is true, show the preview section */}
-        {/* If isPreview is false, show the form section */}
-        {isPreview ? (
-          <div className="w-2/3 bg-white p-8 shadow-lg rounded mx-auto">
-          <h2 className="font-semibold mt-6 text-center text-lg">Project card preview</h2>
-          <div className="shadow-2xl rounded mx-auto mt-6 pt-8 pb-8 w-1/2 flex flex-col items-center">
-            {imageUrl ? (
-              <Image
-                src={imageUrl}
-                alt="Project Logo"
-                width={200}
-                height={200}
-                className="object-contain"
-              />
-            ) : (
-              <div className="w-48 h-48 bg-gray-300 rounded-md flex items-center justify-center">
-                {/* Add optional placeholder content if needed */}
-              </div>
-            )}
-            <h3 className="text-center mt-6 mb-6 font-semibold text-gray-500">
-              {attestationData.projectName || 'Project name'}
-            </h3>
-            <p className='text-center mt-2 mb-2 text-gray-400'> 
-              {attestationData.oneliner || 'Project description'}
-            </p>
-            <div className="flex justify-center py-4 items-center">
-              <Link href={checkwebsiteUrl || '#'}>
+          <div className="shadow-2xl rounded mt-6 mx-auto md:max-w-2/3 lg:max-w-1/3 ">
+            <div className="pt-6 pb-6 ">
+              {imageUrl ? (
+                <Image
+                  src={imageUrl}
+                  alt="Project Logo"
+                  width={100}
+                  height={100}
+                  className="mx-auto object-contain"
+                />
+              ) : (
+                <div className="mx-auto w-32 h-32 bg-gray-300 rounded-md flex items-center justify-center">
+                </div>
+              )}
+              <h3 className="text-center mt-2 font-semibold text-gray-500">
+                {attestationData.projectName || 'Project name'}
+              </h3>
+              <p className='text-center mt-2 text-gray-400'>
+                {attestationData.oneliner || 'Project description'}
+              </p>
+              <div className="flex justify-center py-4 items-center">
                 <BsGlobe2 className="text-black mx-2 text-lg" />
-              </Link>
-              <Link href={checktwitterUrl || '#'}>
-              <FaXTwitter className="text-black mx-2 text-lg" />
-              </Link>
-              <Link href={checkgithubUrl || '#'}>
+                <FaXTwitter className="text-black mx-2 text-lg" />
                 <FaGithub className="text-black mx-2 text-lg" />
-              </Link>
+              </div>
             </div>
           </div>
+        </div>
+      </div>
+    )}
 
-          <div className="mt-20 mb-20  flex justify-center w-full">
-            <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha}  />
-          </div>
-
-          <div className="flex justify-center space-x-6 mt-20 mb-20">
-            <button
-              className="px-4 py-2 w-1/5 text-sm font-medium text-white bg-black rounded-md shadow-sm hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              type="button"
-              onClick={onSubmit}
-            >
-              Confirm & Attest
-            </button>
-            <button
-              className="px-4 py-2 w-1/5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              type="button"
-              onClick={handleBackToEdit}
-            >
-              Back to Edit
-            </button>
+    {/* Center Column ------------------------------------------------------------*/}
+    {/* Form section in the middle */}
+    {/* If isPreview is true, show the preview section */}
+    {/* If isPreview is false, show the form section */}
+    {isPreview ? (
+      <div className="w-full md:w-1/2 lg:w-1/3 bg-white p-8 shadow-lg rounded mx-auto">
+        <h2 className="font-semibold mt-6 text-center text-lg md:hidden lg:hidden">Project card preview</h2>
+        <div className="shadow-2xl rounded mx-auto mt-6 pt-8 pb-8 flex flex-col items-center">
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt="Project Logo"
+              width={200}
+              height={200}
+              className="object-contain"
+            />
+          ) : (
+            <div className="w-48 h-48 bg-gray-300 rounded-md flex items-center justify-center">
+              {/* Add optional placeholder content if needed */}
+            </div>
+          )}
+          <h3 className="text-center mt-6 mb-6 font-semibold text-gray-500">
+            {attestationData.projectName || 'Project name'}
+          </h3>
+          <p className='text-center mt-2 mb-2 text-gray-400'> 
+            {attestationData.oneliner || 'Project description'}
+          </p>
+          <div className="flex justify-center py-4 items-center">
+            <Link href={checkwebsiteUrl || '#'}>
+              <BsGlobe2 className="text-black mx-2 text-lg" />
+            </Link>
+            <Link href={checktwitterUrl || '#'}>
+              <FaXTwitter className="text-black mx-2 text-lg" />
+            </Link>
+            <Link href={checkgithubUrl || '#'}>
+              <FaGithub className="text-black mx-2 text-lg" />
+            </Link>
           </div>
         </div>
-        
-        ) : (
-          <form className="w-1/3 bg-white p-6 shadow rounded space-y-6">
+
+        <div className="mt-20 mb-20 flex justify-center w-full">
+          <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha}  />
+        </div>
+
+        <div className="flex justify-center space-x-6 mt-20 mb-20">
+          <button
+            className="px-4 py-2 w-1/5 text-sm font-medium text-white bg-black rounded-md shadow-sm hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            type="button"
+            onClick={onSubmit}
+          >
+            Confirm & Attest
+          </button>
+          <button
+            className="px-4 py-2 w-1/5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            type="button"
+            onClick={handleBackToEdit}
+          >
+            Back to Edit
+          </button>
+        </div>
+      </div>
+    ) : (
+      <form className="w-full md:w-1/2 lg:w-1/3 bg-white p-6 shadow rounded space-y-6">
         <div>
           <label htmlFor="attestationChain" className="block text-sm font-medium leading-6 text-gray-900">
             Ecosystem and Network of Contribution * (Only Optimism is supported at the moment)
@@ -541,7 +541,7 @@ export default function ProjectSignUp() {
           </div>
         </div>
 
-          <div>
+        <div>
           <label htmlFor="projectName" className="block text-sm font-medium leading-6 text-gray-900">
             What is the name of your project? *
           </label>
@@ -579,8 +579,7 @@ export default function ProjectSignUp() {
 
         <div>
           <label htmlFor="websiteUrl" className="block text-sm font-medium leading-6 text-gray-900">
-              What is the website URL of your project? * 
-              
+            What is the website URL of your project? * 
           </label>
           <div className="mt-2">
             <input
@@ -632,9 +631,9 @@ export default function ProjectSignUp() {
           </div>
         </div>
 
-          <h2>Please upload the logo of your project *</h2>
+        <h2>Please upload the logo of your project *</h2>
 
-          {imageUrl ? (
+        {imageUrl ? (
           <Image
             src={imageUrl}
             alt="Logo of the project"
@@ -659,39 +658,27 @@ export default function ProjectSignUp() {
           />
         )}
 
-          {/* <div className='flex justify-center items-center py-2'>
-            <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha} />
-          </div> */}
-          {/* <div className="flex justify-center items-center py-2">
-            <button className="btn items-center" type="button" onClick={createAttestation}>
-              Get your Attestation
-            </button> 
-          </div> */}
-          <div className="mt-6 flex justify-end justify-center space-x-4">
-            <button
-              className="px-4 py-2 w-1/5 text-sm font-medium text-white bg-black rounded-md shadow-sm hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              type="button"
-              onClick={handleNext}
-            >
-              Next
-            </button>
-            <button className="px-4 py-2 w-1/5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="button">
-              Cancel
-            </button>
-          
-          </div>
-        </form>
-        )}
-
-        {/* Right Column: Empty --------------------------------------------------------------*/}
-        <div className="w-1/4">
+        <div className="mt-6 flex justify-end justify-center space-x-4">
+          <button
+            className="px-4 py-2 w-1/5 text-sm font-medium text-white bg-black rounded-md shadow-sm hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            type="button"
+            onClick={handleNext}
+          >
+            Next
+          </button>
+          <button className="px-4 py-2 w-1/5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="button">
+            Cancel
+          </button>
         </div>
-      </div>
-      <Footer />
-      {renderModal()}
+      </form>
+    )}
+
+    {/* Right Column: Empty --------------------------------------------------------------*/}
+    <div className="hidden lg:block lg:w-1/3">
     </div>
-  );
+  </div>
+  <Footer />
+  {renderModal()}
+</div>
+    );
 }
-
-
-//--------------------------------------------------------------------------------------------
