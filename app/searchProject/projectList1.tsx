@@ -106,7 +106,7 @@ export default function ProjectList({
     return (
       <div className="fixed inset-0 bg-white bg-opacity-50 flex justify-center items-center">
         <div
-          className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-1/4 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
+          className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-1/4 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="text-center pt-8 p-2">
@@ -171,8 +171,8 @@ export default function ProjectList({
   };
 
   return (
-    <div className=" bg-white">
-      <div className="grid grid-cols-4 gap-12 mx-auto max-w-6xl overflow-y-auto">
+    <div className=" bg-white mx-auto gap-12 max-w-6xl">
+      <div className="grid grid-cols-2 gap-4 mx-3 md:grid-cols-3 md:mx-8 md:mx-8 lg:grid-cols-4 lg:gap-12 max-w-6xl overflow-y-auto">
         
         {sortedProjects.map((project) => (
           <div
