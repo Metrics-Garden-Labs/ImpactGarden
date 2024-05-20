@@ -22,6 +22,8 @@ import { Project, AttestationNetworkType } from '@/src/types';
 import { useSwitchChain } from 'wagmi';
 import AttestationCreationModal from '../components/attestationCreationModal';
 import ConfirmationSection from './confirmationPage';
+import { Alchemy, Network, Utils, Wallet } from "alchemy-sdk";
+
 
 type AttestationData = {
   projectName: string;
@@ -232,9 +234,20 @@ export default function ProjectSignUp() {
 
       console.log('User:', user);
       const eas1 = new EAS(networkContractAddresses[selectedNetwork]?.attestAddress);
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      console.log('Provider:', provider);
-      const signer = await provider.getSigner();
+      const settings = {
+        apiKey: process.env.ALCHEMY_API_KEY,
+        network: Network.OPT_MAINNET,
+      };
+      const network = new ethers.Network("optimism", 10);
+      const alchemy = new Alchemy(settings);
+      console.log("Alchemy", alchemy);
+      const alchemyProvider = new ethers.AlchemyProvider(
+        network,
+        settings.apiKey
+      );
+      //const provider = new ethers.BrowserProvider(window.ethereum);
+      console.log('Provider:', alchemyProvider);
+      const signer = await alchemyProvider.getSigner();
       console.log('Signer:', signer);
       eas1.connect(signer);
       console.log('EAS:', eas1);
