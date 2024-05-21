@@ -34,9 +34,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme='light'>
-      <head />
-      <body className={manrope.className}>
+      <head>
         <MatomoTracker />
+      </head>
+      <body className={manrope.className}>
+        
         <Providers>
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           {children}
