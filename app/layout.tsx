@@ -5,6 +5,8 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "../app/api/uploadthing/core";
+import {useEffect} from 'react';
+import MatomoTracker from '../app/components/MatomoTracker';
 
 
 import "./globals.css";
@@ -13,9 +15,12 @@ import { Providers } from './providers';
 const manrope = Manrope({subsets: ["latin"]})
 
 
+
 //get the gambetta font, figure out how to put it in
 
 //const gambetta = localFont({ src: './fonts/Gambetta-Italic.otf' })
+
+
 
 export const metadata: Metadata = {
   title: "Metrics Garden Labs",
@@ -29,7 +34,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme='light'>
+      <head />
       <body className={manrope.className}>
+        <MatomoTracker />
         <Providers>
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           {children}
