@@ -12,61 +12,61 @@ declare global {
 }
 
 
-// const MatomoTracker: React.FC = () => {
-//     useEffect(() => {
-
-//         var _mtm = window._mtm = window._mtm || [];
-//         _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
-       
-//         const matomoUrl = process.env.NEXT_PUBLIC_MATOMO_URL;
-//         if (!matomoUrl) {
-//             console.error('Matomo URL is not defined in environment variables.');
-//             return;
-//         }
-       
-//         var d=document,
-//          g=d.createElement('script'),
-//          s=d.getElementsByTagName('script')[0];
-//         g.async=true;
-//         g.src=matomoUrl;
-//         if (s && s.parentNode) {
-//             s.parentNode.insertBefore(g,s);
-//         }
-//         }, []);
-
-//     return null;
-        
-// }
-
-// export default MatomoTracker;
-
-// components/MatomoTracker.tsx
-
-
-// components/MatomoTracker.tsx
-
 const MatomoTracker: React.FC = () => {
-    const matomoUrl = process.env.NEXT_PUBLIC_MATOMO_URL;
+    useEffect(() => {
 
-    if (!matomoUrl) {
-        console.error('Matomo URL is not defined in environment variables.');
-        return null;
-    }
+        var _mtm = window._mtm = window._mtm || [];
+        _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
+       
+        const matomoUrl = process.env.NEXT_PUBLIC_MATOMO_URL;
+        if (!matomoUrl) {
+            console.error('Matomo URL is not defined in environment variables.');
+            return;
+        }
+       
+        var d=document,
+         g=d.createElement('script'),
+         s=d.getElementsByTagName('script')[0];
+        g.async=true;
+        g.src=matomoUrl;
+        if (s && s.parentNode) {
+            s.parentNode.insertBefore(g,s);
+        }
+        }, []);
 
-    return (
-        <Helmet>
-            <script>
-                {`
-                    var _mtm = window._mtm = window._mtm || [];
-                    _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
-                    (function() {
-                        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-                        g.async=true; g.src='${matomoUrl}'; s.parentNode.insertBefore(g,s);
-                    })();
-                `}
-            </script>
-        </Helmet>
-    );
-};
+    return null;
+        
+}
 
 export default MatomoTracker;
+
+//components/MatomoTracker.tsx
+
+
+// components/MatomoTracker.tsx
+
+// const MatomoTracker: React.FC = () => {
+//     const matomoUrl = process.env.NEXT_PUBLIC_MATOMO_URL;
+
+//     if (!matomoUrl) {
+//         console.error('Matomo URL is not defined in environment variables.');
+//         return null;
+//     }
+
+//     return (
+//         <Helmet>
+//             <script>
+//                 {`
+//                     var _mtm = window._mtm = window._mtm || [];
+//                     _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
+//                     (function() {
+//                         var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+//                         g.async=true; g.src='${matomoUrl}'; s.parentNode.insertBefore(g,s);
+//                     })();
+//                 `}
+//             </script>
+//         </Helmet>
+//     );
+// };
+
+// export default MatomoTracker;
