@@ -14,35 +14,37 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="flex justify-between navbar bg-headerblack text-neutral-content p-3 md:p-8">
+      <div className="flex justify-between items-center navbar bg-headerblack text-neutral-content p-3 md:p-8">
         <Link href='/'>
           <button className="btn bg-headerblack text-xl border-none pl-10">
             <Image src='/mglwhite.png' alt='MGL Logo' width={10} height={10} className='h-10 w-10'/>
           </button>
         </Link>
-        {/* Burger Icon */}
-        <div className="md:hidden flex items-center gap-x-4">
-          <FarcasterLogin />
-          <button className="text-white focus:outline-none" onClick={toggleSidebar}>
-            {isSidebarOpen ? (
-              <FaTimes className="h-6 w-6" />
-            ) : (
-              <FaBars className="h-6 w-6" />
-            )}
-          </button>
-        </div>
+
         {/* Buttons on the Right Side */}
-        <div className="hidden md:flex justify-end">
-          <div className='flex items-center lg:gap-x-8 md:gap-x-2'>
-            <Link href='/projectSignUp' className='text-white lg:text-md md:text-sm hover:text-opacity-75'>REGISTER PROJECT</Link>
-            <Link href='/searchProject' className='text-white lg:text-md md:text-sm  hover:text-opacity-75'>SEARCH PROJECTS</Link>
-            <Link href='/searchUsers' className='text-white text-md md:text-sm  hover:text-opacity-75'>SEARCH USERS</Link>
-            <div className='inline-block'>
-              <FarcasterLogin />
-            </div>
+        <div className="hidden md:flex justify-end items-center lg:gap-x-8 md:gap-x-2">
+          <Link href='/projectSignUp' className='text-white lg:text-md md:text-sm hover:text-opacity-75'>REGISTER PROJECT</Link>
+          <Link href='/searchProject' className='text-white lg:text-md md:text-sm hover:text-opacity-75'>SEARCH PROJECTS</Link>
+          <Link href='/searchUsers' className='text-white text-md md:text-sm hover:text-opacity-75'>SEARCH USERS</Link>
+        </div>
+
+        {/* FarcasterLogin */}
+        <div className="flex items-center">
+          <FarcasterLogin />
+
+          {/* Burger Icon for small screens */}
+          <div className="md:hidden ml-4">
+            <button className="text-white focus:outline-none" onClick={toggleSidebar}>
+              {isSidebarOpen ? (
+                <FaTimes className="h-6 w-6" />
+              ) : (
+                <FaBars className="h-6 w-6" />
+              )}
+            </button>
           </div>
         </div>
       </div>
+
       {/* Sidebar */}
       <div
         className={`fixed top-0 right-0 h-screen w-64 bg-headerblack text-white p-4 transition-transform duration-300 ease-in-out transform z-50 ${
