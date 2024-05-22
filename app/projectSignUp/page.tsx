@@ -420,7 +420,7 @@ export default function ProjectSignUp() {
   if(attestationUID) {
       return (
         <div className="min-h-screen flex flex-col bg-white text-black">
-          <Navbar />
+
           <ConfirmationSection
             attestationUID={attestationUID}
             attestationData={attestationData}
@@ -436,7 +436,7 @@ export default function ProjectSignUp() {
     return (
 
   <div className="min-h-screen flex flex-col bg-white text-black">
-  <Navbar />
+
       
       {!address && (
         <div role="alert" className="alert alert-warning rounded-none">

@@ -32,7 +32,7 @@ const UserProfilePage = async ({ searchParams }: Props) => {
 
     return (
       <div className="bg-white text-black">
-        <Navbar />
+
         <SearchUsers />
         <UserList users={users} query={query} filter={filter} />
       </div>

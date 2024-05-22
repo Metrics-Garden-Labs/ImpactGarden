@@ -22,7 +22,7 @@ const UserProfilePage = async ({ params }: Props) => {
     if (!user) {
       return (
         <div className='bg-white text-black'>
-          <Navbar />
+
           <h1>User not found</h1>
         </div>
       );
@@ -41,7 +41,7 @@ const UserProfilePage = async ({ params }: Props) => {
 
     return (
       <div className="bg-white min-h-screen text-black">
-        <Navbar />
+
         <UserHeader user={user} />
         <div className="container mx-auto px-4 py-8">
           <div>

@@ -30,7 +30,7 @@ const ProjectPage = async ({ params }: Props) => {
 
     return (
       <div className="flex flex-col min-h-screen bg-white text-black">
-        <Navbar />
+
         <div className="flex flex-1 overflow-hidden">
           <Sidebar project={project} projectAttestationCount={projectAttestationCount} />
           <main className="flex-1 overflow-auto">

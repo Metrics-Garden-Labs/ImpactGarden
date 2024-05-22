@@ -11,6 +11,7 @@ import MatomoTracker from '../app/components/MatomoTracker';
 
 import "./globals.css";
 import { Providers } from './providers';
+import Navbar from "./components/navbar1";
 
 const manrope = Manrope({subsets: ["latin"]})
 
@@ -37,11 +38,14 @@ export default function RootLayout({
       <head>
         <MatomoTracker />
       </head>
-      <body className={manrope.className}>
+      <body className={`${manrope.className} m-0 p-0`}>
         
         <Providers>
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-          {children}
+          <div className="min-h-screen bg-white">
+            <Navbar />
+            <main>{children}</main>
+          </div>
         </Providers>
         </body>
     </html>
