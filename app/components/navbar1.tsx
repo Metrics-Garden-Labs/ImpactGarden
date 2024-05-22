@@ -21,10 +21,8 @@ export default function Navbar() {
           </button>
         </Link>
         {/* Burger Icon */}
-        <div className="md:hidden">
-          <div className='flex items-center gap-x-8 mr-4'>
-            <FarcasterLogin />
-          </div>
+        <div className="md:hidden flex items-center gap-x-4">
+          <FarcasterLogin />
           <button className="text-white focus:outline-none" onClick={toggleSidebar}>
             {isSidebarOpen ? (
               <FaTimes className="h-6 w-6" />
