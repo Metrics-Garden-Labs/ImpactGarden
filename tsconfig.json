@@ -35,7 +35,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "src/chatbot/ActionProvider.js", "src/chatbot/config.js"  ],
   "exclude": [
     "node_modules"
   ]

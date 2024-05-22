@@ -23,6 +23,8 @@ import { useSwitchChain } from 'wagmi';
 import AttestationCreationModal from '../components/attestationCreationModal';
 import ConfirmationSection from './confirmationPage';
 import { Alchemy, Network, Utils, Wallet } from "alchemy-sdk";
+import { clientToSigner, useSigner } from '../../src/hooks/useEAS';
+import { isMobile } from 'react-device-detect';
 
 
 type AttestationData = {
@@ -78,6 +80,8 @@ export default function ProjectSignUp() {
 
   const { eas, currentAddress, selectedNetwork, address, handleNetworkChange } = useEAS();
   console.log('selectedNetwork', networkContractAddresses[selectedNetwork]?.attestAddress);
+
+  const signer = useSigner();
 
   useEffect(() => {
     const checkNetwork = async () => {
@@ -206,6 +210,12 @@ export default function ProjectSignUp() {
     }
     console.log('current address', currentAddress);
 
+    if (!signer) {
+      console.error('Signer not available');
+      return;
+    }
+
+
      // Check if the user's fid is in the whitelist
     //  if (!WHITELISTED_USERS.includes(user.fid)) {
     //   alert('Access denied. Still in Alpha testing phase.');
@@ -238,17 +248,22 @@ export default function ProjectSignUp() {
         apiKey: process.env.ALCHEMY_API_KEY,
         network: Network.OPT_MAINNET,
       };
-      const network = new ethers.Network("optimism", 10);
-      const alchemy = new Alchemy(settings);
-      console.log("Alchemy", alchemy);
-      const alchemyProvider = new ethers.AlchemyProvider(
-        network,
-        settings.apiKey
-      );
+      // const network = new ethers.Network("optimism", 10);
+      // const alchemy = new Alchemy(settings);
+      // console.log("Alchemy", alchemy);
+      // const alchemyProvider = new ethers.AlchemyProvider(
+      //   network,
+      //   settings.apiKey
+      // );
       //const provider = new ethers.BrowserProvider(window.ethereum);
-      console.log('Provider:', alchemyProvider);
-      const signer = await alchemyProvider.getSigner();
-      console.log('Signer:', signer);
+      // console.log('Provider:', alchemyProvider);
+      // //const signer = await alchemyProvider.getSigner();
+      // console.log('Signer:', signer);
+
+      // signer = clientToSigner(client);
+
+      // const provider = new ethers.BrowserProvider(window.ethereum);
+      // const signer = await provider.getSigner();
       eas1.connect(signer);
       console.log('EAS:', eas1);
       const delegatedSigner = await eas1.getDelegated();

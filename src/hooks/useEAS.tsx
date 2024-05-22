@@ -8,6 +8,7 @@ import { usePublicClient, useWalletClient } from "wagmi";
 
 
 //i've gone a bit over board with the number of chain, will make it easier later
+//not sure how useful this hook is now
 
 // Define network names as a type
 export type AttestationNetworkType =
@@ -173,24 +174,55 @@ export const useEAS = () => {
     return { eas, schemaRegistry, currentAddress, selectedNetwork, address,  handleNetworkChange };
 };
 
-// export function clientToProvider(client: Client<Transport, Chain>) {
-//   const { chain, transport } = client
+// export function clientToSigner(client: Client<Transport, Chain, Account>): JsonRpcSigner {
+//   const { account, chain, transport } = client;
 //   const network = {
 //     chainId: chain.id,
 //     name: chain.name,
 //     ensAddress: chain.contracts?.ensRegistry?.address,
-//   }
-//   if (transport.type === 'fallback') {
-//     const providers = (transport.transports as ReturnType<Transport>[]).map(
-//       ({ value }) => new JsonRpcProvider(value?.url, network),
-//     )
-//     if (providers.length === 1) return providers[0]
-//     return new FallbackProvider(providers)
-//   }
-//   console.log("client to provider | transport", transport.url);
-//   console.log("client to provider | network", network);
-//   return new JsonRpcProvider(transport.url, network)
+//   };
+//   const provider = new BrowserProvider(transport, network);
+//   return new JsonRpcSigner(provider, account.address);
 // }
+
+
+// export function useSigner(): JsonRpcSigner | undefined {
+//   const { data: walletClient } = useWalletClient();
+//   const [signer, setSigner] = useState<JsonRpcSigner | undefined>(undefined);
+
+//   useEffect(() => {
+//     async function getSigner() {
+//       if (!walletClient) return;
+
+//       const tmpSigner = clientToSigner(walletClient);
+//       console.log("useSigner | tmpSigner", tmpSigner);
+//       setSigner(tmpSigner);
+//     }
+
+//     getSigner();
+//   }, [walletClient]);
+
+//   return signer;
+// }
+
+export function clientToProvider(client: Client<Transport, Chain>) {
+  const { chain, transport } = client
+  const network = {
+    chainId: chain.id,
+    name: chain.name,
+    ensAddress: chain.contracts?.ensRegistry?.address,
+  }
+  if (transport.type === 'fallback') {
+    const providers = (transport.transports as ReturnType<Transport>[]).map(
+      ({ value }) => new JsonRpcProvider(value?.url, network),
+    )
+    if (providers.length === 1) return providers[0]
+    return new FallbackProvider(providers)
+  }
+  console.log("client to provider | transport", transport.url);
+  console.log("client to provider | network", network);
+  return new JsonRpcProvider(transport.url, network)
+}
 
 
 export function clientToSigner(client: Client<Transport, Chain, Account>) {
@@ -233,4 +265,5 @@ export function useSigner() {
   console.log("useSigner | run ", i++, " times");
   return signer;
 }
+
 
