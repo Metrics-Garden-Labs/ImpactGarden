@@ -166,6 +166,8 @@ export const user_addresses = pgTable(
     coinbaseverified: boolean("coinbaseverified").default(false),
     opbadgeholder: boolean("opbadgeholder").default(false),
     powerbadgeholder: boolean("powerbadgeholder").default(false),
+    delegate: boolean("delegate").default(false),
+    s4participant: boolean("s4participant").default(false),
     createdat: timestamp("createdat").defaultNow(),
   },
   (user_addresses) => {

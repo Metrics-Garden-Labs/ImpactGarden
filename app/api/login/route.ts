@@ -3,6 +3,8 @@ import { NeynarAPIClient } from "@neynar/nodejs-sdk";
 import { db } from "../../../src/lib/db";
 import { user_addresses, users } from "../../../src/lib/schema";
 import { getAttestationsByCoinbaseVerified } from "../../..//src/utils/coinbaseVerified";
+import { getOptimismDelegateBadge } from "@/src/utils/getOpDelegateBadge";
+import { getOptimismSeason4Participant } from "@/src/utils/getSeason4Participant";
 import { checkOpBadgeholder } from "../../..//src/utils/opBadgeholder";
 import { eq } from "drizzle-orm";
 import { NewUserAddress } from "../../../src/types";
@@ -18,6 +20,8 @@ const client = new NeynarAPIClient(process.env.NEYNAR_API_KEY as string);
 // Addresses for verification checks
 const coinbaseAddress = "0x357458739F90461b99789350868CD7CF330Dd7EE";
 const optimismAddress = "0x621477dBA416E12df7FF0d48E14c4D20DC85D7D9";
+const opAddress = "0x621477dBA416E12df7FF0d48E14c4D20DC85D7D9";
+const opAddressS4 = "0x3C7820f2874b665AC7471f84f5cbd6E12871F4cC";
 const selectedNetwork: NetworkType = "Base";
 const endpoint = networkEndpoints[selectedNetwork];
 const selectedNetwork1: NetworkType = "Optimism";
@@ -114,6 +118,32 @@ export async function POST(request: NextRequest) {
         // Warpcast Power Badge (from Neynar API)
         const isPowerBadgeholder = !!userData.power_badge;
         console.log("isPowerBadgeholder", isPowerBadgeholder);
+
+        //add one for the op delegate/season 4 participant
+        const isOpDelegate = await (async () => {
+          console.log(`starting Op Delegate Check for ${ethaddress}`);
+          const isOpDelegate = await getOptimismDelegateBadge(
+            opAddress,
+            checkAddress,
+            endpoint1
+          );
+          console.log("isOpDelegate", isOpDelegate);
+          return isOpDelegate && isOpDelegate.length > 0;
+        })();
+        console.log("isOpDelegate", isOpDelegate);
+
+        //season 4 participant
+        const isSeason4Participant = await (async () => {
+          console.log(`starting Season 4 Participant Check for ${ethaddress}`);
+          const isSeason4Participant = await getOptimismSeason4Participant(
+            opAddressS4,
+            checkAddress,
+            endpoint1
+          );
+          console.log("isSeason4Participant", isSeason4Participant);
+          return isSeason4Participant && isSeason4Participant.length > 0;
+        })();
+        console.log("isSeason4Participant", isSeason4Participant);
 
         // Return an object matching the `NewUserAddress` structure
         return {

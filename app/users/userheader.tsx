@@ -52,6 +52,10 @@ const UserHeader = async ({ user }: Props) => {
   console.log('isOpBadgeholder', isOpBadgeholder);
   const isPowerBadgeholder = user_addresses.some(address => address.powerbadgeholder);
   console.log('isPowerBadgeholder', isPowerBadgeholder);
+  const isdelegate = user_addresses.some(address => address.delegate);
+  console.log('isdelegate', isdelegate);
+  const s4participant = user_addresses.some(address => address.s4participant);
+  console.log('s4participant', s4participant);
 
   return (
     <div className='bg-gray-50 pb-8'>
@@ -104,6 +108,32 @@ const UserHeader = async ({ user }: Props) => {
                     <Image
                       src="/powerBadge.png"
                       alt="Power User Badge"
+                      width={20}
+                      height={20}
+                    />
+                  )}
+                </span>
+                <span
+                  className={`tooltip text-sm ${isdelegate ? 'text-black' : 'text-gray-400'} ml-1`}
+                  data-tip="Optimism Delegate"
+                >
+                  {isdelegate && (
+                    <Image
+                      src="/opDelegate.png"
+                      alt="Optimism Delegate"
+                      width={20}
+                      height={20}
+                    />
+                  )}
+                </span>
+                <span
+                  className={`tooltip text-sm ${s4participant ? 'text-black' : 'text-gray-400'} ml-1`}
+                  data-tip="Season 4 Participant"
+                >
+                  {s4participant && (
+                    <Image
+                      src="/s-4grantparticipants.png"
+                      alt="Season 4 Participant"
                       width={20}
                       height={20}
                     />

@@ -97,6 +97,8 @@ export type UserBadgeVerification = {
     coinbaseVerified: boolean | null;
     opBadgeholder: boolean | null;
     powerBadgeholder: boolean | null;
+    isdelegate: boolean | null;
+    s4participant: boolean | null;
   } | null;
 };
 
