@@ -15,6 +15,7 @@ import Navbar from "../components/navbar1";
 import { User } from '../..//src/types';
 import { getUsers } from '../../src/lib/db';
 import Footer from "../components/footer";
+import { Metadata } from "next";
 
 interface Props {
   searchParams?: {
@@ -22,6 +23,10 @@ interface Props {
     filter?: string;
   };
 }
+
+export const metadata: Metadata = {
+  title: "Metrics Garden Labs - Search Users",
+};
 
 const UserProfilePage = async ({ searchParams }: Props) => {
   const query = searchParams?.query || '';

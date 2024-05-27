@@ -3,6 +3,7 @@
 import { Project, SearchResult } from '../../src/types';
 import { getProjects } from '../../src/lib/db';
 import ProjectPageClient from './ProjectPageClient';
+import { Metadata } from 'next';
 
 
 interface Props {
@@ -15,6 +16,9 @@ interface Props {
     searchResults?: SearchResult[];
   };
 }
+export const metadata: Metadata = {
+  title: "Metrics Garden Labs - Search Projects",
+};
 
 const ProjectPage = async ({ searchParams }: Props) => {
   const query = searchParams?.query || '';

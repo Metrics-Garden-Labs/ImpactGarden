@@ -6,12 +6,16 @@ import { User } from '../../../src/types';
 import Navbar from '../../components/navbar1';
 import UserHeader from '../userheader';
 import AttestationList from '../attestationList';
+import { Metadata } from 'next';
 
 interface Props {
   params: {
     username: string;
   };
 }
+export const metadata: Metadata = {
+  title: "Metrics Garden Labs - Users",
+};
 
 const UserProfilePage = async ({ params }: Props) => {
   const { username } = params;

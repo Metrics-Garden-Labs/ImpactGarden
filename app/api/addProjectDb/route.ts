@@ -5,6 +5,11 @@ import { db } from "../../../src/lib/db";
 import { eq } from "drizzle-orm";
 import { projects } from "../../../src/lib/schema";
 import { NewProject } from "../../../src/types";
+import { getEmbedding } from "@/src/config/openai";
+import { ProjectInfo } from "@/src/lib/pinecone";
+import { RecordMetadata, RecordValues } from "@pinecone-database/pinecone";
+
+//in this file we insert new projects into the database, i am also trying to embed the information for the ai to use.
 
 export const POST = async (request: Request) => {
   try {
@@ -32,8 +37,20 @@ export const POST = async (request: Request) => {
       return NextResponse.json({ message: "Project already exists" });
     }
 
-    //insert project into database
+    // const embedding = await getEmbeddingForProject(newProject);
+
+    // const insertedProject = await db.transaction(async (tx) => {
     const insertedProject = await insertProject(newProject);
+
+    // await ProjectInfo.upsert([
+    //   {
+    //   id: newProject.id.toString(),
+    //   values: embedding,
+    //   }
+    // ])
+    // });
+
+    //insert project into database
     return NextResponse.json(insertedProject, { status: 200 });
   } catch (error) {
     console.error("Error inserting project", error);
@@ -44,3 +61,15 @@ export const POST = async (request: Request) => {
   }
 };
 // Path: app/api/addUserDb/route.ts
+
+// async function getEmbeddingForProject(newProject: NewProject) {
+//   return getEmbedding(
+//     newProject.projectName +
+//       "\n\n" +
+//       newProject.ecosystem +
+//       "\n\n" +
+//       newProject.userFid +
+//       "\n\n" +
+//       newProject.githubUrl ?? ""
+//   );
+// }

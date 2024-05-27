@@ -7,7 +7,6 @@ import { EAS, EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestati
 import React, { FormEvent, useEffect, useState } from 'react';
 import { WHITELISTED_USERS, useGlobalState } from '../../src/config/config';
 import { UploadDropzone } from '../../src/utils/uploadthing';
-import Navbar from '../components/navbar1';
 import { NEXT_PUBLIC_URL } from '../../src/config/config';
 import { ethers } from 'ethers';
 import Image from 'next/image';

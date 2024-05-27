@@ -7,12 +7,17 @@ import Navbar from '../../components/navbar1';
 import Footer from '../../components/footer';
 import Sidebar from '../sidebar1';
 import React from 'react';
+import { Metadata } from 'next';
 
 interface Props {
   params?: {
     projectName?: string;
   };
 }
+
+export const metadata: Metadata = {
+  title: "Metrics Garden Labs - Project",
+};
 
 const ProjectPage = async ({ params }: Props) => {
   const encodedProjectName = params?.projectName || '';

@@ -7,8 +7,7 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "../app/api/uploadthing/core";
 import {useEffect} from 'react';
 import MatomoTracker from '../app/components/MatomoTracker';
-
-
+import { useSelectedLayoutSegment } from 'next/navigation';
 import "./globals.css";
 import { Providers } from './providers';
 import Navbar from "./components/navbar1";
@@ -33,6 +32,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  
   return (
     <html lang="en" data-theme='light'>
       <head>

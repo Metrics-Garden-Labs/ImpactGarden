@@ -502,3 +502,24 @@ export const getProjectsByEcosystem = async (
     throw error;
   }
 };
+
+export const getUserPfp = async (userFid: string) => {
+  try {
+    const userPfp = await db
+      .select({
+        pfpUrl: users.pfp_url,
+      })
+      .from(users)
+      .where(eq(users.fid, userFid))
+      .limit(1);
+
+    if (userPfp.length === 0) {
+      return null;
+    }
+
+    return userPfp[0];
+  } catch (error) {
+    console.error(`Error retrieving user pfp for '${userFid}':`, error);
+    throw error;
+  }
+};

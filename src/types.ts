@@ -36,7 +36,7 @@ export interface NewProject {
   websiteUrl?: string;
   twitterUrl?: string;
   githubUrl?: string;
-  id?: number;
+  id: number;
   ecosystem: string;
   projectUid: string;
   logoUrl?: string;
