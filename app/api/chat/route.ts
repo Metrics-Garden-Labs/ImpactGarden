@@ -1,4 +1,4 @@
-import { ChatCompletionMessage } from "openai/resources/index.mjs";
+//import { ChatCompletionMessage } from "openai/resources/index.mjs";
 import { openai } from "@ai-sdk/openai";
 import { StreamingTextResponse, streamText, StreamData } from "ai";
 import { stream } from "fast-check";
