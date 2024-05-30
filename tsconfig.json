@@ -1,11 +1,6 @@
 {
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "ES2022",
-      "ESNext"
-    ],
+    "lib": ["dom", "dom.iterable", "ES2022", "ESNext"],
     "allowJs": true,
     "target": "ES2015",
     "downlevelIteration": true,
@@ -14,29 +9,23 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
-, "src/chatbot/ActionProvider.js", "src/chatbot/config.js", "src/utils/combinedelegates.js"  ],
-  "exclude": [
-    "node_modules"
-  ]
+    ".next/types/**/*.ts",
+    "src/chatbot/ActionProvider.ts",
+    "src/chatbot/config.ts",
+    "src/utils/combinedelegates.ts"
+  ],
+  "exclude": ["node_modules"]
 }

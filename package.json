@@ -2,12 +2,14 @@
   "name": "module3",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate": "drizzle-kit generate:pg"
+    "generate": "drizzle-kit generate:pg",
+    "add-delegates": "node --loader ts-node/esm src/utils/insert_delegates.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.13",
@@ -34,7 +36,7 @@
     "body-parser": "^1.20.2",
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.20.17",
-    "drizzle-orm": "^0.30.9",
+    "drizzle-orm": "^0.30.10",
     "encoding": "^0.1.13",
     "ethers": "^6.12.1",
     "fast-check": "^3.18.0",
@@ -58,7 +60,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^20.12.13",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/react-google-recaptcha": "^2.1.9",
@@ -70,7 +72,8 @@
     "eslint-config-next": "14.2.1",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
   },
   "pnpm": {
     "overrides": {

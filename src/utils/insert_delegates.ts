@@ -1,17 +1,34 @@
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { sql } from "@vercel/postgres";
-import { op_delegates } from "../lib/schema";
+import { op_delegates } from "../lib/schema.js";
+import dotenv from "dotenv";
 
-const db = drizzle(sql);
+// Load environment variables from .env file
+dotenv.config();
+
+const POSTGRES_URL = process.env.POSTGRES_URL;
+
+if (!POSTGRES_URL) {
+  console.error("POSTGRES_URL environment variable is not set.");
+  process.exit(1); // Exit with failure
+}
+
+console.log("POSTGRES_URL:", POSTGRES_URL);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const db = drizzle(sql); // The connection string should be picked up from the environment
 
 const addDelegatesToDB = async () => {
   try {
-    // Read the JSON file
-    const jsonData = fs.readFileSync("all_delegates.json", "utf-8");
+    const filePath = path.join(__dirname, "all_delegates.json");
+    const jsonData = fs.readFileSync(filePath, "utf-8");
     const delegates = JSON.parse(jsonData);
 
-    // Iterate over the delegates and insert them into the database
     for (const delegate of delegates) {
       await db
         .insert(op_delegates)

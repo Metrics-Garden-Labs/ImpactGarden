@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { NeynarAPIClient } from "@neynar/nodejs-sdk";
 import { db } from "../../../src/lib/db";
-import { user_addresses, users } from "../../../src/lib/schema";
+import { user_addresses, users, op_delegates } from "../../../src/lib/schema";
 import { getAttestationsByCoinbaseVerified } from "../../..//src/utils/coinbaseVerified";
 import { getOptimismDelegateBadge } from "@/src/utils/getOpDelegateBadge";
 import { getOptimismSeason4Participant } from "@/src/utils/getSeason4Participant";
@@ -20,7 +20,7 @@ const client = new NeynarAPIClient(process.env.NEYNAR_API_KEY as string);
 // Addresses for verification checks
 const coinbaseAddress = "0x357458739F90461b99789350868CD7CF330Dd7EE";
 const optimismAddress = "0x621477dBA416E12df7FF0d48E14c4D20DC85D7D9";
-const opAddress = "0x621477dBA416E12df7FF0d48E14c4D20DC85D7D9";
+//const opAddress = "0x621477dBA416E12df7FF0d48E14c4D20DC85D7D9";
 const opAddressS4 = "0x3C7820f2874b665AC7471f84f5cbd6E12871F4cC";
 const selectedNetwork: NetworkType = "Base";
 const endpoint = networkEndpoints[selectedNetwork];
@@ -120,15 +120,25 @@ export async function POST(request: NextRequest) {
         console.log("isPowerBadgeholder", isPowerBadgeholder);
 
         //add one for the op delegate/season 4 participant
+        // const isOpDelegate = await (async () => {
+        //   console.log(`starting Op Delegate Check for ${ethaddress}`);
+        //   const isOpDelegate = await getOptimismDelegateBadge(
+        //     opAddress,
+        //     checkAddress,
+        //     endpoint1
+        //   );
+        //   console.log("isOpDelegate", isOpDelegate);
+        //   return isOpDelegate && isOpDelegate.length > 0;
+        // })();
+        // console.log("isOpDelegate", isOpDelegate);
         const isOpDelegate = await (async () => {
-          console.log(`starting Op Delegate Check for ${ethaddress}`);
-          const isOpDelegate = await getOptimismDelegateBadge(
-            opAddress,
-            checkAddress,
-            endpoint1
-          );
-          console.log("isOpDelegate", isOpDelegate);
-          return isOpDelegate && isOpDelegate.length > 0;
+          const result = await db
+            .select()
+            .from(op_delegates)
+            .where(eq(op_delegates.address, checkAddress))
+            .limit(1);
+          console.log("isOpDelegate", result.length > 0);
+          return result.length > 0;
         })();
         console.log("isOpDelegate", isOpDelegate);
 
