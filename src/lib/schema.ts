@@ -180,3 +180,18 @@ export const user_addresses = pgTable(
     };
   }
 );
+
+export const op_delegates = pgTable(
+  "op_delegates",
+  {
+    id: serial("id").primaryKey(),
+    address: text("address").notNull().unique(),
+    twitter: text("twitter"),
+    createdat: timestamp("createdat").defaultNow(),
+  },
+  (op_delegates) => {
+    return {
+      addressIdx: uniqueIndex("address_idx").on(op_delegates.address),
+    };
+  }
+);

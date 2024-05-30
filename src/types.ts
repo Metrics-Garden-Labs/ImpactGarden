@@ -205,3 +205,10 @@ export interface ContributionAttestationWithUsername
   extends ContributionAttestation {
   username: string;
 }
+
+export interface OpDelegate {
+  id?: number;
+  address: string;
+  twitter: string | null;
+  createdAt?: Date;
+}

@@ -155,6 +155,13 @@
       "when": 1716367713130,
       "tag": "0021_soft_shriek",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "5",
+      "when": 1717079505125,
+      "tag": "0022_stale_doctor_faustus",
+      "breakpoints": true
     }
   ]
 }

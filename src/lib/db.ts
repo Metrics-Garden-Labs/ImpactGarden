@@ -7,6 +7,7 @@ import {
   contributions,
   contributionattestations,
   user_addresses,
+  op_delegates,
 } from "./schema";
 import * as schema from "./schema";
 import { getAttestationsByAttester } from "./eas";
