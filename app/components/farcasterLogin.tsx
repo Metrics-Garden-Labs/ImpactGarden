@@ -60,7 +60,7 @@ export default function FarcasterLogin() {
       script = document.createElement("script");
       script.id = scriptId;
       // Set attributes and source of the script
-      script.src = "https://neynarxyz.github.io/siwn/raw/1.2.0/index.js";
+      script.src = "https://ub.io/siwn/raw/1.2.0/index.js";
       script.async = true;
       script.defer = true;
 

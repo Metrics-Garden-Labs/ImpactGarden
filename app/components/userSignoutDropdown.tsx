@@ -40,7 +40,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({onSignout}) => {
             className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40"
         >
             <li>
-                <p onClick={onSignout}>Sign Out</p>
+                <p onClick={onSignout} className='text-black'>Sign Out</p>
             </li>
         </ul>
         </details>
