@@ -74,88 +74,73 @@ const UserHeader = async ({ user }: Props) => {
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 flex items-center">
               {user.username}
               <span className="ml-2 flex items-center">
-              <span
-                className={`tooltip ${isCoinbaseVerified ? 'text-black' : 'text-gray-400'} mr-1`}
-                data-tip="Coinbase Wallet Verified"
-              >
                 {isCoinbaseVerified && (
-                  <Image
-                    src="/coinbaseWallet.png"
-                    alt="Coinbase Wallet Verified"
-                    width={25}
-                    height={25}
-                  />
+                  <span className="tooltip text-black mr-1" data-tip="Coinbase Wallet Verified">
+                    <Image
+                      src="/coinbaseWallet.png"
+                      alt="Coinbase Wallet Verified"
+                      width={25}
+                      height={25}
+                    />
+                  </span>
                 )}
-              </span>
-                <span
-                  className={`tooltip text-sm ${isOpBadgeholder ? 'text-black ' : 'text-gray-400'} mr-1`}
-                  data-tip="Optimism Badgeholder"
-                >
-                  {isOpBadgeholder && (
+                {isOpBadgeholder && (
+                  <span className="tooltip text-black mr-1" data-tip="Optimism Badgeholder">
                     <Image
                       src="/opLogo.png"
                       alt="OP Badge"
                       width={20}
                       height={20}
                     />
-                  )}
-                </span>
-                <span
-                  className={`tooltip text-sm ${isPowerBadgeholder ? 'text-black' : 'text-gray-400'}`}
-                  data-tip="Power User Badge"
-                >
-                  {isPowerBadgeholder && (
+                  </span>
+                )}
+                {isPowerBadgeholder && (
+                  <span className="tooltip text-black" data-tip="Power User Badge">
                     <Image
                       src="/powerBadge.png"
                       alt="Power User Badge"
                       width={20}
                       height={20}
                     />
-                  )}
-                </span>
-                <span
-                  className={`tooltip text-sm ${isdelegate ? 'text-black' : 'text-gray-400'} ml-1`}
-                  data-tip="Optimism Delegate"
-                >
-                  {isdelegate && (
+                  </span>
+                )}
+                {isdelegate && (
+                  <span className="tooltip text-black ml-1" data-tip="Optimism Delegate">
                     <Image
                       src="/opDelegate.png"
                       alt="Optimism Delegate"
                       width={20}
                       height={20}
                     />
-                  )}
-                </span>
-                <span
-                  className={`tooltip text-sm ${s4participant ? 'text-black' : 'text-gray-400'} ml-1`}
-                  data-tip="Season 4 Participant"
-                >
-                  {s4participant && (
+                  </span>
+                )}
+                {s4participant && (
+                  <span className="tooltip text-black ml-1" data-tip="Season 4 Participant">
                     <Image
                       src="/s-4grantparticipants.png"
                       alt="Season 4 Participant"
                       width={20}
                       height={20}
                     />
-                  )}
-                </span>
+                  </span>
+                )}
               </span>
             </h1>
           </div>
         </div>
         <div className="grid grid-cols-3   gap-4 sm:gap-6 md:gap-8">
-        <div className="bg-white p-2 sm:p-3 md:p-4 rounded-lg shadow text-center">
-          <p className="text-xl sm:text-2xl md:text-3xl font-bold text-left">{totalAttestations}</p>
-          <p className="text-xs sm:text-sm text-gray-500 font-light text-left">TOTAL REVIEWS</p>
-        </div>
-        <div className="bg-white p-2 sm:p-3 md:p-4 rounded-lg shadow text-center">
-          <p className="text-xl sm:text-2xl md:text-3xl font-bold text-left">{attestations.length}</p>
-          <p className="text-xs sm:text-sm text-gray-500 font-light text-left">REVIEWS GIVEN</p>
-        </div>
-        <div className="bg-white p-2 sm:p-3 md:p-4 rounded-lg shadow text-center">
-          <p className="text-xl sm:text-2xl md:text-3xl font-bold text-left">{projectAttestations.length}</p>
-          <p className="text-xs sm:text-sm text-gray-500 font-light text-left">REVIEWS RECEIVED</p>
-        </div>
+          <div className="bg-white p-2 sm:p-3 md:p-4 rounded-lg shadow text-center">
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-left">{totalAttestations}</p>
+            <p className="text-xs sm:text-sm text-gray-500 font-light text-left">TOTAL REVIEWS</p>
+          </div>
+          <div className="bg-white p-2 sm:p-3 md:p-4 rounded-lg shadow text-center">
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-left">{attestations.length}</p>
+            <p className="text-xs sm:text-sm text-gray-500 font-light text-left">REVIEWS GIVEN</p>
+          </div>
+          <div className="bg-white p-2 sm:p-3 md:p-4 rounded-lg shadow text-center">
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-left">{projectAttestations.length}</p>
+            <p className="text-xs sm:text-sm text-gray-500 font-light text-left">REVIEWS RECEIVED</p>
+          </div>
         </div>
       </div>
     </div>
