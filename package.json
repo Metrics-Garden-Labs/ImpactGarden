@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "generate": "drizzle-kit generate:pg",
-    "add-delegates": "node --loader ts-node/esm src/utils/insert_delegates.ts"
+    "add-delegates": "node --loader ts-node/esm src/utils/insert_delegates.ts",
+    "test": "ts-node -r tsconfig-paths/register app/components/testDelegate.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.13",
@@ -41,6 +42,7 @@
     "ethers": "^6.12.1",
     "fast-check": "^3.18.0",
     "framer-motion": "^11.2.4",
+    "global": "^4.4.0",
     "next": "14.2.2",
     "openai": "^4.47.1",
     "pino-pretty": "^10.3.1",
@@ -73,6 +75,7 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.4.5"
   },
   "pnpm": {

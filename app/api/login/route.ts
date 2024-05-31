@@ -163,6 +163,8 @@ export async function POST(request: NextRequest) {
           coinbaseverified: isCoinbaseVerified,
           opbadgeholder: isOpBadgeholder,
           powerbadgeholder: isPowerBadgeholder,
+          delegate: isOpDelegate,
+          s4participant: isSeason4Participant,
         };
       })
     );
