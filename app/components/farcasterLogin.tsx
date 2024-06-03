@@ -32,7 +32,8 @@ interface SignInSuccessData {
 
 export default function FarcasterLogin() {
   //signerUuid and fid are global state variables once they are fetched from farcaster.
-  const [user, setUser, removeUser] = useLocalStorage("user", {
+  const [user, setUser, 
+    removeUser] = useLocalStorage("user", {
     fid: '',
     username: '',
     ethAddress: [],
@@ -60,12 +61,12 @@ export default function FarcasterLogin() {
       script = document.createElement("script");
       script.id = scriptId;
       // Set attributes and source of the script
-      script.src = "https://ub.io/siwn/raw/1.2.0/index.js";
+      script.src = "https://neynarxyz.github.io/siwn/raw/1.2.0/index.js";
       script.async = true;
       script.defer = true;
-
       document.body.appendChild(script);
     }
+    
     window.onSignInSuccess = (data) => {
       console.log("Sign in success", data);
       setUser({
@@ -75,6 +76,7 @@ export default function FarcasterLogin() {
       });
       //signer uuid is private and part of the app
       setFid(data.fid);
+      setIsSignedIn(true);
     };
 
     return () => {
