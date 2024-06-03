@@ -1,4 +1,6 @@
 // app/projectSignUp/page.tsx
+//i am going to change this branch to work for the optimism schema and try to get the multi attest by delegation working
+
 "use client";
 
 import {  networkContractAddresses, getChainId } from '../components/networkContractAddresses';
@@ -35,10 +37,33 @@ type AttestationData = {
   farcaster: string;
 };
 
+type AttestationData1 = {
+  issuer: string;
+  farcasterID: string;
+  projectName: string;
+  category: string;
+  parentProjectRefUID: string;
+  metadataType: string;
+  metadataURL: string;
+};
+
 const networks: AttestationNetworkType[] = [
   'Ethereum', 'Optimism', 'Base', 'Arbitrum One', 'Polygon',
   'Scroll', 'Celo', 'Blast', 'Linea'
 ];
+
+type CategoryKey = 'CeFi' | 'Crosschain' | 'DeFi' | 'Governance' | 'NFT' | 'Social' | 'Utilities';
+
+const categories: { [key in CategoryKey]: string } = {
+  CeFi: 'CeFi',
+  Crosschain: 'Crosschain',
+  DeFi: 'DeFi',
+  Governance: 'Governance',
+  NFT: 'NFT',
+  Social: 'Social',
+  Utilities: 'Utilities'
+};
+
 
 export default function ProjectSignUp() {
 
@@ -59,6 +84,43 @@ export default function ProjectSignUp() {
     githubURL: '',
     farcaster: user.fid,
   });
+
+  //new attestation data, not sure if we have to worry to much if we are going to take all of the info from the agora api
+  //first schema contains
+  //FarcasterID
+  //Issuer - MGL or OP Atlas in this case
+
+  //second schema contains
+  //schema 472
+  //farcasterID
+  //Project Name
+  //Category
+  //parent projectRefUID for (only for the contributions/subprojects)
+  //metadata type - not sure what this is actually
+  //metadataURL - all of the stuff that goes in pinata. 
+
+  //third schema contains
+  //schema 470
+  //round number which will be 4
+  //project ref UID - first schema the uid of the project that is being attested - this is going to have to be a separate attestation becasue we need the other attestationUIDs first 
+  //farcasterID - the user's farcasterID
+  //MetaData snapshot Ref - this is the second schema attestationUID
+  //at some point in the ui will have to tell the user that they are going to have to sign two transactions
+
+
+
+
+  const [attestationData1, setAttestationData1] = useState<AttestationData1>({
+    issuer: 'MGL',
+    farcasterID: user.fid,
+    projectName: '',
+    category: '',
+    parentProjectRefUID: '',
+    metadataType: '',
+    metadataURL: '',
+  });
+
+
   console.log('Attestation Data:', attestationData);
 
   const [selectedProject, setSelectedProject] = useLocalStorage<Project | null>('selectedProject', null);
@@ -71,6 +133,15 @@ export default function ProjectSignUp() {
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const { switchChain } = useSwitchChain();
+  const [selectedCategories, setSelectedCategories] = useState<{ [key in CategoryKey]: boolean }>({
+    CeFi: false,
+    Crosschain: false,
+    DeFi: false,
+    Governance: false,
+    NFT: false,
+    Social: false,
+    Utilities: false
+  });
   
   console.log('Ecosystem', ecosystem);
   console.log('walletAddress', walletAddress);
@@ -152,6 +223,20 @@ export default function ProjectSignUp() {
       [name]: value,
     }));
   };
+
+  const handleCategoryToggle = (category: CategoryKey) => {
+    setSelectedCategories(prev => ({
+      ...prev,
+      [category]: !prev[category]
+    }));
+  };
+  
+  const formatCategories = (categories: { [key in CategoryKey]: boolean }) => {
+    return Object.keys(categories)
+      .filter(key => categories[key as CategoryKey])
+      .join(', ');
+  };
+  
 
 
   const handleNext = () => {
@@ -480,6 +565,9 @@ export default function ProjectSignUp() {
               <p className='text-center mt-2 text-gray-400'>
                 {attestationData.oneliner || 'Project description'}
               </p>
+              <h3 className="text-center mt-2 font-semibold text-gray-500">
+                Categories: {formatCategories(selectedCategories) || 'None'}
+              </h3>
               <div className="flex justify-center py-4 items-center">
                 <BsGlobe2 className="text-black mx-2 text-lg" />
                 <FaXTwitter className="text-black mx-2 text-lg" />
@@ -512,12 +600,15 @@ export default function ProjectSignUp() {
               {/* Add optional placeholder content if needed */}
             </div>
           )}
-          <h3 className="text-center mt-6 mb-6 font-semibold text-gray-500">
+          <h3 className="text-center mt-6 mb-2 font-semibold text-gray-500">
             {attestationData.projectName || 'Project name'}
           </h3>
           <p className='text-center mt-2 mb-2 text-gray-400'> 
             {attestationData.oneliner || 'Project description'}
           </p>
+          <h3 className="text-center mt-2 font-semibold text-gray-500">
+                Categories: {formatCategories(selectedCategories) || 'None'}
+          </h3>
           <div className="flex justify-center py-4 items-center">
             <Link href={checkwebsiteUrl || '#'}>
               <BsGlobe2 className="text-black mx-2 text-lg" />
@@ -612,8 +703,25 @@ export default function ProjectSignUp() {
         </div>
 
         <div>
+          <h2 className="font-semibold mt-4">Categories *</h2>
+          <div className="flex flex-wrap mt-2">
+            {Object.keys(categories).map((key) => (
+              <button
+                key={key}
+                onClick={() => handleCategoryToggle(key as CategoryKey)}
+                className={`mb-2 mr-2 px-4 py-2 rounded-lg text-sm ${
+                  selectedCategories[key as CategoryKey] ? 'bg-black text-white' : 'bg-gray-200 text-gray-800'
+                }`}
+              >
+                {selectedCategories[key as CategoryKey] ? '✓' : '+'} {categories[key as CategoryKey]}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
           <label htmlFor="websiteUrl" className="block text-sm font-medium leading-6 text-gray-900">
-            What is the website URL of your project? * 
+            Website URL  * 
           </label>
           <div className="mt-2">
             <input
@@ -631,7 +739,7 @@ export default function ProjectSignUp() {
 
         <div>
           <label htmlFor="twitterUrl" className="block text-sm font-medium leading-6 text-gray-900">
-            <span>What is the Twitter URL of your project? </span>
+            <span>Twitter </span>
             <span className="text-gray-500 text-sm">(Optional)</span>
           </label>
           <div className="mt-2">
@@ -664,6 +772,46 @@ export default function ProjectSignUp() {
             />
           </div>
         </div>
+
+        {/* input for the farcaster channel */}
+        <div>
+          <label htmlFor="farcaster" className="block text-sm font-medium leading-6 text-gray-900">
+            Farcaster *
+          </label>
+          <div className="mt-2">
+            <input
+              type="text"
+              id="farcaster"
+              name="farcaster"
+              value={attestationData.farcaster}
+              onChange={handleAttestationChange}
+              className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="Type Farcaster Channel ID here"
+              required
+            />
+          </div>
+        </div>
+
+        {/* input for the mirror channel */}
+        <div>
+          <label htmlFor="mirror" className="block text-sm font-medium leading-6 text-gray-900">
+            Mirror 
+            <span className="text-gray-500 text-sm"> (Optional)</span>
+
+          </label>
+          <div className="mt-2">
+            <input
+              type="text"
+              id="mirror"
+              name="mirror"
+              value={attestationData1.metadataURL}
+              onChange={handleAttestationChange}
+              className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="Type Mirror Channel ID here"
+            />
+          </div>
+        </div>
+
 
         <h2>Please upload the logo of your project *</h2>
 
