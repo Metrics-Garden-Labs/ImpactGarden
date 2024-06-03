@@ -5,7 +5,7 @@
 
 import {  networkContractAddresses, getChainId } from '../components/networkContractAddresses';
 import { useEAS } from '../../src/hooks/useEAS';
-import { EAS, EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import { AttestationRequestData, EAS, EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import React, { FormEvent, useEffect, useState } from 'react';
 import { WHITELISTED_USERS, useGlobalState } from '../../src/config/config';
 import { UploadDropzone } from '../../src/utils/uploadthing';
@@ -26,6 +26,7 @@ import ConfirmationSection from './confirmationPage';
 import { Alchemy, Network, Utils, Wallet } from "alchemy-sdk";
 import { clientToSigner, useSigner } from '../../src/hooks/useEAS';
 import { isMobile } from 'react-device-detect';
+import { set } from 'zod';
 
 
 type AttestationData = {
@@ -66,9 +67,6 @@ const categories: { [key in CategoryKey]: string } = {
 
 
 export default function ProjectSignUp() {
-
-
-  
 
   const [walletAddress] = useGlobalState('walletAddress');
   const [ user, setUser, removeUser ] = useLocalStorage('user', {
@@ -133,6 +131,8 @@ export default function ProjectSignUp() {
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const { switchChain } = useSwitchChain();
+  const ZERO_BYTES32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
+  const NO_EXPIRATION = 0n;
   const [selectedCategories, setSelectedCategories] = useState<{ [key in CategoryKey]: boolean }>({
     CeFi: false,
     Crosschain: false,
@@ -328,10 +328,10 @@ export default function ProjectSignUp() {
 
       console.log('User:', user);
       const eas1 = new EAS(networkContractAddresses[selectedNetwork]?.attestAddress);
-      const settings = {
-        apiKey: process.env.ALCHEMY_API_KEY,
-        network: Network.OPT_MAINNET,
-      };
+      // const settings = {
+      //   apiKey: process.env.ALCHEMY_API_KEY,
+      //   network: Network.OPT_MAINNET,
+      // };
       // const network = new ethers.Network("optimism", 10);
       // const alchemy = new Alchemy(settings);
       // console.log("Alchemy", alchemy);
@@ -446,45 +446,131 @@ export default function ProjectSignUp() {
     }
   };
 
-  
+  //put in the info for the first attestation with the issuer and the farcasterID
+  const createAttestation1 = async () => {
+    setIsLoading(true);
+    //dont worry about the captcha for this one yet
+    if (!user.fid || user.fid === '') {
+      alert('User not logged in, please login to continue');
+      return;
+    }
+    if (!eas || !currentAddress) {
+      console.error('Wallet not connected. Please connect your wallet to continue');
+      return;
+    }
+    if (!signer) {
+      console.error('Signer not available');
+      return;
+    }
+
+    // If all checks pass, continue with the function
+    try {
+      const schema1 = '0x7ae9f4adabd9214049df72f58eceffc48c4a69e920882f5b06a6c69a3157e5bd';
+      //ive never used the schema encoder with spaces before, hopefully this works, otherwise i can iterate
+      const schemaEncoder1 = new SchemaEncoder(
+        `uint256 farcasterID, string Issuer`
+      );
+      const encodedData1 = schemaEncoder1.encodeData([
+        { name: 'farcasterID', value: user.fid, type: 'uint256' },
+        { name: 'Issuer', value: 'MGL', type: 'string' },
+      ]);
+
+      const eas2 = new EAS(networkContractAddresses[selectedNetwork]?.attestAddress);
+      eas2.connect(signer);
+      //i dont think i need to delegate the signer becasue we are signing the attestation and there is no recipient
+      const easnonce2 = await eas2.getNonce(walletAddress);
+      //i dont actaully think i need the nonce for this 
+
+      const attestationdata1: AttestationRequestData = {
+        recipient: currentAddress,
+        data: encodedData1,
+        expirationTime: NO_EXPIRATION,
+        revocable: true,
+        refUID: ZERO_BYTES32,
+        value: 0n,
+      }
+
+      const dataToSend = {
+        schema: schema1,
+        ...attestationdata1,
+      }
+
+      //might not need to add the bigint conversion because i took the values from the sdk
+      const serialisedData = JSON.stringify(dataToSend, (key, value) =>
+        typeof value === 'bigint' ? "0x" + value.toString(16) : value
+      );
+
+      //now i need to send the data to the backend using a different api
+      const response = await fetch(`/api/projectAttestation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: serialisedData,
+      });
+      const responseData = await response.json();
+      console.log('Response Data:', responseData);
+
+      if (responseData.success) {
+        console.log('Attestations created successfully');
+        setAttestationUID(responseData.attestationUID);
+      } else {
+        throw new Error (`Failed to create attestations, Error: ${responseData.error}`)
+      }
+      //i am not going to add this one to the database, just checking to see if it works
+
+    } catch (error) {
+      console.error('Failed to create attestation 1:', error);
+      alert('An error occurred while creating attestation 1. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
     console.log("Captcha value:", captcha);
   
     // First, check if the CAPTCHA has been completed
-    if (!captcha) {
-      alert("Please complete the CAPTCHA to continue.");
-      return;  // Stop the function if there's no CAPTCHA response
-    }
+    //commenting this out for the test
+    // if (!captcha) {
+    //   alert("Please complete the CAPTCHA to continue.");
+    //   return;  // Stop the function if there's no CAPTCHA response
+    // }
   
     // Next, check if the wallet address is connected and is a non-empty string
     if (!address || address.trim() === "") {
       alert("Please connect your wallet to proceed.");
       return;  // Stop the function if there's no wallet address or if it's empty
     }
-  
+    
+    createAttestation1();
+
     // If both CAPTCHA and wallet address are valid, proceed to verify the CAPTCHA with the backend
-    try {
-      const response = await fetch(`${NEXT_PUBLIC_URL}/api/verifyCaptcha`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ captchaResponse: captcha }),
-      });
+    //commenting this out for the test
+    // try {
+    //   const response = await fetch(`${NEXT_PUBLIC_URL}/api/verifyCaptcha`, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({ captchaResponse: captcha }),
+    //   });
   
-      if (response.ok) {
-        console.log('Captcha is valid and wallet is connected');
-        createAttestation();
-      } else {
-        // If the response is not OK, assume the CAPTCHA was invalid
-        console.error('Captcha is invalid');
-        alert('Captcha is invalid. Please try again.');
-      }
-    } catch (error) {
-      console.error('Failed to verify captcha:', error);
-      alert('An error occurred while verifying the captcha. Please try again.');
-    }
+    //   if (response.ok) {
+    //     console.log('Captcha is valid and wallet is connected');
+    //     //i am testing the new attestation. 
+    //     createAttestation1();
+    //   } else {
+    //     // If the response is not OK, assume the CAPTCHA was invalid
+    //     console.error('Captcha is invalid');
+    //     alert('Captcha is invalid. Please try again.');
+    //   }
+    // } catch (error) {
+    //   console.error('Failed to verify captcha:', error);
+    //   alert('An error occurred while verifying the captcha. Please try again.');
+    // }
   };
 
   //Modal for when the attestation is being processed
@@ -622,9 +708,11 @@ export default function ProjectSignUp() {
           </div>
         </div>
 
+
+        {/* commented out the recaotcha for testing
         <div className="mt-20 mb-20 flex justify-center w-full">
           <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha}  />
-        </div>
+        </div> */}
 
         <div className="flex justify-center space-x-6 mt-20 mb-20">
           <button
@@ -773,7 +861,9 @@ export default function ProjectSignUp() {
           </div>
         </div>
 
-        {/* input for the farcaster channel */}
+        {/* input for the farcaster channel 
+        at the minute it autocompletes the logged in farcaster account, 
+        guess this give the user to change only if they want to*/}
         <div>
           <label htmlFor="farcaster" className="block text-sm font-medium leading-6 text-gray-900">
             Farcaster *
@@ -786,7 +876,7 @@ export default function ProjectSignUp() {
               value={attestationData.farcaster}
               onChange={handleAttestationChange}
               className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Type Farcaster Channel ID here"
+              placeholder="Type Farcaster here"
               required
             />
           </div>
