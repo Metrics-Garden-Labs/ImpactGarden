@@ -470,6 +470,7 @@ export default function ProjectSignUp() {
       const schemaEncoder1 = new SchemaEncoder(
         `uint256 farcasterID, string Issuer`
       );
+
       const encodedData1 = schemaEncoder1.encodeData([
         { name: 'farcasterID', value: user.fid, type: 'uint256' },
         { name: 'Issuer', value: 'MGL', type: 'string' },
@@ -526,6 +527,48 @@ export default function ProjectSignUp() {
       setIsLoading(false);
     }
   };
+
+  //the attestation that will include the metadata and the parent project
+  const createAttestation2 = async () => {
+     //dont worry about the captcha for this one yet
+     //for this test, will have to change how the loading is done for the attestation loading modal,
+     //it will also only be completed when the last attestation is completed
+     //it will also have to show all 3 of the attestations that have been created. 
+     if (!user.fid || user.fid === '') {
+      alert('User not logged in, please login to continue');
+      return;
+    }
+    if (!eas || !currentAddress) {
+      console.error('Wallet not connected. Please connect your wallet to continue');
+      return;
+    }
+    if (!signer) {
+      console.error('Signer not available');
+      return;
+    }
+    const schema2 = '0xe035e3fe27a64c8d7291ae54c6e85676addcbc2d179224fe7fc1f7f05a8c6eac';
+    //need to do some research into what actually the metadata type is. 
+    const schemaEncoder2 = new SchemaEncoder(
+      'bytes32 projectRefUID, uint256 farcasterID, string name, string category, bytes32 parentProjectRefUID, unint metadataType, string metadataURL'
+    );
+
+    //for the attestaion uid this will work in this test, however i need to store this as a separate value,
+    //for the confirmation to show i need to also make it dependeent of the attestationUID2
+    //which will be the result of this attestation
+    //the other metadata will be stored in the pinata url which i am yet to create. 
+    const encodedData2 = schemaEncoder2.encodeData([
+      { name: 'projectRefUID', value: attestationUID, type: 'bytes32' },
+      { name: 'farcasterID', value: user.fid, type: 'uint256' },
+      { name: 'name', value: attestationData.projectName, type: 'string' },
+      { name: 'category', value: formatCategories(selectedCategories), type: 'string' },
+      { name: 'parentProjectRefUID', value: ZERO_BYTES32, type: 'bytes32' },
+      { name: 'metadataType', value: '0', type: 'uint' },
+      { name: 'metadataURL', value: pinataURL, type: 'string' },
+    ]);
+    const eas3 = new EAS(networkContractAddresses[selectedNetwork]?.attestAddress);
+    eas3.connect(signer);
+  };
+
 
 
   const onSubmit = async (event: FormEvent) => {
