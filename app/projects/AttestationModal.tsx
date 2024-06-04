@@ -43,6 +43,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     const [ isLoading, setIsLoading ] = useState(false);
     const [ attestationUID, setAttestationUID ] = useState<string>("");
     const [recentAttestations, setRecentAttestations] = useState<ContributionAttestationWithUsername[]>([]);
+    const [recentAttestationsLoading, setRecentAttestationsLoading] = useState(true);
     const [showAttestationForm, setShowAttestationForm] = useState(false);
     const [rating, setRating] = useState(0);
     const [user] = useLocalStorage( "user", {
@@ -114,6 +115,8 @@ console.log('How It Helped:', improvementareasstring);
           }
         } catch (error) {
           console.error('Error fetching attestations:', error);
+        } finally {
+          setRecentAttestationsLoading(false);
         }
       };
   
@@ -431,35 +434,51 @@ console.log('How It Helped:', improvementareasstring);
                 <div className="mb-4">
                   <h3 className="font-semibold text-center">Insights</h3>
                   <p className="text-center">
-                    This contribution has been attested to {attestationCount} times
+                    {attestationCount > 0 ? (
+                      <>This contribution has been attested to {attestationCount} times</>
+                    ) : (
+                      <>This contribution has not been attested to yet</>
+                    )}
                   </p>
                 </div>
     
                 {/* Show the three most recent attestations */}
-                <div className="mb-4">
-                  {recentAttestations.length > 0 ? (
-                    <ul >
-                      {recentAttestations.map((attestation, index) => (
-                        <li key={index} >
-                          <Link
-                            href={`${
-                              easScanEndpoints[
-                                contribution?.ecosystem as AttestationNetworkType
-                              ]
-                            }${attestation.attestationUID}`}
-                          >
-                            <p>
-                              <strong>{attestation.username}</strong> said:{' '}
-                              {attestation.feedback}
-                            </p>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p></p>
-                  )}
-                </div>
+                 {/* Show the three most recent attestations */}
+                 {attestationCount > 0 && (
+                  <div className="mb-4">
+                    {recentAttestationsLoading ? (
+                      <ul>
+                        {[1, 2, 3].map((_, index) => (
+                          <li key={index} className="animate-pulse">
+                            <div className="bg-gray-200 h-4 w-3/4 mb-2 rounded"></div>
+                            <div className="bg-gray-200 h-4 w-1/2 mb-2 rounded"></div>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : recentAttestations.length > 0 ? (
+                      <ul>
+                        {recentAttestations.map((attestation, index) => (
+                          <li key={index}>
+                            <Link
+                              href={`${
+                                easScanEndpoints[
+                                  contribution?.ecosystem as AttestationNetworkType
+                                ]
+                              }${attestation.attestationUID}`}
+                            >
+                              <p>
+                                <strong>{attestation.username}</strong> said:{' '}
+                                {attestation.feedback}
+                              </p>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p></p>
+                    )}
+                  </div>
+                )}
     
                 <div className="mb-4 text-center py-3">
                     
