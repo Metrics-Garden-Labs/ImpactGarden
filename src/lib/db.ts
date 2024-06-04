@@ -199,39 +199,67 @@ export const getProjects = async (
     console.log("Endpoint db", endpoint);
     console.log("Filter db", filter);
 
-    let query = db.select().from(projects);
-
     if (filter === "Recently Added") {
-      query = query.orderBy(desc(projects.createdAt)) as typeof query;
+      const recentlyAddedQuery = db
+        .select()
+        .from(projects)
+        .orderBy(sql`${projects.createdAt} DESC`);
+      const dbProjects: Project[] = await recentlyAddedQuery.execute();
+      return dbProjects;
     } else if (filter === "Projects on Optimism") {
-      query = query.where(eq(projects.ecosystem, "Optimism")) as typeof query;
+      const optimismQuery = db
+        .select()
+        .from(projects)
+        .where(sql`${projects.ecosystem} = 'Optimism'`);
+      const dbProjects: Project[] = await optimismQuery.execute();
+      return dbProjects;
     } else if (filter === "Most Attested") {
-      // Modify the query to fetch projects with the most attestations
-      // You'll need to join the `contributionattestations` table and count the attestations
-      // Example:
-      // query = query
-      //   .leftJoin(
-      //     contributionattestations,
-      //     eq(projects.projectName, contributionattestations.projectName)
-      //   )
-      //   .groupBy(projects.id)
-      //   .orderBy(desc(count(contributionattestations.id))) as typeof query;
-    } else if (filter === "Best Scored") {
-      // Modify the query to fetch projects with the best scores
-      // You'll need to calculate the average score based on the `rating` field in the `contributionattestations` table
-      // Example:
-      // query = query
-      //   .leftJoin(
-      //     contributionattestations,
-      //     eq(projects.projectName, contributionattestations.projectName)
-      //   )
-      //   .groupBy(projects.id)
-      //   .orderBy(desc(avg(contributionattestations.rating))) as typeof query;
+      const attestedQuery = db
+        .select({
+          id: projects.id,
+          userFid: projects.userFid,
+          ethAddress: projects.ethAddress,
+          ecosystem: projects.ecosystem,
+          projectName: projects.projectName,
+          oneliner: projects.oneliner,
+          websiteUrl: projects.websiteUrl,
+          twitterUrl: projects.twitterUrl,
+          githubUrl: projects.githubUrl,
+          logoUrl: projects.logoUrl,
+          projectUid: projects.projectUid,
+          createdAt: projects.createdAt,
+          attestationCount: sql`COUNT(${contributionattestations.id})`.as(
+            "attestationCount"
+          ),
+        })
+        .from(projects)
+        .leftJoin(
+          contributionattestations,
+          sql`${projects.projectName} = ${contributionattestations.projectName}`
+        )
+        .groupBy(
+          projects.id,
+          projects.userFid,
+          projects.ethAddress,
+          projects.ecosystem,
+          projects.projectName,
+          projects.oneliner,
+          projects.websiteUrl,
+          projects.twitterUrl,
+          projects.githubUrl,
+          projects.logoUrl,
+          projects.projectUid,
+          projects.createdAt
+        )
+        .orderBy(sql`COUNT(${contributionattestations.id}) DESC`);
+      const dbProjects: Project[] = await attestedQuery.execute();
+      return dbProjects;
     }
 
-    const dbProjects: Project[] = await query.execute();
-    //console.log("DB Projects", dbProjects);
-
+    // If no specific filter is provided, return all projects
+    const allProjectsQuery = db.select().from(projects);
+    const dbProjects: Project[] = await allProjectsQuery.execute();
+    console.log("DB Projects", dbProjects);
     return dbProjects;
   } catch (error) {
     console.error("Error retrieving projects:", error);

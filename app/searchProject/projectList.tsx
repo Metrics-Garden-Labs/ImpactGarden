@@ -40,17 +40,17 @@ export default function ProjectList({
   const [selectedProjectName, setSelectedProjectName] = useGlobalState('selectedProjectName');
   const [modalOpen, setModalOpen] = useState(false);
 
-  const filteredProjects = query
-    ? projects.filter((project) => {
-        if (filter === 'projectName') {
-          return (project.projectName?.toLowerCase() || '').includes(query.toLowerCase());
-        } else if (filter === 'Recently Added') {
-          // Since the backend is already filtering, just return true here
-          return true;
-        }
+  const filteredProjects = useMemo(() => {
+    return projects.filter((project) => {
+      if (query && !project.projectName?.toLowerCase().includes(query.toLowerCase())) {
         return false;
-      })
-    : projects;
+      }
+      if (filter === 'Recently Added') {
+        return true; // Since the backend is already filtering, just return true here
+      }
+      return true;
+    });
+  }, [projects, query, filter]);
 
   const sortedProjects = useMemo(() => {
     console.log("Sorting with sortOrder:", sortOrder);
@@ -117,7 +117,7 @@ export default function ProjectList({
             <p className="text-center overflow-wrap break-words max-w-full mx-auto truncate">
               {selectedProject.websiteUrl && (
                 <Link href={`${checkwebsiteUrl}`}>
-                  <p className="text-blacl hover:text-gray-300 visited:text-indigo-600 ">
+                  <p className="text-black hover:text-gray-300 visited:text-indigo-600 ">
                     {selectedProject.websiteUrl}
                   </p>
                 </Link>
