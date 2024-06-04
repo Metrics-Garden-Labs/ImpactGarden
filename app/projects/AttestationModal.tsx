@@ -457,23 +457,22 @@ console.log('How It Helped:', improvementareasstring);
                       </ul>
                     ) : recentAttestations.length > 0 ? (
                       <ul>
-                        {recentAttestations.map((attestation, index) => (
-                          <li key={index}>
-                            <Link
-                              href={`${
-                                easScanEndpoints[
-                                  contribution?.ecosystem as AttestationNetworkType
-                                ]
-                              }${attestation.attestationUID}`}
-                            >
-                              <p>
-                                <strong>{attestation.username}</strong> said:{' '}
-                                {attestation.feedback}
-                              </p>
-                            </Link>
-                          </li>
-                        ))}
+                        {recentAttestations.map((attestation, index) => {
+                          const attestationLink = `${easScanEndpoints[contribution?.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`;
+                          console.log('Attestation Link:', attestationLink);
+
+                          return (
+                            <li key={index}>
+                              <Link href={attestationLink}>
+                                <p>
+                                  <strong>{attestation.username}</strong> said: {attestation.feedback}
+                                </p>
+                              </Link>
+                            </li>
+                          );
+                        })}
                       </ul>
+
                     ) : (
                       <p></p>
                     )}

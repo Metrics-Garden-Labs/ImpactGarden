@@ -16,10 +16,10 @@ export default function Footer() {
             <Link href="/" className="text-white text-lg hover:text-opacity-75">
               HOME
             </Link>
-            <Link href="/about" className="text-white text-lg hover:text-opacity-75">
+            <Link href="/metricsdb" className="text-white text-lg hover:text-opacity-75">
               METRICS DATABASE
             </Link>
-            <Link href="/about" className="text-white text-lg hover:text-opacity-75">
+            <Link href="/searchProject" className="text-white text-lg hover:text-opacity-75">
               PROJECTS
             </Link>
           </div>
