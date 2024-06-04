@@ -101,7 +101,7 @@ console.log('How It Helped:', improvementareasstring);
     useEffect(() => {
       const getContributionAttestations = async () => {
         try {
-          const response = await fetch(`/api/getContributionAttestations`, {
+          const response = await fetch(`${NEXT_PUBLIC_URL}/api/getContributionAttestations`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -384,9 +384,9 @@ console.log('How It Helped:', improvementareasstring);
                       onChange={(e) => setExtraFeedback(e.target.value)}
                       className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
                       rows={4}
-                      maxLength={500}  // Set maximum length for additional feedback
+                      maxLength={200}  // Set maximum length for additional feedback
                   />
-                  <div className="text-right mr-2">{extrafeedback.length}/500</div>
+                  <div className="text-right mr-2">{extrafeedback.length}/200</div>
               </div>
                 <div className="mb-4 text-center py-3 p-3">
                 <button 
