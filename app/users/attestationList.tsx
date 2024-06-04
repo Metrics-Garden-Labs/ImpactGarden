@@ -65,35 +65,40 @@ const AttestationList = async ({ user }: Props) => {
           <h2 className='text-2xl font-bold mb-4'>Reviews {user.username} has given</h2>
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mx-3 lg:gap-8 max-w-6xl overflow-y-auto'>
             {attestations.length > 0 ? (
-              attestations.map((attestation) => (
-                <div key={attestation.id} className='p-4 bg-white border rounded-lg shadow-md'>
-                  <div className='flex items-start mb-2'>
-                    {attestation.logoUrl && (
-                      <Image
-                        src={attestation.logoUrl}
-                        alt={attestation.projectName}
-                        width={40}
-                        height={40}
-                        className='mr-2 rounded-full'
-                      />
-                    )}
-                    <div>
-                      <h3 className='text-lg font-semibold'>{attestation.projectName}</h3>
-                      <p className='text-sm text-gray-500'> {attestation.contribution}</p>
-                      <p className='text-gray-700 mb-2'>
-                        “{attestation.feedback}”
-                      </p>
-                      <p className='text-sm text-gray-500'>
-                        {format(new Date(attestation.createdAt || ''), 'MMMM dd, yyyy')}
-                      </p>
-                      <Link href={`${easScanEndpoints[attestation.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`}>
-                        <p className='text-black hover:underline'>View Attestation</p>
-                      </Link>
+              attestations.map((attestation) => {
+                const attestationLink = `${easScanEndpoints[attestation.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`;
+                console.log('Attestation Link:', attestationLink);
+                console.log('attestationuid:', attestation.attestationUID);
+
+                return (
+                  <div key={attestation.id} className='p-4 bg-white border rounded-lg shadow-md'>
+                    <div className='flex items-start mb-2'>
+                      {attestation.logoUrl && (
+                        <Image
+                          src={attestation.logoUrl}
+                          alt={attestation.projectName}
+                          width={40}
+                          height={40}
+                          className='mr-2 rounded-full'
+                        />
+                      )}
+                      <div>
+                        <h3 className='text-lg font-semibold'>{attestation.projectName}</h3>
+                        <p className='text-sm text-gray-500'> {attestation.contribution}</p>
+                        <p className='text-gray-700 mb-2'>
+                          “{attestation.feedback}”
+                        </p>
+                        <p className='text-sm text-gray-500'>
+                          {format(new Date(attestation.createdAt || ''), 'MMMM dd, yyyy')}
+                        </p>
+                        <Link href={attestationLink}>
+                          <p className='text-black hover:underline'>View Attestation</p>
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                
-                </div>
-              ))
+                );
+              })
             ) : (
               <p>No reviews given.</p>
             )}
