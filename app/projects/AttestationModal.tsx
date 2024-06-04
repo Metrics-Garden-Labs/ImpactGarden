@@ -460,6 +460,7 @@ console.log('How It Helped:', improvementareasstring);
                         {recentAttestations.map((attestation, index) => {
                           const attestationLink = `${easScanEndpoints[contribution?.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`;
                           console.log('Attestation Link:', attestationLink);
+                          console.log('attestationuid:', attestation.attestationUID);
 
                           return (
                             <li key={index}>
