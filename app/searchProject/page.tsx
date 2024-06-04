@@ -5,7 +5,6 @@ import { getProjects } from '../../src/lib/db';
 import ProjectPageClient from './ProjectPageClient';
 import { Metadata } from 'next';
 
-
 interface Props {
   searchParams?: {
     query?: string;
@@ -28,7 +27,8 @@ const ProjectPage = async ({ searchParams }: Props) => {
   const sortOrder = searchParams?.sortOrder || 'asc';
 
   try {
-    const projects: Project[] = await getProjects(walletAddress, endpoint);
+    const projects: Project[] = await getProjects(walletAddress, endpoint, filter);
+    console.log('selected filter:', filter);
     console.log("Projects", projects);
 
     return <ProjectPageClient

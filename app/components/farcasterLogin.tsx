@@ -43,6 +43,8 @@ export default function FarcasterLogin() {
   const [ username, setUsername] = useState("");
   const [ firstVerifiedEthAddress, setFirstVerifiedEthAddress ] = useGlobalState("ethAddress");
   const [isSignedIn, setIsSignedIn] = useState(Boolean(user.fid));
+  //get signeruuid
+  //const [signerUuid, setSignerUuid] = useGlobalState('signerUuid');
 
 
   const client_id = process.env.NEXT_PUBLIC_NEYNAR_CLIENT_ID;
@@ -76,6 +78,9 @@ export default function FarcasterLogin() {
       });
       //signer uuid is private and part of the app
       setFid(data.fid);
+      // setSignerUuid(data.signer_uuid);
+      //console.log("FID", data.fid);
+      // console.log("Signer UUID", data.signer_uuid);
       setIsSignedIn(true);
     };
 

@@ -129,57 +129,110 @@ export const insertOrUpdateUser = async (user: NewUser) => {
 //for the projects table
 export type NewProject = typeof projects.$inferInsert;
 
-export const getProjects = async (walletAddress: string, endpoint: string) => {
+// export const getProjects = async (walletAddress: string, endpoint: string, sortOrder: string = 'asc') => {
+//   try {
+//     console.log("Wallet Address db", walletAddress);
+//     console.log("Endpoint db", endpoint);
+//     let dbProjects: Project[] = await db.select().from(projects);
+//     console.log("DB Projects", dbProjects);
+//     if (sortOrder === 'recent') {
+//       dbProjects = dbProjects.orderBy(desc(projects.createdAt));
+//     }
+
+//     //do not want to show the eas proejcts at the minute but could be useful in the future
+//     // let easProjects: Project[] = [];
+//     // //issue at the moment is that the easProjects does not show up by defaault, only when you query them
+//     // if (walletAddress && endpoint) {
+//     //   const attestations = await getAttestationsByAttester(
+//     //     walletAddress,
+//     //     endpoint
+//     //   );
+//     //   easProjects = attestations
+//     //     .map((attestation: any) => {
+//     //       try {
+//     //         const decodedData = JSON.parse(attestation.decodedDataJson);
+//     //         return {
+//     //           id: attestation.id,
+//     //           projectName:
+//     //             decodedData.find((item: any) => item.name === "projectName")
+//     //               ?.value?.value || "",
+//     //           twitterUrl:
+//     //             decodedData.find((item: any) => item.name === "twitterUrl")
+//     //               ?.value?.value || "",
+//     //           websiteUrl:
+//     //             decodedData.find((item: any) => item.name === "websiteUrl")
+//     //               ?.value?.value || "",
+//     //           githubUrl:
+//     //             decodedData.find((item: any) => item.name === "githubUrl")
+//     //               ?.value?.value || "",
+//     //           ethAddress: attestation.recipient,
+//     //         };
+//     //       } catch (error) {
+//     //         console.error("Error parsing attestation data:", error);
+//     //         return null;
+//     //       }
+//     //     })
+//     //     .filter(
+//     //       (project: Project | null): project is Project => project !== null
+//     //     );
+//     // }
+//     //const combinedProjects: Project[] = [...dbProjects, ...easProjects];
+
+//     const combinedProjects: Project[] = [...dbProjects];
+
+//     console.log("Combined projects", combinedProjects);
+
+//     return combinedProjects;
+//   } catch (error) {
+//     console.error("Error retrieving projects:", error);
+//     throw error;
+//   }
+// };
+
+export const getProjects = async (
+  walletAddress: string,
+  endpoint: string,
+  filter: string = ""
+) => {
   try {
     console.log("Wallet Address db", walletAddress);
     console.log("Endpoint db", endpoint);
-    const dbProjects: Project[] = await db.select().from(projects);
+    console.log("Filter db", filter);
+
+    let query = db.select().from(projects);
+
+    if (filter === "Recently Added") {
+      query = query.orderBy(desc(projects.createdAt)) as typeof query;
+    } else if (filter === "Projects on Optimism") {
+      query = query.where(eq(projects.ecosystem, "Optimism")) as typeof query;
+    } else if (filter === "Most Attested") {
+      // Modify the query to fetch projects with the most attestations
+      // You'll need to join the `contributionattestations` table and count the attestations
+      // Example:
+      // query = query
+      //   .leftJoin(
+      //     contributionattestations,
+      //     eq(projects.projectName, contributionattestations.projectName)
+      //   )
+      //   .groupBy(projects.id)
+      //   .orderBy(desc(count(contributionattestations.id))) as typeof query;
+    } else if (filter === "Best Scored") {
+      // Modify the query to fetch projects with the best scores
+      // You'll need to calculate the average score based on the `rating` field in the `contributionattestations` table
+      // Example:
+      // query = query
+      //   .leftJoin(
+      //     contributionattestations,
+      //     eq(projects.projectName, contributionattestations.projectName)
+      //   )
+      //   .groupBy(projects.id)
+      //   .orderBy(desc(avg(contributionattestations.rating))) as typeof query;
+    }
+
+    const dbProjects: Project[] = await query.execute();
     console.log("DB Projects", dbProjects);
 
-    //do not want to show the eas proejcts at the minute but could be useful in the future
-    // let easProjects: Project[] = [];
-    // //issue at the moment is that the easProjects does not show up by defaault, only when you query them
-    // if (walletAddress && endpoint) {
-    //   const attestations = await getAttestationsByAttester(
-    //     walletAddress,
-    //     endpoint
-    //   );
-    //   easProjects = attestations
-    //     .map((attestation: any) => {
-    //       try {
-    //         const decodedData = JSON.parse(attestation.decodedDataJson);
-    //         return {
-    //           id: attestation.id,
-    //           projectName:
-    //             decodedData.find((item: any) => item.name === "projectName")
-    //               ?.value?.value || "",
-    //           twitterUrl:
-    //             decodedData.find((item: any) => item.name === "twitterUrl")
-    //               ?.value?.value || "",
-    //           websiteUrl:
-    //             decodedData.find((item: any) => item.name === "websiteUrl")
-    //               ?.value?.value || "",
-    //           githubUrl:
-    //             decodedData.find((item: any) => item.name === "githubUrl")
-    //               ?.value?.value || "",
-    //           ethAddress: attestation.recipient,
-    //         };
-    //       } catch (error) {
-    //         console.error("Error parsing attestation data:", error);
-    //         return null;
-    //       }
-    //     })
-    //     .filter(
-    //       (project: Project | null): project is Project => project !== null
-    //     );
-    // }
-    //const combinedProjects: Project[] = [...dbProjects, ...easProjects];
-
-    const combinedProjects: Project[] = [...dbProjects];
-
-    console.log("Combined projects", combinedProjects);
-
-    return combinedProjects;
+    return dbProjects;
   } catch (error) {
     console.error("Error retrieving projects:", error);
     throw error;

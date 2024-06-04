@@ -49,9 +49,9 @@ export default function ProjectList({
   ? projects.filter((project) => {
       if (filter === 'projectName') {
         return (project.projectName?.toLowerCase() || '').includes(query.toLowerCase());
-      } else if (filter === 'Most Engaged') {
-        // Filter projects based on the Farcaster social graph data
-        return Array.isArray(searchResults) && searchResults.length > 0 && searchResults.some((result) => result.fid === project.userFid);
+      // } else if (filter === 'Most Engaged') {
+      //   // Filter projects based on the Farcaster social graph data
+      //   return Array.isArray(searchResults) && searchResults.length > 0 && searchResults.some((result) => result.fid === project.userFid);
       } else if (filter === 'Recently Added') {
         // Filter projects based on the creation date (assuming you have a createdAt field)
         // Modify this logic based on your specific requirements
@@ -62,16 +62,24 @@ export default function ProjectList({
   : projects;
 
   const sortedProjects = useMemo(() => {
-  console.log("Sorting with sortOrder:", sortOrder);
-  return filteredProjects.sort((a, b) => {
-    if (sortOrder === 'asc') {
-      return (a.projectName || '').localeCompare(b.projectName || '', undefined, { sensitivity: 'base' });
-    } else if (sortOrder === 'desc') {
-      return (b.projectName || '').localeCompare(a.projectName || '', undefined, { sensitivity: 'base' });
-    }
-    return 0;
-  });
-}, [filteredProjects, sortOrder]);
+      console.log("Sorting with sortOrder:", sortOrder);
+      if (sortOrder === 'recent') {
+        return filteredProjects.sort((a, b) => {
+          const aTime = a.createdAt ? a.createdAt.getTime() : 0;
+          const bTime = b.createdAt ? b.createdAt.getTime() : 0;
+          return bTime - aTime;
+        });
+      }
+
+    return filteredProjects.sort((a, b) => {
+      if (sortOrder === 'asc') {
+        return (a.projectName || '').localeCompare(b.projectName || '', undefined, { sensitivity: 'base' });
+      } else if (sortOrder === 'desc') {
+        return (b.projectName || '').localeCompare(a.projectName || '', undefined, { sensitivity: 'base' });
+      }
+      return 0;
+    });
+  }, [filteredProjects, sortOrder]);
 
 
 
