@@ -13,9 +13,7 @@ import { easScanEndpoints } from '../components/easScan';
 import AttestationCreationModal from '../components/attestationCreationModal';
 import { useSwitchChain } from 'wagmi';
 import { getChainId } from '../components/networkContractAddresses';
-
-
-
+import { FaInfoCircle } from 'react-icons/fa';
 
 interface Props {
   isOpen: boolean;
@@ -241,28 +239,42 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       throw error;
     }
   };
-  
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+  
     try {
+      // Check if the required fields are filled
+      if (
+        formData.governancetype === '' ||
+        formData.contribution === '' ||
+        formData.desc === '' ||
+        formData.link === ''
+      ) {
+        alert('Please fill in all required fields');
+        return;
+      }
+  
       // Next, check if the wallet address is connected and is a non-empty string
       if (!address || address.trim() === "") {
-      alert("Please connect your wallet to proceed.");
-      return;  // Stop the function if there's no wallet address or if it's empty
+        alert("Please connect your wallet to proceed.");
+        return;  // Stop the function if there's no wallet address or if it's empty
       }
+  
       const newContribution = await addContribution(formData);
       if (newContribution) {
         addContributionCallback(newContribution.contribution); // Pass the contribution property as a string
         onClose();
       } else {
         console.error('Failed to add contribution');
-       
+        // Optionally handle the error case in your UI, such as showing an error message
       }
     } catch (error) {
       console.error('Failed to add contribution', error);
       // Optionally handle the error case in your UI, such as showing an error message
     }
   };
+
 
   if (!isOpen) return null;
 
@@ -297,7 +309,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
      onClick={onClose}>
       <div 
-                className="rrelative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-1/4 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
+                className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
                 onClick={(e) => e.stopPropagation()}
             >
           <form className="bg-white p-8 rounded-lg" onSubmit={handleSubmit}>
@@ -308,6 +320,8 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
             {/* dropdown for type of contribution */}
             <div>
             <h3 className="font-semibold text-center mb-2">Type of Governance Contribution</h3>
+           
+            
             <div className="mb-4">
               <select
                 id="contributionType"
@@ -329,7 +343,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
             <label htmlFor="attestationChain" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
               Main Ecosystem (Optimism only supported)
             </label>
-            <div className=" mb-4">
+            <div className=" mb-2">
               <select
                 id="attestationChain"
                 name="attestationChain"
@@ -345,16 +359,20 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
               </select>
             </div>
           </div>
-            <h3 className='font-semibold text-center'>Secondary Ecosystems</h3>
-            <input
+            <h3 className='font-semibold p-2 text-center'>Secondary Ecosystems</h3>
+            <textarea
               value={formData.secondaryecosystem || ''}
               onChange={e => setFormData({ ...formData, secondaryecosystem: e.target.value })}
               placeholder="Ecosystems"
               className='h-20 w-full p-2 border border-gray-800 rounded-md'
               />
           </div>
-          <div className="mb-4">
-            <h3 className="font-semibold  p-2 text-center">Title</h3>
+          <div className="mb-2">
+            <h3 className="font-semibold  p-2 text-center">Title 
+            <span className="tooltip tooltip-top" data-tip="Required">
+              <FaInfoCircle className="inline ml-2 text-blue-500 relative" style={{ top: '-2px' }} />
+            </span>
+            </h3>
             <textarea
               value={formData.contribution}
               onChange={e => setFormData({ ...formData, contribution: e.target.value })}
@@ -367,13 +385,18 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
                 {formData.contribution.length}/100
               </div>
           </div>
-          <div className="mb-4 ">
-            <h3 className="font-semibold p-2 text-center">Description</h3>
+          <div className="mb-2 ">
+            <h3 className="font-semibold p-2 text-center">Description 
+            <span className="tooltip tooltip-top" data-tip="Required">
+              <FaInfoCircle className="inline ml-2 text-blue-500 relative" style={{ top: '-2px' }} />
+            </span>
+            </h3>
             <textarea
               value={formData.desc ?? ''}
               onChange={e => setFormData({ ...formData, desc: e.target.value })}
               placeholder="Description"
               className='h-20 w-full p-2 border border-gray-800 rounded-md'
+              required
               maxLength={200}
           />
           <div className="text-right mr-2">
@@ -382,13 +405,18 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
           
           </div>
           <div className="mb-4">
-            <h3 className="font-semibold p-2 text-center">Link/Evidence</h3>
+            <h3 className="font-semibold p-2 text-center">Link/Evidence 
+            <span className="tooltip tooltip-top" data-tip="Required">
+              <FaInfoCircle className="inline ml-2 text-blue-500 relative" style={{ top: '-2px' }} />
+            </span>
+            </h3>
             <textarea
               value={formData.link ?? ''}
               onChange={e => setFormData({ ...formData, link: e.target.value })}
               placeholder="Link/Evidence"
               className='h-20 w-full p-2 border border-gray-800 rounded-md'
-              maxLength={200}
+              required
+              data-tip="Please provide a link or evidence for your contribution"
               />
               <div className="text-right mr-2">
                 {formData.link.length}/200
@@ -416,3 +444,5 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     </div>
   );
 }
+
+//in this page how can i make sure that the user has had to fill in the required fields before submitting the form

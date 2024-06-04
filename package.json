@@ -54,6 +54,7 @@
     "react-helmet": "^6.1.0",
     "react-hooks-global-state": "^2.1.0",
     "react-icons": "^5.1.0",
+    "react-tooltip": "^5.26.4",
     "tslib": "^2.6.2",
     "uploadthing": "^6.10.0",
     "viem": "^2.12.0",

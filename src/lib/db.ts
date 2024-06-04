@@ -285,6 +285,7 @@ export const getContributionAttestationList = async (contribution: string) => {
         id: contributionattestations.id,
         username: users.username,
         feedback: contributionattestations.feedback,
+        attestationUID: contributionattestations.attestationUID,
         createdAt: contributionattestations.createdAt,
       })
       .from(contributionattestations)

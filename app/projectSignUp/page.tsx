@@ -156,7 +156,7 @@ export default function ProjectSignUp() {
 
   const handleNext = () => {
     // Ensure required fields are filled before allowing a preview
-    if (!attestationData.projectName || !ecosystem) {
+    if (!attestationData.projectName || !ecosystem || !attestationData.oneliner || !attestationData.websiteUrl) {
       alert('Please fill in required fields.');
       return;
     }
