@@ -458,6 +458,7 @@ console.log('How It Helped:', improvementareasstring);
                     ) : recentAttestations.length > 0 ? (
                       <ul>
                         {recentAttestations.map((attestation, index) => {
+                          console.log('attestation object:', attestation);
                           const attestationLink = `${easScanEndpoints[contribution?.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`;
                           console.log('Attestation Link:', attestationLink);
                           console.log('attestationuid:', attestation.attestationUID);
