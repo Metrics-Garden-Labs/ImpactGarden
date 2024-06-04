@@ -4,8 +4,7 @@
 
 import React, { useState } from 'react';
 import SearchProjects from './searchProjects';
-import ProjectList1 from './projectList1';
-import Navbar from '../components/navbar1';
+import ProjectList1 from './projectList';
 import { Project, SearchResult } from '../../src/types';
 
 interface Props {
@@ -33,29 +32,27 @@ const ProjectPageClient = ({ projects, query, filter, walletAddress, endpoint, s
   };
 
   const handleSortOrderChange = (newSortOrder: string) => {
-    console.log("Updating selectedSortOrder in ProjectPageClient:", newSortOrder);
     setSelectedSortOrder(newSortOrder);
   };
 
   return (
     <div className="bg-white text-black">
-
       <SearchProjects 
         onSearchResults={handleSearchResults}
         onFilterChange={handleFilterChange}
         onSortOrderChange={handleSortOrderChange} 
-    />
+      />
       {error ? (
         <p>{error}</p>
       ) : (
         <ProjectList1
-            projects={projects}
-            query={query}
-            filter={filter}
-            walletAddress={walletAddress}
-            endpoint={endpoint}
-            sortOrder={selectedSortOrder} 
-            searchResults={localSearchResults}
+          projects={projects}
+          query={query}
+          filter={selectedFilter}
+          walletAddress={walletAddress}
+          endpoint={endpoint}
+          sortOrder={selectedSortOrder}
+          searchResults={localSearchResults}
         />
       )}
     </div>

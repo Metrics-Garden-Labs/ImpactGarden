@@ -1,6 +1,4 @@
-// projectList.tsx
-
-// app/projects/projectList.tsx
+// app/projects/ProjectList.tsx
 
 'use client';
 import Link from 'next/link';
@@ -12,8 +10,6 @@ import { useRouter } from 'next/router';
 import { LuArrowUpRight } from 'react-icons/lu';
 import Image from 'next/image';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
-
-
 
 interface Props {
   projects: Project[];
@@ -34,42 +30,37 @@ export default function ProjectList({
   sortOrder,
   searchResults,
 }: Props) {
-    useEffect(() => {
-        console.log("Received sortOrder in ProjectList:", sortOrder);
-    }, [sortOrder]);
+  useEffect(() => {
+    //console.log("Received sortOrder in ProjectList:", sortOrder);
+  }, [sortOrder]);
 
   const [selectedProject, setSelectedProject] = useLocalStorage<Project | null>(
     'selectedProject', null
   );
   const [selectedProjectName, setSelectedProjectName] = useGlobalState('selectedProjectName');
   const [modalOpen, setModalOpen] = useState(false);
-  
 
   const filteredProjects = query
-  ? projects.filter((project) => {
-      if (filter === 'projectName') {
-        return (project.projectName?.toLowerCase() || '').includes(query.toLowerCase());
-      // } else if (filter === 'Most Engaged') {
-      //   // Filter projects based on the Farcaster social graph data
-      //   return Array.isArray(searchResults) && searchResults.length > 0 && searchResults.some((result) => result.fid === project.userFid);
-      } else if (filter === 'Recently Added') {
-        // Filter projects based on the creation date (assuming you have a createdAt field)
-        // Modify this logic based on your specific requirements
-        return (project?.createdAt || '') >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); // Last 7 days
-      }
-      return false;
-    })
-  : projects;
+    ? projects.filter((project) => {
+        if (filter === 'projectName') {
+          return (project.projectName?.toLowerCase() || '').includes(query.toLowerCase());
+        } else if (filter === 'Recently Added') {
+          // Since the backend is already filtering, just return true here
+          return true;
+        }
+        return false;
+      })
+    : projects;
 
   const sortedProjects = useMemo(() => {
-      console.log("Sorting with sortOrder:", sortOrder);
-      if (sortOrder === 'recent') {
-        return filteredProjects.sort((a, b) => {
-          const aTime = a.createdAt ? a.createdAt.getTime() : 0;
-          const bTime = b.createdAt ? b.createdAt.getTime() : 0;
-          return bTime - aTime;
-        });
-      }
+    console.log("Sorting with sortOrder:", sortOrder);
+    if (filter === 'Recently Added') {
+      return filteredProjects.sort((a, b) => {
+        const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return bTime - aTime;
+      });
+    }
 
     return filteredProjects.sort((a, b) => {
       if (sortOrder === 'asc') {
@@ -79,9 +70,7 @@ export default function ProjectList({
       }
       return 0;
     });
-  }, [filteredProjects, sortOrder]);
-
-
+  }, [filteredProjects, sortOrder, filter]);
 
   const openModal = (project: Project) => {
     console.log('Opening modal for project:', project);
@@ -91,8 +80,6 @@ export default function ProjectList({
   };
 
   const closeModal = () => {
-    // setSelectedProject(null);
-    // setSelectedProjectName('');
     setModalOpen(false);
   };
 
@@ -118,55 +105,49 @@ export default function ProjectList({
           onClick={(e) => e.stopPropagation()}
         >
           <div className="text-center pt-8 p-2">
-              <h2 className="text-xl font-bold mb-4">{selectedProject.projectName}</h2>
-            </div>
+            <h2 className="text-xl font-bold mb-4">{selectedProject.projectName}</h2>
+          </div>
           <hr className="border-1 border-gray-300 my-2 mx-auto w-1/2" />
-          
           <div className="mb-4 items-center py-3">
             <h3 className="font-semibold text-center">Description</h3>
             <p className="text-center">{selectedProject.oneliner}</p>
           </div>
-          
           <div className="mb-4">
             <h3 className="font-semibold text-center">Website</h3>
             <p className="text-center overflow-wrap break-words max-w-full mx-auto truncate">
-              {selectedProject.websiteUrl   && (
+              {selectedProject.websiteUrl && (
                 <Link href={`${checkwebsiteUrl}`}>
                   <p className="text-blacl hover:text-gray-300 visited:text-indigo-600 ">
-                  {selectedProject.websiteUrl}
+                    {selectedProject.websiteUrl}
                   </p>
                 </Link>
               )}
             </p>
-            </div>
+          </div>
           <div className="mb-4">
             <h3 className="font-semibold text-center">Twitter</h3>
             <p className="text-center">
-            {selectedProject.twitterUrl && (
-              <a href={selectedProject.twitterUrl} target="_blank" rel="noopener noreferrer">
-                {selectedProject.twitterUrl}
-              </a>
-            )}
+              {selectedProject.twitterUrl && (
+                <a href={selectedProject.twitterUrl} target="_blank" rel="noopener noreferrer">
+                  {selectedProject.twitterUrl}
+                </a>
+              )}
             </p>
           </div>
           <div className="mb-4">
             <h3 className="font-semibold text-center">Github</h3>
             <p className="text-center">
-            {selectedProject.githubUrl && (
-              <a href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer">
-                {selectedProject.githubUrl}
-              </a>
-            )}
+              {selectedProject.githubUrl && (
+                <a href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer">
+                  {selectedProject.githubUrl}
+                </a>
+              )}
             </p>
           </div>
           <div className="mb-4 text-center">
-            {/* //if the project name isnot in the database this does not work */}
-            {/* there must be a waay to fix this */}
             <Link href={`/projects/${encodeURIComponent(selectedProject.projectName)}`}>
-              <button 
-                className='btn'
-                >
-                  View Contributions
+              <button className='btn'>
+                View Contributions
               </button>
             </Link>
           </div>
@@ -179,9 +160,8 @@ export default function ProjectList({
   };
 
   return (
-    <div className=" bg-white mx-auto gap-12 max-w-6xl">
+    <div className="bg-white mx-auto gap-12 max-w-6xl">
       <div className="grid grid-cols-1 gap-4 mx-3 md:grid-cols-3 md:mx-8 md:mx-8 lg:grid-cols-4 lg:gap-12 max-w-6xl overflow-y-auto">
-        
         {sortedProjects.map((project) => (
           <div
             key={project.id}
@@ -203,13 +183,11 @@ export default function ProjectList({
               ) : (
                 <div className="flex items-center justify-center text-gray-500">
                   {/* Add optional placeholder content if needed */}
-                 
                 </div>
               )}
-            </div>  
+            </div>
             <h3 className="mb-2 text-xl font-semibold truncate max-w-full">{project.projectName}</h3>
             <p className="mb-2 text-md text-gray-500 text-center truncate max-w-full">{project.oneliner}</p>
-            {/* Display the username if available */}
             {Array.isArray(searchResults) && searchResults.find((result) => result.fid === project.userFid)?.username && (
               <p className="text-gray-500">
                 {searchResults.find((result) => result.fid === project.userFid)?.username}
@@ -218,9 +196,7 @@ export default function ProjectList({
           </div>
         ))}
       </div>
-    
-      
       {renderModal()}
-  </div>
+    </div>
   );
 }

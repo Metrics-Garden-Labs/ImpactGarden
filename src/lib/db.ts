@@ -230,7 +230,7 @@ export const getProjects = async (
     }
 
     const dbProjects: Project[] = await query.execute();
-    console.log("DB Projects", dbProjects);
+    //console.log("DB Projects", dbProjects);
 
     return dbProjects;
   } catch (error) {
