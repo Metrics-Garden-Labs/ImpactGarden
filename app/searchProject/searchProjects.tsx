@@ -34,7 +34,7 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
     ethAddress: '',
   });
 
-  const options = ["Project Name", "Recently Added", "Projects on Optimism", "Most Attested", "Best Scored"];
+  const options = ["Project Name", "Recently Added", "Projects on Optimism", "Most Attested", "Best Rated"];
 
   console.log('walletAddress', walletAddress);
 

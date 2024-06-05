@@ -198,6 +198,10 @@ const isProjectCount = (project: any): project is ProjectCount => {
   return "attestationCount" in project;
 };
 
+const isProjectRating = (project: any): project is ProjectCount => {
+  return "averageRating" in project;
+};
+
 export const getProjects = async (
   walletAddress: string,
   endpoint: string,
@@ -271,6 +275,69 @@ export const getProjects = async (
           return {
             ...project,
             attestationCount: Number(project.attestationCount),
+          };
+        }
+        return project;
+      }) as ProjectCount[];
+
+      // Enhanced logging
+      console.log("Raw database response:", castedProjects);
+      console.log(`Number of projects returned: ${castedProjects.length}`);
+      castedProjects.forEach((project, index) => {
+        console.log(`Project ${index + 1}:`, project);
+      });
+      return castedProjects;
+    } else if (filter === "Best Rated") {
+      const bestRatedQuery = db
+        .select({
+          id: projects.id,
+          userFid: projects.userFid,
+          ethAddress: projects.ethAddress,
+          ecosystem: projects.ecosystem,
+          projectName: projects.projectName,
+          oneliner: projects.oneliner,
+          websiteUrl: projects.websiteUrl,
+          twitterUrl: projects.twitterUrl,
+          githubUrl: projects.githubUrl,
+          logoUrl: projects.logoUrl,
+          projectUid: projects.projectUid,
+          createdAt: projects.createdAt,
+          averageRating:
+            sql`AVG(CAST(${contributionattestations.rating} AS FLOAT))`.as(
+              "averageRating"
+            ),
+        })
+        .from(projects)
+        .leftJoin(
+          contributionattestations,
+          sql`${projects.projectName} = ${contributionattestations.projectName}`
+        )
+        .groupBy(
+          projects.id,
+          projects.userFid,
+          projects.ethAddress,
+          projects.ecosystem,
+          projects.projectName,
+          projects.oneliner,
+          projects.websiteUrl,
+          projects.twitterUrl,
+          projects.githubUrl,
+          projects.logoUrl,
+          projects.projectUid,
+          projects.createdAt
+        )
+        .orderBy(
+          sql`AVG(CAST(${contributionattestations.rating} AS FLOAT)) DESC`
+        );
+      const dbProjects: (Project | ProjectCount)[] =
+        await bestRatedQuery.execute();
+
+      // Use type guard to filter and map projects
+      const castedProjects = dbProjects.map((project) => {
+        if (isProjectRating(project)) {
+          return {
+            ...project,
+            averageRating: Number(project.averageRating),
           };
         }
         return project;

@@ -15,6 +15,7 @@ export interface Project {
 
 export interface ProjectCount extends Project {
   attestationCount: number; // Explicitly typing attestationCount as number
+  averageRating: number; // Explicitly typing averageRating as number
 }
 
 export interface Contribution {

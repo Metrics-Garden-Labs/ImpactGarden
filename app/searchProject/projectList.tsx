@@ -42,7 +42,7 @@ export default function ProjectList({
       if (query && !project.projectName?.toLowerCase().includes(query.toLowerCase())) {
         return false;
       }
-      if (filter === 'Recently Added' || filter === 'Most Attested') {
+      if (filter === 'Recently Added' || filter === 'Most Attested' || filter === 'Best Rated') {
         return true; // Since the backend is already filtering, just return true here
       }
       return true;
@@ -60,6 +60,10 @@ export default function ProjectList({
     } else if (filter === 'Most Attested') {
       return filteredProjects.sort((a, b) => {
         return ((b as ProjectCount).attestationCount || 0) - ((a as ProjectCount).attestationCount || 0);
+      });
+    } else if (filter == 'Best Rated') {
+      return filteredProjects.sort((a, b) => {
+        return ((b as ProjectCount).averageRating || 0) - ((a as ProjectCount).averageRating|| 0);
       });
     }
 
@@ -166,7 +170,7 @@ export default function ProjectList({
         {sortedProjects.map((project) => (
           <div
             key={project.id}
-            className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-md w-full h-60 shadow-xl"
+            className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-md w-full h-66 shadow-xl"
             onClick={() => {
               console.log('clicked project:', project);
               openModal(project);
@@ -196,6 +200,11 @@ export default function ProjectList({
             )}
             {filter === 'Most Attested' && (            <p className="mb-2 text-md text-gray-500 text-center truncate max-w-full">
               Attestations: {(project as ProjectCount).attestationCount}
+            </p>
+            )}
+            {filter === 'Best Rated' && (
+              <p className="mb-2 text-md text-gray-500 text-center truncate max-w-full">
+              Average Rating: {((project as ProjectCount).averageRating ?? 0).toFixed(2)}
             </p>
             )}
           </div>
