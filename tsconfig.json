@@ -32,6 +32,7 @@
     "src/chatbot/ActionProvider.ts",
     "src/chatbot/config.ts",
     "src/utils/combinedelegates.ts",
+    "app/searchProject/**/*.tsx" // Ensure this line is correct
   ],
   "exclude": ["node_modules"]
 }

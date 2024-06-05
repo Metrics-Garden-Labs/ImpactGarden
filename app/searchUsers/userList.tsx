@@ -20,6 +20,8 @@ export default async function UserList({ users, query, filter, verificationFilte
     const isCoinbaseVerified = user_addresses.some(address => address.coinbaseverified);
     const isOpBadgeholder = user_addresses.some(address => address.opbadgeholder);
     const isPowerBadgeholder = user_addresses.some(address => address.powerbadgeholder);
+    const isDelegate = user_addresses.some(address => address.delegate);
+    const s4Participant = user_addresses.some(address => address.s4participant);
 
     let matchesFilter = true;
 
@@ -39,7 +41,20 @@ export default async function UserList({ users, query, filter, verificationFilte
       if (verificationFilter === 'powerBadgeholder' && !isPowerBadgeholder) {
         continue;
       }
-      filteredUsers.push({ ...user, isCoinbaseVerified, isOpBadgeholder, isPowerBadgeholder });
+      if (verificationFilter === 'delegate' && !isDelegate) {
+        continue;
+      }
+      if (verificationFilter === 's4Participant' && !s4Participant) {
+        continue;
+      }
+      filteredUsers.push({
+        ...user,
+        isCoinbaseVerified,
+        isOpBadgeholder,
+        isPowerBadgeholder,
+        isDelegate,
+        s4Participant
+      });
     }
   }
 
@@ -51,7 +66,7 @@ export default async function UserList({ users, query, filter, verificationFilte
             <div className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-2xl w-full h-60 shadow-lg">
               <div className="rounded-full bg-gray-300 w-32 h-32 flex items-center justify-center overflow-hidden mb-4">
                 {user.pfp_url ? (
-                  <Image src={user.pfp_url} alt="Project Logo" width={128} height={128} className="object-cover w-full h-full" />
+                  <Image src={user.pfp_url} alt="Profile Picture" width={128} height={128} className="object-cover w-full h-full" />
                 ) : (
                   <div className="flex items-center justify-center text-gray-500">
                     No Logo
@@ -60,25 +75,31 @@ export default async function UserList({ users, query, filter, verificationFilte
               </div>
               <h3 className="mb-2 text-xl font-semibold flex items-center">
                 {user.username}
-                <span className={`text-sm font-semibold ${user.isCoinbaseVerified ? 'text-green-500' : 'text-red-500'} flex items-center p-1`}>
+                <span className="flex items-center space-x-2 ml-2"> {/* Added ml-2 for margin */}
                   {user.isCoinbaseVerified && (
-                    <div className='tooltip' data-tip="Coinbase Verified Wallet">
-                      <Image src="/coinbaseWallet.png" alt="Coinbase Wallet Badge" width={25} height={25} className="align-middle mr-3" />
-                    </div>
+                    <span className="tooltip" data-tip="Coinbase Verified Wallet">
+                      <Image src="/coinbaseWallet.png" alt="Coinbase Wallet Badge" width={25} height={25} />
+                    </span>
                   )}
-                </span>
-                <span className={`text-sm font-semibold ${user.isOpBadgeholder ? 'text-green-500' : 'text-red-500'} flex items-center p-1`}>
                   {user.isOpBadgeholder && (
-                    <div className='tooltip' data-tip="OP Badgeholder">
-                      <Image src="/opLogo.png" alt="OP Badge" width={20} height={20} className="align-middle mr-3" />
-                    </div>
+                    <span className="tooltip" data-tip="OP Badgeholder">
+                      <Image src="/opLogo.png" alt="OP Badge" width={20} height={20} />
+                    </span>
                   )}
-                </span>
-                <span className={`text-sm font-semibold ${user.isPowerBadgeholder ? 'text-green-500' : 'text-red-500'} flex items-center p-1`}>
                   {user.isPowerBadgeholder && (
-                    <div className='tooltip' data-tip="Warpcast Power User">
-                      <Image src="/powerBadge.png" alt="Warpcast Power Badge" width={20} height={20} className="align-middle mr-3" />
-                    </div>
+                    <span className="tooltip" data-tip="Warpcast Power User">
+                      <Image src="/powerBadge.png" alt="Warpcast Power Badge" width={20} height={20} />
+                    </span>
+                  )}
+                  {user.isDelegate && (
+                    <span className="tooltip" data-tip="Optimism Delegate">
+                      <Image src="/opDelegate.png" alt="Optimism Delegate Badge" width={20} height={20} />
+                    </span>
+                  )}
+                  {user.s4Participant && (
+                    <span className="tooltip" data-tip="Season 4 Participant">
+                      <Image src="/s-4grantparticipants.png" alt="Season 4 Participant Badge" width={20} height={20} />
+                    </span>
                   )}
                 </span>
               </h3>

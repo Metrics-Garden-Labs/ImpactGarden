@@ -4,7 +4,7 @@
 
 import React, { useState } from 'react';
 import SearchProjects from './searchProjects';
-import ProjectList1 from './projectList';
+import ProjectList1 from './projectList1';
 import { Project, SearchResult } from '../../src/types';
 
 interface Props {

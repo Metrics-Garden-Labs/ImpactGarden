@@ -98,6 +98,8 @@ export const getUsersVerification = async (filter: string, query: string) => {
             coinbaseVerified: user_addresses.coinbaseverified,
             opBadgeholder: sql<boolean>`false`.as("opBadgeholder"),
             powerBadgeholder: sql<boolean>`false`.as("powerBadgeholder"),
+            isdelegate: sql<boolean>`false`.as("isdelegate"),
+            s4Participant: sql<boolean>`false`.as("s4Participant"),
           },
         })
         .from(users)
@@ -118,6 +120,8 @@ export const getUsersVerification = async (filter: string, query: string) => {
             coinbaseVerified: sql<boolean>`false`.as("coinbaseVerified"),
             opBadgeholder: user_addresses.opbadgeholder,
             powerBadgeholder: sql<boolean>`false`.as("powerBadgeholder"),
+            isdelegate: sql<boolean>`false`.as("isdelegate"),
+            s4Participant: sql<boolean>`false`.as("s4Participant"),
           },
         })
         .from(users)
@@ -138,11 +142,57 @@ export const getUsersVerification = async (filter: string, query: string) => {
             coinbaseVerified: sql<boolean>`false`.as("coinbaseVerified"),
             opBadgeholder: sql<boolean>`false`.as("opBadgeholder"),
             powerBadgeholder: user_addresses.powerbadgeholder,
+            isdelegate: sql<boolean>`false`.as("isdelegate"),
+            s4Participant: sql<boolean>`false`.as("s4Participant"),
           },
         })
         .from(users)
         .leftJoin(user_addresses, eq(users.fid, user_addresses.userfid))
         .where(eq(user_addresses.powerbadgeholder, true));
+    } else if (filter === "delegate") {
+      selectResult = await db
+        .select({
+          users: {
+            id: users.id,
+            fid: users.fid,
+            username: users.username,
+            ethaddress: users.ethaddress,
+            pfp_url: users.pfp_url,
+            createdAt: users.createdAt,
+          },
+          userAddresses: {
+            coinbaseVerified: sql<boolean>`false`.as("coinbaseVerified"),
+            opBadgeholder: sql<boolean>`false`.as("opBadgeholder"),
+            powerBadgeholder: sql<boolean>`false`.as("powerBadgeholder"),
+            isdelegate: user_addresses.delegate,
+            s4Participant: sql<boolean>`false`.as("s4Participant"),
+          },
+        })
+        .from(users)
+        .leftJoin(user_addresses, eq(users.fid, user_addresses.userfid))
+        .where(eq(user_addresses.delegate, true));
+    } else if (filter === "s4Participant") {
+      selectResult = await db
+        .select({
+          users: {
+            id: users.id,
+            fid: users.fid,
+            username: users.username,
+            ethaddress: users.ethaddress,
+            pfp_url: users.pfp_url,
+            createdAt: users.createdAt,
+          },
+          userAddresses: {
+            coinbaseVerified: sql<boolean>`false`.as("coinbaseVerified"),
+            opBadgeholder: sql<boolean>`false`.as("opBadgeholder"),
+            powerBadgeholder: sql<boolean>`false`.as("powerBadgeholder"),
+            isdelegate: sql<boolean>`false`.as("isdelegate"),
+            s4Participant: user_addresses.s4participant,
+          },
+        })
+        .from(users)
+        .leftJoin(user_addresses, eq(users.fid, user_addresses.userfid))
+        .where(eq(user_addresses.s4participant, true));
     } else {
       selectResult = await db
         .select({
@@ -158,6 +208,8 @@ export const getUsersVerification = async (filter: string, query: string) => {
             coinbaseVerified: user_addresses.coinbaseverified,
             opBadgeholder: user_addresses.opbadgeholder,
             powerBadgeholder: user_addresses.powerbadgeholder,
+            isdelegate: user_addresses.delegate,
+            s4Participant: user_addresses.s4participant,
           },
         })
         .from(users)

@@ -83,6 +83,8 @@ const SearchUsers = () => {
                 <option value="coinbaseVerified">Coinbase Verified</option>
                 <option value="opBadgeholder">OP Badgeholder</option>
                 <option value="powerBadgeholder">Power Badgeholder</option>
+                <option value="delegate">Delegate</option>
+                <option value="s4Participant">S4 Participant</option>
               </select>
             </div>
 
