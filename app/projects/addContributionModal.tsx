@@ -114,6 +114,15 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       alert('Please connect wallet to continue');
       return ''; 
     }
+    if (
+      formData.governancetype === '' ||
+      formData.contribution === '' ||
+      formData.desc === '' ||
+      formData.link === ''
+    ) {
+      alert('Please fill in all required fields');
+      return '';
+    }
 
     // if (!WHITELISTED_USERS.includes(user.fid)) {
     //   alert('Access denied. Still in Alpha testing phase.');
@@ -245,15 +254,6 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   
     try {
       // Check if the required fields are filled
-      if (
-        formData.governancetype === '' ||
-        formData.contribution === '' ||
-        formData.desc === '' ||
-        formData.link === ''
-      ) {
-        alert('Please fill in all required fields');
-        return;
-      }
   
       // Next, check if the wallet address is connected and is a non-empty string
       if (!address || address.trim() === "") {
