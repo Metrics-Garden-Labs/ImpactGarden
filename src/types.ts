@@ -80,14 +80,23 @@ export interface NewUser {
   createdAt?: Date;
 }
 
-export type User = {
+export interface User {
   id: number;
   fid: string;
   username: string;
-  pfp_url: string | null;
   ethaddress: string | null;
+  pfp_url: string | null;
   createdAt: Date | null;
-};
+}
+
+export interface UserVerification {
+  users: User;
+  userAddresses: {
+    coinbaseVerified: boolean | null;
+    opBadgeholder: boolean | null;
+    powerBadgeholder: boolean | null;
+  } | null;
+}
 
 export type UserBadgeVerification = {
   users: {

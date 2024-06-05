@@ -21,6 +21,7 @@ interface Props {
   searchParams?: {
     query?: string;
     filter?: string;
+    verificationFilter?: string; 
   };
 }
 
@@ -31,6 +32,8 @@ export const metadata: Metadata = {
 const UserProfilePage = async ({ searchParams }: Props) => {
   const query = searchParams?.query || '';
   const filter = searchParams?.filter || '';
+  const verificationFilter = searchParams?.verificationFilter || '';
+
 
   try {
     const users: User[] = await getUsers();
@@ -39,7 +42,7 @@ const UserProfilePage = async ({ searchParams }: Props) => {
       <div className="bg-white text-black">
 
         <SearchUsers />
-        <UserList users={users} query={query} filter={filter} />
+        <UserList users={users} query={query} filter={filter} verificationFilter={verificationFilter} />
       </div>
     );
   } catch (error) {

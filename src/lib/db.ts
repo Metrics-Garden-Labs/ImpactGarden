@@ -79,26 +79,97 @@ export const getUserByUsername = async (username: string) => {
 //get user badge for the verification and searchusers page
 // src/lib/db.ts
 
-export const getUsersVerification = async () => {
+export const getUsersVerification = async (filter: string, query: string) => {
   try {
-    const selectResult = await db
-      .select({
-        users: {
-          id: users.id,
-          fid: users.fid,
-          username: users.username,
-          ethaddress: users.ethaddress,
-          pfp_url: users.pfp_url,
-          createdAt: users.createdAt,
-        },
-        userAddresses: {
-          coinbaseVerified: user_addresses.coinbaseverified,
-          opBadgeholder: user_addresses.opbadgeholder,
-          powerBadgeholder: user_addresses.powerbadgeholder,
-        },
-      })
-      .from(users)
-      .leftJoin(user_addresses, eq(users.fid, user_addresses.userfid));
+    let selectResult;
+
+    if (filter === "coinbaseVerified") {
+      selectResult = await db
+        .select({
+          users: {
+            id: users.id,
+            fid: users.fid,
+            username: users.username,
+            ethaddress: users.ethaddress,
+            pfp_url: users.pfp_url,
+            createdAt: users.createdAt,
+          },
+          userAddresses: {
+            coinbaseVerified: user_addresses.coinbaseverified,
+            opBadgeholder: sql<boolean>`false`.as("opBadgeholder"),
+            powerBadgeholder: sql<boolean>`false`.as("powerBadgeholder"),
+          },
+        })
+        .from(users)
+        .leftJoin(user_addresses, eq(users.fid, user_addresses.userfid))
+        .where(eq(user_addresses.coinbaseverified, true));
+    } else if (filter === "opBadgeholder") {
+      selectResult = await db
+        .select({
+          users: {
+            id: users.id,
+            fid: users.fid,
+            username: users.username,
+            ethaddress: users.ethaddress,
+            pfp_url: users.pfp_url,
+            createdAt: users.createdAt,
+          },
+          userAddresses: {
+            coinbaseVerified: sql<boolean>`false`.as("coinbaseVerified"),
+            opBadgeholder: user_addresses.opbadgeholder,
+            powerBadgeholder: sql<boolean>`false`.as("powerBadgeholder"),
+          },
+        })
+        .from(users)
+        .leftJoin(user_addresses, eq(users.fid, user_addresses.userfid))
+        .where(eq(user_addresses.opbadgeholder, true));
+    } else if (filter === "powerBadgeholder") {
+      selectResult = await db
+        .select({
+          users: {
+            id: users.id,
+            fid: users.fid,
+            username: users.username,
+            ethaddress: users.ethaddress,
+            pfp_url: users.pfp_url,
+            createdAt: users.createdAt,
+          },
+          userAddresses: {
+            coinbaseVerified: sql<boolean>`false`.as("coinbaseVerified"),
+            opBadgeholder: sql<boolean>`false`.as("opBadgeholder"),
+            powerBadgeholder: user_addresses.powerbadgeholder,
+          },
+        })
+        .from(users)
+        .leftJoin(user_addresses, eq(users.fid, user_addresses.userfid))
+        .where(eq(user_addresses.powerbadgeholder, true));
+    } else {
+      selectResult = await db
+        .select({
+          users: {
+            id: users.id,
+            fid: users.fid,
+            username: users.username,
+            ethaddress: users.ethaddress,
+            pfp_url: users.pfp_url,
+            createdAt: users.createdAt,
+          },
+          userAddresses: {
+            coinbaseVerified: user_addresses.coinbaseverified,
+            opBadgeholder: user_addresses.opbadgeholder,
+            powerBadgeholder: user_addresses.powerbadgeholder,
+          },
+        })
+        .from(users)
+        .leftJoin(user_addresses, eq(users.fid, user_addresses.userfid));
+    }
+
+    // Additional query filter if provided
+    if (query) {
+      selectResult = selectResult.filter((user) => {
+        return user.users.username.toLowerCase().includes(query.toLowerCase());
+      });
+    }
 
     console.log("Results", selectResult);
     return selectResult;
