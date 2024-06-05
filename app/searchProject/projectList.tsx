@@ -3,13 +3,13 @@ import Link from 'next/link';
 import React, { useState, useEffect, useMemo } from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import { useGlobalState } from '../../src/config/config';
-import { Project, SearchResult } from '../../src/types';
+import { Project, ProjectCount, SearchResult } from '../../src/types';
 import { LuArrowUpRight } from 'react-icons/lu';
 import Image from 'next/image';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 
 interface Props {
-  projects: Project[];
+  projects: (Project | ProjectCount)[];
   query: string;
   filter: string;
   walletAddress: string;
@@ -59,7 +59,7 @@ export default function ProjectList({
       });
     } else if (filter === 'Most Attested') {
       return filteredProjects.sort((a, b) => {
-        return (b.attestationCount || 0) - (a.attestationCount || 0);
+        return ((b as ProjectCount).attestationCount || 0) - ((a as ProjectCount).attestationCount || 0);
       });
     }
 
@@ -195,7 +195,7 @@ export default function ProjectList({
               </p>
             )}
             {filter === 'Most Attested' && (            <p className="mb-2 text-md text-gray-500 text-center truncate max-w-full">
-              Attestations: {project.attestationCount}
+              Attestations: {(project as ProjectCount).attestationCount}
             </p>
             )}
           </div>

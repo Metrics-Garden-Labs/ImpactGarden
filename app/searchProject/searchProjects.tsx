@@ -2,7 +2,7 @@
 
 import { FaSearch } from "react-icons/fa";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useGlobalState } from "../../src/config/config";
 import { NetworkType, networkEndpoints } from '../components/graphqlEndpoints';
 import { ConnectButton } from "@rainbow-me/rainbowkit";
@@ -56,47 +56,57 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
     handleSearch(searchParams.get("query") || "");
   };
 
-  const handleSearch = async (searchTerm: string) => {
-    const params = new URLSearchParams(searchParams);
-    const endpoint = networkEndpoints[selectedNetwork];
+  const debounce = (func: (...args: any[]) => void, wait: number) => {
+    let timeout: NodeJS.Timeout;
+    return (...args: any[]) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  };
 
-    if (searchTerm) {
+  const handleSearch = useCallback(
+    debounce(async (searchTerm: string) => {
+      const params = new URLSearchParams(searchParams);
+      const endpoint = networkEndpoints[selectedNetwork];
+
+      if (searchTerm) {
         params.set("query", searchTerm);
-    } else {
+      } else {
         params.delete("query");
-     }
+      }
       params.set("filter", selectedFilter);
       params.set("walletAddress", walletAddress);
       params.set("endpoint", endpoint);
       params.set("sortOrder", sortOrder);
-    
 
       replace(`${pathname}?${params.toString()}`);
 
-    try {
-      const response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjects`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: searchTerm,
-          filter: selectedFilter,
-          walletAddress,
-          endpoint,
-          sortOrder,
-        }),
-      });
+      try {
+        const response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjects`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: searchTerm,
+            filter: selectedFilter,
+            walletAddress,
+            endpoint,
+            sortOrder,
+          }),
+        });
 
-      if (response.ok) {
-        const data = await response.json();
-        setSearchResults(data);
-        onSearchResults(data);
-      } else {
-        console.error('Error fetching data');
+        if (response.ok) {
+          const data = await response.json();
+          setSearchResults(data);
+          onSearchResults(data);
+        } else {
+          console.error('Error fetching data');
+        }
+      } catch (error) {
+        console.error('Error during fetch operation:', error);
       }
-    } catch (error) {
-      console.error('Error during fetch operation:', error);
-    }
-  };
+    }, 500),
+    [searchParams, selectedFilter, walletAddress, selectedNetwork, sortOrder, replace, pathname, onSearchResults]
+  );
 
   return (
     <div className="bg-white">

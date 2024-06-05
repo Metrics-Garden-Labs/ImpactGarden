@@ -11,7 +11,10 @@ export interface Project {
   githubUrl: string | null;
   logoUrl: string | null;
   projectUid: string | null;
-  attestationCount?: number;
+}
+
+export interface ProjectCount extends Project {
+  attestationCount: number; // Explicitly typing attestationCount as number
 }
 
 export interface Contribution {

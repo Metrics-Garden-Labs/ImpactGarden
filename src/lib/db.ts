@@ -12,7 +12,12 @@ import {
 import * as schema from "./schema";
 import { getAttestationsByAttester } from "./eas";
 import { Waterfall } from "next/font/google";
-import { Project, newUserAddresses, Attestation } from "@/src/types";
+import {
+  Project,
+  newUserAddresses,
+  Attestation,
+  ProjectCount,
+} from "@/src/types";
 import { count } from "console";
 import { desc, sql as drizzlesql } from "drizzle-orm";
 import { inArray, eq, sql } from "drizzle-orm";
@@ -189,6 +194,10 @@ export type NewProject = typeof projects.$inferInsert;
 //   }
 // };
 
+const isProjectCount = (project: any): project is ProjectCount => {
+  return "attestationCount" in project;
+};
+
 export const getProjects = async (
   walletAddress: string,
   endpoint: string,
@@ -228,9 +237,10 @@ export const getProjects = async (
           logoUrl: projects.logoUrl,
           projectUid: projects.projectUid,
           createdAt: projects.createdAt,
-          attestationCount: sql`COUNT(${contributionattestations.id})`.as(
-            "attestationCount"
-          ),
+          attestationCount:
+            sql`CAST(COUNT(${contributionattestations.id}) AS INT)`.as(
+              "attestationCount"
+            ),
         })
         .from(projects)
         .leftJoin(
@@ -252,14 +262,27 @@ export const getProjects = async (
           projects.createdAt
         )
         .orderBy(sql`COUNT(${contributionattestations.id}) DESC`);
-      const dbProjects: Project[] = await attestedQuery.execute();
+      const dbProjects: (Project | ProjectCount)[] =
+        await attestedQuery.execute();
+
+      // Use type guard to filter and map projects
+      const castedProjects = dbProjects.map((project) => {
+        if (isProjectCount(project)) {
+          return {
+            ...project,
+            attestationCount: Number(project.attestationCount),
+          };
+        }
+        return project;
+      }) as ProjectCount[];
+
       // Enhanced logging
-      console.log("Raw database response:", dbProjects);
-      console.log(`Number of projects returned: ${dbProjects.length}`);
-      dbProjects.forEach((project, index) => {
+      console.log("Raw database response:", castedProjects);
+      console.log(`Number of projects returned: ${castedProjects.length}`);
+      castedProjects.forEach((project, index) => {
         console.log(`Project ${index + 1}:`, project);
       });
-      return dbProjects;
+      return castedProjects;
     }
 
     // If no specific filter is provided, return all projects
