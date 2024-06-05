@@ -1,5 +1,3 @@
-// app/projects/SearchProjects.tsx
-
 'use client';
 
 import { FaSearch } from "react-icons/fa";
@@ -41,9 +39,8 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
   console.log('walletAddress', walletAddress);
 
   useEffect(() => {
-    const initialQuery = searchParams.get("query") || "";
-    handleSearch(initialQuery);
-  }, []);
+    handleSearch(searchParams.get("query") || "");
+  }, [selectedFilter, sortOrder]);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newFilter = e.target.value;
@@ -64,19 +61,17 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
     const endpoint = networkEndpoints[selectedNetwork];
 
     if (searchTerm) {
-      params.set("query", searchTerm);
+        params.set("query", searchTerm);
+    } else {
+        params.delete("query");
+     }
       params.set("filter", selectedFilter);
       params.set("walletAddress", walletAddress);
       params.set("endpoint", endpoint);
       params.set("sortOrder", sortOrder);
-    } else {
-      params.delete("query");
-      params.delete("filter");
-      params.delete("walletAddress");
-      params.delete("endpoint");
-      params.delete("sortOrder");
-    }
-    replace(`${pathname}?${params.toString()}`);
+    
+
+      replace(`${pathname}?${params.toString()}`);
 
     try {
       const response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjects`, {

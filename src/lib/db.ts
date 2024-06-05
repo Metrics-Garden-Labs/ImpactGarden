@@ -253,6 +253,12 @@ export const getProjects = async (
         )
         .orderBy(sql`COUNT(${contributionattestations.id}) DESC`);
       const dbProjects: Project[] = await attestedQuery.execute();
+      // Enhanced logging
+      console.log("Raw database response:", dbProjects);
+      console.log(`Number of projects returned: ${dbProjects.length}`);
+      dbProjects.forEach((project, index) => {
+        console.log(`Project ${index + 1}:`, project);
+      });
       return dbProjects;
     }
 

@@ -1,12 +1,9 @@
-// app/projects/ProjectList.tsx
-
 'use client';
 import Link from 'next/link';
 import React, { useState, useEffect, useMemo } from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import { useGlobalState } from '../../src/config/config';
 import { Project, SearchResult } from '../../src/types';
-import { useRouter } from 'next/router';
 import { LuArrowUpRight } from 'react-icons/lu';
 import Image from 'next/image';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
@@ -45,7 +42,7 @@ export default function ProjectList({
       if (query && !project.projectName?.toLowerCase().includes(query.toLowerCase())) {
         return false;
       }
-      if (filter === 'Recently Added') {
+      if (filter === 'Recently Added' || filter === 'Most Attested') {
         return true; // Since the backend is already filtering, just return true here
       }
       return true;
@@ -59,6 +56,10 @@ export default function ProjectList({
         const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
         const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
         return bTime - aTime;
+      });
+    } else if (filter === 'Most Attested') {
+      return filteredProjects.sort((a, b) => {
+        return (b.attestationCount || 0) - (a.attestationCount || 0);
       });
     }
 
@@ -192,6 +193,10 @@ export default function ProjectList({
               <p className="text-gray-500">
                 {searchResults.find((result) => result.fid === project.userFid)?.username}
               </p>
+            )}
+            {filter === 'Most Attested' && (            <p className="mb-2 text-md text-gray-500 text-center truncate max-w-full">
+              Attestations: {project.attestationCount}
+            </p>
             )}
           </div>
         ))}
