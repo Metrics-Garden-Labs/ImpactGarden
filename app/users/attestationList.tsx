@@ -28,8 +28,8 @@ const AttestationList = async ({ user }: Props) => {
     const ecosystemsOfInterest = [...new Set([...attestedEcosystems, ...userEcosystems])];
 
     return (
-      <div className='flex'>
-        <div className='w-1/4 p-4 bg-white border-r'>
+      <div className='flex flex-col md:flex-row'>
+        <div className='w-full md:w-1/3 lg:w-1/4 p-4 bg-white border-b md:border-b-0 md:border-r'>
           <div className='mb-8'>
             <h3 className='text-lg font-semibold mb-2'>Projects Attested to:</h3>
             {attestedProjectNames.length > 0 ? (
@@ -61,9 +61,9 @@ const AttestationList = async ({ user }: Props) => {
             )}
           </div>
         </div>
-        <div className='w-3/4 p-4'>
+        <div className='w-full md:w-2/3 lg:w-3/4 p-4'>
           <h2 className='text-2xl font-bold mb-4'>Reviews {user.username} has given</h2>
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mx-3 lg:gap-8 max-w-6xl overflow-y-auto'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-3 lg:gap-8 max-w-6xl overflow-y-auto'>
             {attestations.length > 0 ? (
               attestations.map((attestation) => {
                 const attestationLink = `${easScanEndpoints[attestation.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`;
