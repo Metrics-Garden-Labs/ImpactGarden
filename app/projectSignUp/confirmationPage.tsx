@@ -45,29 +45,36 @@ interface ConfirmationSectionProps {
         />
         <h2 className="text-4xl font-bold mb-10">Attestation Created</h2>
         <p className="text-lg mb-10">Your project has been successfully created.</p>
-        <div className="w-1/3 flex flex-col items-center shadow-2xl rounded p-8 mb-8">
-          {imageUrl ? (
-            <Image
-              src={imageUrl}
-              alt="Project Logo"
-              width={400}
-              height={400}
-              className="object-contain mt-15"
-            />
-          ) : (
-            <div className="w-48 h-48 bg-gray-300 rounded-md flex items-center justify-center">
-              {/* Optional placeholder content */}
-            </div>
-          )}
-          <h3 className="text-center mt-6 mb-6 font-semibold text-gray-500 text-2xl">
-            {attestationData.projectName || 'Project Name'}
-          </h3>
-          <div className="flex justify-center py-4 items-center">
-            <BsGlobe2 className="text-black mx-2 text-2xl" />
-            <FaXTwitter className="text-black mx-2 text-2xl" />
-            <FaGithub className="text-black mx-2 text-2xl" />
+
+          <div className="w-full md:w-2/3 lg:w-1/3 flex flex-col items-center shadow-2xl rounded p-8 mb-8">
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt="Project Logo"
+            width={400}
+            height={400}
+            className="object-contain mt-15"
+          />
+        ) : (
+          <div className="w-48 h-48 bg-gray-300 rounded-md flex items-center justify-center">
+            {/* Optional placeholder content */}
           </div>
+        )}
+        <h3 className="text-center mt-6 mb-6 font-semibold text-gray-500 text-xl sm:text-2xl">
+          {attestationData.projectName || 'Project Name'}
+        </h3>
+        <div className="flex justify-center py-4 items-center">
+          <Link href={attestationData.websiteUrl || '#'}>
+            <BsGlobe2 className="text-black mx-2 text-xl sm:text-2xl" />
+          </Link>
+          <Link href={attestationData.twitterUrl || '#'}>
+            <FaXTwitter className="text-black mx-2 text-xl sm:text-2xl" />
+          </Link>
+          <Link href={attestationData.githubURL || '#'}>
+            <FaGithub className="text-black mx-2 text-xl sm:text-2xl" />
+          </Link>
         </div>
+      </div>
   
         <Link href={`/projects/${attestationData.projectName}`} passHref className="pt-6">
           <button className="mt-4 px-6 py-3 bg-black text-white rounded-md text-lg">

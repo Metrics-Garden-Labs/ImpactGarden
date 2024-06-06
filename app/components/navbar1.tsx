@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from "next/image";
 import { FaBars, FaTimes } from "react-icons/fa";
 import FarcasterLogin from './farcasterLogin';
+import { isMobile } from 'react-device-detect';
 
 export default function Navbar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -20,7 +21,11 @@ export default function Navbar() {
     <>
       <div className="flex justify-between items-center navbar bg-headerblack text-neutral-content p-3 md:p-8">
         <Link href='/'>
-          <button className="btn bg-headerblack text-xl border-none pl-10">
+        <button
+            className={`btn bg-headerblack text-xl border-none ${
+              isMobile ? 'pl-2' : 'pl-10'
+            }`}
+          >
             <Image src='/mglwhite.png' alt='MGL Logo' width={10} height={10} className='h-10 w-10'/>
           </button>
         </Link>

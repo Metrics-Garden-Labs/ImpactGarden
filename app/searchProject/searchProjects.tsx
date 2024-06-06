@@ -105,9 +105,9 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
       <div className='container mx-auto px-4 max-w-6xl bg-white'>
         <h1 className="text-2xl font-semibold mt-10 mb-10">Explore Projects</h1>
         <hr className="border-t border-gray-300 my-4" />
-        <div className='flex justify-between bg-white items-center mt-6 mb-5 px-0'>
-          <div className="flex flex-grow space-x-4 bg-white">
-            <div className="relative w-5/12">
+        <div className='flex flex-col sm:flex-row justify-between bg-white items-center mt-6 mb-5 px-0 space-y-4 sm:space-y-0'>
+          <div className="flex flex-col sm:flex-row flex-grow space-y-4 sm:space-y-0 sm:space-x-4 bg-white w-full sm:w-auto">
+            <div className="relative w-full sm:w-5/12">
               <label htmlFor="search" className="sr-only">Search</label>
               <input
                 className="w-full rounded-md border-gray-200 py-3 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -117,7 +117,7 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
               />
               <FaSearch className="absolute left-3 top-1/2 h-[20px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
-            <div className="w-48 border border-gray-300 rounded-md">
+            <div className="w-full sm:w-48 border border-gray-300 rounded-md">
               <select
                 id="filter"
                 name="filter"
@@ -134,7 +134,7 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
               </select>
             </div>
           </div>
-          <div className="flex-initial">
+          <div className="w-full sm:w-auto">
             <select
               id="sortOrder"
               name="sortOrder"

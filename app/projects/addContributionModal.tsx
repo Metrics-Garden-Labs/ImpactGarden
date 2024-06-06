@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { NEXT_PUBLIC_URL, WHITELISTED_USERS, useGlobalState } from '../../src/config/config';
 import { AttestationNetworkType, Contribution, Project } from '../../src/types';
-import { useEAS } from '../../src/hooks/useEAS';
+import { useEAS, useSigner } from '../../src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
 import { ethers } from 'ethers';
 import { RxCross2 } from 'react-icons/rx';
@@ -45,6 +45,8 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   const { eas, currentAddress, address , handleNetworkChange, selectedNetwork} = useEAS();
 
 
+  const signer = useSigner();
+  
   useEffect(() => {
     const checkNetwork = async () => {
       if (selectedNetwork) {
@@ -115,6 +117,11 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       alert('Please connect wallet to continue');
       return ''; 
     }
+    if (!signer) {
+      console.error('Signer not available');
+      return '';
+    }
+
     if (
       formData.governancetype === '' ||
       formData.contribution === '' ||
@@ -148,8 +155,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
 
       console.log ("encodedData", encodedData)
       
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
+      
       const easop = new EAS('0x4200000000000000000000000000000000000021');
       easop.connect(signer);
       const delegatedSigner = await easop.getDelegated();

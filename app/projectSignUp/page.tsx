@@ -2,7 +2,7 @@
 "use client";
 
 import {  networkContractAddresses, getChainId } from '../components/networkContractAddresses';
-import { useEAS } from '../../src/hooks/useEAS';
+import { useEAS, useSigner  } from '../../src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import React, { FormEvent, useEffect, useState } from 'react';
 import { WHITELISTED_USERS, useGlobalState } from '../../src/config/config';
@@ -22,7 +22,6 @@ import { useSwitchChain } from 'wagmi';
 import AttestationCreationModal from '../components/attestationCreationModal';
 import ConfirmationSection from './confirmationPage';
 import { Alchemy, Network, Utils, Wallet } from "alchemy-sdk";
-import { clientToSigner, useSigner } from '../../src/hooks/useEAS';
 import { isMobile } from 'react-device-detect';
 
 
@@ -71,7 +70,6 @@ export default function ProjectSignUp() {
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const { switchChain } = useSwitchChain();
-  
   console.log('Ecosystem', ecosystem);
   console.log('walletAddress', walletAddress);
   console.log('Fid', fid);
@@ -514,16 +512,16 @@ export default function ProjectSignUp() {
           <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha}  />
         </div>
 
-        <div className="flex justify-center space-x-6 mt-20 mb-20">
+        <div className="flex justify-center space-x-4 mt-20 mb-20">
           <button
-            className="px-4 py-2 w-1/5 text-sm font-medium text-white bg-black rounded-md shadow-sm hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="px-4 py-2 w-full sm:w-1/3 md:w-1/4 lg:w-1/5 text-xs sm:text-sm font-medium text-white bg-black rounded-md shadow-sm hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             type="button"
             onClick={onSubmit}
           >
             Confirm & Attest
           </button>
           <button
-            className="px-4 py-2 w-1/5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="px-4 py-2 w-full sm:w-1/3 md:w-1/4 lg:w-1/5 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             type="button"
             onClick={handleBackToEdit}
           >

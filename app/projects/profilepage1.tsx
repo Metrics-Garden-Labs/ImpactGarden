@@ -13,7 +13,8 @@ import AttestationModal from './AttestationModal';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import Sidebar from './smSidebar';
 import { useEAS } from '@/src/hooks/useEAS';
-import { useSearchParams, usePathname, useRouter } from 'next/navigation'; // Import necessary hooks from next/navigation
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { isMobile } from 'react-device-detect'; // Import the hook
 
 interface ProfilePageProps {
     contributions: Contribution[];
@@ -237,12 +238,17 @@ export default function ProfilePage({
     };
 
     return (
-        <main className="flex-grow relative p-10 bg-backgroundgray w-full h-full">
+        <main className="flex-grow relative p-8 sm:p-10 bg-backgroundgray w-full h-full">
             {/* Add contribution button */}
             {user.fid === project.userFid && (
                 <div className="absolute top-1.5 right-5">
                     <button
-                        className="btn bg-headerblack text-white hover:bg-gray-200 hover:text-black px-2 py-1"
+                        style={{
+                            height: isMobile ? '15px' : '40px',
+                            width: isMobile ? '75px' : '150px',
+                            fontSize: isMobile ? '10px' : '16px',
+                        }}
+                        className="btn bg-headerblack text-white hover:bg-gray-200 hover:text-black"
                         onClick={() => setModalOpen(true)}
                     >
                         Add Contribution
@@ -256,7 +262,7 @@ export default function ProfilePage({
                 </div>
             )}
 
-            <div className="mb-4 border-b border-gray-200">
+            <div className="mb-4 border-b border-gray-200 mt-4 sm:mt-8">
                 <nav className="flex space-x-4 text-black">
                     <button
                         className="lg:hidden"

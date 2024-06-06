@@ -15,6 +15,9 @@ import { easScanEndpoints } from '../components/easScan';
 import AttestationCreationModal from '../components/attestationCreationModal';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'; // Import hooks from next/navigation
 import AttestationConfirmationModal from '../components/attestationConfirmationModal';
+import { useSigner  } from '../../src/hooks/useEAS';
+import { isMobile } from 'react-device-detect';
+
 
 interface AttestationModalProps {
     isOpen: boolean;
@@ -61,6 +64,8 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
         models: false
     });
     const [extrafeedback, setExtraFeedback] = useState('');
+
+    const signer = useSigner();
 
     const labels: { [key in ImprovementAreaKey]: string } = {
         participation: 'Improve my participation in governance',
@@ -190,6 +195,11 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             return;
         }
 
+        if (!signer) {
+            console.error('Signer not available');
+            return;
+          }
+
         console.log('contribution:', contribution);
         console.log('projectethAddress:', project.ethAddress);  
 
@@ -215,8 +225,6 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                 { name: 'Feedback', type: 'string', value: feedback },
             ]);
 
-            const provider = new ethers.BrowserProvider(window.ethereum);
-            const signer = await provider.getSigner();
             const easop = new EAS('0x4200000000000000000000000000000000000021'); // Ensure you have the correct contract address for your EAS instance
             easop.connect(signer);
             const delegatedSigner = await easop.getDelegated();
