@@ -6,13 +6,10 @@ import { NextResponse } from "next/server";
 export const POST = async (request: Request) => {
   try {
     console.log("Received request to get projects");
-    const { query, filter, walletAddress, endpoint, sortOrder } =
-      await request.json();
-    console.log("Wallet Addressapi:", walletAddress);
-    console.log("Endpoint: api", endpoint);
+    const { query, filter, sortOrder } = await request.json();
     console.log("Filter:api ", filter);
 
-    const projects = await getProjects(walletAddress, endpoint, filter);
+    const projects = await getProjects(filter);
     //console.log("Projects:", projects);
 
     return NextResponse.json({ projects }, { status: 200 });

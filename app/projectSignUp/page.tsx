@@ -214,7 +214,6 @@ export default function ProjectSignUp() {
       return;
     }
 
-
      // Check if the user's fid is in the whitelist
     //  if (!WHITELISTED_USERS.includes(user.fid)) {
     //   alert('Access denied. Still in Alpha testing phase.');
@@ -243,26 +242,8 @@ export default function ProjectSignUp() {
 
       console.log('User:', user);
       const eas1 = new EAS(networkContractAddresses[selectedNetwork]?.attestAddress);
-      const settings = {
-        apiKey: process.env.ALCHEMY_API_KEY,
-        network: Network.OPT_MAINNET,
-      };
-      // const network = new ethers.Network("optimism", 10);
-      // const alchemy = new Alchemy(settings);
-      // console.log("Alchemy", alchemy);
-      // const alchemyProvider = new ethers.AlchemyProvider(
-      //   network,
-      //   settings.apiKey
-      // );
-      //const provider = new ethers.BrowserProvider(window.ethereum);
-      // console.log('Provider:', alchemyProvider);
-      // //const signer = await alchemyProvider.getSigner();
-      // console.log('Signer:', signer);
-
-      // signer = clientToSigner(client);
-
-      // const provider = new ethers.BrowserProvider(window.ethereum);
-      // const signer = await provider.getSigner();
+      //this is just the optimsim contract address, i have functionality to switch between networks
+      
       eas1.connect(signer);
       console.log('EAS:', eas1);
       const delegatedSigner = await eas1.getDelegated();
@@ -290,8 +271,6 @@ export default function ProjectSignUp() {
 
         attestation.data = encodedData;
         const signature = signDelegated.signature;
-
-        const backendWallet = '0xE27a079BcE042d7163A47eB35D591D241eA7196b';
 
         const dataToSend = {
           ...attestation,

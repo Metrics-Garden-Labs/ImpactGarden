@@ -444,5 +444,3 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     </div>
   );
 }
-
-//in this page how can i make sure that the user has had to fill in the required fields before submitting the form

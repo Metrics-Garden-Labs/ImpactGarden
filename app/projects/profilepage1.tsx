@@ -1,6 +1,4 @@
-// profilepage.tsx
-
-'use client'
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
@@ -15,6 +13,7 @@ import AttestationModal from './AttestationModal';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import Sidebar from './smSidebar';
 import { useEAS } from '@/src/hooks/useEAS';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation'; // Import necessary hooks from next/navigation
 
 interface ProfilePageProps {
     contributions: Contribution[];
@@ -47,6 +46,10 @@ export default function ProfilePage({
         username: '',
         ethAddress: '',
     });
+
+    const searchParams = useSearchParams(); // Use useSearchParams to get query parameters
+    const pathname = usePathname(); // Use usePathname to get the current path
+    const router = useRouter(); // Use useRouter for navigation
 
     useEffect(() => {
         const switchToProjectChain = async () => {
@@ -114,6 +117,17 @@ export default function ProfilePage({
         fetchAttestationCount();
     }, [selectedContribution]);
 
+    useEffect(() => {
+        const contributionId = searchParams.get('contribution');
+        if (contributionId) {
+            const contribution = contributions.find(c => c.id === Number(contributionId));
+            if (contribution) {
+                setSelectedContribution(contribution);
+                setIsModalOpen(true);
+            }
+        }
+    }, [searchParams, contributions]);
+
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
@@ -167,10 +181,13 @@ export default function ProfilePage({
     const openmodal = (contribution: Contribution) => {
         setSelectedContribution(contribution);
         setIsModalOpen(true);
+        router.push(`${pathname}?contribution=${contribution.id}`);
     };
 
     const closeModal = () => {
         setSelectedContribution(null);
+        setIsModalOpen(false);
+        router.push(pathname);
     };
 
     const renderContent = () => {
@@ -196,16 +213,16 @@ export default function ProfilePage({
                         </div>
                         <div className="mb-4"></div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-3 lg:gap-8 max-w-6xl overflow-y-auto">
-                          {filteredContributions.map((contribution) => (
+                            {filteredContributions.map((contribution) => (
                             <div
-                              key={contribution.id}
-                              className="flex flex-col p-4 sm:p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-lg w-full h-56 shadow-lg"
-                              onClick={() => openmodal(contribution)}
+                                key={contribution.id}
+                                className="flex flex-col p-2 sm:p-2 border  bg-white text-black border-gray-300 rounded-lg w-full h-56 shadow-lg"
+                                onClick={() => openmodal(contribution)}
                             >
-                              <h3 className="mb-2 text-lg sm:text-xl font-semibold">{contribution.contribution}</h3>
-                              <p className="text-gray-500 text-sm sm:text-base">{contribution.desc}</p>
+                                <h3 className="text-xl sm:text-lg font-semibold pb-2">{contribution.contribution}</h3>
+                                <p className="text-gray-500 text-md sm:text-base overflow-hidden overflow-ellipsis">{contribution.desc}</p>
                             </div>
-                          ))}
+                            ))}
                         </div>
                     </div>
                 );
@@ -280,7 +297,7 @@ export default function ProfilePage({
                 {isModalOpen && selectedContribution && (
                   <AttestationModal
                     isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
+                    onClose={closeModal}
                     contribution={selectedContribution}
                     attestationCount={attestationCount}
                     project={project}

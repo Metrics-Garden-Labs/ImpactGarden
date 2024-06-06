@@ -12,8 +12,6 @@ interface Props {
   projects: (Project | ProjectCount)[];
   query: string;
   filter: string;
-  walletAddress: string;
-  endpoint: string;
   sortOrder: string;
   searchResults: SearchResult[];
 }
@@ -22,8 +20,6 @@ export default function ProjectList({
   projects,
   query,
   filter,
-  walletAddress,
-  endpoint,
   sortOrder,
   searchResults,
 }: Props) {

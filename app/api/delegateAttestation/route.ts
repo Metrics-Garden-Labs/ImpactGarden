@@ -24,16 +24,6 @@ export async function POST(request: NextRequest) {
       expirationTime,
     } = req;
 
-    console.log("Signature", signature);
-    console.log("Attester", attester);
-    console.log("Recipient", recipient);
-    console.log("Schema UID", schema);
-    console.log("Ref UID", refUID);
-    console.log("Encoded Data", data);
-    console.log("Deadline", deadline);
-    console.log("Value", value);
-    console.log("Expiration Time", expirationTime);
-
     const privateKey = process.env.BACKEND_METAMASK_PRIVATE_KEY;
     if (!privateKey) {
       throw new Error("BACKEND_METAMASK_PRIVATE_KEY is not set");
@@ -52,12 +42,6 @@ export async function POST(request: NextRequest) {
     );
     let backendWallet = new ethers.Wallet(privateKey, alchemyProvider);
     console.log("Backend Wallet", backendWallet);
-
-    //let backendWallet = new Wallet(privateKey);
-
-    //const provider = ethers.getDefaultProvider("optimism");
-    //this will have to change depending on the network
-    //const backendWallet = new ethers.Wallet(privateKey, provider);
 
     const contract = new ethers.Contract(
       "0x4200000000000000000000000000000000000021",

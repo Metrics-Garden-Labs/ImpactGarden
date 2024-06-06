@@ -1,5 +1,3 @@
-// app/projects/page.tsx
-
 import { Project, SearchResult } from '../../src/types';
 import { getProjects } from '../../src/lib/db';
 import ProjectPageClient from './ProjectPageClient';
@@ -9,8 +7,6 @@ interface Props {
   searchParams?: {
     query?: string;
     filter?: string;
-    walletAddress?: string;
-    endpoint?: string;
     sortOrder?: string;
     searchResults?: SearchResult[];
   };
@@ -23,27 +19,22 @@ export const metadata: Metadata = {
 const ProjectPage = async ({ searchParams }: Props) => {
   const query = searchParams?.query || '';
   const filter = searchParams?.filter || '';
-  const walletAddress = searchParams?.walletAddress || '';
-  const endpoint = searchParams?.endpoint || '';
   const sortOrder = searchParams?.sortOrder || 'asc';
 
   console.log('Received search parameters:', searchParams);
 
   try {
-    const projects: Project[] = await getProjects(walletAddress, endpoint, filter);
+    const projects: Project[] = await getProjects(filter);
     console.log('Projects retrieved successfully:', projects);
     console.log('Received sortOrder in ProjectPage:', sortOrder);
     console.log("filter:", filter);
-    console.log("walletAddress:", walletAddress);
-    console.log("endpoint:", endpoint);
+
 
     return (
       <ProjectPageClient
         projects={projects}
         query={query}
         filter={filter}
-        walletAddress={walletAddress}
-        endpoint={endpoint}
         sortOrder={sortOrder}
         searchResults={searchParams?.searchResults || []}
       />
@@ -55,10 +46,9 @@ const ProjectPage = async ({ searchParams }: Props) => {
         projects={[]}
         query={query}
         filter={filter}
-        walletAddress={walletAddress}
-        endpoint={endpoint}
         sortOrder={sortOrder}
         searchResults={[]}
+        error="Failed to fetch projects"
       />
     );
   }

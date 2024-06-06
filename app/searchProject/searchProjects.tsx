@@ -1,13 +1,9 @@
-'use client';
-
 import { FaSearch } from "react-icons/fa";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { useGlobalState } from "../../src/config/config";
 import { NetworkType, networkEndpoints } from '../components/graphqlEndpoints';
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import React from "react";
-import FarcasterLogin from "../components/farcasterLogin";
 import useLocalStorage from "@/src/hooks/use-local-storage-state";
 import { Project, SearchResult } from "@/src/types";
 import { NEXT_PUBLIC_URL } from "../../src/config/config";
@@ -67,7 +63,6 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
   const handleSearch = useCallback(
     debounce(async (searchTerm: string) => {
       const params = new URLSearchParams(searchParams);
-      const endpoint = networkEndpoints[selectedNetwork];
 
       if (searchTerm) {
         params.set("query", searchTerm);
@@ -75,29 +70,26 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
         params.delete("query");
       }
       params.set("filter", selectedFilter);
-      params.set("walletAddress", walletAddress);
-      params.set("endpoint", endpoint);
       params.set("sortOrder", sortOrder);
 
       replace(`${pathname}?${params.toString()}`);
 
       try {
+        //const endpoint = networkEndpoints[selectedNetwork];
         const response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjects`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             query: searchTerm,
             filter: selectedFilter,
-            walletAddress,
-            endpoint,
             sortOrder,
           }),
         });
 
         if (response.ok) {
           const data = await response.json();
-          setSearchResults(data);
-          onSearchResults(data);
+          setSearchResults(data.projects); // Adjust based on your response structure
+          onSearchResults(data.projects); // Adjust based on your response structure
         } else {
           console.error('Error fetching data');
         }
@@ -105,7 +97,7 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
         console.error('Error during fetch operation:', error);
       }
     }, 500),
-    [searchParams, selectedFilter, walletAddress, selectedNetwork, sortOrder, replace, pathname, onSearchResults]
+    [searchParams, selectedFilter, sortOrder, replace, pathname, onSearchResults]
   );
 
   return (

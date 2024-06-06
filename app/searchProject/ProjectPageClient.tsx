@@ -1,24 +1,20 @@
-// app/projects/ProjectPageClient.tsx
-
 'use client';
 
 import React, { useState } from 'react';
 import SearchProjects from './searchProjects';
-import ProjectList1 from './projectList1';
+import ProjectList from './projectList1';
 import { Project, SearchResult } from '../../src/types';
 
 interface Props {
   projects: Project[];
   query: string;
   filter: string;
-  walletAddress: string;
-  endpoint: string;
   sortOrder: string;
   searchResults: SearchResult[];
   error?: string;
 }
 
-const ProjectPageClient = ({ projects, query, filter, walletAddress, endpoint, sortOrder, searchResults, error }: Props) => {
+const ProjectPageClient = ({ projects, query, filter, sortOrder, searchResults, error }: Props) => {
   const [localSearchResults, setLocalSearchResults] = useState<SearchResult[]>(searchResults);
   const [selectedFilter, setSelectedFilter] = useState(filter);
   const [selectedSortOrder, setSelectedSortOrder] = useState(sortOrder);
@@ -45,12 +41,10 @@ const ProjectPageClient = ({ projects, query, filter, walletAddress, endpoint, s
       {error ? (
         <p>{error}</p>
       ) : (
-        <ProjectList1
+        <ProjectList
           projects={projects}
           query={query}
           filter={selectedFilter}
-          walletAddress={walletAddress}
-          endpoint={endpoint}
           sortOrder={selectedSortOrder}
           searchResults={localSearchResults}
         />

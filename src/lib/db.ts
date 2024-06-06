@@ -325,14 +325,8 @@ const isProjectRating = (project: any): project is ProjectCount => {
   return "averageRating" in project;
 };
 
-export const getProjects = async (
-  walletAddress: string,
-  endpoint: string,
-  filter: string = ""
-) => {
+export const getProjects = async (filter: string = "") => {
   try {
-    console.log("Wallet Address db", walletAddress);
-    console.log("Endpoint db", endpoint);
     console.log("Filter db", filter);
 
     if (filter === "Recently Added") {
