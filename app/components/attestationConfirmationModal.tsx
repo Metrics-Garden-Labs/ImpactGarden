@@ -25,7 +25,7 @@ interface AttestationConfirmationModalProps {
         <h2 className="text-xl font-bold mb-4 text-center">Attestation Created</h2>
         <p className="text-center">Your attestation has been successfully created.</p>
         <Link href={`${easScanEndpoints[attestationType?.ecosystem as AttestationNetworkType]}${attestationUID}`}>
-          <p className='text-black hover:underline text-center'>Attestation UID: {attestationUID}</p>
+          <p className='text-black hover:underline text-center overflow-y-auto'>Attestation UID: {attestationUID}</p>
         </Link>
         <div className="flex justify-center mt-4">
           <button
