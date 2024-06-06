@@ -12,6 +12,10 @@ export default function Navbar() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
+
   return (
     <>
       <div className="flex justify-between items-center navbar bg-headerblack text-neutral-content p-3 md:p-8">
@@ -45,6 +49,14 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Overlay */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 z-40"
+          onClick={closeSidebar}
+        ></div>
+      )}
+
       {/* Sidebar */}
       <div
         className={`fixed top-0 right-0 h-screen w-64 bg-headerblack text-white p-4 transition-transform duration-300 ease-in-out transform z-50 ${
@@ -58,13 +70,13 @@ export default function Navbar() {
         </div>
         <ul className="space-y-4 mt-8">
           <li>
-            <Link href='/projectSignUp' className='block py-2'>REGISTER PROJECT</Link>
+            <Link href='/projectSignUp' className='block py-2' onClick={closeSidebar}>REGISTER PROJECT</Link>
           </li>
           <li>
-            <Link href='/searchProject' className='block py-2'>SEARCH PROJECTS</Link>
+            <Link href='/searchProject' className='block py-2' onClick={closeSidebar}>SEARCH PROJECTS</Link>
           </li>
           <li>
-            <Link href='/searchUsers' className='block py-2'>SEARCH USERS</Link>
+            <Link href='/searchUsers' className='block py-2' onClick={closeSidebar}>SEARCH USERS</Link>
           </li>
         </ul>
       </div>
