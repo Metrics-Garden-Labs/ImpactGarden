@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Attestbox from "../components/attestbox";
-import Navbar from "../components/navbar"
+import Navbar from "../components/navbar1"
 import Footer from "../components/footer";
 
 //the plan for this is to recreate the mockup that Mari sent in
