@@ -219,6 +219,7 @@ export default function ProfilePage({
                                 className="flex flex-col p-2 sm:p-2 border  bg-white text-black border-gray-300 rounded-lg w-full h-56 shadow-lg"
                                 onClick={() => openmodal(contribution)}
                             >
+                                {/* updates to how the contribution data is displayed */}
                                 <h3 className="text-xl sm:text-lg font-semibold pb-2">{contribution.contribution}</h3>
                                 <p className="text-gray-500 text-md sm:text-base overflow-hidden overflow-ellipsis">{contribution.desc}</p>
                             </div>
