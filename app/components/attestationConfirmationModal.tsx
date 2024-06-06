@@ -19,12 +19,15 @@ interface AttestationConfirmationModalProps {
     setAttestationUID,
     easScanEndpoints,
   }) => {
+    const attestationLink = `${easScanEndpoints[attestationType.ecosystem as AttestationNetworkType]}${attestationUID}`;
+
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md sm:w-4/5 sm:max-w-lg md:w-1/2 lg:w-1/3">
         <h2 className="text-xl font-bold mb-4 text-center">Attestation Created</h2>
         <p className="text-center">Your attestation has been successfully created.</p>
-        <Link href={`${easScanEndpoints[attestationType?.ecosystem as AttestationNetworkType]}${attestationUID}`}>
+        <Link href={attestationLink}>
           <p className='text-black hover:underline text-center overflow-y-auto'>Attestation UID: {attestationUID}</p>
         </Link>
         <div className="flex justify-center mt-4">
