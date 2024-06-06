@@ -14,6 +14,7 @@ import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import { easScanEndpoints } from '../components/easScan';
 import AttestationCreationModal from '../components/attestationCreationModal';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'; // Import hooks from next/navigation
+import AttestationConfirmationModal from '../components/attestationConfirmationModal';
 
 interface AttestationModalProps {
     isOpen: boolean;
@@ -293,21 +294,12 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             );
         } else if (attestationUID) {
             return (
-                <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-                    <div className="bg-white p-8 rounded-lg shadow-lg">
-                        <h2 className="text-xl font-bold mb-4">Attestation Created</h2>
-                        <p>Your attestation has been successfully created.</p>
-                        <Link href={`${easScanEndpoints[contribution?.ecosystem as AttestationNetworkType]}${attestationUID}`}>
-                            <p className='text-black hover:underline'>Attestation UID: {attestationUID}</p>
-                        </Link>
-                        <button
-                            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
-                            onClick={() => setAttestationUID('')}
-                        >
-                            Close
-                        </button>
-                    </div>
-                </div>
+                <AttestationConfirmationModal
+                    attestationUID={attestationUID}
+                    attestationType={contribution}
+                    setAttestationUID={setAttestationUID}
+                    easScanEndpoints={easScanEndpoints}
+                />
             );
         }
         return null;

@@ -14,6 +14,7 @@ import AttestationCreationModal from '../components/attestationCreationModal';
 import { useSwitchChain } from 'wagmi';
 import { getChainId } from '../components/networkContractAddresses';
 import { FaInfoCircle } from 'react-icons/fa';
+import AttestationConfirmationModal from '../components/attestationConfirmationModal';
 
 interface Props {
   isOpen: boolean;
@@ -30,7 +31,7 @@ const networks: AttestationNetworkType[] = [
 export default function AddContributionModal({ isOpen, onClose, addContributionCallback}: Props) {
   const [fid] = useGlobalState('fid');
   const [walletAddress] = useGlobalState('walletAddress');
-  const [selectedProject] = useLocalStorage<Project | null>('selectedProject', null);
+  const [selectedProject] = useLocalStorage<Project>('selectedProject');
   const [ isLoading, setIsLoading ] = useState(false);
   const [ attestationUID, setAttestationUID ] = useState<string>("");
   const [ ecosystem, setEcosystem ] = useState<AttestationNetworkType>('Optimism');
@@ -285,21 +286,12 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       );
     } else if (attestationUID) {
       return (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold mb-4">Attestation Created</h2>
-            <p>Your attestation has been successfully created.</p>
-            <Link href={`${easScanEndpoints[selectedProject?.ecosystem as AttestationNetworkType]}${attestationUID}`}>
-              <p className='text-black hover:underline'>Attestation UID: {attestationUID}</p>
-            </Link>
-            <button
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
-              onClick={() => setAttestationUID('')}
-            >
-              Close
-            </button>
-          </div>
-        </div>
+        <AttestationConfirmationModal
+        attestationUID={attestationUID}
+        attestationType={selectedProject}
+        setAttestationUID={setAttestationUID}
+        easScanEndpoints={easScanEndpoints}
+    />
       );
     }
     return null;
