@@ -282,16 +282,24 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
         }
     };
 
+    const isWebShareSupported = !!navigator.share;
     const copyToClipboard = () => {
         const shareUrl = `${window.location.origin}${pathname}?contribution=${contribution.id}`;
         navigator.clipboard.writeText(shareUrl)
-            .then(() => {
-                alert('Link copied to clipboard!');
-            })
-            .catch(err => {
-                console.error('Failed to copy: ', err);
-            });
-    };
+          .then(() => {
+            alert('Link copied to clipboard!');
+            if (isWebShareSupported) {
+              return navigator.share({
+                title: 'Share Contribution Link',
+                text: 'Check out this contribution:',
+                url: shareUrl,
+              });
+            }
+          })
+          .catch(err => {
+            console.error('Failed to copy: ', err);
+          });
+      };
 
     if (!isOpen) return null;
 
@@ -414,7 +422,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                                 className="btn text-center bg-headerblack text-white hover:bg-blue-500 "
                                 onClick={createAttestation}
                             >
-                                Share your Insight
+                                Send Review
                             </button>
                         </div>
                     </>
@@ -506,14 +514,14 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                                 className="btn text-center bg-headerblack text-white hover:bg-blue-500"
                                 onClick={toggleAttestationForm}
                             >
-                                Share your Insights
+                                Review
                             </button>
 
                             <button
                                 className="btn text-center bg-headerblack text-white hover:bg-blue-500 ml-2"
                                 onClick={copyToClipboard}
                             >
-                                Copy Link<FaCopy className="ml-1" />
+                                Share<FaCopy className="ml-1" />
                             </button>
 
                         </div>
