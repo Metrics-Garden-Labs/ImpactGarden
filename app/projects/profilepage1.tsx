@@ -214,15 +214,26 @@ export default function ProfilePage({
                         <div className="mb-4"></div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-3 lg:gap-8 max-w-6xl overflow-y-auto">
                             {filteredContributions.map((contribution) => (
-                            <div
-                                key={contribution.id}
-                                className="flex flex-col p-2 sm:p-2 border  bg-white text-black border-gray-300 rounded-lg w-full h-56 shadow-lg"
-                                onClick={() => openmodal(contribution)}
-                            >
-                                {/* updates to how the contribution data is displayed */}
-                                <h3 className="text-xl sm:text-lg font-semibold pb-2">{contribution.contribution}</h3>
-                                <p className="text-gray-500 text-md sm:text-base overflow-hidden overflow-ellipsis">{contribution.desc}</p>
-                            </div>
+                                <div
+                                    key={contribution.id}
+                                    className="flex flex-col justify-between p-2 sm:p-2 border bg-white text-black border-gray-300 rounded-lg w-full h-56 shadow-lg"
+                                    onClick={() => openmodal(contribution)}
+                                >
+                                    {/* updates to how the contribution data is displayed */}
+                                    <div className="flex-grow overflow-hidden">
+                                        <h3 className="text-xl sm:text-lg font-semibold pb-2">
+                                            {contribution.contribution}
+                                        </h3>
+                                        <p className="text-gray-500 text-md sm:text-base overflow-hidden overflow-ellipsis">
+                                            {contribution.desc}
+                                        </p>
+                                    </div>
+                                    <div className="flex justify-center mt-2">
+                                        <button className="btn bg-headerblack text-white hover:bg-gray-200 w-1/3 items-center justify-center hover:text-black px-2 py-1">
+                                            Endorse
+                                        </button>
+                                    </div>
+                                </div>
                             ))}
                         </div>
                     </div>
