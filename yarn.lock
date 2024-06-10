@@ -1330,10 +1330,10 @@
   dependencies:
     hardhat "2.22.1"
 
-"@ethereum-attestation-service/eas-sdk@2.1.4":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@ethereum-attestation-service/eas-sdk/-/eas-sdk-2.1.4.tgz#f034d64b4dbc234eb4c97933c6839420119b8c9f"
-  integrity sha512-y35b6EQVEsZojbhv8TM//kp4OlwJi5SfApsNkRPxpivWWpOT2kOSCHoOj6oAtEyOC4EJ9sTx/ssgSok1c7jdRA==
+"@ethereum-attestation-service/eas-sdk@2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@ethereum-attestation-service/eas-sdk/-/eas-sdk-2.2.0.tgz#8b2e8c981768e70eeca17ec8c68b2d23b92c934c"
+  integrity sha512-G2t1kfKzSZA+QVymwFG/i+WkjBAtSrErrSi6Dn0IvmA74mqQ6afDxtPi5mPp5GOdjWd5atZXvUyYCZEb81nCFQ==
   dependencies:
     "@ethereum-attestation-service/eas-contracts" "1.4.1"
     ethers "^6.11.1"
@@ -6093,7 +6093,7 @@ ethereumjs-util@^6.0.0, ethereumjs-util@^6.2.1:
     ethjs-util "0.1.6"
     rlp "^2.2.3"
 
-ethers@^6.11.1, ethers@^6.12.1:
+ethers@^6.11.1:
   version "6.12.1"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-6.12.1.tgz#517ff6d66d4fd5433e38e903051da3e57c87ff37"
   integrity sha512-j6wcVoZf06nqEcBbDWkKg8Fp895SS96dSnTCjiXT+8vt2o02raTn4Lo9ERUuIVU5bAjoPYeA+7ytQFexFmLuVw==
