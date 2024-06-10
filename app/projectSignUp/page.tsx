@@ -8,7 +8,7 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import { WHITELISTED_USERS, useGlobalState } from '../../src/config/config';
 import { UploadDropzone } from '../../src/utils/uploadthing';
 import { NEXT_PUBLIC_URL } from '../../src/config/config';
-import { ethers } from 'ethers';
+import { N, ethers } from 'ethers';
 import Image from 'next/image';
 import Footer from '../components/footer';
 import Link from 'next/link';
@@ -70,6 +70,8 @@ export default function ProjectSignUp() {
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const { switchChain } = useSwitchChain();
+  const NO_EXPIRATION = 0n;
+
   console.log('Ecosystem', ecosystem);
   console.log('walletAddress', walletAddress);
   console.log('Fid', fid);
@@ -253,12 +255,12 @@ export default function ProjectSignUp() {
       const attestation: EIP712AttestationParams = {
         schema: mainSchemaUid,
         recipient: currentAddress,
-        expirationTime: BigInt(9973891048),
+        expirationTime: NO_EXPIRATION,
         revocable: true,
         refUID: '0x0000000000000000000000000000000000000000000000000000000000000000',
         data: encodedData,
-        value: BigInt(0),
-        deadline: BigInt(9973891048),
+        value: 0n,
+        deadline: NO_EXPIRATION,
         nonce: easnonce,
       };
       console.log('Attestation:', attestation);

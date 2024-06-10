@@ -51,6 +51,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     const [recentAttestationsLoading, setRecentAttestationsLoading] = useState(true);
     const [showAttestationForm, setShowAttestationForm] = useState(false);
     const [rating, setRating] = useState(0);
+    const NO_EXPIRATION = 0n;
     const [user] = useLocalStorage("user", {
         fid: '',
         username: '',
@@ -233,12 +234,12 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             const attestation: EIP712AttestationParams = {
                 schema: attestationSchema,
                 recipient: project.ethAddress || '',
-                expirationTime: BigInt(9973891048),
+                expirationTime: NO_EXPIRATION, 
                 revocable: true,
                 refUID: contribution.easUid || '',
                 data: encodedData,
-                value: BigInt(0),
-                deadline: BigInt(9973891048),
+                value: 0n,
+                deadline: NO_EXPIRATION,
                 nonce: easnonce,
             };
             console.log('Attestation:', attestation);

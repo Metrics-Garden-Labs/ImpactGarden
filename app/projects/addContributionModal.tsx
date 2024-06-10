@@ -36,6 +36,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   const [ attestationUID, setAttestationUID ] = useState<string>("");
   const [ ecosystem, setEcosystem ] = useState<AttestationNetworkType>('Optimism');
   const { switchChain } = useSwitchChain();
+  const NO_EXPIRATION = 0n;
   const [user] = useLocalStorage("user", {
     fid: '',
     username: '',
@@ -168,12 +169,12 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       const attestation: EIP712AttestationParams = {
         schema: contributionSchema,
         recipient: walletAddress,
-        expirationTime: BigInt(9973891048),
+        expirationTime: NO_EXPIRATION,
         revocable: true,
         refUID: selectedProject?.projectUid || '',
         data: encodedData,
-        value: BigInt(0),
-        deadline: BigInt(9973891048),
+        value: 0n,
+        deadline: NO_EXPIRATION,
         nonce: easnonce,
       };
       console.log('Attestation:', attestation);
