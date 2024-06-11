@@ -17,6 +17,9 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation'; // Im
 import AttestationConfirmationModal from '../components/attestationConfirmationModal';
 import { useSigner  } from '../../src/hooks/useEAS';
 import { isMobile } from 'react-device-detect';
+import { isAddress } from 'ethers';
+import { zeroAddress } from 'viem';
+import { Alchemy, Network } from 'alchemy-sdk';
 
 
 interface AttestationModalProps {
@@ -52,6 +55,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     const [showAttestationForm, setShowAttestationForm] = useState(false);
     const [rating, setRating] = useState(0);
     const NO_EXPIRATION = 0n;
+    const zero_uid = "0x0000000000000000000000000000000000000000000000000000000000000000";
     const [user] = useLocalStorage("user", {
         fid: '',
         username: '',
@@ -119,7 +123,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     useEffect(() => {
         const getContributionAttestations = async () => {
             try {
-                const response = await fetch(`${NEXT_PUBLIC_URL}/api/getContributionAttestations`, {
+                const response = await fetch(`/api/getContributionAttestations`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -183,6 +187,10 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     const toggleAttestationForm = () => {
         setShowAttestationForm(!showAttestationForm);
     };
+    const isValidEthereumAddress = (address : string): boolean => {
+        return isAddress(project.ethAddress);
+    };
+
 
     const createAttestation = async () => {
         console.log('user.fid:', user.fid);
@@ -201,6 +209,10 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             return;
           }
 
+        //const recipientAddress = project.ethAddress && isValidEthereumAddress(project.ethAddress) ? project.ethAddress : zeroAddress;
+        const recipientAddress = project.ethAddress && isValidEthereumAddress(project.ethAddress) ? project.ethAddress : '';
+
+        
         console.log('contribution:', contribution);
         console.log('projectethAddress:', project.ethAddress);  
 
@@ -227,16 +239,17 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             ]);
 
             const easop = new EAS('0x4200000000000000000000000000000000000021'); // Ensure you have the correct contract address for your EAS instance
+          
             easop.connect(signer);
             const delegatedSigner = await easop.getDelegated();
             const easnonce = await easop.getNonce(currentAddress);
-
+            
             const attestation: EIP712AttestationParams = {
                 schema: attestationSchema,
-                recipient: project.ethAddress || '',
+                recipient: recipientAddress,
                 expirationTime: NO_EXPIRATION, 
                 revocable: true,
-                refUID: contribution.easUid || '',
+                refUID: contribution.easUid || zero_uid,
                 data: encodedData,
                 value: BigInt(0),
                 deadline: NO_EXPIRATION,
@@ -259,7 +272,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                 typeof value === 'bigint' ? '0x' + value.toString(16) : value
             );
 
-            const response = await fetch(`${NEXT_PUBLIC_URL}/api/delegateAttestation`, {
+            const response = await fetch(`/api/delegateAttestation`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
