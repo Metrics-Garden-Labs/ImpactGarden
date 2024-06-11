@@ -259,7 +259,7 @@ export default function ProjectSignUp() {
         revocable: true,
         refUID: '0x0000000000000000000000000000000000000000000000000000000000000000',
         data: encodedData,
-        value: 0n,
+        value: BigInt(0),
         deadline: NO_EXPIRATION,
         nonce: easnonce,
       };

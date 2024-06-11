@@ -238,7 +238,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                 revocable: true,
                 refUID: contribution.easUid || '',
                 data: encodedData,
-                value: 0n,
+                value: BigInt(0),
                 deadline: NO_EXPIRATION,
                 nonce: easnonce,
             };

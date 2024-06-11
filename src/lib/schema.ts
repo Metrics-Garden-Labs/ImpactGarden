@@ -93,10 +93,8 @@ export const contributions = pgTable(
     secondaryecosystem: text("secondaryecosystem"),
     contribution: text("contribution").notNull().unique(),
     desc: text("desc").notNull(),
-    link: text("link").notNull(),
-    ethAddress: text("ethAddress")
-      .references(() => projects.ethAddress)
-      .notNull(),
+    link: text("link"),
+    ethAddress: text("ethAddress").references(() => projects.ethAddress),
     easUid: text("easUid"),
     createdAt: timestamp("createdAt").defaultNow(),
   },
