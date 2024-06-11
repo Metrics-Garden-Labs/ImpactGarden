@@ -440,11 +440,12 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                             <p className="text-center">{contribution.desc}</p>
                         </div>
 
+                        {contribution.link &&(
                         <div className="mb-4 justify-center items-center overflow-y-auto">
                           <h3 className="font-semibold text-center">Link/Evidence</h3>
                           <div className="flex justify-center items-center">
                             <Link
-                              href={contribution.link}
+                              href={contribution.link || ""}
                               className="text-gray-500 hover:text-gray-300 visited:text-indigo-600 flex items-center"
                             >
                               <p className='text-center'>{contribution.link}</p>
@@ -456,7 +457,8 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                             </Link>
                           </div>
                         </div>
-                       
+                       )}
+
                         <div className="mb-4">
                             <h3 className="font-semibold text-center">Ecosystem</h3>
                             <p className="text-center text-black">{project.ecosystem}</p>

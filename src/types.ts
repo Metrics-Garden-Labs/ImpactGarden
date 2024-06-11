@@ -27,9 +27,9 @@ export interface Contribution {
   ecosystem: string;
   secondaryecosystem: string | null;
   desc: string;
-  link: string;
+  link: string | null;
   easUid: string | null;
-  ethAddress: string;
+  ethAddress: string | null;
   createdAt?: Date | null;
 }
 

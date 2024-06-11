@@ -417,9 +417,11 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
               required
               data-tip="Please provide a link or evidence for your contribution"
               />
+              {formData.link && (
               <div className="text-right mr-2">
                 {formData.link.length}/200
               </div>
+            )}
           </div>
           <div className="mb-4 text-center">
             <button

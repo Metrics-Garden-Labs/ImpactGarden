@@ -118,38 +118,38 @@ export default function ProjectList({
             <h3 className="font-semibold text-center">Description</h3>
             <p className="text-center">{selectedProject.oneliner}</p>
           </div>
+          {selectedProject.websiteUrl && (
           <div className="mb-4">
             <h3 className="font-semibold text-center">Website</h3>
             <p className="text-center overflow-wrap break-words max-w-full mx-auto truncate">
-              {selectedProject.websiteUrl && (
                 <Link href={`${checkwebsiteUrl}`}>
                   <p className="text-black hover:text-gray-300 visited:text-indigo-600 ">
                     {selectedProject.websiteUrl}
                   </p>
                 </Link>
-              )}
             </p>
           </div>
+          )}
+          {selectedProject.twitterUrl && (
           <div className="mb-4">
             <h3 className="font-semibold text-center">Twitter</h3>
             <p className="text-center">
-              {selectedProject.twitterUrl && (
                 <a href={selectedProject.twitterUrl} target="_blank" rel="noopener noreferrer">
                   {selectedProject.twitterUrl}
                 </a>
-              )}
             </p>
           </div>
+          )}
+          {selectedProject.githubUrl && (
           <div className="mb-4">
             <h3 className="font-semibold text-center">Github</h3>
             <p className="text-center">
-              {selectedProject.githubUrl && (
                 <a href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer">
                   {selectedProject.githubUrl}
                 </a>
-              )}
             </p>
           </div>
+          )}
           <div className="mb-4 text-center">
             <Link href={`/projects/${encodeURIComponent(selectedProject.projectName)}`}>
               <button className='btn'>
