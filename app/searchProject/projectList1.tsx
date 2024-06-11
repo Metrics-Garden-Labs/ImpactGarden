@@ -32,6 +32,7 @@ export default function ProjectList({
   );
   const [selectedProjectName, setSelectedProjectName] = useGlobalState('selectedProjectName');
   const [modalOpen, setModalOpen] = useState(false);
+  const [visibleProjects, setVisibleProjects] = useState(12);
 
   const filteredProjects = useMemo(() => {
     return projects.filter((project) => {
@@ -82,6 +83,10 @@ export default function ProjectList({
 
   const closeModal = () => {
     setModalOpen(false);
+  };
+
+  const loadMoreProjects = () => {
+    setVisibleProjects((prev) => prev + 12);
   };
 
   const urlHelper = (url: string) => {
@@ -163,7 +168,7 @@ export default function ProjectList({
   return (
     <div className="bg-white mx-auto gap-12 max-w-6xl">
       <div className="grid grid-cols-1 gap-4 mx-3 md:grid-cols-3 md:mx-8 md:mx-8 lg:grid-cols-4 lg:gap-12 max-w-6xl overflow-y-auto">
-        {sortedProjects.map((project) => (
+        {sortedProjects.slice(0, visibleProjects).map((project) => (
           <div
             key={project.id}
             className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-md w-full h-66 shadow-xl"
@@ -206,6 +211,13 @@ export default function ProjectList({
           </div>
         ))}
       </div>
+      {visibleProjects < sortedProjects.length && (
+        <div className="flex justify-center my-8">
+          <button onClick={loadMoreProjects} className="btn">
+            Load More
+          </button>
+        </div>
+      )}
       {renderModal()}
     </div>
   );

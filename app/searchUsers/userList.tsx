@@ -15,6 +15,10 @@ export default async function UserList({ users, query, filter, verificationFilte
   const filteredUsers = [];
 
   for (const user of users) {
+    if (user.fid === '9999999') {
+      continue; // this should skip and not display the example user
+    }
+
     const user_addresses = await getUserAddressesByFid(user.fid);
 
     const isCoinbaseVerified = user_addresses.some(address => address.coinbaseverified);
