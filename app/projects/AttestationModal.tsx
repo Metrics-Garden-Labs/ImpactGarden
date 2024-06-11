@@ -123,7 +123,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     useEffect(() => {
         const getContributionAttestations = async () => {
             try {
-                const response = await fetch(`/api/getContributionAttestations`, {
+                const response = await fetch(`${NEXT_PUBLIC_URL}/api/getContributionAttestations`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -272,7 +272,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                 typeof value === 'bigint' ? '0x' + value.toString(16) : value
             );
 
-            const response = await fetch(`/api/delegateAttestation`, {
+            const response = await fetch(`${NEXT_PUBLIC_URL}/api/delegateAttestation`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
