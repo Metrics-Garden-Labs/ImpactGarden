@@ -173,7 +173,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
         revocable: true,
         refUID: selectedProject?.projectUid || '',
         data: encodedData,
-        value: 0n,
+        value: BigInt(0),
         deadline: NO_EXPIRATION,
         nonce: easnonce,
       };

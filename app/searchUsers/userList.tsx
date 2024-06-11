@@ -27,6 +27,7 @@ export default async function UserList({ users, query, filter, verificationFilte
     const isDelegate = user_addresses.some(address => address.delegate);
     const s4Participant = user_addresses.some(address => address.s4participant);
 
+
     let matchesFilter = true;
 
     if (filter === 'username') {
