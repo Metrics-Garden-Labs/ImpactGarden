@@ -209,8 +209,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             return;
           }
 
-        //const recipientAddress = project.ethAddress && isValidEthereumAddress(project.ethAddress) ? project.ethAddress : zeroAddress;
-        const recipientAddress = project.ethAddress && isValidEthereumAddress(project.ethAddress) ? project.ethAddress : '';
+        const recipientAddress = project.ethAddress && isValidEthereumAddress(project.ethAddress) ? project.ethAddress : zeroAddress;
 
         
         console.log('contribution:', contribution);
