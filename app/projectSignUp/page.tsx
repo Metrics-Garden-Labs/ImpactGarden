@@ -27,6 +27,7 @@ import { Alchemy, Network, Utils, Wallet } from "alchemy-sdk";
 import { clientToSigner, useSigner } from '../../src/hooks/useEAS';
 import { isMobile } from 'react-device-detect';
 import { set } from 'zod';
+import pinataSDK from '@pinata/sdk';
 
 
 type AttestationData = {
@@ -36,6 +37,7 @@ type AttestationData = {
   twitterUrl: string;
   githubURL: string;
   farcaster: string;
+  mirror: string;
 };
 
 type AttestationData1 = {
@@ -81,6 +83,7 @@ export default function ProjectSignUp() {
     twitterUrl: '',
     githubURL: '',
     farcaster: user.fid,
+    mirror: '',
   });
 
   //new attestation data, not sure if we have to worry to much if we are going to take all of the info from the agora api
@@ -126,6 +129,7 @@ export default function ProjectSignUp() {
   const [fid] = useGlobalState('fid');
   const [ethAddress] = useGlobalState('ethAddress');
   const [attestationUID, setAttestationUID] = useState<string>('');
+  const [attestationUID1, setAttestationUID1] = useState<string>('');
   const [imageUrl, setImageUrl] = useState<string>('');
   const [ecosystem, setEcosystem] = useState<string>('Optimism');
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
@@ -514,7 +518,10 @@ export default function ProjectSignUp() {
 
       if (responseData.success) {
         console.log('Attestations created successfully');
-        setAttestationUID(responseData.attestationUID);
+        const attestationUID1 = responseData.attestationUID;
+        setAttestationUID1(attestationUID1);
+        console.log('Attestation UID1:', attestationUID1);
+        
       } else {
         throw new Error (`Failed to create attestations, Error: ${responseData.error}`)
       }
@@ -527,6 +534,37 @@ export default function ProjectSignUp() {
       setIsLoading(false);
     }
   };
+ 
+  //put the info into pinata 
+  const pinataUpload = async () => {
+    const pin = new pinataSDK({ pinataJWTKey: process.env.NEXT_PUBLIC_PINATA_JWT_KEY});
+
+    try{
+      const attestationMetadata = {
+        name: attestationData.projectName,
+        farcaster: user.fid,
+        description: attestationData.oneliner,
+        website: attestationData.websiteUrl,
+        twitter: attestationData.twitterUrl,
+        github: attestationData.githubURL,
+        projectREFId: attestationUID1,
+        logoURL: imageUrl,
+        mirror: attestationData.mirror,
+        categories: formatCategories(selectedCategories),
+      };
+
+      const res = await pin.pinJSONToIPFS(attestationMetadata);
+      if (!res || !res.IpfsHash) {
+        throw new Error('Invalid response from Pinata');
+      }
+      const pinataURL = `https://gateway.pinata.cloud/ipfs/${res.IpfsHash}`;
+      console.log('Pinata URL:', pinataURL);
+      return pinataURL;
+    } catch (error) {
+      console.error('Failed to upload to pinata:', error);
+      alert('An error occurred while uploading to pinata. Please try again.');
+    }
+  }
 
   //the attestation that will include the metadata and the parent project
   const createAttestation2 = async () => {
@@ -546,10 +584,20 @@ export default function ProjectSignUp() {
       console.error('Signer not available');
       return;
     }
+
+    // Upload to Pinata and get the URL
+    const pinatares = await pinataUpload();
+    const pinataURL = pinatares;
+    console.log('Pinata URL:', pinataURL);
+    if (!pinataURL) {
+      console.error('Failed to get Pinata URL');
+      return;
+    }
+
     const schema2 = '0xe035e3fe27a64c8d7291ae54c6e85676addcbc2d179224fe7fc1f7f05a8c6eac';
     //need to do some research into what actually the metadata type is. 
     const schemaEncoder2 = new SchemaEncoder(
-      'bytes32 projectRefUID, uint256 farcasterID, string name, string category, bytes32 parentProjectRefUID, unint metadataType, string metadataURL'
+      'bytes32 projectRefUID, uint256 farcasterID, string name, string category, bytes32 parentProjectRefUID, uint8 metadataType, string metadataURL'
     );
 
     //for the attestaion uid this will work in this test, however i need to store this as a separate value,
@@ -562,11 +610,50 @@ export default function ProjectSignUp() {
       { name: 'name', value: attestationData.projectName, type: 'string' },
       { name: 'category', value: formatCategories(selectedCategories), type: 'string' },
       { name: 'parentProjectRefUID', value: ZERO_BYTES32, type: 'bytes32' },
-      { name: 'metadataType', value: '0', type: 'uint' },
+      { name: 'metadataType', value: '0', type: 'uint8' },
       { name: 'metadataURL', value: pinataURL, type: 'string' },
     ]);
     const eas3 = new EAS(networkContractAddresses[selectedNetwork]?.attestAddress);
     eas3.connect(signer);
+  
+
+    const attestationdata2: AttestationRequestData = {
+      recipient: currentAddress,
+      data: encodedData2,
+      expirationTime: NO_EXPIRATION,
+      revocable: true,
+      refUID: ZERO_BYTES32,
+      value: 0n,
+    }
+
+    const dataToSend2 = {
+      schema: schema2,
+      ...attestationdata2,
+    }
+
+    const serialisedData2 = JSON.stringify(dataToSend2, (key, value) =>
+        typeof value === 'bigint' ? "0x" + value.toString(16) : value
+      );
+
+    const response2 = await fetch('/api/projectAttestation', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        },
+      body: serialisedData2,
+    });
+
+    const responseData2 = await response2.json();
+    console.log('Response Data:', responseData2);
+
+    if (responseData2.success) {
+      console.log('Attestations created successfully');
+      setAttestationUID(responseData2.attestationUID);
+      console.log('Attestation UID2:', attestationUID);
+    } else {
+      throw new Error (`Failed to create attestations, Error: ${responseData2.error}`)
+    }
+    //again not adding to the db
   };
 
 
@@ -589,6 +676,7 @@ export default function ProjectSignUp() {
     }
     
     createAttestation1();
+    createAttestation2();
 
     // If both CAPTCHA and wallet address are valid, proceed to verify the CAPTCHA with the backend
     //commenting this out for the test
@@ -937,7 +1025,7 @@ export default function ProjectSignUp() {
               type="text"
               id="mirror"
               name="mirror"
-              value={attestationData1.metadataURL}
+              value={attestationData.mirror}
               onChange={handleAttestationChange}
               className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="Type Mirror Channel ID here"

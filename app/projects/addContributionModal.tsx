@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { NEXT_PUBLIC_URL, WHITELISTED_USERS, useGlobalState } from '../../src/config/config';
 import { AttestationNetworkType, Contribution, Project } from '../../src/types';
 import { useEAS } from '../../src/hooks/useEAS';
-import { EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
+import { AttestationRequestData, EAS, EIP712AttestationParams, NO_EXPIRATION, SchemaEncoder, ZERO_BYTES32 } from '@ethereum-attestation-service/eas-sdk';
 import { ethers } from 'ethers';
 import { RxCross2 } from 'react-icons/rx';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
@@ -12,7 +12,9 @@ import Link from 'next/link';
 import { easScanEndpoints } from '../components/easScan';
 import AttestationCreationModal from '../components/attestationCreationModal';
 import { useSwitchChain } from 'wagmi';
-import { getChainId } from '../components/networkContractAddresses';
+import { getChainId, networkContractAddresses } from '../components/networkContractAddresses';
+import pinataSDK from '@pinata/sdk';
+import { clientToSigner, useSigner } from '../../src/hooks/useEAS';
 
 
 
@@ -44,6 +46,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   });
 
   const { eas, currentAddress, address , handleNetworkChange, selectedNetwork} = useEAS();
+  const signer = useSigner();
 
 
   useEffect(() => {
@@ -139,7 +142,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       ]);
 
       console.log ("encodedData", encodedData)
-      
+      //when i merge will have to fix the provider stuff to useSigner
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const easop = new EAS('0x4200000000000000000000000000000000000021');
@@ -205,10 +208,138 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     }
   };
 
+  const pinataUpload = async () => {
+    const pin = new pinataSDK({ pinataJWTKey: process.env.NEXT_PUBLIC_PINATA_JWT_KEY});
+
+    try{
+      const attestationMetadata = {
+        name: selectedProject?.projectName,
+        farcaster: user.fid,
+        governanceType: formData.governancetype,
+        ecosystem: formData.ecosystem,
+        secondaryEcosystem: formData.secondaryecosystem,
+        contribution: formData.contribution,
+        description: formData.desc,
+        evidence: formData.link,
+      };
+
+      const res = await pin.pinJSONToIPFS(attestationMetadata);
+      if (!res || !res.IpfsHash) {
+        throw new Error('Invalid response from Pinata');
+      }
+      const pinataURL = `https://gateway.pinata.cloud/ipfs/${res.IpfsHash}`;
+      console.log('Pinata URL:', pinataURL);
+      return pinataURL;
+    } catch (error) {
+      console.error('Failed to upload to pinata:', error);
+      alert('An error occurred while uploading to pinata. Please try again.');
+    }
+  }
+
+  const createAttestation1 = async ()  => {
+    if (!user.fid) {
+      alert('User not logged in');
+      return '';
+    }
+
+    if (!eas || !currentAddress) {
+      alert('Please connect wallet to continue');
+      return ''; 
+    }
+
+    if (!signer) {
+      console.error('Signer not available');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+    // Upload to Pinata and get the URL
+    const pinatares = await pinataUpload();
+    const pinataURL = pinatares;
+    console.log('Pinata URL:', pinataURL);
+    if (!pinataURL) {
+      console.error('Failed to get Pinata URL');
+      return;
+    }
+
+    const schema1 = '0xe035e3fe27a64c8d7291ae54c6e85676addcbc2d179224fe7fc1f7f05a8c6eac';
+    //need to do some research into what actually the metadata type is. 
+    const schemaEncoder2 = new SchemaEncoder(
+      'bytes32 projectRefUID, uint256 farcasterID, string name, string category, bytes32 parentProjectRefUID, uint8 metadataType, string metadataURL'
+    );
+
+    //for the attestaion uid this will work in this test, however i need to store this as a separate value,
+    //for the confirmation to show i need to also make it dependeent of the attestationUID2
+    //which will be the result of this attestation
+    //the other metadata will be stored in the pinata url which i am yet to create. 
+    const encodedData1 = schemaEncoder2.encodeData([
+      { name: 'projectRefUID', value: attestationUID, type: 'bytes32' },
+      { name: 'farcasterID', value: user.fid, type: 'uint256' },
+      { name: 'name', value: selectedProject?.projectName || "", type: 'string' },
+      { name: 'category', value: formData.governancetype || "", type: 'string' },
+      { name: 'parentProjectRefUID', value: selectedProject?.projectUid || "", type: 'bytes32' },
+      { name: 'metadataType', value: '0', type: 'uint8' },
+      { name: 'metadataURL', value: pinataURL, type: 'string' },
+    ]);
+
+
+      const easop = new EAS('0x4200000000000000000000000000000000000021');
+      easop.connect(signer);
+     
+      const attestationdata1: AttestationRequestData = {
+        recipient: currentAddress,
+        data: encodedData1,
+        expirationTime: NO_EXPIRATION,
+        revocable: true,
+        refUID: ZERO_BYTES32,
+        value: 0n,
+      }
+      const dataToSend = {
+        schema: schema1,
+        ...attestationdata1,
+      }
+
+      //might not need to add the bigint conversion because i took the values from the sdk
+      const serialisedData = JSON.stringify(dataToSend, (key, value) =>
+        typeof value === 'bigint' ? "0x" + value.toString(16) : value
+      );
+
+      //now i need to send the data to the backend using a different api
+      const response = await fetch(`/api/projectAttestation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: serialisedData,
+      });
+      const responseData = await response.json();
+      console.log('Response Data:', responseData);
+
+      if (responseData.success) {
+        console.log('Attestations created successfully');
+        const attestationUID1 = responseData.attestationUID;
+        setAttestationUID(attestationUID1);
+        console.log('Attestation UID1:', attestationUID1);
+        
+      } else {
+        throw new Error (`Failed to create attestations, Error: ${responseData.error}`)
+      }
+      return responseData.attestationUID;
+      //i am not going to add this one to the database, just checking to see if it works
+    } catch (error) {
+      console.error('Failed to create attestation:', error);
+      alert('An error occurred while creating attestation. Please try again.');
+    }
+  };
+
+
+
+
   const addContribution = async (contribution: Contribution): Promise<Contribution> => {
     try {
       // Create the attestation
-      const attestationUID = await createAttestation();
+      const attestationUID = await createAttestation1();
   
       if (attestationUID) {
         // Update the form data with the attestation UID
