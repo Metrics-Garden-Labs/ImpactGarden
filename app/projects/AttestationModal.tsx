@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import { Attestation, EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
+import { Attestation, EAS, EIP712AttestationParams, NO_EXPIRATION, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
 import { AttestationNetworkType, Contribution, ContributionAttestation, ContributionAttestationWithUsername, Project } from '@/src/types'; 
 import { NEXT_PUBLIC_URL, WHITELISTED_USERS } from '@/src/config/config'; 
 import { useGlobalState } from '@/src/config/config'; 
@@ -215,12 +215,12 @@ console.log('How It Helped:', improvementareasstring);
             const attestation: EIP712AttestationParams = {
                 schema: attestationSchema,
                 recipient: project.ethAddress || '',
-                expirationTime: BigInt(9973891048),
+                expirationTime: NO_EXPIRATION,
                 revocable: true,
                 refUID: contribution.easUid || '',
                 data: encodedData,
-                value: BigInt(0),
-                deadline: BigInt(9973891048),
+                value: 0n,
+                deadline: NO_EXPIRATION,
                 nonce: easnonce,
             };
             console.log('Attestation:', attestation);

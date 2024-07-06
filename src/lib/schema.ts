@@ -50,6 +50,7 @@ export const projects = pgTable(
     twitterUrl: text("twitterUrl"),
     githubUrl: text("githubUrl"),
     logoUrl: text("logoUrl"),
+    primaryprojectuid: text("primaryprojectuid").unique(),
     projectUid: text("projectUid").unique(),
     createdAt: timestamp("createdAt").defaultNow(),
   },

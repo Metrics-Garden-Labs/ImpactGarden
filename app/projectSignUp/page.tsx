@@ -10,7 +10,7 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import { WHITELISTED_USERS, useGlobalState } from '../../src/config/config';
 import { UploadDropzone } from '../../src/utils/uploadthing';
 import { NEXT_PUBLIC_URL } from '../../src/config/config';
-import { ethers } from 'ethers';
+import { N, ethers } from 'ethers';
 import Image from 'next/image';
 import Footer from '../components/footer';
 import Link from 'next/link';
@@ -99,7 +99,6 @@ export default function ProjectSignUp() {
   //parent projectRefUID for (only for the contributions/subprojects)
   //metadata type - not sure what this is actually
   //metadataURL - all of the stuff that goes in pinata. 
-
   //third schema contains
   //schema 470
   //round number which will be 4
@@ -187,6 +186,7 @@ export default function ProjectSignUp() {
         githubUrl: attestationData.githubURL,
         logoUrl: imageUrl,
         projectUid: attestationUID,
+        primaryprojectuid: attestationUID1,
         ecosystem: ecosystem,
         // Add other relevant properties from the attestationData
       };
@@ -278,178 +278,6 @@ export default function ProjectSignUp() {
   //Create attestation logic
   //--------------------------------------------------------------------------------
 
-  const createAttestation = async () => {
-
-    //check for captcha being solved
-
-    if (!captcha) {
-        alert("Please complete the captcha to continue");
-        return;//exit function if captcha not solved
-    }
-
-    if (!user.fid || user.fid === '') {
-      alert('User not logged in, please login to continue');
-      return;
-    }
-
-    if (!eas || !currentAddress) {
-      console.error('Wallet not connected. Please connect your wallet to continue');
-      return;
-    }
-    console.log('current address', currentAddress);
-
-    if (!signer) {
-      console.error('Signer not available');
-      return;
-    }
-
-
-     // Check if the user's fid is in the whitelist
-    //  if (!WHITELISTED_USERS.includes(user.fid)) {
-    //   alert('Access denied. Still in Alpha testing phase.');
-    //   return; // Exit function if user is not whitelisted
-    // }
-
-    // If all checks pass, continue with the function
-    console.log('All checks passed, continuing with function...');
-    {/* schema is just for OP at the minute would have to make a schema for each network */}
-    try {
-      setIsLoading(true);
-      const mainSchemaUid = '0x6b4a2e50104d9b69e49c6a19a2054b78c7e87c9c924cba237ebbd5bb0a50a5c4';
-      const schemaEncoder = new SchemaEncoder(
-        'string Project, string Description, string Website, string Twitter, string Github, string Farcaster'
-      );
-      console.log('Schema Encoder:', schemaEncoder);
-      const encodedData = schemaEncoder.encodeData([
-        { name: 'Project', value: attestationData.projectName, type: 'string' },
-        { name: 'Description', value: attestationData.oneliner, type: 'string' },
-        { name: 'Website', value: attestationData.websiteUrl, type: 'string' },
-        { name: 'Twitter', value: attestationData.twitterUrl, type: 'string' },
-        { name: 'Github', value: attestationData.githubURL, type: 'string' },
-        { name: 'Farcaster', value: user.fid, type: 'string' },
-      ]);
-      console.log('Encoded Data:', encodedData);
-
-      console.log('User:', user);
-      const eas1 = new EAS(networkContractAddresses[selectedNetwork]?.attestAddress);
-      // const settings = {
-      //   apiKey: process.env.ALCHEMY_API_KEY,
-      //   network: Network.OPT_MAINNET,
-      // };
-      // const network = new ethers.Network("optimism", 10);
-      // const alchemy = new Alchemy(settings);
-      // console.log("Alchemy", alchemy);
-      // const alchemyProvider = new ethers.AlchemyProvider(
-      //   network,
-      //   settings.apiKey
-      // );
-      //const provider = new ethers.BrowserProvider(window.ethereum);
-      // console.log('Provider:', alchemyProvider);
-      // //const signer = await alchemyProvider.getSigner();
-      // console.log('Signer:', signer);
-
-      // signer = clientToSigner(client);
-
-      // const provider = new ethers.BrowserProvider(window.ethereum);
-      // const signer = await provider.getSigner();
-      eas1.connect(signer);
-      console.log('EAS:', eas1);
-      const delegatedSigner = await eas1.getDelegated();
-      console.log('Delegated Signer:', delegatedSigner);
-
-      const easnonce = await eas1.getNonce(walletAddress);
-      console.log('EAS Nonce:', easnonce);
-
-      const attestation: EIP712AttestationParams = {
-        schema: mainSchemaUid,
-        recipient: currentAddress,
-        expirationTime: BigInt(9973891048),
-        revocable: true,
-        refUID: '0x0000000000000000000000000000000000000000000000000000000000000000',
-        data: encodedData,
-        value: BigInt(0),
-        deadline: BigInt(9973891048),
-        nonce: easnonce,
-      };
-      console.log('Attestation:', attestation);
-
-      try {
-        const signDelegated = await delegatedSigner.signDelegatedAttestation(attestation, signer);
-        console.log('Sign Delegated:', signDelegated);
-
-        attestation.data = encodedData;
-        const signature = signDelegated.signature;
-
-        const backendWallet = '0xE27a079BcE042d7163A47eB35D591D241eA7196b';
-
-        const dataToSend = {
-          ...attestation,
-          signature: signature,
-          attester: walletAddress,
-        };
-
-        const serialisedData = JSON.stringify(dataToSend, (key, value) =>
-          typeof value === 'bigint' ? "0x" + value.toString(16) : value
-        );
-        console.log('Serialised Data:', serialisedData);
-
-        const response = await fetch(`${NEXT_PUBLIC_URL}/api/delegateAttestation`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: serialisedData,
-        });
-        const responseData = await response.json();
-        console.log('Response Data:', responseData);
-
-        if (responseData.success) {
-          setAttestationUID(responseData.attestationUID);
-          console.log('Attestations created successfully');
-        
-          const projectUid = responseData.attestationUID;
-          console.log('Project UID:', projectUid);
-        
-          const newProject = {
-            //userFid: fid,
-            userFid: user.fid,
-            ethAddress: currentAddress,
-            projectName: attestationData.projectName,
-            websiteUrl: attestationData.websiteUrl,
-            oneliner: attestationData.oneliner,
-            twitterUrl: attestationData.twitterUrl,
-            githubUrl: attestationData.githubURL,
-            ecosystem: ecosystem,
-            projectUid: projectUid,
-            logoUrl: imageUrl,
-          };
-
-          //Add project to database
-        
-          const response1 = await fetch(`${NEXT_PUBLIC_URL}/api/addProjectDb`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newProject)
-          });
-          const dbResponse = await response1.json();
-          console.log('insert project to db success', dbResponse);
-        } else {
-          throw new Error (`Failed to create attestations, Error: ${responseData.error}`)
-        }
-      } catch (error) {
-        throw new Error(`Failed to sign delegated attestation,`);
-
-      }
-    } catch (error) {
-      console.error('Failed to create attestations:', error);
-      alert('An error occurred while creating attestations. Please try again.');
-    } finally { 
-      setIsLoading(false);
-    }
-  };
-
   //put in the info for the first attestation with the issuer and the farcasterID
   const createAttestation1 = async () => {
     setIsLoading(true);
@@ -506,7 +334,7 @@ export default function ProjectSignUp() {
       );
 
       //now i need to send the data to the backend using a different api
-      const response = await fetch(`/api/projectAttestation`, {
+      const response = await fetch(`${NEXT_PUBLIC_URL}/api/projectAttestation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -526,6 +354,7 @@ export default function ProjectSignUp() {
         throw new Error (`Failed to create attestations, Error: ${responseData.error}`)
       }
       //i am not going to add this one to the database, just checking to see if it works
+      //i dont think i do need to add it to the db, mmaybe just the attestationUID
 
     } catch (error) {
       console.error('Failed to create attestation 1:', error);
@@ -568,10 +397,9 @@ export default function ProjectSignUp() {
 
   //the attestation that will include the metadata and the parent project
   const createAttestation2 = async () => {
-     //dont worry about the captcha for this one yet
-     //for this test, will have to change how the loading is done for the attestation loading modal,
      //it will also only be completed when the last attestation is completed
-     //it will also have to show all 3 of the attestations that have been created. 
+     //there are 2 attestations going to be made, the first will be made with our wallet
+     //this one will be delegated
      if (!user.fid || user.fid === '') {
       alert('User not logged in, please login to continue');
       return;
@@ -615,27 +443,53 @@ export default function ProjectSignUp() {
     ]);
     const eas3 = new EAS(networkContractAddresses[selectedNetwork]?.attestAddress);
     eas3.connect(signer);
-  
+    const delegatedSigner = await eas3.getDelegated();
+    const easnonce = await eas3.getNonce(currentAddress);
 
-    const attestationdata2: AttestationRequestData = {
+    const attestationdata2: EIP712AttestationParams = {
+      schema: schema2,
       recipient: currentAddress,
-      data: encodedData2,
       expirationTime: NO_EXPIRATION,
       revocable: true,
-      refUID: ZERO_BYTES32,
+      refUID: attestationUID1,
+      data: encodedData2,
       value: 0n,
-    }
+      deadline: NO_EXPIRATION,
+      nonce: easnonce,
+    };
+    console.log('Attestation Data 2:', attestationdata2);
+
+    const signDelegated = await delegatedSigner.signDelegatedAttestation(attestationdata2, signer);
+
+    attestationdata2.data = encodedData2;
+    const signature = signDelegated.signature;
 
     const dataToSend2 = {
-      schema: schema2,
       ...attestationdata2,
-    }
+      signature: signature,
+      attestor: currentAddress,
+    };
+  
+
+    // const attestationdata2: AttestationRequestData = {
+    //   recipient: currentAddress,
+    //   data: encodedData2,
+    //   expirationTime: NO_EXPIRATION,
+    //   revocable: true,
+    //   refUID: ZERO_BYTES32,
+    //   value: 0n,
+    // }
+
+    // const dataToSend2 = {
+    //   schema: schema2,
+    //   ...attestationdata2,
+    // }
 
     const serialisedData2 = JSON.stringify(dataToSend2, (key, value) =>
         typeof value === 'bigint' ? "0x" + value.toString(16) : value
       );
 
-    const response2 = await fetch('/api/projectAttestation', {
+    const response2 = await fetch(`${NEXT_PUBLIC_URL}/api/delegatedAttestation`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -647,13 +501,55 @@ export default function ProjectSignUp() {
     console.log('Response Data:', responseData2);
 
     if (responseData2.success) {
-      console.log('Attestations created successfully');
-      setAttestationUID(responseData2.attestationUID);
-      console.log('Attestation UID2:', attestationUID);
+        setAttestationUID(responseData2.attestationUID);
+        console.log('Attestations created successfully');
+      
+        const projectUid = responseData2.attestationUID;
+        console.log('Project UID:', projectUid);
+      
+        const newProject = {
+          userFid: user.fid,
+          ethAddress: currentAddress,
+          projectName: attestationData.projectName,
+          websiteUrl: attestationData.websiteUrl,
+          oneliner: attestationData.oneliner,
+          twitterUrl: attestationData.twitterUrl,
+          githubUrl: attestationData.githubURL,
+          ecosystem: ecosystem,
+          projectUid: projectUid,
+          logoUrl: imageUrl,
+        };
+
+        //Add project to database
+      
+        try {
+          const response1 = await fetch(`${NEXT_PUBLIC_URL}/api/addProjectDb`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newProject)
+          });
+        
+          // Check if the response status indicates a successful request
+          if (!response1.ok) {
+            // Extract error message from the response body if available
+            const errorDetails = await response1.json();
+            throw new Error(`Error: ${response1.status} - ${errorDetails.message || response1.statusText}`);
+          }
+        
+          // Parse the JSON response
+          const dbResponse = await response1.json();
+          console.log('Insert project to db success:', dbResponse);
+        } catch (error:any) {
+          // Log the error message
+          console.error('Insert project to db failed:', error.message);
+        }
+        
     } else {
       throw new Error (`Failed to create attestations, Error: ${responseData2.error}`)
     }
-    //again not adding to the db
+    //this one does not get added to the database
   };
 
 
@@ -662,46 +558,43 @@ export default function ProjectSignUp() {
     event.preventDefault();
     console.log("Captcha value:", captcha);
   
-    // First, check if the CAPTCHA has been completed
-    //commenting this out for the test
-    // if (!captcha) {
-    //   alert("Please complete the CAPTCHA to continue.");
-    //   return;  // Stop the function if there's no CAPTCHA response
-    // }
+    //First, check if the CAPTCHA has been completed
+    if (!captcha) {
+      alert("Please complete the CAPTCHA to continue.");
+      return;  // Stop the function if there's no CAPTCHA response
+    }
   
     // Next, check if the wallet address is connected and is a non-empty string
     if (!address || address.trim() === "") {
       alert("Please connect your wallet to proceed.");
       return;  // Stop the function if there's no wallet address or if it's empty
     }
-    
-    createAttestation1();
-    createAttestation2();
 
     // If both CAPTCHA and wallet address are valid, proceed to verify the CAPTCHA with the backend
     //commenting this out for the test
-    // try {
-    //   const response = await fetch(`${NEXT_PUBLIC_URL}/api/verifyCaptcha`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ captchaResponse: captcha }),
-    //   });
+    try {
+      const response = await fetch(`${NEXT_PUBLIC_URL}/api/verifyCaptcha`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ captchaResponse: captcha }),
+      });
   
-    //   if (response.ok) {
-    //     console.log('Captcha is valid and wallet is connected');
-    //     //i am testing the new attestation. 
-    //     createAttestation1();
-    //   } else {
-    //     // If the response is not OK, assume the CAPTCHA was invalid
-    //     console.error('Captcha is invalid');
-    //     alert('Captcha is invalid. Please try again.');
-    //   }
-    // } catch (error) {
-    //   console.error('Failed to verify captcha:', error);
-    //   alert('An error occurred while verifying the captcha. Please try again.');
-    // }
+      if (response.ok) {
+        console.log('Captcha is valid and wallet is connected');
+        //i am testing the new attestation. 
+        await createAttestation1();
+        await createAttestation2();
+      } else {
+        // If the response is not OK, assume the CAPTCHA was invalid
+        console.error('Captcha is invalid');
+        alert('Captcha is invalid. Please try again.');
+      }
+    } catch (error) {
+      console.error('Failed to verify captcha:', error);
+      alert('An error occurred while verifying the captcha. Please try again.');
+    }
   };
 
   //Modal for when the attestation is being processed

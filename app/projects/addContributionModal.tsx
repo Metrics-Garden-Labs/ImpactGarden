@@ -1,4 +1,5 @@
 // AddContributionModal.tsx
+//with the current format this is pretty much a subproject of the original project,
 'use client';
 import React, { useEffect, useState } from 'react';
 import { NEXT_PUBLIC_URL, WHITELISTED_USERS, useGlobalState } from '../../src/config/config';
@@ -108,106 +109,6 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   console.log('Project Ecosystem:', selectedProject?.ecosystem);
   console.log('Selected Project:', formData);
 
-  const createAttestation = async (): Promise<string> => {
-
-    if (!user.fid) {
-      alert('User not logged in');
-      return '';
-    }
-
-    if (!eas || !currentAddress) {
-      alert('Please connect wallet to continue');
-      return ''; 
-    }
-
-    // if (!WHITELISTED_USERS.includes(user.fid)) {
-    //   alert('Access denied. Still in Alpha testing phase.');
-    //   return ''; // Exit function if user is not whitelisted
-    // }
-
-    try {
-      setIsLoading(true);
-
-      const contributionSchema = '0xd13f3b9aa3f4e9ec3b70a76cd767fa64f4f7eb7a6a59e4b1e330d7dac6ec2ae9';
-      const schemaEncoder = new SchemaEncoder('string Farcaster, string Project, string GovernanceType, string Ecosystem, string SecondaryEcosystem, string Contribution, string Description, string Evidence');
-      const encodedData = schemaEncoder.encodeData([
-        { name: 'Farcaster', type: 'string', value: user.fid },
-        { name: 'Project', type: 'string', value: selectedProject?.projectName || '' },
-        { name: 'GovernanceType', type: 'string', value: formData.governancetype || '' },
-        { name: 'Ecosystem', type: 'string', value: formData.ecosystem },
-        { name: 'SecondaryEcosystem', type: 'string', value: formData.secondaryecosystem || '' },
-        { name: 'Contribution', type: 'string', value: formData.contribution },
-        { name: 'Description', type: 'string', value: formData.desc || "" },
-        { name: 'Evidence', type: 'string', value: formData.link || "" },  
-      ]);
-
-      console.log ("encodedData", encodedData)
-      //when i merge will have to fix the provider stuff to useSigner
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const easop = new EAS('0x4200000000000000000000000000000000000021');
-      easop.connect(signer);
-      const delegatedSigner = await easop.getDelegated();
-      console.log('Delegated Signer:', delegatedSigner);
-
-      const easnonce = await easop.getNonce(walletAddress);
-      console.log('EAS Nonce:', easnonce);
-      console.log("refUID", selectedProject?.projectUid )
-
-      const attestation: EIP712AttestationParams = {
-        schema: contributionSchema,
-        recipient: walletAddress,
-        expirationTime: BigInt(9973891048),
-        revocable: true,
-        refUID: selectedProject?.projectUid || '',
-        data: encodedData,
-        value: BigInt(0),
-        deadline: BigInt(9973891048),
-        nonce: easnonce,
-      };
-      console.log('Attestation:', attestation);
-
-      const signDelegated = await delegatedSigner.signDelegatedAttestation(attestation, signer);
-      console.log('Delegated Signature:', signDelegated);
-
-      attestation.data = encodedData;
-      const signature = signDelegated.signature;
-
-      const dataToSend = {
-        ...attestation,
-        signature: signature,
-        attester: walletAddress,
-      };
-
-      const serializedData = JSON.stringify(dataToSend, (key, value) =>
-        typeof value === 'bigint' ? '0x' + value.toString(16) : value
-      );
-
-      const response = await fetch(`${NEXT_PUBLIC_URL}/api/delegateAttestation`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: serializedData,
-      });
-      const responseData = await response.json();
-      console.log('Response:', responseData);
-
-      if (responseData.success && responseData.attestationUID) {
-        console.log('Attestation UID:', responseData.attestationUID);
-        return responseData.attestationUID;
-      } else {
-        console.error('Failed to retrieve attestation UID from the API response');
-        return ''; // Return an empty string if attestation UID is not available
-      }
-    } catch (error) {
-      console.error('Error creating attestation:', error);
-      return ''; // Return an empty string if an error occurs
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const pinataUpload = async () => {
     const pin = new pinataSDK({ pinataJWTKey: process.env.NEXT_PUBLIC_PINATA_JWT_KEY});
 
@@ -237,6 +138,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   }
 
   const createAttestation1 = async ()  => {
+    //this attestation is going to have to be delegated too
     if (!user.fid) {
       alert('User not logged in');
       return '';
@@ -252,6 +154,11 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       return;
     }
 
+    if(!selectedProject?.projectUid) {
+      console.error('Selected Project not available');
+      return;
+    }
+
     try {
       setIsLoading(true);
     // Upload to Pinata and get the URL
@@ -264,17 +171,15 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     }
 
     const schema1 = '0xe035e3fe27a64c8d7291ae54c6e85676addcbc2d179224fe7fc1f7f05a8c6eac';
-    //need to do some research into what actually the metadata type is. 
+
     const schemaEncoder2 = new SchemaEncoder(
       'bytes32 projectRefUID, uint256 farcasterID, string name, string category, bytes32 parentProjectRefUID, uint8 metadataType, string metadataURL'
     );
 
-    //for the attestaion uid this will work in this test, however i need to store this as a separate value,
     //for the confirmation to show i need to also make it dependeent of the attestationUID2
     //which will be the result of this attestation
-    //the other metadata will be stored in the pinata url which i am yet to create. 
     const encodedData1 = schemaEncoder2.encodeData([
-      { name: 'projectRefUID', value: attestationUID, type: 'bytes32' },
+      { name: 'projectRefUID', value: selectedProject?.projectUid, type: 'bytes32' },
       { name: 'farcasterID', value: user.fid, type: 'uint256' },
       { name: 'name', value: selectedProject?.projectName || "", type: 'string' },
       { name: 'category', value: formData.governancetype || "", type: 'string' },
@@ -292,7 +197,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
         data: encodedData1,
         expirationTime: NO_EXPIRATION,
         revocable: true,
-        refUID: ZERO_BYTES32,
+        refUID: selectedProject.projectUid,
         value: 0n,
       }
       const dataToSend = {
