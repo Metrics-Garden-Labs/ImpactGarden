@@ -50,7 +50,6 @@ const UserProfilePage = async ({ searchParams }: Props) => {
     // Handle the error, display an error message, or return a fallback UI
     return (
       <div className="bg-white text-black">
-        <h1>Search Users Here:</h1>
         <SearchUsers />
         <p>Failed to fetch users. Please try again later.</p>
       </div>
