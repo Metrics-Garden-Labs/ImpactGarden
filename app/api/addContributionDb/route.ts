@@ -5,8 +5,9 @@ import { db } from "../../../src/lib/db";
 import { eq } from "drizzle-orm";
 import { contributions } from "../../../src/lib/schema";
 import { NewContribution } from "../../../src/types";
+import { corsMiddleware } from "../../../src/config/corsMiddleware";
 
-export const POST = async (request: Request) => {
+const POST = async (request: Request) => {
   try {
     const newContribution: NewContribution = await request.json();
 
@@ -42,3 +43,5 @@ export const POST = async (request: Request) => {
     );
   }
 };
+
+export default corsMiddleware(POST);

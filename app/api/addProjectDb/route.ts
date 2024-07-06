@@ -8,10 +8,11 @@ import { NewProject } from "../../../src/types";
 import { getEmbedding } from "@/src/config/openai";
 import { ProjectInfo } from "@/src/lib/pinecone";
 import { RecordMetadata, RecordValues } from "@pinecone-database/pinecone";
+import { corsMiddleware } from "@/src/config/corsMiddleware";
 
 //in this file we insert new projects into the database, i am also trying to embed the information for the ai to use.
 
-export const POST = async (request: Request) => {
+const POST = async (request: Request) => {
   try {
     const newProject: NewProject = await request.json();
 
@@ -60,6 +61,9 @@ export const POST = async (request: Request) => {
     );
   }
 };
+
+export default corsMiddleware(POST);
+
 // Path: app/api/addUserDb/route.ts
 
 // async function getEmbeddingForProject(newProject: NewProject) {

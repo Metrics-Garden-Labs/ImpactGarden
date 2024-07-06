@@ -15,7 +15,8 @@ const { useGlobalState } = createGlobalState(initialState);
 
 export { useGlobalState };
 
-export const NEXT_PUBLIC_URL = "https://www.metricsgarden.xyz/";
+export const NEXT_PUBLIC_URL =
+  "https://module3-git-newschema-metrics-garden-labs.vercel.app";
 //export const NEXT_PUBLIC_URL = "http://localhost:3001";
 
 export const WHITELISTED_USERS = [

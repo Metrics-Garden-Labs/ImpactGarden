@@ -1,8 +1,9 @@
 // pages/api/getContributions.ts
 import { NextResponse } from "next/server";
 import { getContributionsByProjectName } from "@/src/lib/db";
+import { corsMiddleware } from "@/src/config/corsMiddleware";
 
-export const POST = async (request: Request) => {
+const POST = async (request: Request) => {
   try {
     console.log("Received request to get contributions");
 
@@ -30,3 +31,5 @@ export const POST = async (request: Request) => {
     );
   }
 };
+
+export default corsMiddleware(POST);
