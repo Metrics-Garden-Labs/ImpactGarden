@@ -12,7 +12,7 @@ import { corsMiddleware } from "@/src/config/corsMiddleware";
 
 //in this file we insert new projects into the database, i am also trying to embed the information for the ai to use.
 
-const POST = async (request: Request) => {
+export const POST = async (request: Request) => {
   try {
     const newProject: NewProject = await request.json();
 
@@ -62,7 +62,7 @@ const POST = async (request: Request) => {
   }
 };
 
-export default corsMiddleware(POST);
+// export default corsMiddleware(POST);
 
 // Path: app/api/addUserDb/route.ts
 

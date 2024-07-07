@@ -7,7 +7,7 @@ import { users } from "../../../src/lib/schema";
 import { NewUser } from "../../../src/types";
 import { corsMiddleware } from "../../../src/config/corsMiddleware";
 
-const POST = async (request: Request) => {
+export const POST = async (request: Request) => {
   try {
     const newUser: NewUser = await request.json();
 
@@ -44,4 +44,4 @@ const POST = async (request: Request) => {
   }
 };
 
-export default corsMiddleware(POST);
+// export default corsMiddleware(POST);

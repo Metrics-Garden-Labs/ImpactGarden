@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { NewContributionAttestation } from "../../../src/types";
 import { corsMiddleware } from "@/src/config/corsMiddleware";
 
-export async function POST(request: Request) {
+export const POST = async (request: Request) => {
   try {
     console.log("Received request to add contribution attestation");
 
@@ -21,6 +21,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-}
-
-export default corsMiddleware(POST);
+};

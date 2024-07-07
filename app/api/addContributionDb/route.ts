@@ -7,7 +7,7 @@ import { contributions } from "../../../src/lib/schema";
 import { NewContribution } from "../../../src/types";
 import { corsMiddleware } from "../../../src/config/corsMiddleware";
 
-const POST = async (request: Request) => {
+export const POST = async (request: Request) => {
   try {
     const newContribution: NewContribution = await request.json();
 
@@ -43,5 +43,3 @@ const POST = async (request: Request) => {
     );
   }
 };
-
-export default corsMiddleware(POST);

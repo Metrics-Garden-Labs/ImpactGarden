@@ -4,7 +4,7 @@ import { getProjects } from "../../../src/lib/db";
 import { NextResponse } from "next/server";
 import { corsMiddleware } from "@/src/config/corsMiddleware";
 
-const POST = async (request: Request) => {
+export const POST = async (request: Request) => {
   try {
     console.log("Received request to get projects");
     const { walletAddress, endpoint } = await request.json();
@@ -24,4 +24,4 @@ const POST = async (request: Request) => {
   }
 };
 
-export default corsMiddleware(POST);
+// export default corsMiddleware(POST);

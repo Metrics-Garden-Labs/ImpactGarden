@@ -2,7 +2,7 @@ import { getAttestationCountByProject } from "../../../src/lib/db";
 import { NextResponse } from "next/server";
 import { corsMiddleware } from "@/src/config/corsMiddleware";
 
-const POST = async (request: Request) => {
+export const POST = async (request: Request) => {
   try {
     console.log("Received request to get attestation count");
 
@@ -22,4 +22,4 @@ const POST = async (request: Request) => {
   }
 };
 
-export default corsMiddleware(POST);
+// export default corsMiddleware(POST);

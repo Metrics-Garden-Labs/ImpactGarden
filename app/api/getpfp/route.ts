@@ -24,4 +24,4 @@ export const POST = async (request: Request) => {
   }
 };
 
-export default corsMiddleware(POST);
+// export default corsMiddleware(POST);
