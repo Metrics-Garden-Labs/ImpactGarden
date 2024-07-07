@@ -733,10 +733,10 @@ export default function ProjectSignUp() {
         </div>
 
 
-        {/* commented out the recaotcha for testing
+        {/* commented out the recaotcha for testing */}
         <div className="mt-20 mb-20 flex justify-center w-full">
           <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha}  />
-        </div> */}
+        </div>
 
         <div className="flex justify-center space-x-6 mt-20 mb-20">
           <button
