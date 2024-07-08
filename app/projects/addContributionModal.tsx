@@ -72,6 +72,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   const [formData, setFormData] = useState<Contribution>({
     userFid: user.fid || '',
     projectName: selectedProject?.projectName || '',
+    primaryprojectuid: selectedProject?.primaryprojectuid || '',
     governancetype: '',
     ecosystem: selectedNetwork,
     secondaryecosystem: '',
@@ -102,9 +103,6 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       }
     }
   };
-
-
-
 
   console.log('Project Ecosystem:', selectedProject?.ecosystem);
   console.log('Selected Project:', formData);
@@ -154,10 +152,14 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       return;
     }
 
-    if(!selectedProject?.projectUid) {
+    if(!selectedProject?.primaryprojectuid) {
       console.error('Selected Project not available');
       return;
     }
+    // if(!selectedProject?.projectUid) {
+    //   console.error('Selected Project not available');
+    //   return;
+    // }
 
     try {
       setIsLoading(true);
@@ -175,43 +177,74 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     const schemaEncoder2 = new SchemaEncoder(
       'bytes32 projectRefUID, uint256 farcasterID, string name, string category, bytes32 parentProjectRefUID, uint8 metadataType, string metadataURL'
     );
-
+      console.log('schemaencoded2:', schemaEncoder2);
     //for the confirmation to show i need to also make it dependeent of the attestationUID2
     //which will be the result of this attestation
     const encodedData1 = schemaEncoder2.encodeData([
-      { name: 'projectRefUID', value: selectedProject?.projectUid, type: 'bytes32' },
+      { name: 'projectRefUID', value: selectedProject?.projectUid || "", type: 'bytes32' },
       { name: 'farcasterID', value: user.fid, type: 'uint256' },
       { name: 'name', value: selectedProject?.projectName || "", type: 'string' },
       { name: 'category', value: formData.governancetype || "", type: 'string' },
-      { name: 'parentProjectRefUID', value: selectedProject?.projectUid || "", type: 'bytes32' },
+      { name: 'parentProjectRefUID', value: selectedProject?.primaryprojectuid || "", type: 'bytes32' },
       { name: 'metadataType', value: '0', type: 'uint8' },
       { name: 'metadataURL', value: pinataURL, type: 'string' },
     ]);
+    console.log('Encoded Data:', encodedData1);
 
 
       const easop = new EAS('0x4200000000000000000000000000000000000021');
       easop.connect(signer);
+      const delegatedSigner = await easop.getDelegated();
+      const easnonce = await easop.getNonce(currentAddress)
      
-      const attestationdata1: AttestationRequestData = {
-        recipient: currentAddress,
-        data: encodedData1,
+      // const attestationdata1: AttestationRequestData = {
+      //   recipient: currentAddress,
+      //   data: encodedData1,
+      //   expirationTime: NO_EXPIRATION,
+      //   revocable: true,
+      //   refUID: selectedProject.projectUid || ZERO_BYTES32,
+      //   value: 0n,
+      // }
+      // const dataToSend = {
+      //   schema: schema1,
+      //   ...attestationdata1,
+      // }
+
+      const attestationdata1: EIP712AttestationParams = {
+        schema: schema1,
+        recipient: selectedProject.ethAddress || "",
         expirationTime: NO_EXPIRATION,
         revocable: true,
-        refUID: selectedProject.projectUid,
+        refUID: selectedProject.projectUid || ZERO_BYTES32,
+        data: encodedData1,
         value: 0n,
-      }
-      const dataToSend = {
-        schema: schema1,
-        ...attestationdata1,
+        deadline : NO_EXPIRATION,
+        nonce: easnonce,
       }
 
       //might not need to add the bigint conversion because i took the values from the sdk
+      
+      
+      const signDelegated = await delegatedSigner.signDelegatedAttestation(attestationdata1, signer);
+      console.log('Sign Delegated:', signDelegated);
+
+      attestationdata1.data = encodedData1;
+      const signature = signDelegated.signature;
+
+      const dataToSend = {
+        ...attestationdata1,
+        signature: signature,
+        attester: currentAddress,
+      };
+
+
       const serialisedData = JSON.stringify(dataToSend, (key, value) =>
         typeof value === 'bigint' ? "0x" + value.toString(16) : value
       );
+      console.log('Serialised Data:', serialisedData);
 
       //now i need to send the data to the backend using a different api
-      const response = await fetch(`/api/projectAttestation`, {
+      const response = await fetch(`/api/delegateAttestation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
