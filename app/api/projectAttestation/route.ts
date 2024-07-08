@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     } = req;
 
     const privateKey = process.env.BACKEND_METAMASK_PRIVATE_KEY;
-    const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
+    const alchemyApiKey = process.env.ALCHEMY_API_KEY;
 
     if (!privateKey) {
       throw new Error("BACKEND_METAMASK_PRIVATE_KEY is not set");
