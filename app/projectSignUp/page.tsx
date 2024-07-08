@@ -517,7 +517,7 @@ export default function ProjectSignUp() {
           console.log('Attestations created successfully');
         
           const primaryprojectuid = attestationUID
-          const projectUid = responseData2.attestationUID1;
+          const projectUid = responseData2.attestationUID;
           console.log('Project UID:', projectUid);
         
           const newProject = {
