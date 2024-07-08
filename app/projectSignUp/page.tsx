@@ -106,6 +106,8 @@ export default function ProjectSignUp() {
   //farcasterID - the user's farcasterID
   //MetaData snapshot Ref - this is the second schema attestationUID
   //at some point in the ui will have to tell the user that they are going to have to sign two transactions
+  //the fitst attestation uid witll be attestationUID
+  //the second attestation uid will be attestationUID1 
 
 
 
@@ -176,7 +178,7 @@ export default function ProjectSignUp() {
   }, [selectedNetwork, switchChain]);
 
   useEffect(() => {
-    if (attestationUID) {
+    if (attestationUID1) {
       const project: Project = {
         userFid: user.fid,
         projectName: attestationData.projectName,
@@ -185,14 +187,14 @@ export default function ProjectSignUp() {
         twitterUrl: attestationData.twitterUrl,
         githubUrl: attestationData.githubURL,
         logoUrl: imageUrl,
-        projectUid: attestationUID,
-        primaryprojectuid: attestationUID1,
+        projectUid: attestationUID1,
+        primaryprojectuid: attestationUID,
         ecosystem: ecosystem,
         // Add other relevant properties from the attestationData
       };
       setSelectedProject(project);
     }
-  }, [attestationUID, attestationData, imageUrl, user.fid, ecosystem, setSelectedProject]);
+  }, [attestationUID1, attestationData, imageUrl, user.fid, ecosystem, setSelectedProject]);
 
   const handleNetworkChangeEvent = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     let selectedValue = e.target.value as AttestationNetworkType;
@@ -281,6 +283,11 @@ export default function ProjectSignUp() {
   //put in the info for the first attestation with the issuer and the farcasterID
   const createAttestation1 = async () => {
     setIsLoading(true);
+    console.log('Starting createAttestation1');
+    console.log('User FID:', user.fid);
+    console.log('Selected Network:', selectedNetwork);
+    console.log('Current Address:', currentAddress);
+    console.log('Signer:', signer);
     //dont worry about the captcha for this one yet
     if (!user.fid || user.fid === '') {
       alert('User not logged in, please login to continue');
@@ -307,6 +314,7 @@ export default function ProjectSignUp() {
         { name: 'farcasterID', value: user.fid, type: 'uint256' },
         { name: 'Issuer', value: 'MGL', type: 'string' },
       ]);
+      console.log('encoded data 1', encodedData1)
 
       const eas2 = new EAS(networkContractAddresses[selectedNetwork]?.attestAddress);
       eas2.connect(signer);
@@ -322,6 +330,7 @@ export default function ProjectSignUp() {
         refUID: ZERO_BYTES32,
         value: 0n,
       }
+      console.log('attestation1 data', attestationdata1)
 
       const dataToSend = {
         schema: schema1,
@@ -346,13 +355,17 @@ export default function ProjectSignUp() {
 
       if (responseData.success) {
         console.log('Attestations created successfully');
-        const attestationUID1 = responseData.attestationUID;
-        setAttestationUID1(attestationUID1);
-        console.log('Attestation UID1:', attestationUID1);
+        const attestationnUID = responseData.attestationUID;
+        setAttestationUID(attestationUID);
+        console.log('Attestation UID:', attestationnUID);
+
+        await createAttestation2(attestationnUID)
+        // return attestationUID;
         
       } else {
         throw new Error (`Failed to create attestations, Error: ${responseData.error}`)
       }
+      ;
       //i am not going to add this one to the database, just checking to see if it works
       //i dont think i do need to add it to the db, mmaybe just the attestationUID
 
@@ -376,7 +389,7 @@ export default function ProjectSignUp() {
         website: attestationData.websiteUrl,
         twitter: attestationData.twitterUrl,
         github: attestationData.githubURL,
-        projectREFId: attestationUID1,
+        projectREFId: attestationUID,
         logoURL: imageUrl,
         mirror: attestationData.mirror,
         categories: formatCategories(selectedCategories),
@@ -396,10 +409,16 @@ export default function ProjectSignUp() {
   }
 
   //the attestation that will include the metadata and the parent project
-  const createAttestation2 = async () => {
+  const createAttestation2 = async (attestationUID: string) => {
      //it will also only be completed when the last attestation is completed
      //there are 2 attestations going to be made, the first will be made with our wallet
      //this one will be delegated
+     console.log('Starting createAttestation2');
+    console.log('User FID:', user.fid);
+    console.log('Selected Network:', selectedNetwork);
+    console.log('Current Address:', currentAddress);
+    console.log('Signer:', signer);
+    console.log('Attestation UID:', attestationUID);
      if (!user.fid || user.fid === '') {
       alert('User not logged in, please login to continue');
       return;
@@ -414,149 +433,151 @@ export default function ProjectSignUp() {
     }
 
     // Upload to Pinata and get the URL
-    const pinatares = await pinataUpload();
-    const pinataURL = pinatares;
+    const pinataURL = await pinataUpload();
     console.log('Pinata URL:', pinataURL);
     if (!pinataURL) {
       console.error('Failed to get Pinata URL');
       return;
     }
 
-    const schema2 = '0xe035e3fe27a64c8d7291ae54c6e85676addcbc2d179224fe7fc1f7f05a8c6eac';
-    //need to do some research into what actually the metadata type is. 
-    const schemaEncoder2 = new SchemaEncoder(
-      'bytes32 projectRefUID, uint256 farcasterID, string name, string category, bytes32 parentProjectRefUID, uint8 metadataType, string metadataURL'
-    );
-
-    //for the attestaion uid this will work in this test, however i need to store this as a separate value,
-    //for the confirmation to show i need to also make it dependeent of the attestationUID2
-    //which will be the result of this attestation
-    //the other metadata will be stored in the pinata url which i am yet to create. 
-    const encodedData2 = schemaEncoder2.encodeData([
-      { name: 'projectRefUID', value: attestationUID, type: 'bytes32' },
-      { name: 'farcasterID', value: user.fid, type: 'uint256' },
-      { name: 'name', value: attestationData.projectName, type: 'string' },
-      { name: 'category', value: formatCategories(selectedCategories), type: 'string' },
-      { name: 'parentProjectRefUID', value: ZERO_BYTES32, type: 'bytes32' },
-      { name: 'metadataType', value: '0', type: 'uint8' },
-      { name: 'metadataURL', value: pinataURL, type: 'string' },
-    ]);
-    const eas3 = new EAS(networkContractAddresses[selectedNetwork]?.attestAddress);
-    eas3.connect(signer);
-    const delegatedSigner = await eas3.getDelegated();
-    const easnonce = await eas3.getNonce(currentAddress);
-
-    const attestationdata2: EIP712AttestationParams = {
-      schema: schema2,
-      recipient: currentAddress,
-      expirationTime: NO_EXPIRATION,
-      revocable: true,
-      refUID: attestationUID1,
-      data: encodedData2,
-      value: 0n,
-      deadline: NO_EXPIRATION,
-      nonce: easnonce,
-    };
-    console.log('Attestation Data 2:', attestationdata2);
-
-    const signDelegated = await delegatedSigner.signDelegatedAttestation(attestationdata2, signer);
-
-    attestationdata2.data = encodedData2;
-    const signature = signDelegated.signature;
-
-    const dataToSend2 = {
-      ...attestationdata2,
-      signature: signature,
-      attestor: currentAddress,
-    };
-  
-
-    // const attestationdata2: AttestationRequestData = {
-    //   recipient: currentAddress,
-    //   data: encodedData2,
-    //   expirationTime: NO_EXPIRATION,
-    //   revocable: true,
-    //   refUID: ZERO_BYTES32,
-    //   value: 0n,
-    // }
-
-    // const dataToSend2 = {
-    //   schema: schema2,
-    //   ...attestationdata2,
-    // }
-
-    const serialisedData2 = JSON.stringify(dataToSend2, (key, value) =>
-        typeof value === 'bigint' ? "0x" + value.toString(16) : value
+    try{
+      const schema2 = '0xe035e3fe27a64c8d7291ae54c6e85676addcbc2d179224fe7fc1f7f05a8c6eac';
+      //need to do some research into what actually the metadata type is. 
+      const schemaEncoder2 = new SchemaEncoder(
+        'bytes32 projectRefUID, uint256 farcasterID, string name, string category, bytes32 parentProjectRefUID, uint8 metadataType, string metadataURL'
       );
 
-    const response2 = await fetch(`${NEXT_PUBLIC_URL}/api/delegatedAttestation`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        },
-      body: serialisedData2,
-    });
+      //for the attestaion uid this will work in this test, however i need to store this as a separate value,
+      //for the confirmation to show i need to also make it dependeent of the attestationUID2
+      //which will be the result of this attestation
+      //the other metadata will be stored in the pinata url which i am yet to create. 
+      const encodedData2 = schemaEncoder2.encodeData([
+        { name: 'projectRefUID', value: attestationUID, type: 'bytes32' },
+        { name: 'farcasterID', value: user.fid, type: 'uint256' },
+        { name: 'name', value: attestationData.projectName, type: 'string' },
+        { name: 'category', value: formatCategories(selectedCategories), type: 'string' },
+        { name: 'parentProjectRefUID', value: ZERO_BYTES32, type: 'bytes32' },
+        { name: 'metadataType', value: '0', type: 'uint8' },
+        { name: 'metadataURL', value: pinataURL, type: 'string' },
+      ]);
+      const eas3 = new EAS(networkContractAddresses[selectedNetwork]?.attestAddress);
+      eas3.connect(signer);
+      const delegatedSigner = await eas3.getDelegated();
+      const easnonce = await eas3.getNonce(currentAddress);
 
-    const responseData2 = await response2.json();
-    console.log('Response Data:', responseData2);
+      const attestationdata2: EIP712AttestationParams = {
+        schema: schema2,
+        recipient: currentAddress,
+        expirationTime: NO_EXPIRATION,
+        revocable: true,
+        refUID: attestationUID,
+        data: encodedData2,
+        value: 0n,
+        deadline: NO_EXPIRATION,
+        nonce: easnonce,
+      };
+      console.log('Attestation Data 2:', attestationdata2);
 
-    if (responseData2.success) {
-        setAttestationUID(responseData2.attestationUID);
-        console.log('Attestations created successfully');
-      
-        const projectUid = responseData2.attestationUID;
-        console.log('Project UID:', projectUid);
-      
-        const newProject = {
-          userFid: user.fid,
-          ethAddress: currentAddress,
-          projectName: attestationData.projectName,
-          websiteUrl: attestationData.websiteUrl,
-          oneliner: attestationData.oneliner,
-          twitterUrl: attestationData.twitterUrl,
-          githubUrl: attestationData.githubURL,
-          ecosystem: ecosystem,
-          projectUid: projectUid,
-          logoUrl: imageUrl,
-        };
+      const signDelegated = await delegatedSigner.signDelegatedAttestation(attestationdata2, signer);
+      console.log('Sign Delegated:', signDelegated); 
 
-        //Add project to database
-      
-        try {
-          const response1 = await fetch(`${NEXT_PUBLIC_URL}/api/addProjectDb`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newProject)
-          });
+      attestationdata2.data = encodedData2;
+      const signature = signDelegated.signature;
+
+      const dataToSend2 = {
+        ...attestationdata2,
+        signature: signature,
+        attester: currentAddress,
+      };
+
+      const serialisedData2 = JSON.stringify(dataToSend2, (key, value) =>
+          typeof value === 'bigint' ? "0x" + value.toString(16) : value
+        );
+
+      console.log('Serialised Data 2:', serialisedData2);
+
+      const response2 = await fetch(`${NEXT_PUBLIC_URL}/api/delegateAttestation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          },
+        body: serialisedData2,
+      });
+
+      if(!response2.ok) {
+        const errorDetails = await response2.json();
+        throw new Error(`Error: ${response2.status} - ${errorDetails.message || response2.statusText}`);
+      }
+
+      const responseData2 = await response2.json();
+      console.log('Response Data:', responseData2);
+
+      if (responseData2.success) {
+          setAttestationUID1(responseData2.attestationUID);
+          console.log('Attestations created successfully');
         
-          // Check if the response status indicates a successful request
-          if (!response1.ok) {
-            // Extract error message from the response body if available
-            const errorDetails = await response1.json();
-            throw new Error(`Error: ${response1.status} - ${errorDetails.message || response1.statusText}`);
+          const primaryprojectuid = attestationUID
+          const projectUid = responseData2.attestationUID1;
+          console.log('Project UID:', projectUid);
+        
+          const newProject = {
+            userFid: user.fid,
+            ethAddress: currentAddress,
+            projectName: attestationData.projectName,
+            websiteUrl: attestationData.websiteUrl,
+            oneliner: attestationData.oneliner,
+            twitterUrl: attestationData.twitterUrl,
+            githubUrl: attestationData.githubURL,
+            ecosystem: ecosystem,
+            primaryprojectuid: primaryprojectuid,
+            projectUid: projectUid,
+            logoUrl: imageUrl,
+          };
+
+          //Add project to database
+        
+          try {
+            const response1 = await fetch(`${NEXT_PUBLIC_URL}/api/addProjectDb`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(newProject)
+            });
+          
+            // Check if the response status indicates a successful request
+            if (!response1.ok) {
+              // Extract error message from the response body if available
+              const errorDetails = await response1.json();
+              throw new Error(`Error: ${response1.status} - ${errorDetails.message || response1.statusText}`);
+            }
+          
+            // Parse the JSON response
+            const dbResponse = await response1.json();
+            console.log('Insert project to db success:', dbResponse);
+          } catch (error:any) {
+            // Log the error message
+            console.error('Insert project to db failed:', error.message);
           }
-        
-          // Parse the JSON response
-          const dbResponse = await response1.json();
-          console.log('Insert project to db success:', dbResponse);
-        } catch (error:any) {
-          // Log the error message
-          console.error('Insert project to db failed:', error.message);
-        }
-        
-    } else {
-      throw new Error (`Failed to create attestations, Error: ${responseData2.error}`)
+          
+      } else {
+        throw new Error (`Failed to create attestations, Error: ${responseData2.error}`)
+      }
+    } catch (error) {
+      console.error('Failed to create attestation 2:', error);
+      alert('An error occurred while creating attestation 2. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
-    //this one does not get added to the database
   };
 
 
 
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    console.log('starting on submit')
     console.log("Captcha value:", captcha);
+    console.log('Wallet Address:', address);
   
     //First, check if the CAPTCHA has been completed
     if (!captcha) {
@@ -583,9 +604,11 @@ export default function ProjectSignUp() {
   
       if (response.ok) {
         console.log('Captcha is valid and wallet is connected');
-        //i am testing the new attestation. 
+        //i am testing the new attestation.
+        //maybe split these into a different try block for error handling and to figure out where the error is coming from.  
         await createAttestation1();
-        await createAttestation2();
+        console.log('starting second attestation')
+        // await createAttestation2();
       } else {
         // If the response is not OK, assume the CAPTCHA was invalid
         console.error('Captcha is invalid');
@@ -611,12 +634,12 @@ export default function ProjectSignUp() {
 
  // When attestation is created it shows the confirmation page
   //--------------------------------------------------------------------------------
-  if(attestationUID) {
+  if(attestationUID1) {
       return (
         <div className="min-h-screen flex flex-col bg-white text-black">
 
           <ConfirmationSection
-            attestationUID={attestationUID}
+            attestationUID={attestationUID1}
             attestationData={attestationData}
             imageUrl={imageUrl}
             ecosystem={ecosystem}
