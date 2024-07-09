@@ -328,21 +328,20 @@ const isProjectRating = (project: any): project is ProjectCount => {
 export const getProjects = async (filter: string = "") => {
   try {
     console.log("Filter db", filter);
+    let dbProjects: (Project | ProjectCount)[] = [];
 
     if (filter === "Recently Added") {
       const recentlyAddedQuery = db
         .select()
         .from(projects)
         .orderBy(sql`${projects.createdAt} DESC`);
-      const dbProjects: Project[] = await recentlyAddedQuery.execute();
-      return dbProjects;
+      dbProjects = await recentlyAddedQuery.execute();
     } else if (filter === "Projects on Optimism") {
       const optimismQuery = db
         .select()
         .from(projects)
         .where(sql`${projects.ecosystem} = 'Optimism'`);
-      const dbProjects: Project[] = await optimismQuery.execute();
-      return dbProjects;
+      dbProjects = await optimismQuery.execute();
     } else if (filter === "Most Attested") {
       const attestedQuery = db
         .select({
@@ -383,11 +382,10 @@ export const getProjects = async (filter: string = "") => {
           projects.createdAt
         )
         .orderBy(sql`COUNT(${contributionattestations.id}) DESC`);
-      const dbProjects: (Project | ProjectCount)[] =
-        await attestedQuery.execute();
+      dbProjects = await attestedQuery.execute();
 
       // Use type guard to filter and map projects
-      const castedProjects = dbProjects.map((project) => {
+      dbProjects = dbProjects.map((project) => {
         if (isProjectCount(project)) {
           return {
             ...project,
@@ -395,15 +393,7 @@ export const getProjects = async (filter: string = "") => {
           };
         }
         return project;
-      }) as ProjectCount[];
-
-      // Enhanced logging
-      console.log("Raw database response:", castedProjects);
-      console.log(`Number of projects returned: ${castedProjects.length}`);
-      castedProjects.forEach((project, index) => {
-        console.log(`Project ${index + 1}:`, project);
       });
-      return castedProjects;
     } else if (filter === "Best Rated") {
       const bestRatedQuery = db
         .select({
@@ -446,33 +436,32 @@ export const getProjects = async (filter: string = "") => {
         .orderBy(
           sql`AVG(CAST(${contributionattestations.rating} AS FLOAT)) DESC`
         );
-      const dbProjects: (Project | ProjectCount)[] =
-        await bestRatedQuery.execute();
+      dbProjects = await bestRatedQuery.execute();
 
       // Use type guard to filter and map projects
-      const castedProjects = dbProjects.map((project) => {
+      dbProjects = dbProjects.map((project) => {
         if (isProjectRating(project)) {
           return {
             ...project,
-            averageRating: Number(project.averageRating),
+            averageRating:
+              project.averageRating !== null
+                ? Number(project.averageRating)
+                : null,
           };
         }
         return project;
-      }) as ProjectCount[];
-
-      // Enhanced logging
-      console.log("Raw database response:", castedProjects);
-      console.log(`Number of projects returned: ${castedProjects.length}`);
-      castedProjects.forEach((project, index) => {
-        console.log(`Project ${index + 1}:`, project);
       });
-      return castedProjects;
+    } else {
+      const allProjectsQuery = db.select().from(projects);
+      dbProjects = await allProjectsQuery.execute();
     }
 
-    // If no specific filter is provided, return all projects
-    const allProjectsQuery = db.select().from(projects);
-    const dbProjects: Project[] = await allProjectsQuery.execute();
-    console.log("DB Projects", dbProjects);
+    // Enhanced logging
+    console.log("Raw database response:", dbProjects);
+    console.log(`Number of projects returned: ${dbProjects.length}`);
+    dbProjects.forEach((project, index) => {
+      console.log(`Project ${index + 1}:`, project);
+    });
     return dbProjects;
   } catch (error) {
     console.error("Error retrieving projects:", error);

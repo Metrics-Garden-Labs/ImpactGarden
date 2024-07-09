@@ -74,7 +74,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   const [formData, setFormData] = useState<Contribution>({
     userFid: user.fid || '',
     projectName: selectedProject?.projectName || '',
-    primaryprojectuid: selectedProject?.primaryprojectuid || '',
+    // primaryprojectuid: selectedProject?.primaryprojectuid || '',
     governancetype: '',
     ecosystem: selectedNetwork,
     secondaryecosystem: '',

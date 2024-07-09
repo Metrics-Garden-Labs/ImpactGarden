@@ -41,6 +41,7 @@ const addProjectsToDB = async () => {
           userFid: hardcodedUserFid,
           ethAddress: project.address,
           ecosystem: "Optimism",
+          primaryprojectuid: project.projectUid, // Corrected usage
           projectName: project.name,
           oneliner: project.description,
           websiteUrl: project.websiteUrl || "", // Assuming optional fields
@@ -48,7 +49,6 @@ const addProjectsToDB = async () => {
           githubUrl: project.githubUrl || "",
           logoUrl: project.profileImageUrl || "",
           projectUid: project.id,
-          category: project.primaryCategory, // Assuming category is equivalent to primaryCategory
         })
         .onConflictDoNothing()
         .returning();

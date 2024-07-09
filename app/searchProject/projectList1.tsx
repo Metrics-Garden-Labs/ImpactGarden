@@ -7,6 +7,7 @@ import { Project, ProjectCount, SearchResult } from '../../src/types';
 import { LuArrowUpRight } from 'react-icons/lu';
 import Image from 'next/image';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
+import { IoStarHalfSharp, IoStarOutline, IoStarSharp } from 'react-icons/io5';
 
 interface Props {
   projects: (Project | ProjectCount)[];
@@ -15,6 +16,26 @@ interface Props {
   sortOrder: string;
   searchResults: SearchResult[];
 }
+
+const renderStars = (rating: number) => {
+  const fullStarsCount = Math.floor(rating);
+  const halfStarsCount = rating % 1 >= 0.5 ? 1 : 0;
+  const emptyStarsCount = 5 - fullStarsCount - halfStarsCount;
+
+  return (
+    <div className="flex justify-center">
+      {Array.from({ length: fullStarsCount }, (_, index) => (
+        <IoStarSharp key={`full-${index}`} />
+      ))}
+      {Array.from({ length: halfStarsCount }, (_, index) => (
+        <IoStarHalfSharp key={`half-${index}`} />
+      ))}
+      {Array.from({ length: emptyStarsCount }, (_, index) => (
+        <IoStarOutline key={`empty-${index}`} />
+      ))}
+    </div>
+  );
+};
 
 export default function ProjectList({ 
   projects,
@@ -204,9 +225,9 @@ export default function ProjectList({
             </p>
             )}
             {filter === 'Best Rated' && (
-              <p className="mb-2 text-md text-gray-500 text-center truncate max-w-full">
-              Average Rating: {((project as ProjectCount).averageRating ?? 0).toFixed(2)}
-            </p>
+              <div className="mb-2 text-md text-gray-500 text-center truncate max-w-full">
+                Average Rating: {renderStars((project as ProjectCount).averageRating ?? 0)}
+              </div>
             )}
           </div>
         ))}
