@@ -1,6 +1,7 @@
 import { insertAttestation } from "@/src/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { NewContributionAttestation } from "../../../src/types";
+import { corsMiddleware } from "@/src/config/corsMiddleware";
 
 export const POST = async (request: Request) => {
   try {

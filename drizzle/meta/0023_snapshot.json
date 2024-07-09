@@ -1,5 +1,5 @@
 {
-  "id": "dbc11d56-7df2-4b3a-b980-f9f288f7a9f8",
+  "id": "79e53ae9-d87c-4a25-b7c1-1aa21b50174e",
   "prevId": "a797af00-723b-4180-9123-bac761c66297",
   "version": "5",
   "dialect": "pg",
@@ -430,14 +430,14 @@
           "primaryKey": false,
           "notNull": false
         },
-        "projectUid": {
-          "name": "projectUid",
+        "primaryprojectuid": {
+          "name": "primaryprojectuid",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "category": {
-          "name": "category",
+        "projectUid": {
+          "name": "projectUid",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -481,6 +481,13 @@
           "nullsNotDistinct": false,
           "columns": [
             "projectName"
+          ]
+        },
+        "projects_primaryprojectuid_unique": {
+          "name": "projects_primaryprojectuid_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "primaryprojectuid"
           ]
         },
         "projects_projectUid_unique": {

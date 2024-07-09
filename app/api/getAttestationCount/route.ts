@@ -1,5 +1,6 @@
 import { getAttestationsByContribution } from "../../../src/lib/db";
 import { NextResponse } from "next/server";
+import { corsMiddleware } from "@/src/config/corsMiddleware";
 
 export const POST = async (request: Request) => {
   try {
@@ -21,3 +22,5 @@ export const POST = async (request: Request) => {
     );
   }
 };
+
+// export default corsMiddleware(POST);

@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import { Attestation, EAS, EIP712AttestationParams, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
-import { AttestationNetworkType, Contribution, ContributionAttestationWithUsername, Project } from '@/src/types'; 
-import { NEXT_PUBLIC_URL } from '@/src/config/config'; 
+import { Attestation, EAS, EIP712AttestationParams, NO_EXPIRATION, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
+import { AttestationNetworkType, Contribution, ContributionAttestation, ContributionAttestationWithUsername, Project } from '@/src/types'; 
+import { NEXT_PUBLIC_URL, WHITELISTED_USERS } from '@/src/config/config'; 
 import { useGlobalState } from '@/src/config/config'; 
 import { LuArrowUpRight } from 'react-icons/lu';
 import { RxCross2 } from 'react-icons/rx';
@@ -245,12 +245,12 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             
             const attestation: EIP712AttestationParams = {
                 schema: attestationSchema,
-                recipient: recipientAddress,
-                expirationTime: NO_EXPIRATION, 
+                recipient: project.ethAddress || '',
+                expirationTime: NO_EXPIRATION,
                 revocable: true,
                 refUID: contribution.easUid || zero_uid,
                 data: encodedData,
-                value: BigInt(0),
+                value: 0n,
                 deadline: NO_EXPIRATION,
                 nonce: easnonce,
             };

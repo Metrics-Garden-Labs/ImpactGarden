@@ -166,22 +166,8 @@
     {
       "idx": 23,
       "version": "5",
-      "when": 1718099142127,
-      "tag": "0023_skinny_rick_jones",
-      "breakpoints": true
-    },
-    {
-      "idx": 24,
-      "version": "5",
-      "when": 1718099250979,
-      "tag": "0024_brainy_wallow",
-      "breakpoints": true
-    },
-    {
-      "idx": 25,
-      "version": "5",
-      "when": 1718121436801,
-      "tag": "0025_simple_madame_hydra",
+      "when": 1720297741057,
+      "tag": "0023_gray_red_shift",
       "breakpoints": true
     }
   ]

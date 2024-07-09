@@ -5,6 +5,7 @@ import { db } from "../../../src/lib/db";
 import { eq } from "drizzle-orm";
 import { users } from "../../../src/lib/schema";
 import { NewUser } from "../../../src/types";
+import { corsMiddleware } from "../../../src/config/corsMiddleware";
 
 export const POST = async (request: Request) => {
   try {
@@ -42,3 +43,5 @@ export const POST = async (request: Request) => {
     );
   }
 };
+
+// export default corsMiddleware(POST);
