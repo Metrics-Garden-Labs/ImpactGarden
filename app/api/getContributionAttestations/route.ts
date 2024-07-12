@@ -14,10 +14,10 @@ export const POST = async (request: Request) => {
 
     // const response = await getAttestationsByContribution(contribution);
     // console.log("Contribution Attestations", response);
-    const response = await getContributionAttestationList(contribution);
-    console.log("Contribution Attestations", response);
+    const attestations = await getContributionAttestationList(contribution);
+    console.log("Contribution Attestations", attestations);
 
-    return NextResponse.json({ response }, { status: 200 });
+    return NextResponse.json({ attestations }, { status: 200 });
   } catch (error) {
     console.error("Error fetching attestation count:", error);
     return NextResponse.json(

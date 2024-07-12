@@ -17,6 +17,7 @@ import {
   newUserAddresses,
   Attestation,
   ProjectCount,
+  Contribution,
 } from "@/src/types";
 import { count } from "console";
 import { desc, sql as drizzlesql } from "drizzle-orm";
@@ -31,6 +32,25 @@ export const getUsers = async () => {
     return selectResult;
   } catch (error) {
     console.error("Error retrieving users:", error);
+    throw error;
+  }
+};
+
+export const getUserByFid = async (fid: string) => {
+  try {
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.fid, fid))
+      .limit(1);
+
+    if (user.length === 0) {
+      return null;
+    }
+
+    return user[0];
+  } catch (error) {
+    console.error(`Error retrieving user '${fid}':`, error);
     throw error;
   }
 };
@@ -567,7 +587,9 @@ export const getContributionAttestationList = async (contribution: string) => {
       .select({
         id: contributionattestations.id,
         username: users.username,
+        pfp: users.pfp_url,
         feedback: contributionattestations.feedback,
+        rating: contributionattestations.rating,
         attestationUID: contributionattestations.attestationUID,
         createdAt: contributionattestations.createdAt,
       })
@@ -805,6 +827,26 @@ export const getUserPfp = async (userFid: string) => {
     return userPfp[0];
   } catch (error) {
     console.error(`Error retrieving user pfp for '${userFid}':`, error);
+    throw error;
+  }
+};
+
+//get the contribution by the id
+export const getContributionById = async (contributionId: number) => {
+  try {
+    const contribution = await db
+      .select()
+      .from(contributions)
+      .where(eq(contributions.id, contributionId))
+      .limit(1);
+
+    if (contribution.length === 0) {
+      throw new Error(`Contribution not found: ${contributionId}`);
+    }
+
+    return contribution[0];
+  } catch (error) {
+    console.error(`Error retrieving contribution '${contributionId}':`, error);
     throw error;
   }
 };

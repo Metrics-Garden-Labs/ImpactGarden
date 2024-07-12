@@ -304,7 +304,6 @@ export default function ProjectSignUp() {
     // If all checks pass, continue with the function
     try {
       const schema1 = '0x7ae9f4adabd9214049df72f58eceffc48c4a69e920882f5b06a6c69a3157e5bd';
-      //ive never used the schema encoder with spaces before, hopefully this works, otherwise i can iterate
       const schemaEncoder1 = new SchemaEncoder(
         `uint256 farcasterID, string Issuer`
       );

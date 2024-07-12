@@ -19,9 +19,6 @@ import pinataSDK from '@pinata/sdk';
 import { clientToSigner, useSigner } from '../../src/hooks/useEAS';
 import { FaInfoCircle } from 'react-icons/fa';
 
-
-
-
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -38,9 +35,9 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   const [fid] = useGlobalState('fid');
   const [walletAddress] = useGlobalState('walletAddress');
   const [selectedProject] = useLocalStorage<Project>('selectedProject');
-  const [ isLoading, setIsLoading ] = useState(false);
-  const [ attestationUID, setAttestationUID ] = useState<string>("");
-  const [ ecosystem, setEcosystem ] = useState<AttestationNetworkType>('Optimism');
+  const [isLoading, setIsLoading] = useState(false);
+  const [attestationUID, setAttestationUID] = useState<string>("");
+  const [ecosystem, setEcosystem] = useState<AttestationNetworkType>('Optimism');
   const { switchChain } = useSwitchChain();
   const NO_EXPIRATION = 0n;
   const [user] = useLocalStorage("user", {
@@ -49,9 +46,9 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     ethAddress: '',
   });
 
-  const { eas, currentAddress, address , handleNetworkChange, selectedNetwork} = useEAS();
+  const { eas, currentAddress, address, handleNetworkChange, selectedNetwork } = useEAS();
   const signer = useSigner();
-  
+
   useEffect(() => {
     const checkNetwork = async () => {
       if (selectedNetwork) {
@@ -61,20 +58,18 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
             await switchChain({ chainId });
           } catch (error) {
             console.error('Failed to switch network:', error);
-            // Show an error message or prompt to the user indicating the need to switch networks
             alert('Please switch to the correct network in your wallet.');
           }
         }
       }
     };
-  
+
     checkNetwork();
   }, [selectedNetwork, switchChain]);
 
   const [formData, setFormData] = useState<Contribution>({
     userFid: user.fid || '',
     projectName: selectedProject?.projectName || '',
-    // primaryprojectuid: selectedProject?.primaryprojectuid || '',
     governancetype: '',
     ecosystem: selectedNetwork,
     secondaryecosystem: '',
@@ -88,14 +83,13 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   const handleNetworkChangeEvent = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     let selectedValue = e.target.value as AttestationNetworkType;
     setEcosystem(selectedValue);
-    // Check if the selected network is 'mainnet' and adjust to 'Optimism', this will do for now
     if (selectedValue === 'Ethereum') {
       selectedValue = 'Optimism';
       alert('Mainnet is not supported at the moment, switching to Optimism.');
     }
     handleNetworkChange(selectedValue);
     console.log('Selected Network', selectedValue);
-  
+
     const chainId = getChainId(selectedValue);
     if (chainId) {
       try {
@@ -110,9 +104,9 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   console.log('Selected Project:', formData);
 
   const pinataUpload = async () => {
-    const pin = new pinataSDK({ pinataJWTKey: process.env.NEXT_PUBLIC_PINATA_JWT_KEY});
+    const pin = new pinataSDK({ pinataJWTKey: process.env.NEXT_PUBLIC_PINATA_JWT_KEY });
 
-    try{
+    try {
       const attestationMetadata = {
         name: selectedProject?.projectName,
         farcaster: user.fid,
@@ -134,11 +128,11 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     } catch (error) {
       console.error('Failed to upload to pinata:', error);
       alert('An error occurred while uploading to pinata. Please try again.');
+      return '';
     }
   }
 
-  const createAttestation1 = async ()  => {
-    //this attestation is going to have to be delegated too
+  const createAttestation1 = async () => {
     if (!user.fid) {
       alert('User not logged in');
       return '';
@@ -146,7 +140,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
 
     if (!eas || !currentAddress) {
       alert('Please connect wallet to continue');
-      return ''; 
+      return '';
     }
     if (!signer) {
       console.error('Signer not available');
@@ -163,68 +157,32 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       return '';
     }
 
-    if (!signer) {
-      console.error('Signer not available');
-      return;
-    }
-
-    if(!selectedProject?.primaryprojectuid) {
-      console.error('Selected Project not available');
-      return;
-    }
-    // if(!selectedProject?.projectUid) {
-    //   console.error('Selected Project not available');
-    //   return;
-    // }
-
     try {
       setIsLoading(true);
-    // Upload to Pinata and get the URL
-    const pinatares = await pinataUpload();
-    const pinataURL = pinatares;
-    console.log('Pinata URL:', pinataURL);
-    if (!pinataURL) {
-      console.error('Failed to get Pinata URL');
-      return;
-    }
+      const pinataURL = await pinataUpload();
+      if (!pinataURL) return '';
 
-    const schema1 = '0xe035e3fe27a64c8d7291ae54c6e85676addcbc2d179224fe7fc1f7f05a8c6eac';
+      const schema1 = '0xe035e3fe27a64c8d7291ae54c6e85676addcbc2d179224fe7fc1f7f05a8c6eac';
 
-    const schemaEncoder2 = new SchemaEncoder(
-      'bytes32 projectRefUID, uint256 farcasterID, string name, string category, bytes32 parentProjectRefUID, uint8 metadataType, string metadataURL'
-    );
-      console.log('schemaencoded2:', schemaEncoder2);
-    //for the confirmation to show i need to also make it dependeent of the attestationUID2
-    //which will be the result of this attestation
-    const encodedData1 = schemaEncoder2.encodeData([
-      { name: 'projectRefUID', value: selectedProject?.projectUid || "", type: 'bytes32' },
-      { name: 'farcasterID', value: user.fid, type: 'uint256' },
-      { name: 'name', value: selectedProject?.projectName || "", type: 'string' },
-      { name: 'category', value: formData.governancetype || "", type: 'string' },
-      { name: 'parentProjectRefUID', value: selectedProject?.primaryprojectuid || "", type: 'bytes32' },
-      { name: 'metadataType', value: '0', type: 'uint8' },
-      { name: 'metadataURL', value: pinataURL, type: 'string' },
-    ]);
-    console.log('Encoded Data:', encodedData1);
+      const schemaEncoder2 = new SchemaEncoder(
+        'bytes32 projectRefUID, uint256 farcasterID, string name, string category, bytes32 parentProjectRefUID, uint8 metadataType, string metadataURL'
+      );
 
+      const encodedData1 = schemaEncoder2.encodeData([
+        { name: 'projectRefUID', value: selectedProject?.projectUid || "", type: 'bytes32' },
+        { name: 'farcasterID', value: user.fid, type: 'uint256' },
+        { name: 'name', value: selectedProject?.projectName || "", type: 'string' },
+        { name: 'category', value: formData.governancetype || "", type: 'string' },
+        { name: 'parentProjectRefUID', value: selectedProject?.primaryprojectuid || "", type: 'bytes32' },
+        { name: 'metadataType', value: '0', type: 'uint8' },
+        { name: 'metadataURL', value: pinataURL, type: 'string' },
+      ]);
+      console.log('Encoded Data:', encodedData1);
 
       const easop = new EAS('0x4200000000000000000000000000000000000021');
       easop.connect(signer);
       const delegatedSigner = await easop.getDelegated();
       const easnonce = await easop.getNonce(currentAddress)
-     
-      // const attestationdata1: AttestationRequestData = {
-      //   recipient: currentAddress,
-      //   data: encodedData1,
-      //   expirationTime: NO_EXPIRATION,
-      //   revocable: true,
-      //   refUID: selectedProject.projectUid || ZERO_BYTES32,
-      //   value: 0n,
-      // }
-      // const dataToSend = {
-      //   schema: schema1,
-      //   ...attestationdata1,
-      // }
 
       const attestationdata1: EIP712AttestationParams = {
         schema: schema1,
@@ -234,13 +192,10 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
         refUID: selectedProject.projectUid || ZERO_BYTES32,
         data: encodedData1,
         value: 0n,
-        deadline : NO_EXPIRATION,
+        deadline: NO_EXPIRATION,
         nonce: easnonce,
       }
 
-      //might not need to add the bigint conversion because i took the values from the sdk
-      
-      
       const signDelegated = await delegatedSigner.signDelegatedAttestation(attestationdata1, signer);
       console.log('Sign Delegated:', signDelegated);
 
@@ -253,13 +208,11 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
         attester: currentAddress,
       };
 
-
       const serialisedData = JSON.stringify(dataToSend, (key, value) =>
         typeof value === 'bigint' ? "0x" + value.toString(16) : value
       );
       console.log('Serialised Data:', serialisedData);
 
-      //now i need to send the data to the backend using a different api
       const response = await fetch(`/api/delegateAttestation`, {
         method: 'POST',
         headers: {
@@ -275,32 +228,31 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
         const attestationUID1 = responseData.attestationUID;
         setAttestationUID(attestationUID1);
         console.log('Attestation UID1:', attestationUID1);
-        
+        return attestationUID1;
       } else {
-        throw new Error (`Failed to create attestations, Error: ${responseData.error}`)
+        throw new Error(`Failed to create attestations, Error: ${responseData.error}`);
       }
-      return responseData.attestationUID;
-      //i am not going to add this one to the database, just checking to see if it works
-    } catch (error) {
-      console.error('Failed to create attestation:', error);
-      alert('An error occurred while creating attestation. Please try again.');
+    } catch (error: any) {
+      if (error.code === 4001) {
+        console.error('User rejected the transaction', error);
+        alert('Transaction was rejected by the user.');
+      } else {
+        console.error('Failed to create attestation:', error);
+        alert('An error occurred while creating attestation. Please try again.');
+      }
+      return '';
+    } finally {
+      setIsLoading(false);
     }
   };
 
-
-
-
   const addContribution = async (contribution: Contribution): Promise<Contribution> => {
     try {
-      // Create the attestation
       const attestationUID = await createAttestation1();
-  
       if (attestationUID) {
-        // Update the form data with the attestation UID
         const updatedContribution = { ...contribution, easUid: attestationUID };
         console.log('Updated Contribution:', updatedContribution);
-  
-        // Submit the form data to the API
+
         const response = await fetch(`${NEXT_PUBLIC_URL}/api/addContributionDb`, {
           method: 'POST',
           body: JSON.stringify(updatedContribution),
@@ -308,15 +260,13 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
             'Content-Type': 'application/json',
           },
         });
-  
+
         if (!response.ok) {
           throw new Error('Failed to add contribution');
         }
-  
-        const addedContribution: Contribution = await response.json();
-        //refresh to show the new contribution
-        window.location.reload();
 
+        const addedContribution: Contribution = await response.json();
+        window.location.reload();
         return addedContribution;
       } else {
         throw new Error('Failed to create attestation');
@@ -329,119 +279,100 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-  
+
     try {
-      // Check if the required fields are filled
-  
-      // Next, check if the wallet address is connected and is a non-empty string
       if (!address || address.trim() === "") {
         alert("Please connect your wallet to proceed.");
-        return;  // Stop the function if there's no wallet address or if it's empty
+        return;
       }
-  
+
       const newContribution = await addContribution(formData);
       if (newContribution) {
-        addContributionCallback(newContribution.contribution); // Pass the contribution property as a string
+        addContributionCallback(newContribution.contribution);
         onClose();
       } else {
         console.error('Failed to add contribution');
-        // Optionally handle the error case in your UI, such as showing an error message
       }
     } catch (error) {
       console.error('Failed to add contribution', error);
-      // Optionally handle the error case in your UI, such as showing an error message
     }
   };
-
 
   if (!isOpen) return null;
 
   const renderModal = () => {
     if (isLoading) {
-      return (
-        AttestationCreationModal() 
-      );
+      return AttestationCreationModal();
     } else if (attestationUID) {
       return (
         <AttestationConfirmationModal
-        attestationUID={attestationUID}
-        attestationType={selectedProject}
-        setAttestationUID={setAttestationUID}
-        easScanEndpoints={easScanEndpoints}
-    />
+          attestationUID={attestationUID}
+          attestationType={selectedProject}
+          setAttestationUID={setAttestationUID}
+          easScanEndpoints={easScanEndpoints}
+        />
       );
     }
     return null;
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
-     onClick={onClose}>
-      <div 
-                className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
-                onClick={(e) => e.stopPropagation()}
-            >
-          <form className="bg-white p-8 rounded-lg" onSubmit={handleSubmit}>
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50" onClick={onClose}>
+      <div className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20" onClick={(e) => e.stopPropagation()}>
+        <form className="bg-white p-8 rounded-lg" onSubmit={handleSubmit}>
           <div className="text-center pt-8 p-2">
             <h2 className="text-xl font-bold mb-4">Add New Contribution</h2>
           </div>
           <div className="mb-4 items-center py-3 max-h-96 overflow-y-auto">
-            {/* dropdown for type of contribution */}
             <div>
-            <h3 className="font-semibold text-center mb-2">Type of Governance Contribution</h3>
-           
-            
-            <div className="mb-4">
-              <select
-                id="contributionType"
-                name="contributionType"
-                value={formData.governancetype || ''}
-                onChange={e => setFormData({ ...formData, governancetype: e.target.value })}
-                className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              >
-                <option value="">Select Contribution Type</option>
-                <option value="Education">Education</option>
-                <option value="Research">Research</option>
-                <option value="Tooling">Tooling</option>
-                <option value="Awareness">Awareness</option>
-              </select>
+              <h3 className="font-semibold text-center mb-2">Type of Governance Contribution</h3>
+              <div className="mb-4">
+                <select
+                  id="contributionType"
+                  name="contributionType"
+                  value={formData.governancetype || ''}
+                  onChange={e => setFormData({ ...formData, governancetype: e.target.value })}
+                  className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                >
+                  <option value="">Select Contribution Type</option>
+                  <option value="Education">Education</option>
+                  <option value="Research">Research</option>
+                  <option value="Tooling">Tooling</option>
+                  <option value="Awareness">Awareness</option>
+                </select>
+              </div>
             </div>
-          </div>
 
-          <div>
-            <label htmlFor="attestationChain" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
-              Main Ecosystem (Optimism only supported)
-            </label>
-            <div className=" mb-2">
-              <select
-                id="attestationChain"
-                name="attestationChain"
-                value={selectedNetwork}
-                onChange={handleNetworkChangeEvent}
-                className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              >
-                {networks.map((network) => (
-                  <option key={network} value={network}>
-                    {network}
-                  </option>
-                ))}
-              </select>
+            <div>
+              <label htmlFor="attestationChain" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
+                Main Ecosystem (Optimism only supported)
+              </label>
+              <div className=" mb-2">
+                <select
+                  id="attestationChain"
+                  name="attestationChain"
+                  value={selectedNetwork}
+                  onChange={handleNetworkChangeEvent}
+                  className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                >
+                  {networks.map((network) => (
+                    <option key={network} value={network}>
+                      {network}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-          </div>
             <h3 className='font-semibold p-2 text-center'>Secondary Ecosystems</h3>
             <textarea
               value={formData.secondaryecosystem || ''}
               onChange={e => setFormData({ ...formData, secondaryecosystem: e.target.value })}
               placeholder="Ecosystems"
               className='h-20 w-full p-2 border border-gray-800 rounded-md'
-              />
+            />
           </div>
           <div className="mb-2">
-            <h3 className="font-semibold  p-2 text-center">Title 
-            <span className="tooltip tooltip-top" data-tip="Required">
-              <FaInfoCircle className="inline ml-2 text-blue-500 relative" style={{ top: '-2px' }} />
-            </span>
-            </h3>
+            <h3 className="font-semibold p-2 text-center">Title <span className="tooltip tooltip-top" data-tip="Required"><FaInfoCircle className="inline ml-2 text-blue-500 relative" style={{ top: '-2px' }} /></span></h3>
             <textarea
               value={formData.contribution}
               onChange={e => setFormData({ ...formData, contribution: e.target.value })}
@@ -449,17 +380,11 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
               className='h-20 w-full p-2 border border-gray-800 rounded-md'
               required
               maxLength={100}
-              />
-              <div className="text-right mr-2">
-                {formData.contribution.length}/100
-              </div>
+            />
+            <div className="text-right mr-2">{formData.contribution.length}/100</div>
           </div>
-          <div className="mb-2 ">
-            <h3 className="font-semibold p-2 text-center">Description 
-            <span className="tooltip tooltip-top" data-tip="Required">
-              <FaInfoCircle className="inline ml-2 text-blue-500 relative" style={{ top: '-2px' }} />
-            </span>
-            </h3>
+          <div className="mb-2">
+            <h3 className="font-semibold p-2 text-center">Description <span className="tooltip tooltip-top" data-tip="Required"><FaInfoCircle className="inline ml-2 text-blue-500 relative" style={{ top: '-2px' }} /></span></h3>
             <textarea
               value={formData.desc ?? ''}
               onChange={e => setFormData({ ...formData, desc: e.target.value })}
@@ -467,18 +392,11 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
               className='h-20 w-full p-2 border border-gray-800 rounded-md'
               required
               maxLength={200}
-          />
-          <div className="text-right mr-2">
-            {formData.desc.length}/200
-          </div>
-          
+            />
+            <div className="text-right mr-2">{formData.desc.length}/200</div>
           </div>
           <div className="mb-4">
-            <h3 className="font-semibold p-2 text-center">Link/Evidence 
-            <span className="tooltip tooltip-top" data-tip="Required">
-              <FaInfoCircle className="inline ml-2 text-blue-500 relative" style={{ top: '-2px' }} />
-            </span>
-            </h3>
+            <h3 className="font-semibold p-2 text-center">Link/Evidence <span className="tooltip tooltip-top" data-tip="Required"><FaInfoCircle className="inline ml-2 text-blue-500 relative" style={{ top: '-2px' }} /></span></h3>
             <textarea
               value={formData.link ?? ''}
               onChange={e => setFormData({ ...formData, link: e.target.value })}
@@ -486,32 +404,26 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
               className='h-20 w-full p-2 border border-gray-800 rounded-md'
               required
               data-tip="Please provide a link or evidence for your contribution"
-              />
-              {formData.link && (
-              <div className="text-right mr-2">
-                {formData.link.length}/200
-              </div>
+            />
+            {formData.link && (
+              <div className="text-right mr-2">{formData.link.length}/200</div>
             )}
           </div>
           <div className="mb-4 text-center">
             <button
               className="btn items-center"
-              type="button"
-              onClick={async () => {
-                await addContribution(formData);
-                onClose();
-              }}
+              type="submit"
+              disabled={isLoading}
             >
-              Add Contribution
+              {isLoading ? 'Adding...' : 'Add Contribution'}
             </button>
           </div>
           <button onClick={onClose} className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4">
-                <RxCross2 className='w-5 h-5'/>
+            <RxCross2 className='w-5 h-5' />
           </button>
-          </form>
-          {renderModal()}
-        </div>
-      
+        </form>
+        {renderModal()}
+      </div>
     </div>
   );
 }

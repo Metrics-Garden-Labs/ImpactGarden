@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
-import { IoIosMenu } from "react-icons/io";
+import { IoIosArrowBack, IoIosMenu } from "react-icons/io";
 import { Project, Contribution, AttestationNetworkType } from '@/src/types';
 import AddContributionModal from './addContributionModal';
 import { useGlobalState } from '@/src/config/config';
@@ -15,6 +15,7 @@ import Sidebar from './smSidebar';
 import { useEAS } from '@/src/hooks/useEAS';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { isMobile } from 'react-device-detect'; // Import the hook
+import Link from 'next/link';
 
 interface ProfilePageProps {
     contributions: Contribution[];
@@ -124,7 +125,7 @@ export default function ProfilePage({
             const contribution = contributions.find(c => c.id === Number(contributionId));
             if (contribution) {
                 setSelectedContribution(contribution);
-                setIsModalOpen(true);
+                //setIsModalOpen(true);
             }
         }
     }, [searchParams, contributions]);
@@ -192,61 +193,62 @@ export default function ProfilePage({
     };
 
     const renderContent = () => {
-        switch (activeTab) {
-            case 'attestations':
-                return (
-                    <div className="px-3 bg-backgroundgray">
-                        <div className="mb-4 flex justify-between items-center flex-col sm:flex-row">
-                          <div className="relative w-full sm:w-1/2 mb-2 sm:mb-0">
-                            <input
-                              type="text"
-                              placeholder="Search for a contribution..."
-                              className="px-4 py-2 border border-gray-300 rounded-md w-full text-sm"
-                              onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                            <span className="absolute right-3 top-3 text-black">
-                              <FaSearch />
-                            </span>
-                          </div>
-                          <select className="px-4 py-2 bg-backgroundgray text-black rounded-full w-full sm:w-60 border-none focus:ring-0 focus:border-none text-sm">
-                            <option>Sort by: Most Attestations</option>
-                          </select>
-                        </div>
-                        <div className="mb-4"></div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-3 lg:gap-8 max-w-6xl overflow-y-auto">
-                            {filteredContributions.map((contribution) => (
-                                <div
-                                    key={contribution.id}
-                                    className="flex flex-col justify-between p-2 sm:p-2 border bg-white text-black border-gray-300 rounded-lg w-full h-56 shadow-lg"
-                                    onClick={() => openmodal(contribution)}
-                                >
-                                    {/* updates to how the contribution data is displayed */}
-                                    <div className="flex-grow overflow-hidden">
-                                        <h3 className="text-xl sm:text-lg font-semibold pb-2">
-                                            {contribution.contribution}
-                                        </h3>
-                                        <p className="text-gray-500 text-md sm:text-base overflow-hidden overflow-ellipsis">
-                                            {contribution.desc}
-                                        </p>
-                                    </div>
-                                    <div className="flex justify-center mt-2">
-                                        <button className="btn bg-headerblack text-white hover:bg-gray-200 w-1/3 items-center justify-center hover:text-black px-2 py-1">
-                                            Endorse
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+    switch (activeTab) {
+        case 'attestations':
+        return (
+            <div className="px-3 bg-backgroundgray">
+            <div className="mb-4 flex justify-between items-center flex-col sm:flex-row">
+                <div className="relative w-full sm:w-1/2 mb-2 sm:mb-0">
+                <input
+                    type="text"
+                    placeholder="Search for a contribution..."
+                    className="px-4 py-2 border border-gray-300 rounded-md w-full text-sm"
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <span className="absolute right-3 top-3 text-black">
+                    <FaSearch />
+                </span>
+                </div>
+                <select className="px-4 py-2 bg-backgroundgray text-black rounded-full w-full sm:w-60 border-none focus:ring-0 focus:border-none text-sm">
+                <option>Sort by: Most Attestations</option>
+                </select>
+            </div>
+            <div className="mb-4"></div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-3 lg:gap-8 max-w-6xl overflow-y-auto">
+                {filteredContributions.map((contribution) => (
+                <Link href={`/projects/${project.projectName}/contributions/${contribution.id}`} key={contribution.id}>
+                    <div
+                    key={contribution.id}
+                    className="flex flex-col justify-between p-2 sm:p-2 border bg-white text-black border-gray-300 rounded-lg w-full h-56 shadow-lg"
+                    >
+                    <div className="flex-grow overflow-hidden">
+                        <h3 className="text-xl sm:text-lg font-semibold pb-2">
+                        {contribution.contribution}
+                        </h3>
+                        <p className="text-gray-500 text-md sm:text-base overflow-hidden overflow-ellipsis">
+                        {contribution.desc}
+                        </p>
                     </div>
-                );
-            case 'insights':
-                return <div className="text-black">Content for Insights</div>;
-            case 'charts':
-                return <div className="text-black">Content for Charts</div>;
-            default:
-                return <div className="text-black">Select a tab</div>;
-        }
+                    <div className='text-center'>
+                    <button className='btn w-1/2  '>
+                        View Contribution
+                    </button>
+                    </div>
+                    </div>
+                </Link>
+                ))}
+            </div>
+            </div>
+        );
+        case 'insights':
+        return <div className="text-black">Content for Insights</div>;
+        case 'charts':
+        return <div className="text-black">Content for Charts</div>;
+        default:
+        return <div className="text-black">Select a tab</div>;
+    }
     };
+
 
     return (
         <main className="flex-grow relative p-8 sm:p-10 bg-backgroundgray w-full h-full">
@@ -283,6 +285,15 @@ export default function ProfilePage({
                         <IoIosMenu className="h-6 w-6" />
                     </button>
 
+                    <button
+                        className=""
+                        onClick={() => router.push('/searchProject')}
+                        aria-label="Go Back"
+                        >
+                        <IoIosArrowBack className="h-6 w-6" />
+                    </button>
+
+
                     <button onClick={() => setActiveTab('attestations')} className={tabClasses('attestations')}>
                         Contributions
                     </button>
@@ -312,17 +323,7 @@ export default function ProfilePage({
 
               <div className="flex-1 p-4">
                 {renderContent()}
-                {isModalOpen && selectedContribution && (
-                  <AttestationModal
-                    isOpen={isModalOpen}
-                    onClose={closeModal}
-                    contribution={selectedContribution}
-                    attestationCount={attestationCount}
-                    project={project}
-                    currentAddress={walletAddress}
-                    eas={eas || null}
-                  />
-                )}
+
               </div>
             </div>
         </main>

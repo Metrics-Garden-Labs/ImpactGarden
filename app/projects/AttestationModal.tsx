@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import { Attestation, EAS, EIP712AttestationParams, NO_EXPIRATION, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
+import { Attestation, EAS, EIP712AttestationParams, NO_EXPIRATION, SchemaEncoder, ZERO_ADDRESS } from '@ethereum-attestation-service/eas-sdk';
 import { AttestationNetworkType, Contribution, ContributionAttestation, ContributionAttestationWithUsername, Project } from '@/src/types'; 
 import { NEXT_PUBLIC_URL, WHITELISTED_USERS } from '@/src/config/config'; 
 import { useGlobalState } from '@/src/config/config'; 
@@ -15,7 +15,7 @@ import { easScanEndpoints } from '../components/easScan';
 import AttestationCreationModal from '../components/attestationCreationModal';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'; // Import hooks from next/navigation
 import AttestationConfirmationModal from '../components/attestationConfirmationModal';
-import { useSigner  } from '../../src/hooks/useEAS';
+import { useSigner, useEAS   } from '../../src/hooks/useEAS';
 import { isMobile } from 'react-device-detect';
 import { isAddress } from 'ethers';
 import { zeroAddress } from 'viem';
@@ -27,8 +27,6 @@ interface AttestationModalProps {
     onClose: () => void;
     contribution: Contribution;
     project: Project;
-    currentAddress: string;
-    eas: EAS | null;
     attestationCount: number;
 }
 
@@ -39,9 +37,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     onClose,
     contribution,
     project,
-    currentAddress,
     attestationCount,
-    eas
 }) => {
     const [isdelegate, setIsDelegate] = useState(false);
     const [feedback, setFeedback] = useState('');
@@ -69,6 +65,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
         models: false
     });
     const [extrafeedback, setExtraFeedback] = useState('');
+    const { eas, currentAddress, address, handleNetworkChange, selectedNetwork } = useEAS();
 
     const signer = useSigner();
 
@@ -236,6 +233,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                 { name: 'IsDelegate', type: 'bool', value: isdelegate },
                 { name: 'Feedback', type: 'string', value: feedback },
             ]);
+            console.log("enoceDatainfo:", user.fid, contribution, rating, improvementareasstring, isdelegate, feedback );
 
             const easop = new EAS('0x4200000000000000000000000000000000000021'); // Ensure you have the correct contract address for your EAS instance
           
@@ -245,7 +243,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             
             const attestation: EIP712AttestationParams = {
                 schema: attestationSchema,
-                recipient: project.ethAddress || '',
+                recipient: project.ethAddress || ZERO_ADDRESS,
                 expirationTime: NO_EXPIRATION,
                 revocable: true,
                 refUID: contribution.easUid || zero_uid,
@@ -257,14 +255,14 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             console.log('Attestation:', attestation);
 
             const signDelegated = await delegatedSigner.signDelegatedAttestation(attestation, signer);
-
+            console.log('Sign Delegated:', signDelegated);
             attestation.data = encodedData;
             const signature = signDelegated.signature;
 
             const dataToSend = {
                 ...attestation,
                 signature: signature,
-                attester: walletAddress,
+                attester: currentAddress,
             };
 
             const serializedData = JSON.stringify(dataToSend, (key, value) =>
@@ -343,7 +341,6 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                 className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
                 onClick={(e) => e.stopPropagation()}
             >
-                {showAttestationForm ? (
                     <>
                         <h2 className="text-xl font-bold mb-4 text-center">
                             Attest to Contribution
@@ -439,44 +436,9 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                             </button>
                         </div>
                     </>
-                ) : (
-                    <>
-                        <div className="text-center pt-8 p-2">
-                            <h2 className="text-xl font-bold mb-4">
-                                {contribution.contribution}
-                            </h2>
-                        </div>
-                        <hr className="border-1 border-gray-300 my-2 mx-auto w-1/2" />
-                        <div className="mb-4 items-center py-3 max-h-96 overflow-y-auto">
-                            <h3 className="font-semibold text-center">Description</h3>
-                            <p className="text-center">{contribution.desc}</p>
-                        </div>
+                
 
-                        {contribution.link &&(
-                        <div className="mb-4 justify-center items-center overflow-y-auto">
-                          <h3 className="font-semibold text-center">Link/Evidence</h3>
-                          <div className="flex justify-center items-center">
-                            <Link
-                              href={contribution.link || ""}
-                              className="text-gray-500 hover:text-gray-300 visited:text-indigo-600 flex items-center"
-                            >
-                              <p className='text-center'>{contribution.link}</p>
-                              {contribution.link.length > 0 && (
-                                <span>
-                                  <LuArrowUpRight className="ml-1" />
-                                </span>
-                              )}
-                            </Link>
-                          </div>
-                        </div>
-                       )}
-
-                        <div className="mb-4">
-                            <h3 className="font-semibold text-center">Ecosystem</h3>
-                            <p className="text-center text-black">{project.ecosystem}</p>
-                        </div>
-
-                        <div className="mb-4">
+                        {/* <div className="mb-4">
                             <h3 className="font-semibold text-center">Insights</h3>
                             <p className="text-center">
                                 {attestationCount > 0 ? (
@@ -521,27 +483,8 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                                 ) : (
                                     <p></p>
                                 )}
-                            </div>
-                        )}
-
-                        <div className="mb-4 text-center py-3">
-                            <button
-                                className="btn text-center bg-headerblack text-white hover:bg-blue-500"
-                                onClick={toggleAttestationForm}
-                            >
-                                Review
-                            </button>
-
-                            <button
-                                className="btn text-center bg-headerblack text-white hover:bg-blue-500 ml-2"
-                                onClick={copyToClipboard}
-                            >
-                                Share<FaCopy className="ml-1" />
-                            </button>
-
-                        </div>
-                    </>
-                )}
+                            </div> 
+                        )}*/}
 
                 <button
                     onClick={onClose}

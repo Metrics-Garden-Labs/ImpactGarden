@@ -142,7 +142,7 @@ export interface ContributionAttestation {
   projectName: string;
   contribution: string;
   ecosystem: string;
-  attestationUID: string;
+  attestationUID: string | null;
   attesterAddy: string;
   feedback: string | null;
   isdelegate: boolean;
@@ -222,6 +222,8 @@ export type AttestationData = {
 export interface ContributionAttestationWithUsername
   extends ContributionAttestation {
   username: string;
+  pfp: string | null;
+  rating: string;
 }
 
 export interface OpDelegate {
