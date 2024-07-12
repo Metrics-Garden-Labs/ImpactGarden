@@ -190,7 +190,7 @@ export default function ContributionPage({
             Contribution Details
           </button>
           <button onClick={() => setActiveTab('attestations')} className={tabClasses('attestations')}>
-            Attestations
+            Insights
           </button>
         </nav>
       </div>
