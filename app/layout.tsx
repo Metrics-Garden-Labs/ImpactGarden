@@ -6,7 +6,7 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "../app/api/uploadthing/core";
 import {useEffect} from 'react';
-import MatomoTracker from '../app/components/MatomoTracker';
+import MatomoTracker from '../src/utils/MatomoTracker';
 import { useSelectedLayoutSegment } from 'next/navigation';
 import "./globals.css";
 import { Providers } from './providers';

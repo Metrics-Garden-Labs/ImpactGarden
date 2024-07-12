@@ -1,5 +1,5 @@
 
-import AIChatButton from '../components/aichatbutton'
+import AIChatButton from '../components/ai/aichatbutton'
 import React from 'react'
 import Navbar from '@/app/components/navbar1'
 import Footer from '@/app/components/footer'

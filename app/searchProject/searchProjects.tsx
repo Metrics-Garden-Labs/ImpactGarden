@@ -2,7 +2,7 @@ import { FaSearch } from "react-icons/fa";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { useGlobalState } from "../../src/config/config";
-import { NetworkType, networkEndpoints } from '../components/graphqlEndpoints';
+import { NetworkType, networkEndpoints } from '../../src/utils/graphqlEndpoints';
 import React from "react";
 import useLocalStorage from "@/src/hooks/use-local-storage-state";
 import { Project, SearchResult } from "@/src/types";

@@ -1,6 +1,6 @@
 //include the endpoints for eas scan to link the attestation Uids correctly
 
-import  {AttestationNetworkType} from '../../src/types';
+import  {AttestationNetworkType} from '../types';
 
 
 export const easScanEndpoints: Record<AttestationNetworkType, string> = {

@@ -2,16 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { NeynarAPIClient } from "@neynar/nodejs-sdk";
 import { db } from "../../../src/lib/db/dbattestations";
 import { user_addresses, users, op_delegates } from "../../../src/lib/schema";
-import { getAttestationsByCoinbaseVerified } from "../../..//src/utils/coinbaseVerified";
-import { getOptimismDelegateBadge } from "@/src/utils/getOpDelegateBadge";
-import { getOptimismSeason4Participant } from "@/src/utils/getSeason4Participant";
-import { checkOpBadgeholder } from "../../..//src/utils/opBadgeholder";
+import { getAttestationsByCoinbaseVerified } from "../../../src/utils/badges/coinbaseVerified";
+import { getOptimismDelegateBadge } from "@/src/utils/badges/getOpDelegateBadge";
+import { getOptimismSeason4Participant } from "@/src/utils/badges/getSeason4Participant";
+import { checkOpBadgeholder } from "../../../src/utils/badges/opBadgeholder";
 import { eq } from "drizzle-orm";
 import { NewUserAddress } from "../../../src/types";
 import {
   NetworkType,
   networkEndpoints,
-} from "../../components/graphqlEndpoints";
+} from "../../../src/utils/graphqlEndpoints";
 import { getAddress } from "viem";
 
 // Neynar API Client

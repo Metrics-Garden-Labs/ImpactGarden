@@ -4,7 +4,7 @@ import { fetchAttestationsWithLogos } from '@/src/lib/db/dbattestations';
 import { Attestation, AttestationNetworkType, User } from '@/src/types';
 import { format } from 'date-fns';
 import Link from 'next/link';
-import { easScanEndpoints } from '../components/easScan';
+import { easScanEndpoints } from '../../src/utils/easScan';
 import Image from 'next/image';
 
 interface Props {

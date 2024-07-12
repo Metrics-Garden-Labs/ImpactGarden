@@ -3,7 +3,7 @@
 
 "use client";
 
-import {  networkContractAddresses, getChainId } from '../components/networkContractAddresses';
+import {  networkContractAddresses, getChainId } from '../../src/utils/networkContractAddresses';
 import { useEAS, useSigner } from '../../src/hooks/useEAS';
 import { AttestationRequestData, EAS, EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import React, { FormEvent, useEffect, useState } from 'react';

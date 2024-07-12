@@ -7,7 +7,7 @@ import { Project, Contribution, AttestationNetworkType } from '@/src/types';
 import AddContributionModal from './addContributionModal';
 import { useGlobalState } from '@/src/config/config';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
-import { getChainId } from '../components/networkContractAddresses';
+import { getChainId } from '../../src/utils/networkContractAddresses';
 import { useSwitchChain } from 'wagmi';
 import AttestationModal from './AttestationModal';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';

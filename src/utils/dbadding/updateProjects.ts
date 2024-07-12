@@ -3,25 +3,17 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { sql } from "@vercel/postgres";
-import { projects } from "../lib/schema.js";
+import { projects } from "../../lib/schema.js";
 import dotenv from "dotenv";
 import { eq } from "drizzle-orm";
-import { NeynarAPIClient } from "@neynar/nodejs-sdk";
 
 // Load environment variables from .env file
 dotenv.config();
 
 const POSTGRES_URL = process.env.POSTGRES_URL;
 
-const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY;
-
 if (!POSTGRES_URL) {
   console.error("POSTGRES_URL environment variable is not set.");
-  process.exit(1); // Exit with failure
-}
-
-if (!NEYNAR_API_KEY) {
-  console.error("NEYNAR_API_KEY environment variable is not set.");
   process.exit(1); // Exit with failure
 }
 
@@ -33,7 +25,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const db = drizzle(sql);
-const client = new NeynarAPIClient(NEYNAR_API_KEY);
 
 const updateProjectsInDB = async () => {
   try {
@@ -74,25 +65,16 @@ const updateProjectsInDB = async () => {
       }
     }
 
-    // Update the userFid and ethAddress for existing projects that match by name
+    // Update the userFid for existing projects that match by name
     for (const existingProject of existingProjects) {
-      const userFid = projectNameToUserFid.get(existingProject.projectName);
-      if (userFid) {
-        console.log(`Fetching data for userFid: ${userFid}`);
-        const fidData = await client.fetchBulkUsers([parseInt(userFid)]);
-        const userData = fidData.users[0];
-
-        const ethAddress =
-          userData?.verified_addresses?.eth_addresses?.[0] ||
-          "0x0000000000000000000000000000000000000000";
-
+      const newUserFid = projectNameToUserFid.get(existingProject.projectName);
+      if (newUserFid) {
         console.log(
-          `Updating project: ${existingProject.projectName} with userFid: ${userFid} and ethAddress: ${ethAddress}`
+          `Updating project: ${existingProject.projectName} with userFid: ${newUserFid}`
         );
-
         await db
           .update(projects)
-          .set({ userFid, ethAddress })
+          .set({ userFid: newUserFid })
           .where(eq(projects.projectName, existingProject.projectName));
       }
     }

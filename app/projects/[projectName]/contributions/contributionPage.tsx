@@ -9,7 +9,7 @@ import AttestationModal from '../../AttestationModal';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { easScanEndpoints } from '../../../components/easScan';
+import { easScanEndpoints } from '../../../../src/utils/easScan';
 import Image from 'next/image';
 
 interface ContributionPageProps {
