@@ -1,4 +1,4 @@
-import { insertAttestation } from "@/src/lib/db";
+import { insertAttestation } from "@/src/lib/db/dbattestations";
 import { NextRequest, NextResponse } from "next/server";
 import { NewContributionAttestation } from "../../../src/types";
 import { corsMiddleware } from "@/src/config/corsMiddleware";

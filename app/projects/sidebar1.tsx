@@ -14,7 +14,7 @@ import {useGlobalState} from '@/src/config/config';
 import Link from 'next/link';
 import { BsGlobe2 } from 'react-icons/bs';
 import { FaGithub, FaXTwitter } from 'react-icons/fa6';
-import { getAttestationCountByProject } from '@/src/lib/db';
+import { getAttestationCountByProject } from '@/src/lib/db/dbattestations';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');

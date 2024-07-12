@@ -1,7 +1,7 @@
-import { insertProject } from "../../../src/lib/db";
+import { insertProject } from "../../../src/lib/db/dbprojects";
 import { NextRequest, NextResponse } from "next/server";
 
-import { db } from "../../../src/lib/db";
+import { db } from "../../../src/lib/db/dbprojects";
 import { eq } from "drizzle-orm";
 import { projects } from "../../../src/lib/schema";
 import { NewProject } from "../../../src/types";

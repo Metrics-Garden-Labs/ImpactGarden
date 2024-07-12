@@ -1,4 +1,4 @@
-import { db } from "../../src/lib/db"; // Ensure this path is correct
+import { db } from "../../src/lib/db/dbusers"; // Ensure this path is correct
 import { op_delegates, user_addresses } from "../../src/lib/schema"; // Ensure this path is correct
 import { eq } from "drizzle-orm";
 import { getAddress } from "viem";

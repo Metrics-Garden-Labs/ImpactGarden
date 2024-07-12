@@ -1,5 +1,6 @@
 import React from 'react';
-import { fetchAttestationsWithLogos, getProjectsByUserId } from '@/src/lib/db';
+import { getProjectsByUserId } from '@/src/lib/db/dbprojects';
+import { fetchAttestationsWithLogos } from '@/src/lib/db/dbattestations';
 import { Attestation, AttestationNetworkType, User } from '@/src/types';
 import { format } from 'date-fns';
 import Link from 'next/link';

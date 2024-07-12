@@ -1,6 +1,6 @@
 // app/api/projects/route.ts
 
-import { getProjectsByEcosystem } from "../../../src/lib/db";
+import { getProjectsByEcosystem } from "../../../src/lib/db/dbprojects";
 import { NextResponse } from "next/server";
 import { corsMiddleware } from "@/src/config/corsMiddleware";
 

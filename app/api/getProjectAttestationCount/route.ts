@@ -1,4 +1,4 @@
-import { getAttestationCountByProject } from "../../../src/lib/db";
+import { getAttestationCountByProject } from "../../../src/lib/db/dbattestations";
 import { NextResponse } from "next/server";
 import { corsMiddleware } from "@/src/config/corsMiddleware";
 

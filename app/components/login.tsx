@@ -8,7 +8,6 @@ import useLocalStorage from '../../src/hooks/use-local-storage-state';
 import { useGlobalState } from '../../src/config/config';
 import dotenv from 'dotenv';
 import { useRouter } from 'next/router';
-//import { insertUser } from 'app/lib/db';
 import { NEXT_PUBLIC_URL } from '../../src/config/config';
 import Image from 'next/image';
 dotenv.config();

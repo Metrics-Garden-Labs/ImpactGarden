@@ -1,4 +1,6 @@
-import { getAttestationsByContribution, getContributionById, getProjectByName } from '../../../../../src/lib/db';
+import {   getProjectByName } from '../../../../../src/lib/db/dbprojects';
+import { getAttestationsByContribution } from '../../../../../src/lib/db/dbattestations';
+import { getContributionById } from '../../../../../src/lib/db/dbcontributions';
 import { Contribution, Project } from '../../../../../src/types';
 import Footer from '../../../../components/footer';
 import Sidebar from '../../../sidebar1';

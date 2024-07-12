@@ -1,7 +1,7 @@
 // app/users/[username].tsx
 
 import React from 'react';
-import { getUserByUsername, getUserAddressesByFid } from '../../../src/lib/db';
+import { getUserByUsername, getUserAddressesByFid } from '../../../src/lib/db/dbusers';
 import { User } from '../../../src/types';
 import Navbar from '../../components/navbar1';
 import UserHeader from '../userheader';

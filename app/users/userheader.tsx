@@ -1,5 +1,7 @@
 import React from 'react';
-import { getUserByUsername, getUserAddressesByFid, getAttestationsByUserId, getProjectsByUserId, getUserProjectAttestations } from '../../src/lib/db';
+import { getUserByUsername, getUserAddressesByFid, getUserProjectAttestations } from '../../src/lib/db/dbusers';
+import { getProjectsByUserId } from '../../src/lib/db/dbprojects';
+import { getAttestationsByUserId } from '../../src/lib/db/dbattestations';
 import { Attestation, Project, User } from '../../src/types';
 import Navbar from '../components/navbar1';
 import AttestationList from './attestationList';

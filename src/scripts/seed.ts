@@ -1,4 +1,4 @@
-import { NewUser, insertUser } from "../lib/db";
+import { NewUser, insertUser } from "../lib/db/dbusers";
 
 //add logic here that adds new users to the db when they sign/login
 

@@ -1,7 +1,7 @@
-import { insertUser } from "../../../src/lib/db";
+import { insertUser } from "../../../src/lib/db/dbusers";
 import { NextRequest, NextResponse } from "next/server";
 
-import { db } from "../../../src/lib/db";
+import { db } from "../../../src/lib/db/dbusers";
 import { eq } from "drizzle-orm";
 import { users } from "../../../src/lib/schema";
 import { NewUser } from "../../../src/types";

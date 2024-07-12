@@ -1,6 +1,6 @@
 // Path: app/api/karmalabfarcasterrep/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { getProjectsByFids } from "@/src/lib/db";
+import { getProjectsByFids } from "@/src/lib/db/dbprojects";
 import { SearchResult } from "@/src/types";
 
 export const POST = async (request: NextRequest) => {

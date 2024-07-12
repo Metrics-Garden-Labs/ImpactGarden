@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { NeynarAPIClient } from "@neynar/nodejs-sdk";
-import { db } from "../../../src/lib/db";
+import { db } from "../../../src/lib/db/dbattestations";
 import { user_addresses, users, op_delegates } from "../../../src/lib/schema";
 import { getAttestationsByCoinbaseVerified } from "../../..//src/utils/coinbaseVerified";
 import { getOptimismDelegateBadge } from "@/src/utils/getOpDelegateBadge";
