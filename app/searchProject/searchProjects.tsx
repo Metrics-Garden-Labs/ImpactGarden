@@ -1,12 +1,13 @@
 import { FaSearch } from "react-icons/fa";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useTransition } from "react";
 import { useGlobalState } from "../../src/config/config";
-import { NetworkType, networkEndpoints } from '../../src/utils/graphqlEndpoints';
+import { NetworkType } from '../../src/utils/graphqlEndpoints';
 import React from "react";
 import useLocalStorage from "@/src/hooks/use-local-storage-state";
 import { Project, SearchResult } from "@/src/types";
 import { NEXT_PUBLIC_URL } from "../../src/config/config";
+import { useDebouncedCallback } from 'use-debounce';
 
 interface Props {
   onSearchResults: (results: SearchResult[]) => void;
@@ -30,6 +31,8 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
     ethAddress: '',
   });
 
+  const [isPending, startTransition] = useTransition();
+
   const options = ["Project Name", "Recently Added", "Projects on Optimism", "Most Attested", "Best Rated"];
 
   console.log('walletAddress', walletAddress);
@@ -52,16 +55,8 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
     handleSearch(searchParams.get("query") || "");
   };
 
-  const debounce = (func: (...args: any[]) => void, wait: number) => {
-    let timeout: NodeJS.Timeout;
-    return (...args: any[]) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func(...args), wait);
-    };
-  };
-
   const handleSearch = useCallback(
-    debounce(async (searchTerm: string) => {
+    async (searchTerm: string) => {
       const params = new URLSearchParams(searchParams);
 
       if (searchTerm) {
@@ -75,7 +70,6 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
       replace(`${pathname}?${params.toString()}`);
 
       try {
-        //const endpoint = networkEndpoints[selectedNetwork];
         const response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjects`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -88,17 +82,20 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
 
         if (response.ok) {
           const data = await response.json();
-          setSearchResults(data.projects); // Adjust based on your response structure
-          onSearchResults(data.projects); // Adjust based on your response structure
+          startTransition(() => {
+            setSearchResults(data.projects);
+            onSearchResults(data.projects);
+          });
         } else {
           console.error('Error fetching data');
         }
       } catch (error) {
         console.error('Error during fetch operation:', error);
       }
-    }, 500),
-    [searchParams, selectedFilter, sortOrder, replace, pathname, onSearchResults]
+    }, [searchParams, selectedFilter, sortOrder, replace, pathname, onSearchResults]
   );
+
+  const debouncedHandleSearch = useDebouncedCallback(handleSearch, 500);
 
   return (
     <div className="bg-white">
@@ -113,7 +110,7 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
                 className="w-full rounded-md border-gray-200 py-3 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 placeholder="Search projects"
                 defaultValue={searchParams.get("query")?.toString() || ""}
-                onChange={(e) => handleSearch(e.target.value)}
+                onChange={(e) => debouncedHandleSearch(e.target.value)}
               />
               <FaSearch className="absolute left-3 top-1/2 h-[20px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>

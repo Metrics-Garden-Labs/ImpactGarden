@@ -1,9 +1,9 @@
 'use client';
 
-import React from "react";
+import React, { useState, useEffect, useCallback, useTransition } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useDebouncedCallback } from 'use-debounce';
 
 const SearchUsers = () => {
   const searchParams = useSearchParams();
@@ -12,31 +12,42 @@ const SearchUsers = () => {
   const [filter, setFilter] = useState("username");
   const [verificationFilter, setVerificationFilter] = useState(searchParams.get("verificationFilter") || "");
 
+  const [isPending, startTransition] = useTransition();
+
   const handleSearch = (searchTerm: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (searchTerm) {
-      params.set("query", searchTerm);
-    } else {
-      params.delete("query");
-    }
-    params.set("filter", filter);
-    if (verificationFilter) {
-      params.set("verificationFilter", verificationFilter);
-    } else {
-      params.delete("verificationFilter");
-    }
-    replace(`${pathname}?${params.toString()}`);
+    startTransition(() => {
+      const params = new URLSearchParams(searchParams);
+      if (searchTerm) {
+        params.set("query", searchTerm);
+      } else {
+        params.delete("query");
+      }
+      params.set("filter", filter);
+      if (verificationFilter) {
+        params.set("verificationFilter", verificationFilter);
+      } else {
+        params.delete("verificationFilter");
+      }
+      replace(`${pathname}?${params.toString()}`);
+    });
   };
 
+  const debouncedHandleSearch = useDebouncedCallback((searchTerm: string) => {
+    handleSearch(searchTerm);
+  }, 500);
+
   const handleVerificationFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setVerificationFilter(e.target.value);
-    const params = new URLSearchParams(searchParams);
-    if (e.target.value) {
-      params.set("verificationFilter", e.target.value);
-    } else {
-      params.delete("verificationFilter");
-    }
-    replace(`${pathname}?${params.toString()}`);
+    const newVerificationFilter = e.target.value;
+    setVerificationFilter(newVerificationFilter);
+    startTransition(() => {
+      const params = new URLSearchParams(searchParams);
+      if (newVerificationFilter) {
+        params.set("verificationFilter", newVerificationFilter);
+      } else {
+        params.delete("verificationFilter");
+      }
+      replace(`${pathname}?${params.toString()}`);
+    });
   };
 
   return (
@@ -53,7 +64,7 @@ const SearchUsers = () => {
                 className="w-full rounded-md border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 placeholder="Search users"
                 defaultValue={searchParams.get("query")?.toString() || ""}
-                onChange={(e) => handleSearch(e.target.value)}
+                onChange={(e) => debouncedHandleSearch(e.target.value)}
               />
               <FaSearch className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
@@ -75,8 +86,6 @@ const SearchUsers = () => {
             </div>
           </div>
         </div>
-
-
       </div>
     </>
   );
