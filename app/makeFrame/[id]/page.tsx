@@ -1,5 +1,5 @@
 import { Contribution, Project } from '../../../src/types';
-import FrameCustomizationPage from './FrameCustomizationPage';
+import FrameCustomization from '../../components/FrameCustomization';
 
 async function getContributionData(id: string) {
   try {
@@ -34,11 +34,10 @@ async function getContributionData(id: string) {
 export default async function Page({ params }: { params: { id: string } }) {
   try {
     console.log('Page params:', params);
-    console.log('Fetching contribution and project data for ID:', params.id);
     const { contribution, project } = await getContributionData(params.id);
     console.log('Fetched contribution and project:', { contribution, project });
 
-    return <FrameCustomizationPage contribution={contribution} project={project} />;
+    return <FrameCustomization contribution={contribution} project={project} />;
   } catch (error) {
     console.error('Error in Page component:', error);
     return <div>Error loading data</div>;

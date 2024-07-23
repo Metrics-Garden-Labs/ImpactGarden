@@ -5,9 +5,10 @@ interface FramePreviewProps {
   contribution: Contribution;
   project: Project;
   backgroundColor: string;
+  content?: React.ReactNode;
 }
 
-const FramePreview: React.FC<FramePreviewProps> = ({ contribution, project, backgroundColor }) => {
+const FramePreview: React.FC<FramePreviewProps> = ({ contribution, project, backgroundColor, content }) => {
   return (
     <div
       style={{
@@ -19,25 +20,29 @@ const FramePreview: React.FC<FramePreviewProps> = ({ contribution, project, back
         backgroundColor,
         width: '100%',
         height: '100%',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
       }}
     >
-      <img
-        src={project.logoUrl || 'https://i.imgur.com/2Mfg3YA.jpg'}
-        alt="Project Logo"
-        width={200}
-        height={200}
-        className="pt-5"
-      />
-      <h2 style={{ fontSize: '24px' }}>{contribution.projectName}</h2>
-      <p style={{ fontSize: '18px' }}>{contribution.desc}</p>
-      {contribution.link && (
-        <a
-          href={contribution.link}
-          style={{ color: 'blue', textDecoration: 'underline' }}
-        >
-          {contribution.link}
-        </a>
+      {content || (
+        <>
+          <img
+            src={project.logoUrl || 'https://i.imgur.com/2Mfg3YA.jpg'}
+            alt="Logo"
+            width={200}
+            height={200}
+            className="pt-5"
+          />
+          <h2 style={{ fontSize: '24px' }}>{contribution.projectName}</h2>
+          <p style={{ fontSize: '18px' }}>{contribution.desc}</p>
+          {contribution.link && (
+            <a
+              href={contribution.link}
+              style={{ color: 'blue', textDecoration: 'underline' }}
+            >
+              {contribution.link}
+            </a>
+          )}
+        </>
       )}
     </div>
   );
