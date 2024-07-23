@@ -10,14 +10,15 @@ import { ethers } from 'ethers';
 import { RxCross2 } from 'react-icons/rx';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import Link from 'next/link';
-import { easScanEndpoints } from '../components/easScan';
+import { easScanEndpoints } from '../../src/utils/easScan';
 import AttestationCreationModal from '../components/attestationCreationModal';
 import AttestationConfirmationModal from '../components/attestationConfirmationModal';
 import { useSwitchChain } from 'wagmi';
-import { getChainId, networkContractAddresses } from '../components/networkContractAddresses';
+import { getChainId, networkContractAddresses } from '../../src/utils/networkContractAddresses';
 import pinataSDK from '@pinata/sdk';
 import { clientToSigner, useSigner } from '../../src/hooks/useEAS';
 import { FaInfoCircle } from 'react-icons/fa';
+import {checkNetwork, categories, networks} from '../../src/utils/projectSignUpUtils';
 
 interface Props {
   isOpen: boolean;
@@ -25,11 +26,6 @@ interface Props {
   addContribution: (contribution: Contribution) => Promise<void>;
   addContributionCallback: (contribution: string) => void;
 }
-
-const networks: AttestationNetworkType[] = [
-  'Ethereum', 'Optimism', 'Base', 'Arbitrum One', 'Polygon',
-  'Scroll', 'Celo', 'Blast', 'Linea'
-];
 
 export default function AddContributionModal({ isOpen, onClose, addContributionCallback}: Props) {
   const [fid] = useGlobalState('fid');
@@ -50,21 +46,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   const signer = useSigner();
 
   useEffect(() => {
-    const checkNetwork = async () => {
-      if (selectedNetwork) {
-        const chainId = getChainId(selectedNetwork);
-        if (chainId) {
-          try {
-            await switchChain({ chainId });
-          } catch (error) {
-            console.error('Failed to switch network:', error);
-            alert('Please switch to the correct network in your wallet.');
-          }
-        }
-      }
-    };
-
-    checkNetwork();
+    checkNetwork(selectedNetwork, switchChain);
   }, [selectedNetwork, switchChain]);
 
   const [formData, setFormData] = useState<Contribution>({

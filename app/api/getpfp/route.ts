@@ -1,4 +1,4 @@
-import { getUserPfp } from "../../../src/lib/db";
+import { getUserPfp } from "../../../src/lib/db/dbusers";
 import { NextResponse } from "next/server";
 import { corsMiddleware } from "../../../src/config/corsMiddleware";
 

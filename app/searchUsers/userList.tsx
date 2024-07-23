@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { User } from '../../src/types';
 import Image from 'next/image';
-import { getUserAddressesByFid } from '../../src/lib/db';
+import { getUserAddressesByFid } from '../../src/lib/db/dbusers';
 
 interface Props {
   users: User[];

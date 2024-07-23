@@ -13,7 +13,7 @@ import SearchUsers from "./searchUsers";
 import UserList from "./userList";
 import Navbar from "../components/navbar1";
 import { User } from '../..//src/types';
-import { getUsers } from '../../src/lib/db';
+import { getUsers } from '../../src/lib/db/dbusers';
 import Footer from "../components/footer";
 import { Metadata } from "next";
 

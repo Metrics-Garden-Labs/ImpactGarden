@@ -1,11 +1,13 @@
 import React from 'react';
-import { getUserByUsername, getUserAddressesByFid, getAttestationsByUserId, getProjectsByUserId, getUserProjectAttestations } from '../../src/lib/db';
+import { getUserByUsername, getUserAddressesByFid, getUserProjectAttestations } from '../../src/lib/db/dbusers';
+import { getProjectsByUserId } from '../../src/lib/db/dbprojects';
+import { getAttestationsByUserId } from '../../src/lib/db/dbattestations';
 import { Attestation, Project, User } from '../../src/types';
 import Navbar from '../components/navbar1';
 import AttestationList from './attestationList';
-import { getAttestationsByCoinbaseVerified } from '../..//src/utils/coinbaseVerified';
-import { checkOpBadgeholder } from '../..//src/utils/opBadgeholder';
-import { NetworkType, networkEndpoints } from '../components/graphqlEndpoints';
+import { getAttestationsByCoinbaseVerified } from '../../src/utils/badges/coinbaseVerified';
+import { checkOpBadgeholder } from '../../src/utils/badges/opBadgeholder';
+import { NetworkType, networkEndpoints } from '../../src/utils/graphqlEndpoints';
 import { getAddress } from 'viem';
 import { NeynarAPIClient } from "@neynar/nodejs-sdk";
 import Image from 'next/image';

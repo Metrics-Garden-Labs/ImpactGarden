@@ -1,6 +1,6 @@
 // app/api/projects/route.ts
 
-import { getProjects } from "../../../src/lib/db";
+import { getProjects } from "../../../src/lib/db/dbprojects";
 import { NextResponse } from "next/server";
 import { corsMiddleware } from "@/src/config/corsMiddleware";
 

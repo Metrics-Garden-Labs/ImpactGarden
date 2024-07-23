@@ -1,5 +1,5 @@
 import { Project, SearchResult } from '../../src/types';
-import { getProjects } from '../../src/lib/db';
+import { getProjects } from '../../src/lib/db/dbprojects';
 import ProjectPageClient from './ProjectPageClient';
 import { Metadata } from 'next';
 

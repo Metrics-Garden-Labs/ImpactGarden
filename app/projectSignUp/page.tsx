@@ -3,7 +3,7 @@
 
 "use client";
 
-import {  networkContractAddresses, getChainId } from '../components/networkContractAddresses';
+import {  networkContractAddresses, getChainId } from '../../src/utils/networkContractAddresses';
 import { useEAS, useSigner } from '../../src/hooks/useEAS';
 import { AttestationRequestData, EAS, EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import React, { FormEvent, useEffect, useState } from 'react';
@@ -19,7 +19,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { FaXTwitter } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa";
 import { BsGlobe2 } from "react-icons/bs";
-import { Project, AttestationNetworkType } from '@/src/types';
+import { Project, AttestationNetworkType, AttestationData, AttestationData1, CategoryKey } from '@/src/types';
 import { useSwitchChain } from 'wagmi';
 import AttestationCreationModal from '../components/attestationCreationModal';
 import ConfirmationSection from './confirmationPage';
@@ -27,44 +27,7 @@ import { Alchemy, Network, Utils, Wallet } from "alchemy-sdk";
 import { isMobile } from 'react-device-detect';
 import { set } from 'zod';
 import pinataSDK from '@pinata/sdk';
-
-
-type AttestationData = {
-  projectName: string;
-  oneliner: string | "";
-  websiteUrl: string;
-  twitterUrl: string;
-  githubURL: string;
-  farcaster: string;
-  mirror: string;
-};
-
-type AttestationData1 = {
-  issuer: string;
-  farcasterID: string;
-  projectName: string;
-  category: string;
-  parentProjectRefUID: string;
-  metadataType: string;
-  metadataURL: string;
-};
-
-const networks: AttestationNetworkType[] = [
-  'Ethereum', 'Optimism', 'Base', 'Arbitrum One', 'Polygon',
-  'Scroll', 'Celo', 'Blast', 'Linea'
-];
-
-type CategoryKey = 'CeFi' | 'Crosschain' | 'DeFi' | 'Governance' | 'NFT' | 'Social' | 'Utilities';
-
-const categories: { [key in CategoryKey]: string } = {
-  CeFi: 'CeFi',
-  Crosschain: 'Crosschain',
-  DeFi: 'DeFi',
-  Governance: 'Governance',
-  NFT: 'NFT',
-  Social: 'Social',
-  Utilities: 'Utilities'
-};
+import { networks, categories, checkNetwork } from '@/src/utils/projectSignUpUtils';
 
 
 export default function ProjectSignUp() {
@@ -84,32 +47,6 @@ export default function ProjectSignUp() {
     farcaster: user.fid,
     mirror: '',
   });
-
-  //new attestation data, not sure if we have to worry to much if we are going to take all of the info from the agora api
-  //first schema contains
-  //FarcasterID
-  //Issuer - MGL or OP Atlas in this case
-
-  //second schema contains
-  //schema 472
-  //farcasterID
-  //Project Name
-  //Category
-  //parent projectRefUID for (only for the contributions/subprojects)
-  //metadata type - not sure what this is actually
-  //metadataURL - all of the stuff that goes in pinata. 
-  //third schema contains
-  //schema 470
-  //round number which will be 4
-  //project ref UID - first schema the uid of the project that is being attested - this is going to have to be a separate attestation becasue we need the other attestationUIDs first 
-  //farcasterID - the user's farcasterID
-  //MetaData snapshot Ref - this is the second schema attestationUID
-  //at some point in the ui will have to tell the user that they are going to have to sign two transactions
-  //the fitst attestation uid witll be attestationUID
-  //the second attestation uid will be attestationUID1 
-
-
-
 
   const [attestationData1, setAttestationData1] = useState<AttestationData1>({
     issuer: 'MGL',
@@ -158,22 +95,7 @@ export default function ProjectSignUp() {
   const signer = useSigner();
 
   useEffect(() => {
-    const checkNetwork = async () => {
-      if (selectedNetwork) {
-        const chainId = getChainId(selectedNetwork);
-        if (chainId) {
-          try {
-            await switchChain({ chainId });
-          } catch (error) {
-            console.error('Failed to switch network:', error);
-            // Show an error message or prompt to the user indicating the need to switch networks
-            alert('Please switch to the correct network in your wallet.');
-          }
-        }
-      }
-    };
-  
-    checkNetwork();
+    checkNetwork(selectedNetwork, switchChain);
   }, [selectedNetwork, switchChain]);
 
   useEffect(() => {

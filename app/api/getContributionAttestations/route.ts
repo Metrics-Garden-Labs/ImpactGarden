@@ -1,7 +1,7 @@
 import {
   getAttestationsByContribution,
   getContributionAttestationList,
-} from "../../../src/lib/db";
+} from "../../../src/lib/db/dbattestations";
 import { NextResponse } from "next/server";
 import { corsMiddleware } from "../../../src/config/corsMiddleware";
 

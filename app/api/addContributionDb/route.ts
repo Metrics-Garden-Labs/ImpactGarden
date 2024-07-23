@@ -1,7 +1,7 @@
-import { insertContribution } from "../../../src/lib/db";
+import { insertContribution } from "../../../src/lib/db/dbcontributions";
 import { NextRequest, NextResponse } from "next/server";
 
-import { db } from "../../../src/lib/db";
+import { db } from "../../../src/lib/db/dbcontributions";
 import { eq } from "drizzle-orm";
 import { contributions } from "../../../src/lib/schema";
 import { NewContribution } from "../../../src/types";

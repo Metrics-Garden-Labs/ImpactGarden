@@ -3,7 +3,7 @@ import { AttestationData, AttestationNetworkType, Project } from '@/src/types';
 import { BsGlobe2 } from 'react-icons/bs';
 import { FaGithub, FaXTwitter } from 'react-icons/fa6';
 import Link from 'next/link';
-import { easScanEndpoints } from '../components/easScan';
+import { easScanEndpoints } from '../../src/utils/easScan';
 
 //--------------------------------------------------------------------------------------------
 //Logic for conditionally rendering the confirmation page

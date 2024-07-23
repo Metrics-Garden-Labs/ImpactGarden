@@ -11,7 +11,7 @@ import { RxCross2 } from 'react-icons/rx';
 import { FaCopy } from 'react-icons/fa';
 import Link from 'next/link';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
-import { easScanEndpoints } from '../components/easScan';
+import { easScanEndpoints } from '../../src/utils/easScan';
 import AttestationCreationModal from '../components/attestationCreationModal';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'; // Import hooks from next/navigation
 import AttestationConfirmationModal from '../components/attestationConfirmationModal';

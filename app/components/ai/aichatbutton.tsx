@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import AIChatBox from './aichatbox';
 import { FaRobot } from "react-icons/fa6";
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
-import { getUserPfp } from '@/src/lib/db';
+import { getUserPfp } from '@/src/lib/db/dbusers';
 
 export default function AIChatButton() {
     const [chatBoxOpen, setChatBoxOpen] = useState(false);
