@@ -83,6 +83,11 @@ export default function ContributionPage({
       });
   };
 
+  //maybe the stuff for making the frame, will revisit later
+ const handleMakeFrame = () => {
+  router.push(`/makeFrame/${contribution.id}`);
+ };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'details':
@@ -123,6 +128,12 @@ export default function ContributionPage({
                 onClick={copyToClipboard}
               >
                 Share<FaCopy className="ml-1" />
+              </button>
+              <button
+                className="btn text-center bg-headerblack text-white hover:bg-blue-500 ml-2"
+                onClick={handleMakeFrame}
+              >
+                Make Frame
               </button>
             </div>
           </>

@@ -21,6 +21,11 @@ export default function MakeFrame() {
             <br></br>
             this will be deployed on vercel, and it will be connected to our database. 
         </p>
+        <br></br>
+        <p>i think depending on the user that is logged in it will retrieve their projects and which contribution they would like to make the frame absolute
+          , then it will have to show the preview using the opengraph images, then it will make the dyanmic route that it was talking about, hopefully
+          that is enough to work. 
+        </p>
     </div>
     
   )
