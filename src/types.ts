@@ -212,12 +212,12 @@ export type ContractAddresses = {
   schemaRegistryAddress: string;
 };
 
-export type AttestationData = {
-  projectName: string;
-  websiteUrl: string;
-  twitterUrl: string;
-  githubURL: string;
-};
+// export type AttestationData = {
+//   projectName: string;
+//   websiteUrl: string;
+//   twitterUrl: string;
+//   githubURL: string;
+// };
 
 export interface ContributionAttestationWithUsername
   extends ContributionAttestation {
@@ -232,3 +232,32 @@ export interface OpDelegate {
   twitter: string | null;
   createdAt?: Date;
 }
+
+export type AttestationData = {
+  projectName: string;
+  oneliner: string | "";
+  websiteUrl: string;
+  twitterUrl: string;
+  githubURL: string;
+  farcaster: string;
+  mirror: string;
+};
+
+export type AttestationData1 = {
+  issuer: string;
+  farcasterID: string;
+  projectName: string;
+  category: string;
+  parentProjectRefUID: string;
+  metadataType: string;
+  metadataURL: string;
+};
+
+export type CategoryKey =
+  | "CeFi"
+  | "Crosschain"
+  | "DeFi"
+  | "Governance"
+  | "NFT"
+  | "Social"
+  | "Utilities";
