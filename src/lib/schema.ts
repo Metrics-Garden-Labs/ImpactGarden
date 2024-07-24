@@ -34,6 +34,7 @@ export const users = pgTable(
 );
 
 //this is the projects table for AttestDb Demo
+//for the projects i need to add the higher category and subcategories to the db.
 
 export const projects = pgTable(
   "projects",
@@ -45,6 +46,8 @@ export const projects = pgTable(
     ethAddress: text("ethAddress").notNull(),
     ecosystem: text("ecosystem").notNull(),
     projectName: text("projectName").unique().notNull(),
+    // highercategory: text("category"),
+    // subcategory: text("subcategory"),
     oneliner: text("oneliner"),
     websiteUrl: text("websiteUrl"),
     twitterUrl: text("twitterUrl"),

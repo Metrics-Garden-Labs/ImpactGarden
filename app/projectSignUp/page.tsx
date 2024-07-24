@@ -296,7 +296,8 @@ export default function ProjectSignUp() {
         projectREFId: attestationUID,
         logoURL: imageUrl,
         mirror: attestationData.mirror,
-        categories: formatCategories(selectedCategories),
+        highercategories: selectedHigherCategory,
+        subcategories: selectedCategories,
       };
 
       const res = await pin.pinJSONToIPFS(attestationMetadata);
@@ -608,6 +609,9 @@ export default function ProjectSignUp() {
                   <p className='text-center mt-2 text-gray-400'>
                     {attestationData.oneliner || 'Project description'}
                   </p>
+                  <h2 className='text-center mt-2 text-gray-500'>
+                    Higher Category: {higherCategories[selectedHigherCategory as higherCategoryKey] || 'None'}
+                  </h2>
                   <h3 className="text-center mt-2 font-semibold text-gray-500">
                     Categories: {formatCategories(selectedCategories) || 'None'}
                   </h3>
