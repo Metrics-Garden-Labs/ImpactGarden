@@ -75,13 +75,10 @@ export default function ProjectSignUp() {
   const ZERO_BYTES32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
   const NO_EXPIRATION = 0n;
   const [selectedCategories, setSelectedCategories] = useState<{ [key in CategoryKey]: boolean }>({
-    CeFi: false,
-    Crosschain: false,
-    DeFi: false,
-    Governance: false,
-    NFT: false,
-    Social: false,
-    Utilities: false
+    "Infra & Tooling": false,
+    "Governance Research & Analytics": false,
+    "Collaboration & Onboarding": false,
+    "Governance Leadership": false,
   });
   
   console.log('Ecosystem', ecosystem);

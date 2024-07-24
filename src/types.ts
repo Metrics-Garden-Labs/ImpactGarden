@@ -253,7 +253,7 @@ export type AttestationData1 = {
   metadataURL: string;
 };
 
-export type CategoryKey =
+export type CategoryKey1 =
   | "CeFi"
   | "Crosschain"
   | "DeFi"
@@ -261,3 +261,9 @@ export type CategoryKey =
   | "NFT"
   | "Social"
   | "Utilities";
+
+export type CategoryKey =
+  | "Infra & Tooling"
+  | "Governance Research & Analytics"
+  | "Collaboration & Onboarding"
+  | "Governance Leadership";

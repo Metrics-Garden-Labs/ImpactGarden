@@ -14,14 +14,21 @@ export const networks: AttestationNetworkType[] = [
   "Linea",
 ];
 
+// export const categories1: { [key in CategoryKey]: string } = {
+//   CeFi: "CeFi",
+//   Crosschain: "Crosschain",
+//   DeFi: "DeFi",
+//   Governance: "Governance",
+//   NFT: "NFT",
+//   Social: "Social",
+//   Utilities: "Utilities",
+// };
+
 export const categories: { [key in CategoryKey]: string } = {
-  CeFi: "CeFi",
-  Crosschain: "Crosschain",
-  DeFi: "DeFi",
-  Governance: "Governance",
-  NFT: "NFT",
-  Social: "Social",
-  Utilities: "Utilities",
+  "Infra & Tooling": "Infra & Tooling",
+  "Governance Research & Analytics": "Governance Research & Analytics",
+  "Collaboration & Onboarding": "Collaboration & Onboarding",
+  "Governance Leadership": "Governance Leadership",
 };
 
 export const checkNetwork = async (
