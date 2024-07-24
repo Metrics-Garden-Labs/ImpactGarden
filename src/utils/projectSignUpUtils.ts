@@ -1,4 +1,11 @@
-import { AttestationNetworkType, CategoryKey } from "../types";
+import {
+  AttestationNetworkType,
+  DeveloperToolingCategoryKey,
+  GovernanceCategoryKey,
+  OPStackCategoryKey,
+  OnchainBuildersCategoryKey,
+  higherCategoryKey,
+} from "../types";
 import { getChainId } from "./networkContractAddresses";
 import { useSwitchChain } from "wagmi";
 
@@ -24,11 +31,44 @@ export const networks: AttestationNetworkType[] = [
 //   Utilities: "Utilities",
 // };
 
-export const categories: { [key in CategoryKey]: string } = {
-  "Infra & Tooling": "Infra & Tooling",
-  "Governance Research & Analytics": "Governance Research & Analytics",
-  "Collaboration & Onboarding": "Collaboration & Onboarding",
-  "Governance Leadership": "Governance Leadership",
+export const higherCategories: { [key in higherCategoryKey]: string } = {
+  "Developer Tooling": "Developer Tooling",
+  Governance: "Governance",
+  "Onchain Builders": "Onchain Builders",
+  "OP Stack": "OP Stack",
+};
+
+export const governanceCategories: { [key in GovernanceCategoryKey]: string } =
+  {
+    "Infra & Tooling": "Infra & Tooling",
+    "Governance Research & Analytics": "Governance Research & Analytics",
+    "Collaboration & Onboarding": "Collaboration & Onboarding",
+    "Governance Leadership": "Governance Leadership",
+  };
+
+export const onchainBuildersCategories: {
+  [key in OnchainBuildersCategoryKey]: string;
+} = {
+  CeFi: "CeFi",
+  Crosschain: "Crosschain",
+  DeFi: "DeFi",
+  Governance: "Governance",
+  NFT: "NFT",
+  Social: "Social",
+  Utilities: "Utilities",
+};
+
+export const opStackCategories: { [key in OPStackCategoryKey]: string } = {
+  "Ethereum Core Contributions": "Ethereum Core Contributions",
+  "OP Stack Research and Development": "OP Stack Research and Development",
+  "OP Stack Tooling": "OP Stack Tooling",
+};
+
+export const developerToolingCategories: {
+  [key in DeveloperToolingCategoryKey]: string;
+} = {
+  Undefined: "Undefined",
+  "Waiting for Update": "Waiting for Update",
 };
 
 export const checkNetwork = async (

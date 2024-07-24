@@ -1,9 +1,6 @@
-// app/projectSignUp/page.tsx
-//i am going to change this branch to work for the optimism schema and try to get the multi attest by delegation working
-
 "use client";
 
-import {  networkContractAddresses, getChainId } from '../../src/utils/networkContractAddresses';
+import { networkContractAddresses, getChainId } from '../../src/utils/networkContractAddresses';
 import { useEAS, useSigner } from '../../src/hooks/useEAS';
 import { AttestationRequestData, EAS, EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import React, { FormEvent, useEffect, useState } from 'react';
@@ -19,7 +16,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { FaXTwitter } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa";
 import { BsGlobe2 } from "react-icons/bs";
-import { Project, AttestationNetworkType, AttestationData, AttestationData1, CategoryKey } from '@/src/types';
+import { Project, AttestationNetworkType, AttestationData, AttestationData1, higherCategoryKey, OnchainBuildersCategoryKey, GovernanceCategoryKey, OPStackCategoryKey, DeveloperToolingCategoryKey, CategoryKey } from '@/src/types';
 import { useSwitchChain } from 'wagmi';
 import AttestationCreationModal from '../components/attestationCreationModal';
 import ConfirmationSection from './confirmationPage';
@@ -27,13 +24,12 @@ import { Alchemy, Network, Utils, Wallet } from "alchemy-sdk";
 import { isMobile } from 'react-device-detect';
 import { set } from 'zod';
 import pinataSDK from '@pinata/sdk';
-import { networks, categories, checkNetwork } from '@/src/utils/projectSignUpUtils';
-
+import { networks, checkNetwork, higherCategories, governanceCategories, onchainBuildersCategories, developerToolingCategories, opStackCategories } from '@/src/utils/projectSignUpUtils';
 
 export default function ProjectSignUp() {
 
   const [walletAddress] = useGlobalState('walletAddress');
-  const [ user, setUser, removeUser ] = useLocalStorage('user', {
+  const [user, setUser, removeUser] = useLocalStorage('user', {
     fid: '',
     username: '',
     ethAddress: '',
@@ -58,7 +54,6 @@ export default function ProjectSignUp() {
     metadataURL: '',
   });
 
-
   console.log('Attestation Data:', attestationData);
 
   const [selectedProject, setSelectedProject] = useLocalStorage<Project | null>('selectedProject', null);
@@ -69,18 +64,14 @@ export default function ProjectSignUp() {
   const [attestationUID1, setAttestationUID1] = useState<string>('');
   const [imageUrl, setImageUrl] = useState<string>('');
   const [ecosystem, setEcosystem] = useState<string>('Optimism');
-  const [ isLoading, setIsLoading ] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const { switchChain } = useSwitchChain();
   const ZERO_BYTES32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
   const NO_EXPIRATION = 0n;
-  const [selectedCategories, setSelectedCategories] = useState<{ [key in CategoryKey]: boolean }>({
-    "Infra & Tooling": false,
-    "Governance Research & Analytics": false,
-    "Collaboration & Onboarding": false,
-    "Governance Leadership": false,
-  });
-  
+  const [selectedHigherCategory, setSelectedHigherCategory] = useState<higherCategoryKey | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<{ [key in CategoryKey]?: boolean }>({});
+
   console.log('Ecosystem', ecosystem);
   console.log('walletAddress', walletAddress);
   console.log('Fid', fid);
@@ -124,7 +115,7 @@ export default function ProjectSignUp() {
     }
     handleNetworkChange(selectedValue);
     console.log('Selected Network', selectedValue);
-  
+
     const chainId = getChainId(selectedValue);
     if (chainId) {
       try {
@@ -148,20 +139,23 @@ export default function ProjectSignUp() {
     }));
   };
 
+  const handleHigherCategoryChange = (category: higherCategoryKey) => {
+    setSelectedHigherCategory(category);
+    setSelectedCategories({});
+  };
+
   const handleCategoryToggle = (category: CategoryKey) => {
     setSelectedCategories(prev => ({
       ...prev,
       [category]: !prev[category]
     }));
   };
-  
-  const formatCategories = (categories: { [key in CategoryKey]: boolean }) => {
+
+  const formatCategories = (categories: { [key in CategoryKey]?: boolean }) => {
     return Object.keys(categories)
       .filter(key => categories[key as CategoryKey])
       .join(', ');
   };
-  
-
 
   const handleNext = () => {
     // Ensure required fields are filled before allowing a preview
@@ -179,12 +173,12 @@ export default function ProjectSignUp() {
     if (!url.trim()) {
       return null;
     }
-  
+
     // Ensure the URL starts with http:// or https://
     if (!url.match(/^https?:\/\//)) {
       return `https://${url}`;
     }
-  
+
     return url;
   };
 
@@ -193,12 +187,6 @@ export default function ProjectSignUp() {
   const checktwitterUrl = urlHelper(attestationData?.twitterUrl || '');
   const checkgithubUrl = urlHelper(attestationData?.githubURL || '');
 
-
-
-  //Create attestation logic
-  //--------------------------------------------------------------------------------
-
-  //put in the info for the first attestation with the issuer and the farcasterID
   const createAttestation1 = async () => {
     setIsLoading(true);
     console.log('Starting createAttestation1');
@@ -278,11 +266,10 @@ export default function ProjectSignUp() {
 
         await createAttestation2(attestationnUID)
         // return attestationUID;
-        
+
       } else {
-        throw new Error (`Failed to create attestations, Error: ${responseData.error}`)
-      }
-      ;
+        throw new Error(`Failed to create attestations, Error: ${responseData.error}`)
+      };
       //i am not going to add this one to the database, just checking to see if it works
       //i dont think i do need to add it to the db, mmaybe just the attestationUID
 
@@ -293,12 +280,12 @@ export default function ProjectSignUp() {
       setIsLoading(false);
     }
   };
- 
+
   //put the info into pinata 
   const pinataUpload = async () => {
-    const pin = new pinataSDK({ pinataJWTKey: process.env.NEXT_PUBLIC_PINATA_JWT_KEY});
+    const pin = new pinataSDK({ pinataJWTKey: process.env.NEXT_PUBLIC_PINATA_JWT_KEY });
 
-    try{
+    try {
       const attestationMetadata = {
         name: attestationData.projectName,
         farcaster: user.fid,
@@ -327,16 +314,16 @@ export default function ProjectSignUp() {
 
   //the attestation that will include the metadata and the parent project
   const createAttestation2 = async (attestationUID: string) => {
-     //it will also only be completed when the last attestation is completed
-     //there are 2 attestations going to be made, the first will be made with our wallet
-     //this one will be delegated
-     console.log('Starting createAttestation2');
+    //it will also only be completed when the last attestation is completed
+    //there are 2 attestations going to be made, the first will be made with our wallet
+    //this one will be delegated
+    console.log('Starting createAttestation2');
     console.log('User FID:', user.fid);
     console.log('Selected Network:', selectedNetwork);
     console.log('Current Address:', currentAddress);
     console.log('Signer:', signer);
     console.log('Attestation UID:', attestationUID);
-     if (!user.fid || user.fid === '') {
+    if (!user.fid || user.fid === '') {
       alert('User not logged in, please login to continue');
       return;
     }
@@ -357,7 +344,7 @@ export default function ProjectSignUp() {
       return;
     }
 
-    try{
+    try {
       const schema2 = '0xe035e3fe27a64c8d7291ae54c6e85676addcbc2d179224fe7fc1f7f05a8c6eac';
       //need to do some research into what actually the metadata type is. 
       const schemaEncoder2 = new SchemaEncoder(
@@ -396,7 +383,7 @@ export default function ProjectSignUp() {
       console.log('Attestation Data 2:', attestationdata2);
 
       const signDelegated = await delegatedSigner.signDelegatedAttestation(attestationdata2, signer);
-      console.log('Sign Delegated:', signDelegated); 
+      console.log('Sign Delegated:', signDelegated);
 
       attestationdata2.data = encodedData2;
       const signature = signDelegated.signature;
@@ -408,8 +395,8 @@ export default function ProjectSignUp() {
       };
 
       const serialisedData2 = JSON.stringify(dataToSend2, (key, value) =>
-          typeof value === 'bigint' ? "0x" + value.toString(16) : value
-        );
+        typeof value === 'bigint' ? "0x" + value.toString(16) : value
+      );
 
       console.log('Serialised Data 2:', serialisedData2);
 
@@ -417,11 +404,11 @@ export default function ProjectSignUp() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          },
+        },
         body: serialisedData2,
       });
 
-      if(!response2.ok) {
+      if (!response2.ok) {
         const errorDetails = await response2.json();
         throw new Error(`Error: ${response2.status} - ${errorDetails.message || response2.statusText}`);
       }
@@ -430,55 +417,55 @@ export default function ProjectSignUp() {
       console.log('Response Data:', responseData2);
 
       if (responseData2.success) {
-          setAttestationUID1(responseData2.attestationUID);
-          console.log('Attestations created successfully');
-        
-          const primaryprojectuid = attestationUID
-          const projectUid = responseData2.attestationUID;
-          console.log('Project UID:', projectUid);
-        
-          const newProject = {
-            userFid: user.fid,
-            ethAddress: currentAddress,
-            projectName: attestationData.projectName,
-            websiteUrl: attestationData.websiteUrl,
-            oneliner: attestationData.oneliner,
-            twitterUrl: attestationData.twitterUrl,
-            githubUrl: attestationData.githubURL,
-            ecosystem: ecosystem,
-            primaryprojectuid: primaryprojectuid,
-            projectUid: projectUid,
-            logoUrl: imageUrl,
-          };
+        setAttestationUID1(responseData2.attestationUID);
+        console.log('Attestations created successfully');
 
-          //Add project to database
-        
-          try {
-            const response1 = await fetch(`${NEXT_PUBLIC_URL}/api/addProjectDb`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(newProject)
-            });
-          
-            // Check if the response status indicates a successful request
-            if (!response1.ok) {
-              // Extract error message from the response body if available
-              const errorDetails = await response1.json();
-              throw new Error(`Error: ${response1.status} - ${errorDetails.message || response1.statusText}`);
-            }
-          
-            // Parse the JSON response
-            const dbResponse = await response1.json();
-            console.log('Insert project to db success:', dbResponse);
-          } catch (error:any) {
-            // Log the error message
-            console.error('Insert project to db failed:', error.message);
+        const primaryprojectuid = attestationUID
+        const projectUid = responseData2.attestationUID;
+        console.log('Project UID:', projectUid);
+
+        const newProject = {
+          userFid: user.fid,
+          ethAddress: currentAddress,
+          projectName: attestationData.projectName,
+          websiteUrl: attestationData.websiteUrl,
+          oneliner: attestationData.oneliner,
+          twitterUrl: attestationData.twitterUrl,
+          githubUrl: attestationData.githubURL,
+          ecosystem: ecosystem,
+          primaryprojectuid: primaryprojectuid,
+          projectUid: projectUid,
+          logoUrl: imageUrl,
+        };
+
+        //Add project to database
+
+        try {
+          const response1 = await fetch(`${NEXT_PUBLIC_URL}/api/addProjectDb`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newProject)
+          });
+
+          // Check if the response status indicates a successful request
+          if (!response1.ok) {
+            // Extract error message from the response body if available
+            const errorDetails = await response1.json();
+            throw new Error(`Error: ${response1.status} - ${errorDetails.message || response1.statusText}`);
           }
-          
+
+          // Parse the JSON response
+          const dbResponse = await response1.json();
+          console.log('Insert project to db success:', dbResponse);
+        } catch (error: any) {
+          // Log the error message
+          console.error('Insert project to db failed:', error.message);
+        }
+
       } else {
-        throw new Error (`Failed to create attestations, Error: ${responseData2.error}`)
+        throw new Error(`Failed to create attestations, Error: ${responseData2.error}`)
       }
     } catch (error) {
       console.error('Failed to create attestation 2:', error);
@@ -488,20 +475,18 @@ export default function ProjectSignUp() {
     }
   };
 
-
-
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
     console.log('starting on submit')
     console.log("Captcha value:", captcha);
     console.log('Wallet Address:', address);
-  
+
     //First, check if the CAPTCHA has been completed
     if (!captcha) {
       alert("Please complete the CAPTCHA to continue.");
       return;  // Stop the function if there's no CAPTCHA response
     }
-  
+
     // Next, check if the wallet address is connected and is a non-empty string
     if (!address || address.trim() === "") {
       alert("Please connect your wallet to proceed.");
@@ -518,7 +503,7 @@ export default function ProjectSignUp() {
         },
         body: JSON.stringify({ captchaResponse: captcha }),
       });
-  
+
       if (response.ok) {
         console.log('Captcha is valid and wallet is connected');
         //i am testing the new attestation.
@@ -537,384 +522,403 @@ export default function ProjectSignUp() {
     }
   };
 
-  //Modal for when the attestation is being processed
-  //--------------------------------------------------------------------------------
   const renderModal = () => {
     if (isLoading) {
       return (
-       AttestationCreationModal()
+        AttestationCreationModal()
       );
-    } 
+    }
     return null;
   };
 
-
- // When attestation is created it shows the confirmation page
-  //--------------------------------------------------------------------------------
-  if(attestationUID1) {
-      return (
-        <div className="min-h-screen flex flex-col bg-white text-black">
-
-          <ConfirmationSection
-            attestationUID={attestationUID1}
-            attestationData={attestationData}
-            imageUrl={imageUrl}
-            ecosystem={ecosystem}
-            selectedProject={selectedProject}  
-            selectedNetwork={selectedNetwork}       />
-          <Footer />
-        </div>
-      );
-    }
-
+  if (attestationUID1) {
     return (
+      <div className="min-h-screen flex flex-col bg-white text-black">
 
-  <div className="min-h-screen flex flex-col bg-white text-black">
+        <ConfirmationSection
+          attestationUID={attestationUID1}
+          attestationData={attestationData}
+          imageUrl={imageUrl}
+          ecosystem={ecosystem}
+          selectedProject={selectedProject}
+          selectedNetwork={selectedNetwork} />
+        <Footer />
+      </div>
+    );
+  }
 
-      
+  const renderSubcategories = (): { [key in CategoryKey]?: string } => {
+    switch (selectedHigherCategory) {
+      case 'Developer Tooling':
+        return developerToolingCategories;
+      case 'Governance':
+        return governanceCategories;
+      case 'Onchain Builders':
+        return onchainBuildersCategories;
+      case 'OP Stack':
+        return opStackCategories;
+      default:
+        return {};
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-white text-black">
+
       {!address && (
         <div role="alert" className="alert alert-warning rounded-none">
-        <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6 " fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-        <span>Alert: Wallet not connected! Please connect your waller to continue.</span>
-      </div>
+          <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6 " fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+          <span>Alert: Wallet not connected! Please connect your waller to continue.</span>
+        </div>
       )}
-  
-  <div className="flex flex-col md:flex-row lg:flex-row justify-center items-start w-full mt-10 px-8 md:px-8">
-    {/* Left Column------------------------------------------------- */}
-    {/* Project Card view section on the left hand side */}
-    {/* Hide the left column on small screens*/}
-    {isPreview ? (
-      <div className="hidden md:block md:w-1/2 lg:w-1/3 pr-0 md:pr-8 mb-8 md:mb-0">
-        <h1 className="font-bold text-2xl">Register a project</h1>
-        <p className="text-gray-600 mt-2">Project preview & confirmation</p>
-      </div>
-    ) : (
-      <div className="hidden md:block md:w-1/2 lg:w-1/3 pr-8">
-        <div className="sticky top-0">
-          <h1 className="font-bold text-2xl">Register a project</h1>
-          <p className="text-gray-600 mt-2">Tell us more about your project</p>
-          <h2 className="font-semibold mt-10 pb-10 text-lg">Project card preview</h2>
-          
-          <div className="shadow-2xl rounded mt-6 mx-auto md:max-w-2/3 lg:max-w-1/3 ">
-            <div className="pt-6 pb-6 ">
+
+      <div className="flex flex-col md:flex-row lg:flex-row justify-center items-start w-full mt-10 px-8 md:px-8">
+        {/* Left Column------------------------------------------------- */}
+        {/* Project Card view section on the left hand side */}
+        {/* Hide the left column on small screens*/}
+        {isPreview ? (
+          <div className="hidden md:block md:w-1/2 lg:w-1/3 pr-0 md:pr-8 mb-8 md:mb-0">
+            <h1 className="font-bold text-2xl">Register a project</h1>
+            <p className="text-gray-600 mt-2">Project preview & confirmation</p>
+          </div>
+        ) : (
+          <div className="hidden md:block md:w-1/2 lg:w-1/3 pr-8">
+            <div className="sticky top-0">
+              <h1 className="font-bold text-2xl">Register a project</h1>
+              <p className="text-gray-600 mt-2">Tell us more about your project</p>
+              <h2 className="font-semibold mt-10 pb-10 text-lg">Project card preview</h2>
+
+              <div className="shadow-2xl rounded mt-6 mx-auto md:max-w-2/3 lg:max-w-1/3 ">
+                <div className="pt-6 pb-6 ">
+                  {imageUrl ? (
+                    <Image
+                      src={imageUrl}
+                      alt="Project Logo"
+                      width={100}
+                      height={100}
+                      className="mx-auto object-contain"
+                    />
+                  ) : (
+                    <div className="mx-auto w-32 h-32 bg-gray-300 rounded-md flex items-center justify-center">
+                    </div>
+                  )}
+                  <h3 className="text-center mt-2 font-semibold text-gray-500">
+                    {attestationData.projectName || 'Project name'}
+                  </h3>
+                  <p className='text-center mt-2 text-gray-400'>
+                    {attestationData.oneliner || 'Project description'}
+                  </p>
+                  <h3 className="text-center mt-2 font-semibold text-gray-500">
+                    Categories: {formatCategories(selectedCategories) || 'None'}
+                  </h3>
+                  <div className="flex justify-center py-4 items-center">
+                    <BsGlobe2 className="text-black mx-2 text-lg" />
+                    <FaXTwitter className="text-black mx-2 text-lg" />
+                    <FaGithub className="text-black mx-2 text-lg" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Center Column ------------------------------------------------------------*/}
+        {/* Form section in the middle */}
+        {/* If isPreview is true, show the preview section */}
+        {/* If isPreview is false, show the form section */}
+        {isPreview ? (
+          <div className="w-full md:w-1/2 lg:w-1/3 bg-white p-8 shadow-lg rounded mx-auto">
+            <h2 className="font-semibold mt-6 text-center text-lg md:hidden lg:hidden">Project card preview</h2>
+            <div className="shadow-2xl rounded mx-auto mt-6 pt-8 pb-8 flex flex-col items-center">
               {imageUrl ? (
                 <Image
                   src={imageUrl}
                   alt="Project Logo"
-                  width={100}
-                  height={100}
-                  className="mx-auto object-contain"
+                  width={200}
+                  height={200}
+                  className="object-contain"
                 />
               ) : (
-                <div className="mx-auto w-32 h-32 bg-gray-300 rounded-md flex items-center justify-center">
+                <div className="w-48 h-48 bg-gray-300 rounded-md flex items-center justify-center">
+                  {/* Add optional placeholder content if needed */}
                 </div>
               )}
-              <h3 className="text-center mt-2 font-semibold text-gray-500">
+              <h3 className="text-center mt-6 mb-2 font-semibold text-gray-500">
                 {attestationData.projectName || 'Project name'}
               </h3>
-              <p className='text-center mt-2 text-gray-400'>
+              <p className='text-center mt-2 mb-2 text-gray-400'>
                 {attestationData.oneliner || 'Project description'}
               </p>
               <h3 className="text-center mt-2 font-semibold text-gray-500">
                 Categories: {formatCategories(selectedCategories) || 'None'}
               </h3>
               <div className="flex justify-center py-4 items-center">
-                <BsGlobe2 className="text-black mx-2 text-lg" />
-                <FaXTwitter className="text-black mx-2 text-lg" />
-                <FaGithub className="text-black mx-2 text-lg" />
+                <Link href={checkwebsiteUrl || '#'}>
+                  <BsGlobe2 className="text-black mx-2 text-lg" />
+                </Link>
+                <Link href={checktwitterUrl || '#'}>
+                  <FaXTwitter className="text-black mx-2 text-lg" />
+                </Link>
+                <Link href={checkgithubUrl || '#'}>
+                  <FaGithub className="text-black mx-2 text-lg" />
+                </Link>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    )}
 
-    {/* Center Column ------------------------------------------------------------*/}
-    {/* Form section in the middle */}
-    {/* If isPreview is true, show the preview section */}
-    {/* If isPreview is false, show the form section */}
-    {isPreview ? (
-      <div className="w-full md:w-1/2 lg:w-1/3 bg-white p-8 shadow-lg rounded mx-auto">
-        <h2 className="font-semibold mt-6 text-center text-lg md:hidden lg:hidden">Project card preview</h2>
-        <div className="shadow-2xl rounded mx-auto mt-6 pt-8 pb-8 flex flex-col items-center">
-          {imageUrl ? (
-            <Image
-              src={imageUrl}
-              alt="Project Logo"
-              width={200}
-              height={200}
-              className="object-contain"
-            />
-          ) : (
-            <div className="w-48 h-48 bg-gray-300 rounded-md flex items-center justify-center">
-              {/* Add optional placeholder content if needed */}
+            <div className="mt-20 mb-20 flex justify-center w-full">
+              <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha} />
             </div>
-          )}
-          <h3 className="text-center mt-6 mb-2 font-semibold text-gray-500">
-            {attestationData.projectName || 'Project name'}
-          </h3>
-          <p className='text-center mt-2 mb-2 text-gray-400'> 
-            {attestationData.oneliner || 'Project description'}
-          </p>
-          <h3 className="text-center mt-2 font-semibold text-gray-500">
-                Categories: {formatCategories(selectedCategories) || 'None'}
-          </h3>
-          <div className="flex justify-center py-4 items-center">
-            <Link href={checkwebsiteUrl || '#'}>
-              <BsGlobe2 className="text-black mx-2 text-lg" />
-            </Link>
-            <Link href={checktwitterUrl || '#'}>
-              <FaXTwitter className="text-black mx-2 text-lg" />
-            </Link>
-            <Link href={checkgithubUrl || '#'}>
-              <FaGithub className="text-black mx-2 text-lg" />
-            </Link>
-          </div>
-        </div>
 
-
-        {/* commented out the recaotcha for testing */}
-        <div className="mt-20 mb-20 flex justify-center w-full">
-          <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha}  />
-        </div>
-
-        <div className="flex justify-center space-x-4 mt-20 mb-20">
-          <button
-            className="px-4 py-2 w-full sm:w-1/3 md:w-1/4 lg:w-1/5 text-xs sm:text-sm font-medium text-white bg-black rounded-md shadow-sm hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            type="button"
-            onClick={onSubmit}
-          >
-            Confirm & Attest
-          </button>
-          <button
-            className="px-4 py-2 w-full sm:w-1/3 md:w-1/4 lg:w-1/5 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            type="button"
-            onClick={handleBackToEdit}
-          >
-            Back to Edit
-          </button>
-        </div>
-      </div>
-    ) : (
-      <form className="w-full md:w-1/2 lg:w-1/3 bg-white p-6 shadow rounded space-y-6">
-        <div>
-          <label htmlFor="attestationChain" className="block text-sm font-medium leading-6 text-gray-900">
-            Ecosystem and Network of Contribution * (Only Optimism is supported at the moment)
-          </label>
-          <div className="mt-2">
-            <select
-              id="attestationChain"
-              name="attestationChain"
-              value={selectedNetwork}
-              onChange={handleNetworkChangeEvent}
-              className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            >
-              {networks.map((network) => (
-                <option key={network} value={network}>
-                  {network}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label htmlFor="projectName" className="block text-sm font-medium leading-6 text-gray-900">
-            What is the name of your project? *
-          </label>
-          <div className="mt-2">
-            <input
-              type="text"
-              id="projectName"
-              name="projectName"
-              value={attestationData.projectName}
-              onChange={handleAttestationChange}
-              className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Type Project Name here"
-              required
-            />
-          </div>
-        </div>
-
-        <div>
-          <label htmlFor="projectName" className="block text-sm font-medium leading-6 text-gray-900">
-            A brief one line description of your project *
-          </label>
-          <div className="mt-2">
-            <input
-              type="text"
-              id="oneliner"
-              name="oneliner"
-              value={attestationData.oneliner}
-              onChange={handleAttestationChange}
-              className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Type Project Description Here"
-              required
-            />
-          </div>
-        </div>
-
-        <div>
-          <h2 className="font-semibold mt-4">Categories *</h2>
-          <div className="flex flex-wrap mt-2">
-            {Object.keys(categories).map((key) => (
+            <div className="flex justify-center space-x-4 mt-20 mb-20">
               <button
-                key={key}
-                onClick={() => handleCategoryToggle(key as CategoryKey)}
-                className={`mb-2 mr-2 px-4 py-2 rounded-lg text-sm ${
-                  selectedCategories[key as CategoryKey] ? 'bg-black text-white' : 'bg-gray-200 text-gray-800'
-                }`}
+                className="px-4 py-2 w-full sm:w-1/3 md:w-1/4 lg:w-1/5 text-xs sm:text-sm font-medium text-white bg-black rounded-md shadow-sm hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                type="button"
+                onClick={onSubmit}
               >
-                {selectedCategories[key as CategoryKey] ? '✓' : '+'} {categories[key as CategoryKey]}
+                Confirm & Attest
               </button>
-            ))}
+              <button
+                className="px-4 py-2 w-full sm:w-1/3 md:w-1/4 lg:w-1/5 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                type="button"
+                onClick={handleBackToEdit}
+              >
+                Back to Edit
+              </button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <form className="w-full md:w-1/2 lg:w-1/3 bg-white p-6 shadow rounded space-y-6">
+            <div>
+              <label htmlFor="attestationChain" className="block text-sm font-medium leading-6 text-gray-900">
+                Ecosystem and Network of Contribution * (Only Optimism is supported at the moment)
+              </label>
+              <div className="mt-2">
+                <select
+                  id="attestationChain"
+                  name="attestationChain"
+                  value={selectedNetwork}
+                  onChange={handleNetworkChangeEvent}
+                  className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                >
+                  {networks.map((network) => (
+                    <option key={network} value={network}>
+                      {network}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
 
-        <div>
-          <label htmlFor="websiteUrl" className="block text-sm font-medium leading-6 text-gray-900">
-            Website URL  * 
-          </label>
-          <div className="mt-2">
-            <input
-              type="text"
-              id="websiteUrl"
-              name="websiteUrl"
-              value={attestationData.websiteUrl}
-              onChange={handleAttestationChange}
-              className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Type the website URL here"
-              required
-            />
-          </div>
-        </div>
+            <div>
+              <label htmlFor="projectName" className="block text-sm font-medium leading-6 text-gray-900">
+                What is the name of your project? *
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  id="projectName"
+                  name="projectName"
+                  value={attestationData.projectName}
+                  onChange={handleAttestationChange}
+                  className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder="Type Project Name here"
+                  required
+                />
+              </div>
+            </div>
 
-        <div>
-          <label htmlFor="twitterUrl" className="block text-sm font-medium leading-6 text-gray-900">
-            <span>Twitter </span>
-            <span className="text-gray-500 text-sm">(Optional)</span>
-          </label>
-          <div className="mt-2">
-            <input
-              type="text"
-              id="twitterUrl"
-              name="twitterUrl"
-              value={attestationData.twitterUrl}
-              onChange={handleAttestationChange}
-              className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Type the Twitter URL here"
-            />
-          </div>
-        </div>
+            <div>
+              <label htmlFor="projectName" className="block text-sm font-medium leading-6 text-gray-900">
+                A brief one line description of your project *
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  id="oneliner"
+                  name="oneliner"
+                  value={attestationData.oneliner}
+                  onChange={handleAttestationChange}
+                  className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder="Type Project Description Here"
+                  required
+                />
+              </div>
+            </div>
 
-        <div>
-          <label htmlFor="githubURL" className="block text-sm font-medium leading-6 text-gray-900">
-            <span>What is the Github URL of your project? </span>
-            <span className="text-gray-500 text-sm">(Optional)</span>
-          </label>
-          <div className="mt-2">
-            <input
-              type="text"
-              id="githubURL"
-              name="githubURL"
-              value={attestationData.githubURL}
-              onChange={handleAttestationChange}
-              className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Type the Github URL here"
-            />
-          </div>
-        </div>
+            <div>
+              <h2 className="font-semibold mt-4">Higher Category *</h2>
+              <div className="flex flex-wrap mt-2">
+                {Object.keys(higherCategories).map((key) => (
+                  <button
+                    key={key}
+                    onClick={() => handleHigherCategoryChange(key as higherCategoryKey)}
+                    className={`mb-2 mr-2 px-4 py-2 rounded-lg text-sm ${selectedHigherCategory === key ? 'bg-black text-white' : 'bg-gray-200 text-gray-800'}`}
+                  >
+                    {higherCategories[key as higherCategoryKey]}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-        {/* input for the farcaster channel 
+            <div>
+              <h2 className="font-semibold mt-4">Subcategories *</h2>
+              <div className="flex flex-wrap mt-2">
+                {Object.keys(renderSubcategories()).map((key) => (
+                  <button
+                    key={key}
+                    onClick={() => handleCategoryToggle(key as CategoryKey)}
+                    className={`mb-2 mr-2 px-4 py-2 rounded-lg text-sm ${selectedCategories[key as CategoryKey] ? 'bg-black text-white' : 'bg-gray-200 text-gray-800'}`}
+                  >
+                    {selectedCategories[key as CategoryKey] ? '✓' : '+'} {renderSubcategories()[key as CategoryKey]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="websiteUrl" className="block text-sm font-medium leading-6 text-gray-900">
+                Website URL  *
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  id="websiteUrl"
+                  name="websiteUrl"
+                  value={attestationData.websiteUrl}
+                  onChange={handleAttestationChange}
+                  className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder="Type the website URL here"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="twitterUrl" className="block text-sm font-medium leading-6 text-gray-900">
+                <span>Twitter </span>
+                <span className="text-gray-500 text-sm">(Optional)</span>
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  id="twitterUrl"
+                  name="twitterUrl"
+                  value={attestationData.twitterUrl}
+                  onChange={handleAttestationChange}
+                  className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder="Type the Twitter URL here"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="githubURL" className="block text-sm font-medium leading-6 text-gray-900">
+                <span>What is the Github URL of your project? </span>
+                <span className="text-gray-500 text-sm">(Optional)</span>
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  id="githubURL"
+                  name="githubURL"
+                  value={attestationData.githubURL}
+                  onChange={handleAttestationChange}
+                  className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder="Type the Github URL here"
+                />
+              </div>
+            </div>
+
+            {/* input for the farcaster channel 
         at the minute it autocompletes the logged in farcaster account, 
         guess this give the user to change only if they want to*/}
-        <div>
-          <label htmlFor="farcaster" className="block text-sm font-medium leading-6 text-gray-900">
-            Farcaster *
-          </label>
-          <div className="mt-2">
-            <input
-              type="text"
-              id="farcaster"
-              name="farcaster"
-              value={attestationData.farcaster}
-              onChange={handleAttestationChange}
-              className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Type Farcaster here"
-              required
-            />
-          </div>
-        </div>
+            <div>
+              <label htmlFor="farcaster" className="block text-sm font-medium leading-6 text-gray-900">
+                Farcaster *
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  id="farcaster"
+                  name="farcaster"
+                  value={attestationData.farcaster}
+                  onChange={handleAttestationChange}
+                  className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder="Type Farcaster here"
+                  required
+                />
+              </div>
+            </div>
 
-        {/* input for the mirror channel */}
-        <div>
-          <label htmlFor="mirror" className="block text-sm font-medium leading-6 text-gray-900">
-            Mirror 
-            <span className="text-gray-500 text-sm"> (Optional)</span>
+            {/* input for the mirror channel */}
+            <div>
+              <label htmlFor="mirror" className="block text-sm font-medium leading-6 text-gray-900">
+                Mirror
+                <span className="text-gray-500 text-sm"> (Optional)</span>
 
-          </label>
-          <div className="mt-2">
-            <input
-              type="text"
-              id="mirror"
-              name="mirror"
-              value={attestationData.mirror}
-              onChange={handleAttestationChange}
-              className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Type Mirror Channel ID here"
-            />
-          </div>
-        </div>
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  id="mirror"
+                  name="mirror"
+                  value={attestationData.mirror}
+                  onChange={handleAttestationChange}
+                  className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder="Type Mirror Channel ID here"
+                />
+              </div>
+            </div>
 
 
-        <h2>Please upload the logo of your project *</h2>
+            <h2>Please upload the logo of your project *</h2>
 
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt="Logo of the project"
-            width={1000}
-            height={667}
-            className="w-full h-64 object-contain"
-          />
-        ) : (
-          <UploadDropzone
-            className="border-black bg-slate-300 w-full h-64 ut-label:text-lg ut-allowed-content:ut-uploading:text-red-300"
-            endpoint="imageUploader"
-            onClientUploadComplete={(res) => {
-              setImageUrl(res[0].url);
-              console.log("Files: ", res);
-              console.log("Uploaded Image URL:", res[0].url);
-              console.log(setImageUrl);
-              alert("Upload Completed");
-            }}
-            onUploadError={(error) => {
-              alert(`ERROR! ${error.message}`);
-            }}
-          />
+            {imageUrl ? (
+              <Image
+                src={imageUrl}
+                alt="Logo of the project"
+                width={1000}
+                height={667}
+                className="w-full h-64 object-contain"
+              />
+            ) : (
+              <UploadDropzone
+                className="border-black bg-slate-300 w-full h-64 ut-label:text-lg ut-allowed-content:ut-uploading:text-red-300"
+                endpoint="imageUploader"
+                onClientUploadComplete={(res) => {
+                  setImageUrl(res[0].url);
+                  console.log("Files: ", res);
+                  console.log("Uploaded Image URL:", res[0].url);
+                  console.log(setImageUrl);
+                  alert("Upload Completed");
+                }}
+                onUploadError={(error) => {
+                  alert(`ERROR! ${error.message}`);
+                }}
+              />
+            )}
+
+            <div className="mt-6 flex justify-end justify-center space-x-4">
+              <button
+                className="px-4 py-2 w-1/5 text-sm font-medium text-white bg-black rounded-md shadow-sm hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                type="button"
+                onClick={handleNext}
+              >
+                Next
+              </button>
+              <button className="px-4 py-2 w-1/5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="button">
+                Cancel
+              </button>
+            </div>
+          </form>
         )}
 
-        <div className="mt-6 flex justify-end justify-center space-x-4">
-          <button
-            className="px-4 py-2 w-1/5 text-sm font-medium text-white bg-black rounded-md shadow-sm hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            type="button"
-            onClick={handleNext}
-          >
-            Next
-          </button>
-          <button className="px-4 py-2 w-1/5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="button">
-            Cancel
-          </button>
+        {/* Right Column: Empty --------------------------------------------------------------*/}
+        <div className="hidden lg:block lg:w-1/3">
         </div>
-      </form>
-    )}
-
-    {/* Right Column: Empty --------------------------------------------------------------*/}
-    <div className="hidden lg:block lg:w-1/3">
+      </div>
+      <Footer />
+      {renderModal()}
     </div>
-  </div>
-  <Footer />
-  {renderModal()}
-</div>
-    );
+  );
 }

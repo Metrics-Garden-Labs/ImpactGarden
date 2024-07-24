@@ -253,7 +253,13 @@ export type AttestationData1 = {
   metadataURL: string;
 };
 
-export type CategoryKey1 =
+export type CategoryKey =
+  | OnchainBuildersCategoryKey
+  | GovernanceCategoryKey
+  | OPStackCategoryKey
+  | DeveloperToolingCategoryKey;
+
+export type OnchainBuildersCategoryKey =
   | "CeFi"
   | "Crosschain"
   | "DeFi"
@@ -262,8 +268,21 @@ export type CategoryKey1 =
   | "Social"
   | "Utilities";
 
-export type CategoryKey =
+export type GovernanceCategoryKey =
   | "Infra & Tooling"
   | "Governance Research & Analytics"
   | "Collaboration & Onboarding"
   | "Governance Leadership";
+
+export type higherCategoryKey =
+  | "Developer Tooling"
+  | "Governance"
+  | "Onchain Builders"
+  | "OP Stack";
+
+export type OPStackCategoryKey =
+  | "Ethereum Core Contributions"
+  | "OP Stack Research and Development"
+  | "OP Stack Tooling";
+
+export type DeveloperToolingCategoryKey = "Undefined" | "Waiting for Update";
