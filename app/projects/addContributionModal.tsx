@@ -18,7 +18,8 @@ import { getChainId, networkContractAddresses } from '../../src/utils/networkCon
 import pinataSDK from '@pinata/sdk';
 import { clientToSigner, useSigner } from '../../src/hooks/useEAS';
 import { FaInfoCircle } from 'react-icons/fa';
-import {checkNetwork, categories, networks} from '../../src/utils/projectSignUpUtils';
+import { networks, checkNetwork, higherCategories, governanceCategories, onchainBuildersCategories, developerToolingCategories, opStackCategories } from '@/src/utils/projectSignUpUtils';
+
 
 interface Props {
   isOpen: boolean;
@@ -56,6 +57,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     ecosystem: selectedNetwork,
     secondaryecosystem: '',
     contribution: '',
+    subcategory: '',
     desc: '',
     link: '',
     easUid: '',

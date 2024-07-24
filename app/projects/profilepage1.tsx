@@ -141,6 +141,7 @@ export default function ProfilePage({
             ecosystem: project?.ecosystem || '',
             governancetype: '',
             secondaryecosystem: '',
+            subcategory: '',
             contribution: newContribution,
             desc: '',
             link: '',

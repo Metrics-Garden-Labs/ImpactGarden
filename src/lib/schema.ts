@@ -46,8 +46,7 @@ export const projects = pgTable(
     ethAddress: text("ethAddress").notNull(),
     ecosystem: text("ecosystem").notNull(),
     projectName: text("projectName").unique().notNull(),
-    // highercategory: text("category"),
-    // subcategory: text("subcategory"),
+    category: text("category"),
     oneliner: text("oneliner"),
     websiteUrl: text("websiteUrl"),
     twitterUrl: text("twitterUrl"),
@@ -93,6 +92,7 @@ export const contributions = pgTable(
       .references(() => projects.ecosystem)
       .notNull(),
     governancetype: text("governancetype"),
+    subcategory: text("subcategory"),
     secondaryecosystem: text("secondaryecosystem"),
     contribution: text("contribution").notNull().unique(),
     desc: text("desc").notNull(),

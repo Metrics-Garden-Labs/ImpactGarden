@@ -5,6 +5,7 @@ export interface Project {
   ethAddress?: string;
   ecosystem: string;
   projectName: string;
+  category: string | null;
   oneliner: string | null;
   websiteUrl: string | null;
   twitterUrl: string | null;
@@ -25,6 +26,7 @@ export interface Contribution {
   projectName: string;
   // primaryprojectuid?: string | null;
   contribution: string;
+  subcategory: string | null;
   governancetype: string | null;
   ecosystem: string;
   secondaryecosystem: string | null;
@@ -40,6 +42,7 @@ export interface NewProject {
   ethAddress: string;
   projectName: string;
   oneliner?: string;
+  category?: string;
   websiteUrl?: string;
   twitterUrl?: string;
   githubUrl?: string;
@@ -66,6 +69,7 @@ export interface NewContribution {
   // primaryprojectuid?: string | null;
   contribution: string;
   governancetype?: string;
+  subcategory?: string;
   ecosystem: string;
   secondaryecosystem?: string;
   desc: string;
@@ -239,6 +243,7 @@ export type AttestationData = {
   websiteUrl: string;
   twitterUrl: string;
   githubURL: string;
+  category: string;
   farcaster: string;
   mirror: string;
 };

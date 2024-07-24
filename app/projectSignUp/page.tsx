@@ -40,6 +40,7 @@ export default function ProjectSignUp() {
     websiteUrl: '',
     twitterUrl: '',
     githubURL: '',
+    category: "",
     farcaster: user.fid,
     mirror: '',
   });
@@ -94,6 +95,7 @@ export default function ProjectSignUp() {
         oneliner: attestationData.oneliner,
         websiteUrl: attestationData.websiteUrl,
         twitterUrl: attestationData.twitterUrl,
+        category: selectedHigherCategory,
         githubUrl: attestationData.githubURL,
         logoUrl: imageUrl,
         projectUid: attestationUID1,
@@ -296,8 +298,8 @@ export default function ProjectSignUp() {
         projectREFId: attestationUID,
         logoURL: imageUrl,
         mirror: attestationData.mirror,
-        highercategories: selectedHigherCategory,
-        subcategories: selectedCategories,
+        category : selectedHigherCategory,
+        // subcategories: selectedCategories,
       };
 
       const res = await pin.pinJSONToIPFS(attestationMetadata);
@@ -548,20 +550,20 @@ export default function ProjectSignUp() {
     );
   }
 
-  const renderSubcategories = (): { [key in CategoryKey]?: string } => {
-    switch (selectedHigherCategory) {
-      case 'Developer Tooling':
-        return developerToolingCategories;
-      case 'Governance':
-        return governanceCategories;
-      case 'Onchain Builders':
-        return onchainBuildersCategories;
-      case 'OP Stack':
-        return opStackCategories;
-      default:
-        return {};
-    }
-  };
+  // const renderSubcategories = (): { [key in CategoryKey]?: string } => {
+  //   switch (selectedHigherCategory) {
+  //     case 'Developer Tooling':
+  //       return developerToolingCategories;
+  //     case 'Governance':
+  //       return governanceCategories;
+  //     case 'Onchain Builders':
+  //       return onchainBuildersCategories;
+  //     case 'OP Stack':
+  //       return opStackCategories;
+  //     default:
+  //       return {};
+  //   }
+  // };
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-black">
@@ -610,11 +612,11 @@ export default function ProjectSignUp() {
                     {attestationData.oneliner || 'Project description'}
                   </p>
                   <h2 className='text-center mt-2 text-gray-500'>
-                    Higher Category: {higherCategories[selectedHigherCategory as higherCategoryKey] || 'None'}
+                    Category: {higherCategories[selectedHigherCategory as higherCategoryKey] || 'None'}
                   </h2>
-                  <h3 className="text-center mt-2 font-semibold text-gray-500">
+                  {/* <h3 className="text-center mt-2 font-semibold text-gray-500">
                     Categories: {formatCategories(selectedCategories) || 'None'}
-                  </h3>
+                  </h3> */}
                   <div className="flex justify-center py-4 items-center">
                     <BsGlobe2 className="text-black mx-2 text-lg" />
                     <FaXTwitter className="text-black mx-2 text-lg" />
@@ -750,7 +752,7 @@ export default function ProjectSignUp() {
             </div>
 
             <div>
-              <h2 className="font-semibold mt-4">Higher Category *</h2>
+              <h2 className="font-semibold mt-4">Category *</h2>
               <div className="flex flex-wrap mt-2">
                 {Object.keys(higherCategories).map((key) => (
                   <button
@@ -764,7 +766,7 @@ export default function ProjectSignUp() {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <h2 className="font-semibold mt-4">Subcategories *</h2>
               <div className="flex flex-wrap mt-2">
                 {Object.keys(renderSubcategories()).map((key) => (
@@ -777,7 +779,7 @@ export default function ProjectSignUp() {
                   </button>
                 ))}
               </div>
-            </div>
+            </div> */}
 
             <div>
               <label htmlFor="websiteUrl" className="block text-sm font-medium leading-6 text-gray-900">
