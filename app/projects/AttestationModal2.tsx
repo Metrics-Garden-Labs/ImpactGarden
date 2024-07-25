@@ -7,8 +7,9 @@ import AttestationConfirmationModal from '../components/attestationConfirmationM
 import { isAddress } from 'ethers';
 import { EIP712AttestationParams, EAS, SchemaEncoder, ZERO_ADDRESS, NO_EXPIRATION } from '@ethereum-attestation-service/eas-sdk';
 import { ethers } from 'ethers';
-import { Contribution, ContributionAttestationWithUsername, Project } from '@/src/types';
+import { Contribution, ContributionAttestationWithUsername, Project, contributionRolesKey } from '@/src/types';
 import GovernanceInfraToolingForm from '@/src/utils/contributionAttestations/GovernanceInfraToolingForm';
+import GovernanceRAndAForm from '@/src/utils/contributionAttestations/GovernanceR&A';
 import { easScanEndpoints } from '@/src/utils/easScan';
 
 interface AttestationModalProps {
@@ -18,8 +19,6 @@ interface AttestationModalProps {
   project: Project;
   attestationCount: number;
 }
-
-type contributionRolesKey = 'OP Foundation Employee' | 'Metagovernance Designer' | 'Delegate' | 'Delegate (Token Holder)' | 'Badgeholder' | 'Other' | 'I do not actively participate in Optimism Governance';
 
 const AttestationModal2: React.FC<AttestationModalProps> = ({
   isOpen,
@@ -160,6 +159,23 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 // createAttestation={createAttestation}
               />
             );
+            case 'Governance Research & Analytics':
+                return(
+                    <GovernanceRAndAForm
+                        handleRating1={handleRating1}
+                        handleRating2={handleRating2}
+                        rating1={rating1}
+                        rating2={rating2}
+                        contributionRoles={contributionRoles}
+                        handleClick={handleClick}
+                        labels={labels}
+                        feedback={feedback}
+                        setFeedback={setFeedback}
+                        extrafeedback={extrafeedback}
+                        setExtraFeedback={setExtraFeedback}
+                        onClose={onClose}
+                    />
+                );
           // Add more cases here for other subcategories under Governance...
         }
         break;

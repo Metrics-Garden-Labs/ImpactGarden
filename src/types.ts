@@ -293,3 +293,12 @@ export type OPStackCategoryKey =
   | "OP Stack Tooling";
 
 export type DeveloperToolingCategoryKey = "Undefined" | "Waiting for Update";
+
+export type contributionRolesKey =
+  | "OP Foundation Employee"
+  | "Metagovernance Designer"
+  | "Delegate"
+  | "Delegate (Token Holder)"
+  | "Badgeholder"
+  | "Other"
+  | "I do not actively participate in Optimism Governance";
