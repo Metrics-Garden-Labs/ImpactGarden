@@ -11,6 +11,7 @@ import { Contribution, ContributionAttestationWithUsername, Project, contributio
 import GovernanceInfraToolingForm from '@/src/utils/contributionAttestations/GovernanceInfraToolingForm';
 import GovernanceRAndAForm from '@/src/utils/contributionAttestations/GovernanceR&A';
 import { easScanEndpoints } from '@/src/utils/easScan';
+import GovernanceCollabAndOnboarding from '@/src/utils/contributionAttestations/GovernanceCollabAndOnboarding';
 
 interface AttestationModalProps {
   isOpen: boolean;
@@ -166,6 +167,25 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                         handleRating2={handleRating2}
                         rating1={rating1}
                         rating2={rating2}
+                        contributionRoles={contributionRoles}
+                        handleClick={handleClick}
+                        labels={labels}
+                        feedback={feedback}
+                        setFeedback={setFeedback}
+                        extrafeedback={extrafeedback}
+                        setExtraFeedback={setExtraFeedback}
+                        onClose={onClose}
+                    />
+                );
+            case 'Collaboration & Onboarding':
+                return(
+                    <GovernanceCollabAndOnboarding
+                        handleRating1={handleRating1}
+                        handleRating2={handleRating2}
+                        handleRating3={handleRating3}
+                        rating1={rating1}
+                        rating2={rating2}
+                        rating3={rating3}
                         contributionRoles={contributionRoles}
                         handleClick={handleClick}
                         labels={labels}

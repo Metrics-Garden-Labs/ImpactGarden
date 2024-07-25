@@ -72,10 +72,10 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
             <RatingScale rating={rating2} handleRating={handleRating2}/>
           </div>
 
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <h3 className='font-semibold text-center mt-4'>Has this contribution been useful for increasing accessibility to your governance functions?</h3>
             <RatingScale rating={rating3} handleRating={handleRating3}/>
-          </div>
+          </div> */}
 
           <div className="mb-4">
             <label className="block text-gray-700 font-bold mb-2">Please provide a brief explanation of your ratings:</label>
@@ -100,7 +100,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
             />
             <div className="text-right mr-2">{extrafeedback.length}/200</div>
           </div>
-          
+
           <div className="mb-4 text-center py-3 p-3">
             <button className='btn text-center bg-headerblack text-white hover:bg-blue-500 mr-4' onClick={onClose}>Back</button>
             {/* <button className="btn text-center bg-headerblack text-white hover:bg-blue-500 " onClick={createAttestation}>Send Review</button> */}
