@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Contribution, Project } from '../../src/types';
+import Image from 'next/image';
 
 interface FrameCustomizationProps {
   contribution: Contribution;
@@ -32,7 +33,7 @@ const framesData = [
           fontSize: fontSize,
         }}
       >
-        <img
+        <Image
           src={logoUrl}
           alt="Logo"
           width={200}
@@ -75,7 +76,7 @@ const framesData = [
           fontSize: fontSize,
         }}
       >
-        <img
+        <Image
           src={logoUrl}
           alt="Logo"
           width={200}
@@ -112,7 +113,7 @@ const framesData = [
           fontSize: fontSize,
         }}
       >
-        <img
+        <Image
           src={logoUrl}
           alt="Logo"
           width={200}
@@ -146,7 +147,7 @@ const framesData = [
           fontSize: fontSize,
         }}
       >
-        <img
+        <Image
           src={logoUrl}
           alt="Logo"
           width={200}

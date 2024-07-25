@@ -74,15 +74,15 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
           <div className="mb-4">
             <h3 className='font-semibold text-center mt-4'>How likely are you to recommend this contribution to someone in your role or position?</h3>
             <RatingScale rating={rating1} handleRating={handleRating1}/>
-          </div>
+        </div>              
 
-          <div className="mb-4">
-            <h3 className='font-semibold text-center mt-4'>How would you feel if this tool/contribution ceased to exist?</h3>
-            <SmileyRatingScale rating={smileyRating} handleRating={handleSmileyRating} />
-            <p className='text-sm'><span className='font-semibold'>Extremely Upset:</span> The absence of this tool would significantly disrupt my work.</p>
-            <p className='text-sm'><span className='font-semibold'>Somewhat Upset:</span>  The absence of this tool would cause considerable inconvenience.</p>
-            <p className='text-sm'><span className='font-semibold'>Neutral:</span>  The absence of this tool would have little to no impact on my work.</p>
-          </div>
+        <div className="mb-4">
+          <h3 className='font-semibold text-center mt-4'>How would you feel if this tool/contribution ceased to exist?</h3>
+          <SmileyRatingScale rating={smileyRating} handleRating={handleSmileyRating} />
+          <p className='text-sm'><span className='font-semibold'>Extremely Upset:</span> The absence of this tool would significantly disrupt my work.</p>
+          <p className='text-sm'><span className='font-semibold'>Somewhat Upset:</span>  The absence of this tool would cause considerable inconvenience.</p>
+          <p className='text-sm'><span className='font-semibold'>Neutral:</span>  The absence of this tool would have little to no impact on my work.</p>
+        </div>
 
           {/* <div className="mb-4">
             <h3 className='font-semibold text-center mt-4'>Has this contribution been useful for your day-to-day role?</h3>
