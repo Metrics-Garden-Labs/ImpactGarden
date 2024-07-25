@@ -422,12 +422,12 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                             <div className="text-right mr-2">{extrafeedback.length}/200</div>
                         </div>
                         <div className="mb-4 text-center py-3 p-3">
-                            <button 
+                            {/* <button 
                                 className='btn text-center bg-headerblack text-white hover:bg-blue-500 mr-4'
                                 onClick={toggleAttestationForm}
                             >
                                 Back
-                            </button>
+                            </button> */}
                             <button
                                 className="btn text-center bg-headerblack text-white hover:bg-blue-500 "
                                 onClick={createAttestation}

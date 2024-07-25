@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { IoIosArrowBack } from "react-icons/io";
 import { FaCopy } from 'react-icons/fa';
 import AttestationModal from '../../AttestationModal';
+import AttestationModal2 from '../../AttestationModal2';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
 import Link from 'next/link';
 import { format } from 'date-fns';
@@ -211,7 +212,14 @@ export default function ContributionPage({
         </div>
       </div>
       {isAttestationModalOpen && (
-        <AttestationModal
+        // <AttestationModal
+        //   contribution={contribution}
+        //   project={project}
+        //   attestationCount={attestationCount}
+        //   onClose={() => setIsAttestationModalOpen(false)}
+        //   isOpen={isAttestationModalOpen}
+        // />
+        <AttestationModal2
           contribution={contribution}
           project={project}
           attestationCount={attestationCount}
