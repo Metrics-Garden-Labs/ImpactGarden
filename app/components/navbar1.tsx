@@ -84,9 +84,9 @@ export default function Navbar() {
           <li>
             <Link href='/searchUsers' className='block py-2' onClick={closeSidebar}>SEARCH USERS</Link>
           </li>
-          <li>
+          {/* <li>
             <Link href='/makeFrame' className='text-white text-md md:text-sm hover:text-opacity-75'>Make Frame</Link>
-          </li>
+          </li> */}
         </ul>
       </div>
     </>

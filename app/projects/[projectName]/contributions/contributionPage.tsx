@@ -130,12 +130,12 @@ export default function ContributionPage({
               >
                 Share<FaCopy className="ml-1" />
               </button>
-              <button
+              {/* <button
                 className="btn text-center bg-headerblack text-white hover:bg-blue-500 ml-2"
                 onClick={handleMakeFrame}
               >
                 Make Frame
-              </button>
+              </button> */}
             </div>
           </>
         );
