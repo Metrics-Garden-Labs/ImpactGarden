@@ -43,6 +43,7 @@ const addProjectsToDB = async () => {
           ecosystem: "Optimism",
           primaryprojectuid: project.projectUid, // Corrected usage
           projectName: project.name,
+          category: project.category || "", // Assuming optional fields
           oneliner: project.description,
           websiteUrl: project.websiteUrl || "", // Assuming optional fields
           twitterUrl: project.twitterUrl || "",

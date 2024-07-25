@@ -1,6 +1,6 @@
 {
-  "id": "a2d1d69f-dc00-4643-8d6b-9f199d0779c6",
-  "prevId": "dbc11d56-7df2-4b3a-b980-f9f288f7a9f8",
+  "id": "4aaf3985-de1e-4861-861d-5e4cb21100fb",
+  "prevId": "762845e0-9796-45c6-93bb-dbccd5a40bf3",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -197,6 +197,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "subcategory": {
+          "name": "subcategory",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "secondaryecosystem": {
           "name": "secondaryecosystem",
           "type": "text",
@@ -219,13 +231,13 @@
           "name": "link",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "ethAddress": {
           "name": "ethAddress",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "easUid": {
           "name": "easUid",
@@ -286,6 +298,19 @@
           ],
           "columnsTo": [
             "ecosystem"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "contributions_category_projects_category_fk": {
+          "name": "contributions_category_projects_category_fk",
+          "tableFrom": "contributions",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "category"
+          ],
+          "columnsTo": [
+            "category"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -400,6 +425,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "oneliner": {
           "name": "oneliner",
           "type": "text",
@@ -430,14 +461,14 @@
           "primaryKey": false,
           "notNull": false
         },
-        "projectUid": {
-          "name": "projectUid",
+        "primaryprojectuid": {
+          "name": "primaryprojectuid",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "category": {
-          "name": "category",
+        "projectUid": {
+          "name": "projectUid",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -481,6 +512,20 @@
           "nullsNotDistinct": false,
           "columns": [
             "projectName"
+          ]
+        },
+        "projects_primaryprojectuid_unique": {
+          "name": "projects_primaryprojectuid_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "primaryprojectuid"
+          ]
+        },
+        "projects_projectUid_unique": {
+          "name": "projects_projectUid_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "projectUid"
           ]
         }
       }
