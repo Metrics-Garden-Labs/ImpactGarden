@@ -35,7 +35,7 @@ export default function Navbar() {
           <Link href='/projectSignUp' className='text-white lg:text-md md:text-sm hover:text-opacity-75'>REGISTER PROJECT</Link>
           <Link href='/searchProject' className='text-white lg:text-md md:text-sm hover:text-opacity-75'>SEARCH PROJECTS</Link>
           <Link href='/searchUsers' className='text-white text-md md:text-sm hover:text-opacity-75'>SEARCH USERS</Link>
-          <Link href='/makeFrame' className='text-white text-md md:text-sm hover:text-opacity-75'>Make Frame</Link>
+          {/* <Link href='/makeFrame' className='text-white text-md md:text-sm hover:text-opacity-75'>Make Frame</Link> */}
         </div>
 
         {/* FarcasterLogin */}
