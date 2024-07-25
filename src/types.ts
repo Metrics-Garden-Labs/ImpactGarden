@@ -26,6 +26,7 @@ export interface Contribution {
   projectName: string;
   // primaryprojectuid?: string | null;
   contribution: string;
+  category: string | null;
   subcategory: string | null;
   governancetype: string | null;
   ecosystem: string;
@@ -69,6 +70,7 @@ export interface NewContribution {
   // primaryprojectuid?: string | null;
   contribution: string;
   governancetype?: string;
+  category?: string;
   subcategory?: string;
   ecosystem: string;
   secondaryecosystem?: string;

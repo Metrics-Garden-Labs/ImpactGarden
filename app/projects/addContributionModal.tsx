@@ -1,24 +1,22 @@
-// AddContributionModal.tsx
-//with the current format this is pretty much a subproject of the original project,
 'use client';
 import React, { useEffect, useState } from 'react';
-import { NEXT_PUBLIC_URL, WHITELISTED_USERS, useGlobalState } from '../../src/config/config';
+import { NEXT_PUBLIC_URL, useGlobalState } from '../../src/config/config';
 import { AttestationNetworkType, Contribution, Project } from '../../src/types';
-import { useEAS } from '../../src/hooks/useEAS';
-import { AttestationRequestData, EAS, EIP712AttestationParams, NO_EXPIRATION, SchemaEncoder, ZERO_BYTES32 } from '@ethereum-attestation-service/eas-sdk';
+import { useEAS, useSigner } from '../../src/hooks/useEAS';
+import { EAS, EIP712AttestationParams, SchemaEncoder, ZERO_BYTES32 } from '@ethereum-attestation-service/eas-sdk';
 import { ethers } from 'ethers';
 import { RxCross2 } from 'react-icons/rx';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import Link from 'next/link';
-import { easScanEndpoints } from '../../src/utils/easScan';
 import AttestationCreationModal from '../components/attestationCreationModal';
 import AttestationConfirmationModal from '../components/attestationConfirmationModal';
 import { useSwitchChain } from 'wagmi';
 import { getChainId, networkContractAddresses } from '../../src/utils/networkContractAddresses';
 import pinataSDK from '@pinata/sdk';
-import { clientToSigner, useSigner } from '../../src/hooks/useEAS';
 import { FaInfoCircle } from 'react-icons/fa';
-import { networks, checkNetwork, higherCategories, governanceCategories, onchainBuildersCategories, developerToolingCategories, opStackCategories } from '@/src/utils/projectSignUpUtils';
+import { networks, checkNetwork } from '@/src/utils/projectSignUpUtils';
+import { easScanEndpoints } from '@/src/utils/easScan';
+import { Category, Subcategory, higherCategories, getSubcategories } from '@/src/utils/dbadding/addContributionModalUtils';
 
 
 interface Props {
@@ -28,7 +26,7 @@ interface Props {
   addContributionCallback: (contribution: string) => void;
 }
 
-export default function AddContributionModal({ isOpen, onClose, addContributionCallback}: Props) {
+export default function AddContributionModal({ isOpen, onClose, addContributionCallback }: Props) {
   const [fid] = useGlobalState('fid');
   const [walletAddress] = useGlobalState('walletAddress');
   const [selectedProject] = useLocalStorage<Project>('selectedProject');
@@ -57,6 +55,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     ecosystem: selectedNetwork,
     secondaryecosystem: '',
     contribution: '',
+    category: selectedProject?.category || '',
     subcategory: '',
     desc: '',
     link: '',
@@ -94,7 +93,8 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       const attestationMetadata = {
         name: selectedProject?.projectName,
         farcaster: user.fid,
-        governanceType: formData.governancetype,
+        category: selectedProject?.category,
+        subcategory: formData.subcategory,
         ecosystem: formData.ecosystem,
         secondaryEcosystem: formData.secondaryecosystem,
         contribution: formData.contribution,
@@ -132,7 +132,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     }
 
     if (
-      formData.governancetype === '' ||
+      formData.subcategory === '' ||
       formData.contribution === '' ||
       formData.desc === '' ||
       formData.link === ''
@@ -166,7 +166,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       const easop = new EAS('0x4200000000000000000000000000000000000021');
       easop.connect(signer);
       const delegatedSigner = await easop.getDelegated();
-      const easnonce = await easop.getNonce(currentAddress)
+      const easnonce = await easop.getNonce(currentAddress);
 
       const attestationdata1: EIP712AttestationParams = {
         schema: schema1,
@@ -282,6 +282,11 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     }
   };
 
+  const handleSubcategorySelect = (subcategory: Subcategory) => {
+    setFormData({ ...formData, subcategory });
+  };
+
+
   if (!isOpen) return null;
 
   const renderModal = () => {
@@ -309,52 +314,35 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
           </div>
           <div className="mb-4 items-center py-3 max-h-96 overflow-y-auto">
             <div>
-              <h3 className="font-semibold text-center mb-2">Type of Governance Contribution</h3>
-              <div className="mb-4">
-                <select
-                  id="contributionType"
-                  name="contributionType"
-                  value={formData.governancetype || ''}
-                  onChange={e => setFormData({ ...formData, governancetype: e.target.value })}
-                  className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                >
-                  <option value="">Select Contribution Type</option>
-                  <option value="Education">Education</option>
-                  <option value="Research">Research</option>
-                  <option value="Tooling">Tooling</option>
-                  <option value="Awareness">Awareness</option>
-                </select>
+              <h3 className="font-semibold text-center mb-2">Type of Contribution</h3>
+              <div className="flex flex-wrap justify-center">
+                {getSubcategories(selectedProject?.category as Category).map((subcategory) => (
+                  <button
+                    key={subcategory}
+                    onClick={() => handleSubcategorySelect(subcategory)}
+                    className={`mb-2 mr-2 px-4 py-2 rounded-lg text-sm ${formData.subcategory === subcategory ? 'bg-black text-white' : 'bg-gray-200 text-gray-800'}`}
+                  >
+                    {subcategory}
+                  </button>
+                ))}
               </div>
             </div>
-
-            <div>
-              <label htmlFor="attestationChain" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
-                Main Ecosystem (Optimism only supported)
-              </label>
-              <div className=" mb-2">
-                <select
-                  id="attestationChain"
-                  name="attestationChain"
-                  value={selectedNetwork}
-                  onChange={handleNetworkChangeEvent}
-                  className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                >
-                  {networks.map((network) => (
-                    <option key={network} value={network}>
-                      {network}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <h3 className='font-semibold p-2 text-center'>Secondary Ecosystems</h3>
-            <textarea
-              value={formData.secondaryecosystem || ''}
-              onChange={e => setFormData({ ...formData, secondaryecosystem: e.target.value })}
-              placeholder="Ecosystems"
-              className='h-20 w-full p-2 border border-gray-800 rounded-md'
-            />
           </div>
+
+           {/* <div>
+              <h2 className="font-semibold mt-4">Subcategories *</h2>
+              <div className="flex flex-wrap mt-2">
+                {Object.keys(renderSubcategories()).map((key) => (
+                  <button
+                    key={key}
+                    onClick={() => handleCategoryToggle(key as CategoryKey)}
+                    className={`mb-2 mr-2 px-4 py-2 rounded-lg text-sm ${selectedCategories[key as CategoryKey] ? 'bg-black text-white' : 'bg-gray-200 text-gray-800'}`}
+                  >
+                    {selectedCategories[key as CategoryKey] ? '✓' : '+'} {renderSubcategories()[key as CategoryKey]}
+                  </button>
+                ))}
+              </div>
+            </div> */}
           <div className="mb-2">
             <h3 className="font-semibold p-2 text-center">Title <span className="tooltip tooltip-top" data-tip="Required"><FaInfoCircle className="inline ml-2 text-blue-500 relative" style={{ top: '-2px' }} /></span></h3>
             <textarea

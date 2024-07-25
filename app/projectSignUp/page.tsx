@@ -433,6 +433,7 @@ export default function ProjectSignUp() {
           projectName: attestationData.projectName,
           websiteUrl: attestationData.websiteUrl,
           oneliner: attestationData.oneliner,
+          category: selectedHigherCategory,
           twitterUrl: attestationData.twitterUrl,
           githubUrl: attestationData.githubURL,
           ecosystem: ecosystem,
