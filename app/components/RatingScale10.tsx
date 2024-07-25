@@ -12,10 +12,10 @@ const RatingScale10: React.FC<RatingScaleProps> = ({ rating, handleRating }) => 
   return (
     <div className="text-center">
       <div className="flex justify-between mb-2">
-        <span className="text-sm">0 = Not likely at all</span>
-        <span className="text-sm">10 = Extremely likely</span>
+        <span className="text-sm mt-2">0 = Not likely at all</span>
+        <span className="text-sm mt-2">10 = Extremely likely</span>
       </div>
-      <div className="flex justify-center mt-2">
+      <div className="flex justify-center mt-4">
         {[...Array(11).keys()].map((num) => (
           <div
             key={num}

@@ -9,19 +9,19 @@ const RatingScale5: React.FC<RatingScaleProps> = ({ rating, handleRating }) => {
   return (
     <div className="text-center">
       <div className="flex justify-between mb-2">
-        <span className="text-sm">1 = Not likely at all</span>
-        <span className="text-sm">5 = Extremely likely</span>
+        <span className="text-sm mt-2">1 = Not likely at all</span>
+        <span className="text-sm mt-2">5 = Extremely likely</span>
       </div>
       <div className="flex justify-center mt-2">
         {[...Array(5).keys()].map((num) => (
           <div
             key={num}
             className={`w-10 h-10 mx-1 flex items-center justify-center cursor-pointer rounded-full text-white ${colors[num]} ${
-              rating === num  ? 'ring-2 ring-offset-2 ring-blue-500' : ''
+              rating === num + 1  ? 'ring-2 ring-offset-2 ring-blue-500' : ''
             }`}
-            onClick={() => handleRating(num)}
+            onClick={() => handleRating(num + 1)}
           >
-            {num}
+            {num + 1}
           </div>
         ))}
       </div>
