@@ -41,6 +41,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   const [rating1, setRating1] = useState(0);
   const [rating2, setRating2] = useState(0);
   const [rating3, setRating3] = useState(0);
+  const [ smileyRating, setSmileyRating ] = useState(0);
   const [user] = useLocalStorage("user", {
     fid: '',
     username: '',
@@ -79,6 +80,11 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
       router.push(pathname);
     }
   }, [isOpen, contribution.id, router, pathname]);
+
+  const handleSmileyRating = (rate: number) => {
+    setSmileyRating(rate);
+    console.log("Smiley Rating set to: ", rate);
+  }
 
   const handleRating1 = (rate: number) => {
     setRating1(rate);
@@ -146,6 +152,8 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 handleRating1={handleRating1}
                 handleRating2={handleRating2}
                 handleRating3={handleRating3}
+                handleSmileyRating={handleSmileyRating}
+                smileyRating={smileyRating}
                 rating1={rating1}
                 rating2={rating2}
                 rating3={rating3}

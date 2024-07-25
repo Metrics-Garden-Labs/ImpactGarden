@@ -1,8 +1,9 @@
 
 import React from 'react';
-import RatingScale from '@/app/components/RatingScale';
 import { RxCross2 } from 'react-icons/rx';
 import { contributionRolesKey } from '@/src/types';
+import RatingScale5 from '@/app/components/RatingScale5';
+import RatingScale10 from '@/app/components/RatingScale10';
 
 interface GovernanceRAndAFormProps {
     contributionRoles: { [key in contributionRolesKey]: boolean };
@@ -41,7 +42,7 @@ const GovernanceRAndDForm: React.FC<GovernanceRAndAFormProps> = ({
         >
           <>
           <h2 className="text-xl font-bold mb-4 text-center">Attest to Contribution</h2>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <h3 className="font-semibold text-center">Please select the roles you perform within Optimism's Governance for which this contribution has been impactful. Select all that apply.</h3>
             <div className='font-semibold text-center mt-4'>
               {Object.entries(contributionRoles).map(([key, value]) => (
@@ -54,20 +55,20 @@ const GovernanceRAndDForm: React.FC<GovernanceRAndAFormProps> = ({
                 </button>
               ))}
             </div>
+          </div> */}
+
+          <div className="mb-4">
+            <h3 className='font-semibold text-center mt-4'>How likely are you to recommend this contribution to someone in your role or position?</h3>
+            <RatingScale10 rating={rating1} handleRating={handleRating1}/>
           </div>
 
           <div className="mb-4">
-            <h3 className='font-semibold text-center mt-4'>How likely are you to recommend this contribution to someone in your role or an ecosystem participant?</h3>
-            <RatingScale rating={rating1} handleRating={handleRating1}/>
+            <h3 className='font-semibold text-center mt-4'>How effectively were you able to create improvements to Optimism’s governance based on this research or analysis?</h3>
+            <RatingScale5 rating={rating2} handleRating={handleRating2}/>
           </div>
 
           <div className="mb-4">
-            <h3 className='font-semibold text-center mt-4'>How effectively does the research provide insights that can be applied to understand or improve Optimism meta governance design?</h3>
-            <RatingScale rating={rating1} handleRating={handleRating1}/>
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Please provide specific examples or scenarios of how this research has been useful for you, please specify in which role</label>
+            <label className="block text-gray-700 font-bold mb-2">Please explain your rating.<span className='italics'> What makes this research valuable or insightful, or what limitations do you see without it?</span></label>
             <textarea
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
@@ -79,7 +80,7 @@ const GovernanceRAndDForm: React.FC<GovernanceRAndAFormProps> = ({
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Any additional feedback or suggestions?</label>
+            <label className="block text-gray-700 font-bold mb-2">Any additional feedback or suggestions on this contribution? This response will be confidential and only shared with the contributor.</label>
             <textarea
               value={extrafeedback}
               onChange={(e) => setExtraFeedback(e.target.value)}

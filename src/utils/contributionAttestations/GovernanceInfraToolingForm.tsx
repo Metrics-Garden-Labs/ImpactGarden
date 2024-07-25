@@ -1,7 +1,11 @@
+//im just commenting out all the stuff that is being removed for now incase it gets added back in at a later date
+
+
 import React from 'react';
-import RatingScale from '@/app/components/RatingScale';
+import RatingScale from '@/app/components/RatingScale10';
 import { RxCross2 } from 'react-icons/rx';
 import { contributionRolesKey } from '@/src/types';
+import SmileyRatingScale from '@/app/components/SmileyRatingScale';
 
 interface GovernanceInfraToolingFormProps {
   handleRating1: (rate: number) => void;
@@ -10,6 +14,8 @@ interface GovernanceInfraToolingFormProps {
   rating1: number;
   rating2: number;
   rating3: number;
+  smileyRating: number;
+  handleSmileyRating: (rate: number) => void;
   contributionRoles: { [key in contributionRolesKey]: boolean };
   handleClick: (key: contributionRolesKey) => void;
   labels: { [key in contributionRolesKey]: string };
@@ -27,6 +33,8 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
   handleRating2,
   handleRating3,
   rating1,
+  smileyRating,
+  handleSmileyRating,
   rating2,
   rating3,
   contributionRoles,
@@ -46,7 +54,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <>
-          <h2 className="text-xl font-bold mb-4 text-center">Attest to Contribution</h2>
+          {/* <h2 className="text-xl font-bold mb-4 text-center">Attest to Contribution</h2>
           <div className="mb-4">
             <h3 className="font-semibold text-center">Please select the roles you perform within Optimism's Governance for which this contribution has been impactful. Select all that apply.</h3>
             <div className='font-semibold text-center mt-4'>
@@ -60,17 +68,26 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
                 </button>
               ))}
             </div>
-          </div>
+          </div> 
+          this will be present in another branch, dont need it for now, should be able to get this information from the persons wallet when they sign up*/}
 
           <div className="mb-4">
-            <h3 className='font-semibold text-center mt-4'>How likely are you to recommend this contribution to someone in your role or an ecosystem participant?</h3>
+            <h3 className='font-semibold text-center mt-4'>How likely are you to recommend this contribution to someone in your role or position?</h3>
             <RatingScale rating={rating1} handleRating={handleRating1}/>
           </div>
 
           <div className="mb-4">
+            <h3 className='font-semibold text-center mt-4'>How would you feel if this tool/contribution ceased to exist?</h3>
+            <SmileyRatingScale rating={smileyRating} handleRating={handleSmileyRating} />
+            <p className='text-sm'><span className='font-semibold'>Extremely Upset:</span> The absence of this tool would significantly disrupt my work.</p>
+            <p className='text-sm'><span className='font-semibold'>Somewhat Upset:</span>  The absence of this tool would cause considerable inconvenience.</p>
+            <p className='text-sm'><span className='font-semibold'>Neutral:</span>  The absence of this tool would have little to no impact on my work.</p>
+          </div>
+
+          {/* <div className="mb-4">
             <h3 className='font-semibold text-center mt-4'>Has this contribution been useful for your day-to-day role?</h3>
             <RatingScale rating={rating2} handleRating={handleRating2}/>
-          </div>
+          </div> */}
 
           {/* <div className="mb-4">
             <h3 className='font-semibold text-center mt-4'>Has this contribution been useful for increasing accessibility to your governance functions?</h3>
@@ -78,7 +95,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
           </div> */}
 
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Please provide a brief explanation of your ratings:</label>
+            <label className="block text-gray-700 font-bold mb-2">Please provide a brief explanation for your rating. For example, what aspects of this tool make it stand out from others, or what challenges do you face without it? </label>
             <textarea
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
@@ -90,7 +107,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Any additional feedback or suggestions?</label>
+            <label className="block text-gray-700 font-bold mb-2">Any additional feedback or suggestions on this contribution? This response will be confidential and only shared with the contributor.</label>
             <textarea
               value={extrafeedback}
               onChange={(e) => setExtraFeedback(e.target.value)}

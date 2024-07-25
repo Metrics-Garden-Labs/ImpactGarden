@@ -302,3 +302,8 @@ export type contributionRolesKey =
   | "Badgeholder"
   | "Other"
   | "I do not actively participate in Optimism Governance";
+
+export interface RatingScaleProps {
+  rating: number;
+  handleRating: (rate: number) => void;
+}

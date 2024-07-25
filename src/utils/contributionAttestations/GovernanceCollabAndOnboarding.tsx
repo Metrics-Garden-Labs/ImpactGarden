@@ -26,7 +26,7 @@
 
 
 import React from 'react';
-import RatingScale from '@/app/components/RatingScale';
+import RatingScale from '@/app/components/RatingScale10';
 import { RxCross2 } from 'react-icons/rx';
 import { contributionRolesKey } from '@/src/types';
 
