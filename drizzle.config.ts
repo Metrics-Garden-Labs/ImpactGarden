@@ -9,9 +9,7 @@ export default defineConfig({
   out: "./drizzle",
   dialect: "postgresql",
   dbCredentials: {
-    url:
-      process.env.POSTGRES_URL ||
-      "postgres://default:4PYgnlCu3IhM@ep-calm-union-a4ngoy74-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require",
+    url: process.env.POSTGRES_URL as string,
   },
   verbose: true,
   strict: true,
