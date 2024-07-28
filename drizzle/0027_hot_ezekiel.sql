@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX IF NOT EXISTS "projects_project_name_idx" ON "projects" USING btree ("projectName");

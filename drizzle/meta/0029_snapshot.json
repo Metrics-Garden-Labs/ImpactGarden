@@ -1,10 +1,10 @@
 {
-  "id": "72f82641-28bd-4e85-b838-3cd9597e643a",
-  "prevId": "762845e0-9796-45c6-93bb-dbccd5a40bf3",
-  "version": "5",
-  "dialect": "pg",
+  "id": "de72c5ac-24ea-4829-a998-6f7ba1c38166",
+  "prevId": "fc9103db-057f-41d4-983b-135ec0745cd9",
+  "version": "7",
+  "dialect": "postgresql",
   "tables": {
-    "contributionattestations": {
+    "public.contributionattestations": {
       "name": "contributionattestations",
       "schema": "",
       "columns": {
@@ -24,7 +24,7 @@
           "name": "projectName",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "contribution": {
           "name": "contribution",
@@ -93,9 +93,17 @@
         "cont_attest_id_idx": {
           "name": "cont_attest_id_idx",
           "columns": [
-            "id"
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -163,7 +171,7 @@
         }
       }
     },
-    "contributions": {
+    "public.contributions": {
       "name": "contributions",
       "schema": "",
       "columns": {
@@ -257,9 +265,17 @@
         "cont_user_fid_idx": {
           "name": "cont_user_fid_idx",
           "columns": [
-            "id"
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -340,7 +356,7 @@
         }
       }
     },
-    "governance_collab_and_onboarding": {
+    "public.governance_collab_and_onboarding": {
       "name": "governance_collab_and_onboarding",
       "schema": "",
       "columns": {
@@ -434,9 +450,17 @@
         "governance_collab_and_onboarding_idx": {
           "name": "governance_collab_and_onboarding_idx",
           "columns": [
-            "id"
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -517,7 +541,7 @@
         }
       }
     },
-    "governance_infra_and_tooling": {
+    "public.governance_infra_and_tooling": {
       "name": "governance_infra_and_tooling",
       "schema": "",
       "columns": {
@@ -605,9 +629,17 @@
         "governance_infra_and_tooling_idx": {
           "name": "governance_infra_and_tooling_idx",
           "columns": [
-            "id"
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -688,7 +720,7 @@
         }
       }
     },
-    "governance_r_and_a": {
+    "public.governance_r_and_a": {
       "name": "governance_r_and_a",
       "schema": "",
       "columns": {
@@ -782,9 +814,17 @@
         "governance_r_and_a_idx": {
           "name": "governance_r_and_a_idx",
           "columns": [
-            "id"
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -865,7 +905,7 @@
         }
       }
     },
-    "op_delegates": {
+    "public.op_delegates": {
       "name": "op_delegates",
       "schema": "",
       "columns": {
@@ -899,9 +939,17 @@
         "address_idx": {
           "name": "address_idx",
           "columns": [
-            "address"
+            {
+              "expression": "address",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {},
@@ -916,7 +964,7 @@
         }
       }
     },
-    "projects": {
+    "public.projects": {
       "name": "projects",
       "schema": "",
       "columns": {
@@ -930,7 +978,7 @@
           "name": "userFid",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "ethAddress": {
           "name": "ethAddress",
@@ -1010,26 +1058,35 @@
         "projects_user_id_idx": {
           "name": "projects_user_id_idx",
           "columns": [
-            "id"
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "projects_project_name_idx": {
+          "name": "projects_project_name_idx",
+          "columns": [
+            {
+              "expression": "projectName",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
-      "foreignKeys": {
-        "projects_userFid_users_fid_fk": {
-          "name": "projects_userFid_users_fid_fk",
-          "tableFrom": "projects",
-          "tableTo": "users",
-          "columnsFrom": [
-            "userFid"
-          ],
-          "columnsTo": [
-            "fid"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "projects_projectName_unique": {
@@ -1055,7 +1112,7 @@
         }
       }
     },
-    "user_addresses": {
+    "public.user_addresses": {
       "name": "user_addresses",
       "schema": "",
       "columns": {
@@ -1130,11 +1187,29 @@
         "unique_user_address_idx": {
           "name": "unique_user_address_idx",
           "columns": [
-            "userfid",
-            "addressorder",
-            "ethaddress"
+            {
+              "expression": "userfid",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "addressorder",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "ethaddress",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -1163,7 +1238,7 @@
         }
       }
     },
-    "users": {
+    "public.users": {
       "name": "users",
       "schema": "",
       "columns": {
@@ -1209,9 +1284,17 @@
         "fid_unique_idx": {
           "name": "fid_unique_idx",
           "columns": [
-            "fid"
+            {
+              "expression": "fid",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {},
@@ -1229,6 +1312,7 @@
   },
   "enums": {},
   "schemas": {},
+  "sequences": {},
   "_meta": {
     "columns": {},
     "schemas": {},

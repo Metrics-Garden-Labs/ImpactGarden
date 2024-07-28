@@ -1,10 +1,8 @@
 {
-  "id": "4a6c2aa9-e38b-4a20-8b90-0c48dadbdf90",
-  "prevId": "00000000-0000-0000-0000-000000000000",
-  "version": "5",
-  "dialect": "pg",
+  "version": "7",
+  "dialect": "postgresql",
   "tables": {
-    "users": {
+    "public.users": {
       "name": "users",
       "schema": "",
       "columns": {
@@ -42,11 +40,19 @@
       },
       "indexes": {
         "fid_unique_idx": {
-          "name": "fid_unique_idx",
           "columns": [
-            "fid"
+            {
+              "expression": "fid",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "with": {},
+          "name": "fid_unique_idx",
+          "isUnique": true,
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {},
@@ -54,10 +60,10 @@
       "uniqueConstraints": {
         "users_fid_unique": {
           "name": "users_fid_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "fid"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     }
@@ -65,8 +71,10 @@
   "enums": {},
   "schemas": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
-    "tables": {}
-  }
+    "tables": {},
+    "columns": {}
+  },
+  "id": "4a6c2aa9-e38b-4a20-8b90-0c48dadbdf90",
+  "prevId": "00000000-0000-0000-0000-000000000000"
 }

@@ -1,10 +1,8 @@
 {
-  "id": "3535af16-e43b-47da-a573-6a461acd1850",
-  "prevId": "4a6c2aa9-e38b-4a20-8b90-0c48dadbdf90",
-  "version": "5",
-  "dialect": "pg",
+  "version": "7",
+  "dialect": "postgresql",
   "tables": {
-    "contributionAttestations": {
+    "public.contributionAttestations": {
       "name": "contributionAttestations",
       "schema": "",
       "columns": {
@@ -47,45 +45,53 @@
       },
       "indexes": {
         "cont_attest_id_idx": {
-          "name": "cont_attest_id_idx",
           "columns": [
-            "id"
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "with": {},
+          "name": "cont_attest_id_idx",
+          "isUnique": true,
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "contributionAttestations_userFid_users_fid_fk": {
           "name": "contributionAttestations_userFid_users_fid_fk",
           "tableFrom": "contributionAttestations",
-          "tableTo": "users",
           "columnsFrom": [
             "userFid"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "fid"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "contributionAttestations_contribution_contributions_contribution_fk": {
           "name": "contributionAttestations_contribution_contributions_contribution_fk",
           "tableFrom": "contributionAttestations",
-          "tableTo": "contributions",
           "columnsFrom": [
             "contribution"
           ],
+          "tableTo": "contributions",
           "columnsTo": [
             "contribution"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "contributions": {
+    "public.contributions": {
       "name": "contributions",
       "schema": "",
       "columns": {
@@ -134,66 +140,74 @@
       },
       "indexes": {
         "cont_user_fid_idx": {
-          "name": "cont_user_fid_idx",
           "columns": [
-            "id"
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "with": {},
+          "name": "cont_user_fid_idx",
+          "isUnique": true,
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "contributions_userFid_users_fid_fk": {
           "name": "contributions_userFid_users_fid_fk",
           "tableFrom": "contributions",
-          "tableTo": "users",
           "columnsFrom": [
             "userFid"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "fid"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "contributions_projectName_projects_projectName_fk": {
           "name": "contributions_projectName_projects_projectName_fk",
           "tableFrom": "contributions",
-          "tableTo": "projects",
           "columnsFrom": [
             "projectName"
           ],
+          "tableTo": "projects",
           "columnsTo": [
             "projectName"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "contributions_ethAddress_projects_ethAddress_fk": {
           "name": "contributions_ethAddress_projects_ethAddress_fk",
           "tableFrom": "contributions",
-          "tableTo": "projects",
           "columnsFrom": [
             "ethAddress"
           ],
+          "tableTo": "projects",
           "columnsTo": [
             "ethAddress"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "contributions_contribution_unique": {
           "name": "contributions_contribution_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "contribution"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "projects": {
+    "public.projects": {
       "name": "projects",
       "schema": "",
       "columns": {
@@ -255,32 +269,40 @@
       },
       "indexes": {
         "projects_user_id_idx": {
-          "name": "projects_user_id_idx",
           "columns": [
-            "id"
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "with": {},
+          "name": "projects_user_id_idx",
+          "isUnique": true,
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "projects_userFid_users_fid_fk": {
           "name": "projects_userFid_users_fid_fk",
           "tableFrom": "projects",
-          "tableTo": "users",
           "columnsFrom": [
             "userFid"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "fid"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "users": {
+    "public.users": {
       "name": "users",
       "schema": "",
       "columns": {
@@ -318,11 +340,19 @@
       },
       "indexes": {
         "fid_unique_idx": {
-          "name": "fid_unique_idx",
           "columns": [
-            "fid"
+            {
+              "expression": "fid",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "with": {},
+          "name": "fid_unique_idx",
+          "isUnique": true,
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {},
@@ -330,10 +360,10 @@
       "uniqueConstraints": {
         "users_fid_unique": {
           "name": "users_fid_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "fid"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     }
@@ -341,8 +371,10 @@
   "enums": {},
   "schemas": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
-    "tables": {}
-  }
+    "tables": {},
+    "columns": {}
+  },
+  "id": "3535af16-e43b-47da-a573-6a461acd1850",
+  "prevId": "4a6c2aa9-e38b-4a20-8b90-0c48dadbdf90"
 }

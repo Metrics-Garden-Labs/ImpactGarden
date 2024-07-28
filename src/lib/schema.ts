@@ -7,6 +7,7 @@ import {
   boolean,
   timestamp,
   uniqueIndex,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 import { useGlobalState } from "../config/config";
 import { number } from "zod";
@@ -41,12 +42,10 @@ export const projects = pgTable(
   "projects",
   {
     id: serial("id").primaryKey(),
-    userFid: text("userFid")
-      .references(() => users.fid)
-      .notNull(),
+    userFid: text("userFid"),
     ethAddress: text("ethAddress").notNull(),
     ecosystem: text("ecosystem").notNull(),
-    projectName: text("projectName").unique().notNull(),
+    projectName: text("projectName").notNull(),
     category: text("category"),
     oneliner: text("oneliner"),
     websiteUrl: text("websiteUrl"),
@@ -60,6 +59,9 @@ export const projects = pgTable(
   (projects) => {
     return {
       userIdIdx: uniqueIndex("projects_user_id_idx").on(projects.id),
+      projectNameIdx: uniqueIndex("projects_project_name_idx").on(
+        projects.projectName
+      ),
     };
   }
 );
@@ -130,9 +132,7 @@ export const contributionattestations = pgTable(
     userFid: text("userFid")
       .references(() => users.fid)
       .notNull(),
-    projectName: text("projectName")
-      .references(() => projects.projectName)
-      .notNull(),
+    projectName: text("projectName").references(() => projects.projectName),
     contribution: text("contribution")
       .references(() => contributions.contribution)
       .notNull(),
