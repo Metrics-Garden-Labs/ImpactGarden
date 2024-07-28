@@ -1,6 +1,6 @@
 {
-  "id": "762845e0-9796-45c6-93bb-dbccd5a40bf3",
-  "prevId": "a2d1d69f-dc00-4643-8d6b-9f199d0779c6",
+  "id": "72f82641-28bd-4e85-b838-3cd9597e643a",
+  "prevId": "762845e0-9796-45c6-93bb-dbccd5a40bf3",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -197,6 +197,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "subcategory": {
+          "name": "subcategory",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "secondaryecosystem": {
           "name": "secondaryecosystem",
           "type": "text",
@@ -290,6 +302,19 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
+        "contributions_category_projects_category_fk": {
+          "name": "contributions_category_projects_category_fk",
+          "tableFrom": "contributions",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "category"
+          ],
+          "columnsTo": [
+            "category"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
         "contributions_ethAddress_projects_ethAddress_fk": {
           "name": "contributions_ethAddress_projects_ethAddress_fk",
           "tableFrom": "contributions",
@@ -311,6 +336,531 @@
           "nullsNotDistinct": false,
           "columns": [
             "contribution"
+          ]
+        }
+      }
+    },
+    "governance_collab_and_onboarding": {
+      "name": "governance_collab_and_onboarding",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userfid": {
+          "name": "userfid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ethaddress": {
+          "name": "ethaddress",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "projectName": {
+          "name": "projectName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subcategory": {
+          "name": "subcategory",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ecosystem": {
+          "name": "ecosystem",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "attestationUID": {
+          "name": "attestationUID",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "governance_knowledge": {
+          "name": "governance_knowledge",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "recommend_contribution": {
+          "name": "recommend_contribution",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "feeling_if_didnt_exist": {
+          "name": "feeling_if_didnt_exist",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "explanation": {
+          "name": "explanation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "private_feedback": {
+          "name": "private_feedback",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "governance_collab_and_onboarding_idx": {
+          "name": "governance_collab_and_onboarding_idx",
+          "columns": [
+            "id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "governance_collab_and_onboarding_userfid_users_fid_fk": {
+          "name": "governance_collab_and_onboarding_userfid_users_fid_fk",
+          "tableFrom": "governance_collab_and_onboarding",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userfid"
+          ],
+          "columnsTo": [
+            "fid"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "governance_collab_and_onboarding_projectName_projects_projectName_fk": {
+          "name": "governance_collab_and_onboarding_projectName_projects_projectName_fk",
+          "tableFrom": "governance_collab_and_onboarding",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "projectName"
+          ],
+          "columnsTo": [
+            "projectName"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "governance_collab_and_onboarding_category_projects_category_fk": {
+          "name": "governance_collab_and_onboarding_category_projects_category_fk",
+          "tableFrom": "governance_collab_and_onboarding",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "category"
+          ],
+          "columnsTo": [
+            "category"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "governance_collab_and_onboarding_subcategory_contributions_subcategory_fk": {
+          "name": "governance_collab_and_onboarding_subcategory_contributions_subcategory_fk",
+          "tableFrom": "governance_collab_and_onboarding",
+          "tableTo": "contributions",
+          "columnsFrom": [
+            "subcategory"
+          ],
+          "columnsTo": [
+            "subcategory"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "governance_collab_and_onboarding_ecosystem_projects_ecosystem_fk": {
+          "name": "governance_collab_and_onboarding_ecosystem_projects_ecosystem_fk",
+          "tableFrom": "governance_collab_and_onboarding",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "ecosystem"
+          ],
+          "columnsTo": [
+            "ecosystem"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "governance_collab_and_onboarding_attestationUID_unique": {
+          "name": "governance_collab_and_onboarding_attestationUID_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "attestationUID"
+          ]
+        }
+      }
+    },
+    "governance_infra_and_tooling": {
+      "name": "governance_infra_and_tooling",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userfid": {
+          "name": "userfid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ethaddress": {
+          "name": "ethaddress",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "projectName": {
+          "name": "projectName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subcategory": {
+          "name": "subcategory",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ecosystem": {
+          "name": "ecosystem",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "attestationUID": {
+          "name": "attestationUID",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "likely_to_recommend": {
+          "name": "likely_to_recommend",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "feeling_if_didnt_exist": {
+          "name": "feeling_if_didnt_exist",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "explanation": {
+          "name": "explanation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "private_feedback": {
+          "name": "private_feedback",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "governance_infra_and_tooling_idx": {
+          "name": "governance_infra_and_tooling_idx",
+          "columns": [
+            "id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "governance_infra_and_tooling_userfid_users_fid_fk": {
+          "name": "governance_infra_and_tooling_userfid_users_fid_fk",
+          "tableFrom": "governance_infra_and_tooling",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userfid"
+          ],
+          "columnsTo": [
+            "fid"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "governance_infra_and_tooling_projectName_projects_projectName_fk": {
+          "name": "governance_infra_and_tooling_projectName_projects_projectName_fk",
+          "tableFrom": "governance_infra_and_tooling",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "projectName"
+          ],
+          "columnsTo": [
+            "projectName"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "governance_infra_and_tooling_category_projects_category_fk": {
+          "name": "governance_infra_and_tooling_category_projects_category_fk",
+          "tableFrom": "governance_infra_and_tooling",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "category"
+          ],
+          "columnsTo": [
+            "category"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "governance_infra_and_tooling_subcategory_contributions_subcategory_fk": {
+          "name": "governance_infra_and_tooling_subcategory_contributions_subcategory_fk",
+          "tableFrom": "governance_infra_and_tooling",
+          "tableTo": "contributions",
+          "columnsFrom": [
+            "subcategory"
+          ],
+          "columnsTo": [
+            "subcategory"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "governance_infra_and_tooling_ecosystem_projects_ecosystem_fk": {
+          "name": "governance_infra_and_tooling_ecosystem_projects_ecosystem_fk",
+          "tableFrom": "governance_infra_and_tooling",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "ecosystem"
+          ],
+          "columnsTo": [
+            "ecosystem"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "governance_infra_and_tooling_attestationUID_unique": {
+          "name": "governance_infra_and_tooling_attestationUID_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "attestationUID"
+          ]
+        }
+      }
+    },
+    "governance_r_and_a": {
+      "name": "governance_r_and_a",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userfid": {
+          "name": "userfid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ethaddress": {
+          "name": "ethaddress",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "projectName": {
+          "name": "projectName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subcategory": {
+          "name": "subcategory",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ecosystem": {
+          "name": "ecosystem",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "attestationUID": {
+          "name": "attestationUID",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "likely_to_recommend": {
+          "name": "likely_to_recommend",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "useful_for_understanding": {
+          "name": "useful_for_understanding",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "effective_for_improvements": {
+          "name": "effective_for_improvements",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "explanation": {
+          "name": "explanation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "private_feedback": {
+          "name": "private_feedback",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "governance_r_and_a_idx": {
+          "name": "governance_r_and_a_idx",
+          "columns": [
+            "id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "governance_r_and_a_userfid_users_fid_fk": {
+          "name": "governance_r_and_a_userfid_users_fid_fk",
+          "tableFrom": "governance_r_and_a",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userfid"
+          ],
+          "columnsTo": [
+            "fid"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "governance_r_and_a_projectName_projects_projectName_fk": {
+          "name": "governance_r_and_a_projectName_projects_projectName_fk",
+          "tableFrom": "governance_r_and_a",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "projectName"
+          ],
+          "columnsTo": [
+            "projectName"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "governance_r_and_a_category_projects_category_fk": {
+          "name": "governance_r_and_a_category_projects_category_fk",
+          "tableFrom": "governance_r_and_a",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "category"
+          ],
+          "columnsTo": [
+            "category"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "governance_r_and_a_subcategory_contributions_subcategory_fk": {
+          "name": "governance_r_and_a_subcategory_contributions_subcategory_fk",
+          "tableFrom": "governance_r_and_a",
+          "tableTo": "contributions",
+          "columnsFrom": [
+            "subcategory"
+          ],
+          "columnsTo": [
+            "subcategory"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "governance_r_and_a_ecosystem_projects_ecosystem_fk": {
+          "name": "governance_r_and_a_ecosystem_projects_ecosystem_fk",
+          "tableFrom": "governance_r_and_a",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "ecosystem"
+          ],
+          "columnsTo": [
+            "ecosystem"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "governance_r_and_a_attestationUID_unique": {
+          "name": "governance_r_and_a_attestationUID_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "attestationUID"
           ]
         }
       }
@@ -400,6 +950,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "oneliner": {
           "name": "oneliner",
           "type": "text",
@@ -430,14 +986,14 @@
           "primaryKey": false,
           "notNull": false
         },
-        "projectUid": {
-          "name": "projectUid",
+        "primaryprojectuid": {
+          "name": "primaryprojectuid",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "category": {
-          "name": "category",
+        "projectUid": {
+          "name": "projectUid",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -481,6 +1037,20 @@
           "nullsNotDistinct": false,
           "columns": [
             "projectName"
+          ]
+        },
+        "projects_primaryprojectuid_unique": {
+          "name": "projects_primaryprojectuid_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "primaryprojectuid"
+          ]
+        },
+        "projects_projectUid_unique": {
+          "name": "projects_projectUid_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "projectUid"
           ]
         }
       }

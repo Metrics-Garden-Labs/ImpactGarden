@@ -9,6 +9,7 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { useGlobalState } from "../config/config";
+import { number } from "zod";
 
 //to add columns to the schema you can add them in as usual then
 //run yarn drizzle-kit push:pg, it will add the columns to the database
@@ -195,6 +196,121 @@ export const op_delegates = pgTable(
   (op_delegates) => {
     return {
       addressIdx: uniqueIndex("address_idx").on(op_delegates.address),
+    };
+  }
+);
+
+//need to add the table for the attestation types
+//Governance Tables
+
+//Infra and Tooling
+
+export const governance_infra_and_tooling = pgTable(
+  "governance_infra_and_tooling",
+  {
+    id: serial("id").primaryKey(),
+    userfid: text("userfid")
+      .references(() => users.fid)
+      .notNull(),
+    ethaddress: text("ethaddress"),
+    projectName: text("projectName")
+      .references(() => projects.projectName)
+      .notNull(),
+    category: text("category")
+      .references(() => projects.category)
+      .notNull(),
+    subcategory: text("subcategory")
+      .references(() => contributions.subcategory)
+      .notNull(),
+    ecosystem: text("ecosystem")
+      .references(() => projects.ecosystem)
+      .notNull(),
+    attestationUID: text("attestationUID").notNull().unique(),
+    likely_to_recommend: text("likely_to_recommend"),
+    feeling_if_didnt_exist: text("feeling_if_didnt_exist"),
+    explanation: text("explanation"),
+    private_feedback: text("private_feedback"),
+    createdAt: timestamp("createdAt").defaultNow(),
+  },
+  (governance_infra_and_tooling) => {
+    return {
+      governanceInfraAndToolingIdx: uniqueIndex(
+        "governance_infra_and_tooling_idx"
+      ).on(governance_infra_and_tooling.id),
+    };
+  }
+);
+
+export const governance_r_and_a = pgTable(
+  "governance_r_and_a",
+  {
+    id: serial("id").primaryKey(),
+    userfid: text("userfid")
+      .references(() => users.fid)
+      .notNull(),
+    ethaddress: text("ethaddress"),
+    projectName: text("projectName")
+      .references(() => projects.projectName)
+      .notNull(),
+    category: text("category")
+      .references(() => projects.category)
+      .notNull(),
+    subcategory: text("subcategory")
+      .references(() => contributions.subcategory)
+      .notNull(),
+    ecosystem: text("ecosystem")
+      .references(() => projects.ecosystem)
+      .notNull(),
+    attestationUID: text("attestationUID").notNull().unique(),
+    likely_to_recommend: text("likely_to_recommend"),
+    useful_for_understanding: text("useful_for_understanding"),
+    effective_for_improvements: text("effective_for_improvements"),
+    explanation: text("explanation"),
+    private_feedback: text("private_feedback"),
+    createdAt: timestamp("createdAt").defaultNow(),
+  },
+  (governance_r_and_a) => {
+    return {
+      governanceRandAIdx: uniqueIndex("governance_r_and_a_idx").on(
+        governance_r_and_a.id
+      ),
+    };
+  }
+);
+
+export const governance_collab_and_onboarding = pgTable(
+  "governance_collab_and_onboarding",
+  {
+    id: serial("id").primaryKey(),
+    userfid: text("userfid")
+      .references(() => users.fid)
+      .notNull(),
+    ethaddress: text("ethaddress"),
+    projectName: text("projectName")
+      .references(() => projects.projectName)
+      .notNull(),
+    category: text("category")
+      .references(() => projects.category)
+      .notNull(),
+    subcategory: text("subcategory")
+      .references(() => contributions.subcategory)
+      .notNull(),
+    ecosystem: text("ecosystem")
+      .references(() => projects.ecosystem)
+      .notNull(),
+    attestationUID: text("attestationUID").notNull().unique(),
+    governance_knowledge: text("governance_knowledge"),
+    recommend_contribution: text("recommend_contribution"),
+    feeling_if_didnt_exist: text("feeling_if_didnt_exist"),
+    explanation: text("explanation"),
+    private_feedback: text("private_feedback"),
+    createdAt: timestamp("createdAt").defaultNow(),
+  },
+  (governance_collab_and_onboarding) => {
+    return {
+      governanceCollabAndOnboardingIdx: uniqueIndex(
+        "governance_collab_and_onboarding_idx"
+      ).on(governance_collab_and_onboarding.id),
     };
   }
 );

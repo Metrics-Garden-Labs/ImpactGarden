@@ -176,6 +176,13 @@
       "when": 1721865257219,
       "tag": "0024_fluffy_maddog",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "5",
+      "when": 1722192872802,
+      "tag": "0025_fine_silverclaw",
+      "breakpoints": true
     }
   ]
 }

@@ -13,6 +13,8 @@ import GovernanceRAndAForm from '@/src/utils/contributionAttestations/Governance
 import { easScanEndpoints } from '@/src/utils/easScan';
 import GovernanceCollabAndOnboarding from '@/src/utils/contributionAttestations/GovernanceCollabAndOnboarding';
 
+//will have to add the attestation functionality at some point
+
 interface AttestationModalProps {
   isOpen: boolean;
   onClose: () => void;

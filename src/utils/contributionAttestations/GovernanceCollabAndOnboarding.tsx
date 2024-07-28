@@ -1,8 +1,8 @@
 import React from 'react';
-import RatingScale from '@/app/components/RatingScale10';
 import { RxCross2 } from 'react-icons/rx';
 import { contributionRolesKey } from '@/src/types';
 import SmileyRatingScale from '@/app/components/SmileyRatingScale';
+import RatingScale10 from '@/app/components/RatingScale10';
 
 interface GovernanceCollabAndOnboardingProps {
   handleRating1: (rate: number) => void;
@@ -78,7 +78,7 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
           {/* Q2 */}
           <div className="mb-6">
             <h3 className='font-semibold text-center'>How likely are you to recommend this contribution to someone in your role or an ecosystem participant?</h3>
-            <RatingScale rating={rating1} handleRating={handleRating1} />
+            <RatingScale10 rating={rating1} handleRating={handleRating1} />
           </div>
           <hr className="my-4" />
 
