@@ -1,7 +1,7 @@
 export interface Project {
   id?: number | null;
   createdAt?: Date | null;
-  userFid: string;
+  userFid: string | null;
   ethAddress?: string;
   ecosystem: string;
   projectName: string;
@@ -39,7 +39,7 @@ export interface Contribution {
 }
 
 export interface NewProject {
-  userFid: string;
+  userFid: string | null;
   ethAddress: string;
   projectName: string;
   oneliner?: string;
@@ -161,7 +161,7 @@ export interface ContributionAttestation {
 export interface Attestation {
   id: number;
   userFid: string;
-  projectName: string;
+  projectName: string | null;
   contribution: string;
   ecosystem: string;
   attestationUID: string;
@@ -307,3 +307,56 @@ export interface RatingScaleProps {
   rating: number;
   handleRating: (rate: number) => void;
 }
+
+export interface GovernanceInfraAndToolingAttestation {
+  userfid: string;
+  ethaddress: string;
+  projectName: string;
+  category: string;
+  subcategory: string;
+  ecosystem: string;
+  attestationUID: string;
+  likely_to_recommend: string;
+  feeling_if_didnt_exist: string;
+  explanation: string;
+  private_feedback: string;
+  createdAt?: Date;
+}
+
+export interface GovernanceRandAAttestation {
+  userfid: string;
+  ethaddress: string;
+  projectName: string;
+  category: string;
+  subcategory: string;
+  ecosystem: string;
+  attestationUID: string;
+  likely_to_recommend: string;
+  useful_for_understanding: string;
+  effective_for_improvements: string;
+  explanation: string;
+  private_feedback: string;
+  createdAt?: Date;
+}
+
+export interface GovernanceCollabAndOnboardingAttestation {
+  userfid: string;
+  ethaddress: string;
+  projectName: string;
+  category: string;
+  subcategory: string;
+  ecosystem: string;
+  attestationUID: string;
+  governance_knowledge: string;
+  recommend_contribution: string;
+  feeling_if_didnt_exist: string;
+  explanation: string;
+  private_feedback: string;
+  createdAt?: Date;
+}
+
+// NewContributionAttestation will act as a union type
+export type NewContributionAttestationGov =
+  | GovernanceInfraAndToolingAttestation
+  | GovernanceRandAAttestation
+  | GovernanceCollabAndOnboardingAttestation;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { useGlobalState } from '@/src/config/config'; 
+import { NEXT_PUBLIC_URL, useGlobalState } from '@/src/config/config';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import AttestationCreationModal from '../components/attestationCreationModal';
 import AttestationConfirmationModal from '../components/attestationConfirmationModal';
@@ -12,8 +12,7 @@ import GovernanceInfraToolingForm from '@/src/utils/contributionAttestations/Gov
 import GovernanceRAndAForm from '@/src/utils/contributionAttestations/GovernanceR&A';
 import { easScanEndpoints } from '@/src/utils/easScan';
 import GovernanceCollabAndOnboarding from '@/src/utils/contributionAttestations/GovernanceCollabAndOnboarding';
-
-//will have to add the attestation functionality at some point
+import { ZeroAddress } from 'ethers';
 
 interface AttestationModalProps {
   isOpen: boolean;
@@ -43,7 +42,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   const [rating1, setRating1] = useState(0);
   const [rating2, setRating2] = useState(0);
   const [rating3, setRating3] = useState(0);
-  const [ smileyRating, setSmileyRating ] = useState(0);
+  const [smileyRating, setSmileyRating] = useState(0);
   const [user] = useLocalStorage("user", {
     fid: '',
     username: '',
@@ -76,7 +75,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     if (isOpen) {
       router.push(`${pathname}?contribution=${contribution.id}`);
       console.log('Contribution:', contribution);
-      console.log('Contribution Category:', contribution.category)
+      console.log('Contribution Category:', contribution.category);
       console.log('Contribution Subcategory:', contribution.subcategory);
     } else {
       router.push(pathname);
@@ -110,37 +109,45 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     }));
   };
 
-//   const createAttestation = async () => {
-//     console.log('user.fid:', user.fid);
-//     if (!user.fid) {
-//       alert('User not logged in');
-//       return;
-//     }
+  const handleFormSubmit = async (formData: any) => {
+    try {
+      console.log('Form Data:', formData);
+      const attestationUID = ZeroAddress;
+      const attestationData = { 
+        userfid: user.fid,
+        ethaddress: user.ethAddress,
+        projectName: contribution.projectName,
+        category: contribution.category,
+        subcategory: contribution.subcategory,
+        ecosystem: contribution.ecosystem,
+        attestationUID: attestationUID,
+        ...formData,
+      };
 
-//     if (!walletAddress) {
-//       alert('Please connect your wallet to continue');
-//       return;
-//     }
-
-//     // Add your EAS and signature logic here...
-
-//     const newAttestation = {
-//       userFid: user.fid,
-//       projectName: contribution.projectName,
-//       contribution: contribution.contribution,
-//       ecosystem: contribution.ecosystem,
-//       attestationUID: attestationUID,
-//       attesterAddy: walletAddress,
-//       rating: `${rating1}, ${rating2}, ${rating3}`, // Store all ratings
-//       feedback: feedback,
-//       extrafeedback: extrafeedback,
-//       isdelegate: isdelegate ? true : false,
-//     };
-
-//     console.log('New Attestation:', newAttestation);
-
-//     // Post to your backend...
-//   };
+      console.log('Attestation Data:', attestationData);
+  
+      const response = await fetch(`${NEXT_PUBLIC_URL}/api/addGovernanceAttestation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(attestationData),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to submit attestation');
+      }
+  
+      const result = await response.json();
+      console.log('Submission result:', result);
+  
+      // Close the modal after submission
+      onClose();
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+  };
+  
 
   if (!isOpen) return null;
 
@@ -166,50 +173,52 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 setFeedback={setFeedback}
                 extrafeedback={extrafeedback}
                 setExtraFeedback={setExtraFeedback}
+                onSubmit={handleFormSubmit}
                 onClose={onClose}
-                // createAttestation={createAttestation}
               />
             );
-            case 'Governance Research & Analytics':
-                return(
-                    <GovernanceRAndAForm
-                        handleRating1={handleRating1}
-                        handleRating2={handleRating2}
-                        handleRating3={handleRating3}
-                        rating1={rating1}
-                        rating2={rating2}
-                        rating3={rating3}
-                        contributionRoles={contributionRoles}
-                        handleClick={handleClick}
-                        labels={labels}
-                        feedback={feedback}
-                        setFeedback={setFeedback}
-                        extrafeedback={extrafeedback}
-                        setExtraFeedback={setExtraFeedback}
-                        onClose={onClose}
-                    />
-                );
-            case 'Collaboration & Onboarding':
-                return(
-                    <GovernanceCollabAndOnboarding
-                        handleRating1={handleRating1}
-                        handleRating2={handleRating2}
-                        handleRating3={handleRating3}
-                        handleSmileyRating={handleSmileyRating}
-                        smileyRating={smileyRating}
-                        rating1={rating1}
-                        rating2={rating2}
-                        rating3={rating3}
-                        contributionRoles={contributionRoles}
-                        handleClick={handleClick}
-                        labels={labels}
-                        feedback={feedback}
-                        setFeedback={setFeedback}
-                        extrafeedback={extrafeedback}
-                        setExtraFeedback={setExtraFeedback}
-                        onClose={onClose}
-                    />
-                );
+          case 'Governance Research & Analytics':
+            return (
+              <GovernanceRAndAForm
+                handleRating1={handleRating1}
+                handleRating2={handleRating2}
+                handleRating3={handleRating3}
+                rating1={rating1}
+                rating2={rating2}
+                rating3={rating3}
+                contributionRoles={contributionRoles}
+                handleClick={handleClick}
+                labels={labels}
+                feedback={feedback}
+                setFeedback={setFeedback}
+                extrafeedback={extrafeedback}
+                setExtraFeedback={setExtraFeedback}
+                onSubmit={handleFormSubmit}
+                onClose={onClose}
+              />
+            );
+          case 'Collaboration & Onboarding':
+            return (
+              <GovernanceCollabAndOnboarding
+                handleRating1={handleRating1}
+                handleRating2={handleRating2}
+                handleRating3={handleRating3}
+                handleSmileyRating={handleSmileyRating}
+                smileyRating={smileyRating}
+                rating1={rating1}
+                rating2={rating2}
+                rating3={rating3}
+                contributionRoles={contributionRoles}
+                handleClick={handleClick}
+                labels={labels}
+                feedback={feedback}
+                setFeedback={setFeedback}
+                extrafeedback={extrafeedback}
+                setExtraFeedback={setExtraFeedback}
+                onSubmit={handleFormSubmit}
+                onClose={onClose}
+              />
+            );
           // Add more cases here for other subcategories under Governance...
         }
         break;

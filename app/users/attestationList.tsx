@@ -77,7 +77,7 @@ const AttestationList = async ({ user }: Props) => {
                       {attestation.logoUrl && (
                         <Image
                           src={attestation.logoUrl}
-                          alt={attestation.projectName}
+                          alt={attestation.projectName || ""}
                           width={40}
                           height={40}
                           className='mr-2 rounded-full'

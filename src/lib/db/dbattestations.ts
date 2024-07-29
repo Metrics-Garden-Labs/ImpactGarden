@@ -8,6 +8,9 @@ import {
   contributionattestations,
   user_addresses,
   op_delegates,
+  governance_collab_and_onboarding,
+  governance_infra_and_tooling,
+  governance_r_and_a,
 } from "../schema";
 import * as schema from "../schema";
 import { getAttestationsByAttester } from "../eas";
@@ -19,6 +22,7 @@ import {
   ProjectCount,
   Contribution,
   NewProject,
+  NewContributionAttestationGov,
 } from "@/src/types";
 import { count } from "console";
 import { desc, sql as drizzlesql } from "drizzle-orm";
@@ -146,4 +150,74 @@ export const fetchAttestationsWithLogos = async (
     .where(eq(contributionattestations.userFid, userFid));
 
   return attestationsWithLogos;
+};
+
+export const insertGovernanceInfraToolingAttestation = async (
+  attestation: NewContributionAttestationGov
+) => {
+  try {
+    console.log(
+      "Inserting Governance Infra & Tooling attestation into the database"
+    );
+    const result = await db
+      .insert(governance_infra_and_tooling)
+      .values(attestation)
+      .returning();
+    console.log("Governance Infra & Tooling attestation inserted successfully");
+    return result;
+  } catch (error) {
+    console.error(
+      "Error inserting Governance Infra & Tooling attestation:",
+      error
+    );
+    throw error;
+  }
+};
+
+export const insertGovernanceRandAAttestation = async (
+  attestation: NewContributionAttestationGov
+) => {
+  try {
+    console.log(
+      "Inserting Governance Research & Analytics attestation into the database"
+    );
+    const result = await db
+      .insert(governance_r_and_a)
+      .values(attestation)
+      .returning();
+    console.log(
+      "Governance Research & Analytics attestation inserted successfully"
+    );
+    return result;
+  } catch (error) {
+    console.error(
+      "Error inserting Governance Research & Analytics attestation:",
+      error
+    );
+    throw error;
+  }
+};
+
+export const insertGovernanceCollabAndOnboardingAttestation = async (
+  attestation: NewContributionAttestationGov
+) => {
+  try {
+    console.log(
+      "Inserting Governance Collaboration & Onboarding attestation into the database"
+    );
+    const result = await db
+      .insert(governance_collab_and_onboarding)
+      .values(attestation)
+      .returning();
+    console.log(
+      "Governance Collaboration & Onboarding attestation inserted successfully"
+    );
+    return result;
+  } catch (error) {
+    console.error(
+      "Error inserting Governance Collaboration & Onboarding attestation:",
+      error
+    );
+    throw error;
+  }
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import { contributionRolesKey } from '@/src/types';
 import SmileyRatingScale from '@/app/components/SmileyRatingScale';
@@ -20,8 +20,9 @@ interface GovernanceCollabAndOnboardingProps {
   setFeedback: (feedback: string) => void;
   extrafeedback: string;
   setExtraFeedback: (extraFeedback: string) => void;
+  onSubmit: (formData: any) => void;
   onClose: () => void;
-};
+}
 
 const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps> = ({
   handleRating1,
@@ -39,13 +40,28 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
   setFeedback,
   extrafeedback,
   setExtraFeedback,
+  onSubmit,
   onClose,
 }) => {
-
-  const [knowledgeLevel, setKnowledgeLevel] = React.useState('');
+  const [knowledgeLevel, setKnowledgeLevel] = useState('');
+  const [localRating1, setLocalRating1] = useState(rating1);
+  const [localSmileyRating, setLocalSmileyRating] = useState(smileyRating);
+  const [localFeedback, setLocalFeedback] = useState(feedback);
+  const [localExtraFeedback, setLocalExtraFeedback] = useState(extrafeedback);
 
   const handleKnowledgeLevelChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setKnowledgeLevel(event.target.value);
+  };
+
+  const handleSubmit = () => {
+    const formData = {
+      governance_knowledge: knowledgeLevel,
+      recommend_contribution: localRating1.toString(),
+      feeling_if_didnt_exist: localSmileyRating.toString(),
+      explanation: localFeedback,
+      private_feedback: localExtraFeedback,
+    };
+    onSubmit(formData);
   };
 
   return (
@@ -78,14 +94,14 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
           {/* Q2 */}
           <div className="mb-6">
             <h3 className='font-semibold text-center'>How likely are you to recommend this contribution to someone in your role or an ecosystem participant?</h3>
-            <RatingScale10 rating={rating1} handleRating={handleRating1} />
+            <RatingScale10 rating={localRating1} handleRating={setLocalRating1} />
           </div>
           <hr className="my-4" />
 
           {/* Q3 */}
           <div className="mb-6">
             <h3 className='font-semibold text-center'>How would you feel if this contribution ceased to exist?</h3>
-            <SmileyRatingScale rating={smileyRating} handleRating={handleSmileyRating} />
+            <SmileyRatingScale rating={localSmileyRating} handleRating={setLocalSmileyRating} />
             <p className='text-sm mt-2'><span className='font-semibold'>Extremely Upset:</span>  I wouldn’t have been able to understand and engage in governance without it.</p>
             <p className='text-sm'><span className='font-semibold'>Somewhat Upset:</span>  Understanding and engaging in Optimism’s governance would have been considerably more challenging.</p>
             <p className='text-sm'><span className='font-semibold'>Neutral:</span>  The absence of this tool would have had little to no impact on my journey.</p>
@@ -96,13 +112,13 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
           <div className="mb-6">
             <label className="block text-gray-700 font-bold mb-2">Please give examples of how this collaboration or onboarding contribution has been useful for you. <span className='italic'>Did it increase your participation?</span></label>
             <textarea
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
+              value={localFeedback}
+              onChange={(e) => setLocalFeedback(e.target.value)}
               className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
               rows={4}
               maxLength={200}
             />
-            <div className="text-right text-xs text-gray-500 mt-1">{feedback.length}/200</div>
+            <div className="text-right text-xs text-gray-500 mt-1">{localFeedback.length}/200</div>
           </div>
           <hr className="my-4" />
 
@@ -110,19 +126,19 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
           <div className="mb-6">
             <label className="block text-gray-700 font-bold mb-2">Any additional feedback or suggestions on this contribution? This response will be confidential and only shared with the contributor.</label>
             <textarea
-              value={extrafeedback}
-              onChange={(e) => setExtraFeedback(e.target.value)}
+              value={localExtraFeedback}
+              onChange={(e) => setLocalExtraFeedback(e.target.value)}
               className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
               rows={4}
               maxLength={200}
             />
-            <div className="text-right text-xs text-gray-500 mt-1">{extrafeedback.length}/200</div>
+            <div className="text-right text-xs text-gray-500 mt-1">{localExtraFeedback.length}/200</div>
           </div>
           <hr className="my-4" />
 
           <div className="text-center py-3">
             <button className='btn bg-headerblack text-white hover:bg-blue-500 mr-2' onClick={onClose}>Back</button>
-            <button className="btn bg-headerblack text-white hover:bg-blue-500">Send Review</button>
+            <button className="btn bg-headerblack text-white hover:bg-blue-500" onClick={handleSubmit}>Send Review</button>
           </div>
         </>
         <button onClick={onClose} className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4">
