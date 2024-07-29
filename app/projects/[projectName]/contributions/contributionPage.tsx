@@ -133,7 +133,7 @@ export default function ContributionPage({
             <>
               <p className='text-sm text-gray-500 mb-2'>Governance Knowledge: {attestation.governance_knowledge}</p>
               <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.recommend_contribution}</p>
-              <p className='text-sm text-gray-500 mb-2'>Feeling if didn't exist: {attestation.feeling_if_didnt_exist}</p>
+              <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
               <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
             </>
           );
