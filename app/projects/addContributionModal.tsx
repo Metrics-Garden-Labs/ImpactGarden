@@ -18,7 +18,6 @@ import { networks, checkNetwork } from '@/src/utils/projectSignUpUtils';
 import { easScanEndpoints } from '@/src/utils/easScan';
 import { Category, Subcategory, higherCategories, getSubcategories } from '@/src/utils/dbadding/addContributionModalUtils';
 
-
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -29,13 +28,14 @@ interface Props {
 export default function AddContributionModal({ isOpen, onClose, addContributionCallback }: Props) {
   const [fid] = useGlobalState('fid');
   const [walletAddress] = useGlobalState('walletAddress');
-  const [selectedProject] = useLocalStorage<Project>('selectedProject');
+  const [storedProject, setStoredProject] = useLocalStorage<Project>('selectedProject');
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [attestationUID, setAttestationUID] = useState<string>("");
+  const [attestationUID, setAttestationUID] = useState<string>('');
   const [ecosystem, setEcosystem] = useState<AttestationNetworkType>('Optimism');
   const { switchChain } = useSwitchChain();
   const NO_EXPIRATION = 0n;
-  const [user] = useLocalStorage("user", {
+  const [user] = useLocalStorage('user', {
     fid: '',
     username: '',
     ethAddress: '',
@@ -48,14 +48,53 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     checkNetwork(selectedNetwork, switchChain);
   }, [selectedNetwork, switchChain]);
 
+  useEffect(() => {
+    const fetchProject = async () => {
+      if (storedProject?.projectName) {
+        try {
+          const response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjectByName`, {
+            method: 'POST',
+            body: JSON.stringify({ projectName: storedProject.projectName }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to fetch project data');
+          }
+
+          const { project } = await response.json();
+          setSelectedProject(project);
+        } catch (error) {
+          console.error('Error fetching project data:', error);
+        }
+      }
+    };
+
+    fetchProject();
+  }, [storedProject?.projectName]);
+
+  
+  useEffect(() => {
+    if (selectedProject) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        projectName: selectedProject.projectName,
+        category: selectedProject.category || '',
+        ethAddress: currentAddress || '',
+      }));
+    }
+  }, [selectedProject, currentAddress]);
+
   const [formData, setFormData] = useState<Contribution>({
     userFid: user.fid || '',
-    projectName: selectedProject?.projectName || '',
+    projectName: storedProject?.projectName || '',
     governancetype: '',
     ecosystem: selectedNetwork,
     secondaryecosystem: '',
     contribution: '',
-    category: selectedProject?.category || '',
+    category: storedProject?.category || '',
     subcategory: '',
     desc: '',
     link: '',
@@ -114,7 +153,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       alert('An error occurred while uploading to pinata. Please try again.');
       return '';
     }
-  }
+  };
 
   const createAttestation1 = async () => {
     if (!user.fid) {
@@ -153,11 +192,11 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       );
 
       const encodedData1 = schemaEncoder2.encodeData([
-        { name: 'projectRefUID', value: selectedProject?.projectUid || "", type: 'bytes32' },
+        { name: 'projectRefUID', value: selectedProject?.projectUid || '', type: 'bytes32' },
         { name: 'farcasterID', value: user.fid, type: 'uint256' },
-        { name: 'name', value: selectedProject?.projectName || "", type: 'string' },
-        { name: 'category', value: formData.governancetype || "", type: 'string' },
-        { name: 'parentProjectRefUID', value: selectedProject?.primaryprojectuid || "", type: 'bytes32' },
+        { name: 'name', value: selectedProject?.projectName || '', type: 'string' },
+        { name: 'category', value: formData.governancetype || '', type: 'string' },
+        { name: 'parentProjectRefUID', value: selectedProject?.primaryprojectuid || '', type: 'bytes32' },
         { name: 'metadataType', value: '0', type: 'uint8' },
         { name: 'metadataURL', value: pinataURL, type: 'string' },
       ]);
@@ -168,17 +207,21 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       const delegatedSigner = await easop.getDelegated();
       const easnonce = await easop.getNonce(currentAddress);
 
+      console.log('selectedProject', selectedProject);
+
       const attestationdata1: EIP712AttestationParams = {
         schema: schema1,
-        recipient: selectedProject.ethAddress || "",
+        recipient: selectedProject?.ethAddress || '',
         expirationTime: NO_EXPIRATION,
         revocable: true,
-        refUID: selectedProject.projectUid || ZERO_BYTES32,
+        refUID: selectedProject?.projectUid || ZERO_BYTES32,
         data: encodedData1,
         value: 0n,
         deadline: NO_EXPIRATION,
         nonce: easnonce,
-      }
+      };
+
+      console.log('Attestation Data:', attestationdata1);
 
       const signDelegated = await delegatedSigner.signDelegatedAttestation(attestationdata1, signer);
       console.log('Sign Delegated:', signDelegated);
@@ -193,7 +236,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       };
 
       const serialisedData = JSON.stringify(dataToSend, (key, value) =>
-        typeof value === 'bigint' ? "0x" + value.toString(16) : value
+        typeof value === 'bigint' ? '0x' + value.toString(16) : value
       );
       console.log('Serialised Data:', serialisedData);
 
@@ -265,8 +308,8 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     event.preventDefault();
 
     try {
-      if (!address || address.trim() === "") {
-        alert("Please connect your wallet to proceed.");
+      if (!address || address.trim() === '') {
+        alert('Please connect your wallet to proceed.');
         return;
       }
 
@@ -286,13 +329,12 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     setFormData({ ...formData, subcategory });
   };
 
-
   if (!isOpen) return null;
 
   const renderModal = () => {
     if (isLoading) {
-      return AttestationCreationModal();
-    } else if (attestationUID) {
+      return <AttestationCreationModal />;
+    } else if (attestationUID && selectedProject) {
       return (
         <AttestationConfirmationModal
           attestationUID={attestationUID}
@@ -347,9 +389,9 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
             <h3 className="font-semibold p-2 text-center">Title <span className="tooltip tooltip-top" data-tip="Required"><FaInfoCircle className="inline ml-2 text-blue-500 relative" style={{ top: '-2px' }} /></span></h3>
             <textarea
               value={formData.contribution}
-              onChange={e => setFormData({ ...formData, contribution: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, contribution: e.target.value })}
               placeholder="Contribution Title"
-              className='h-20 w-full p-2 border border-gray-800 rounded-md'
+              className="h-20 w-full p-2 border border-gray-800 rounded-md"
               required
               maxLength={100}
             />
@@ -359,9 +401,9 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
             <h3 className="font-semibold p-2 text-center">Description <span className="tooltip tooltip-top" data-tip="Required"><FaInfoCircle className="inline ml-2 text-blue-500 relative" style={{ top: '-2px' }} /></span></h3>
             <textarea
               value={formData.desc ?? ''}
-              onChange={e => setFormData({ ...formData, desc: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, desc: e.target.value })}
               placeholder="Description"
-              className='h-20 w-full p-2 border border-gray-800 rounded-md'
+              className="h-20 w-full p-2 border border-gray-800 rounded-md"
               required
               maxLength={200}
             />
@@ -371,9 +413,9 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
             <h3 className="font-semibold p-2 text-center">Link/Evidence <span className="tooltip tooltip-top" data-tip="Required"><FaInfoCircle className="inline ml-2 text-blue-500 relative" style={{ top: '-2px' }} /></span></h3>
             <textarea
               value={formData.link ?? ''}
-              onChange={e => setFormData({ ...formData, link: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, link: e.target.value })}
               placeholder="Link/Evidence"
-              className='h-20 w-full p-2 border border-gray-800 rounded-md'
+              className="h-20 w-full p-2 border border-gray-800 rounded-md"
               required
               data-tip="Please provide a link or evidence for your contribution"
             />
@@ -382,16 +424,12 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
             )}
           </div>
           <div className="mb-4 text-center">
-            <button
-              className="btn items-center"
-              type="submit"
-              disabled={isLoading}
-            >
+            <button className="btn items-center" type="submit" disabled={isLoading}>
               {isLoading ? 'Adding...' : 'Add Contribution'}
             </button>
           </div>
           <button onClick={onClose} className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4">
-            <RxCross2 className='w-5 h-5' />
+            <RxCross2 className="w-5 h-5" />
           </button>
         </form>
         {renderModal()}

@@ -1,13 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
-import { AttestationNetworkType } from '@/src/types';
+import { AttestationNetworkType, Contribution, Project } from '@/src/types';
 
 
 interface AttestationConfirmationModalProps {
     attestationUID: string;
-    attestationType: {
-      ecosystem: string;
-    };
+    attestationType: Project | Contribution;
     setAttestationUID: (uid: string) => void;
     easScanEndpoints: { [key: string]: string };
   }
@@ -19,7 +17,7 @@ interface AttestationConfirmationModalProps {
     setAttestationUID,
     easScanEndpoints,
   }) => {
-    const attestationLink = `${easScanEndpoints[attestationType.ecosystem as AttestationNetworkType]}${attestationUID}`;
+    const attestationLink = `${easScanEndpoints[attestationType?.ecosystem as AttestationNetworkType]}${attestationUID}`;
 
 
   return (

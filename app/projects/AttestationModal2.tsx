@@ -231,7 +231,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     <div>
       {renderForm()}
       {isLoading && <AttestationCreationModal />}
-      {attestationUID && (
+      {attestationUID && selectedProject &&(
         <AttestationConfirmationModal
           attestationUID={attestationUID}
           attestationType={contribution}
