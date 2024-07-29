@@ -1,11 +1,11 @@
+// src/components/ContributionPage.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { AttestationNetworkType, Contribution, ContributionAttestationWithUsername, Project } from '@/src/types'; 
+import { AttestationNetworkType, Contribution, AttestationDisplay, Project, GovInfraAndToolingDisplay } from '@/src/types'; 
 import { usePathname, useRouter } from 'next/navigation';
 import { IoIosArrowBack } from "react-icons/io";
 import { FaCopy } from 'react-icons/fa';
-import AttestationModal from '../../AttestationModal';
 import AttestationModal2 from '../../AttestationModal2';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
 import Link from 'next/link';
@@ -26,19 +26,19 @@ export default function ContributionPage({
 }: ContributionPageProps) {
   const [activeTab, setActiveTab] = useState('details');
   const [isAttestationModalOpen, setIsAttestationModalOpen] = useState(false);
-  const [recentAttestations, setRecentAttestations] = useState<ContributionAttestationWithUsername[]>([]);
+  const [recentAttestations, setRecentAttestations] = useState<AttestationDisplay[]>([]);
   const [recentAttestationsLoading, setRecentAttestationsLoading] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
 
   const fetchRecentAttestations = async () => {
     try {
-      const response = await fetch(`${NEXT_PUBLIC_URL}/api/getContributionAttestations`, {
+      const response = await fetch(`${NEXT_PUBLIC_URL}/api/getContributionAttestations2`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ contribution: contribution.contribution }),
+        body: JSON.stringify({ contribution: contribution.contribution, subcategory: contribution.subcategory }),
       });
 
       const responseData = await response.json();
@@ -65,29 +65,85 @@ export default function ContributionPage({
       activeTab === tabName ? 'border-b-2 border-black' : 'text-gray-600 hover:text-black'
     }`;
 
-  const isWebShareSupported = !!navigator.share;
+  const isWebShareSupported = typeof navigator !== 'undefined' && !!navigator.share;
   const copyToClipboard = () => {
     const shareUrl = `${window.location.origin}${pathname}?contribution=${contribution.id}`;
-    navigator.clipboard.writeText(shareUrl)
-      .then(() => {
-        alert('Link copied to clipboard!');
-        if (isWebShareSupported) {
-          return navigator.share({
-            title: 'Share Contribution Link',
-            text: 'Check out this contribution:',
-            url: shareUrl,
-          });
-        }
-      })
-      .catch(err => {
-        console.error('Failed to copy: ', err);
-      });
+    if (typeof navigator !== 'undefined') {
+      navigator.clipboard.writeText(shareUrl)
+        .then(() => {
+          alert('Link copied to clipboard!');
+          if (isWebShareSupported) {
+            return navigator.share({
+              title: 'Share Contribution Link',
+              text: 'Check out this contribution:',
+              url: shareUrl,
+            });
+          }
+        })
+        .catch(err => {
+          console.error('Failed to copy: ', err);
+        });
+    }
   };
 
-  //maybe the stuff for making the frame, will revisit later
- const handleMakeFrame = () => {
-  router.push(`/makeFrame/${contribution.id}`);
- };
+  const handleMakeFrame = () => {
+    router.push(`/makeFrame/${contribution.id}`);
+  };
+
+  const renderAttestationContent = (attestation: AttestationDisplay) => {
+    const { subcategory } = contribution;
+
+    if (!subcategory || subcategory === '') {
+      if('feedback' in attestation) {
+      // Default case for generic attestations
+      return (
+        <>
+          <p className='text-sm text-gray-500 mb-2'>Feedback: {attestation.feedback}</p>
+          <p className='text-sm text-gray-500 mb-2'>Rating: {attestation.rating}</p>
+        </>
+      );
+    }
+    }
+
+    switch (contribution.subcategory) {
+      case 'Infra & Tooling':
+        if ('likely_to_recommend' in attestation) {
+          return (
+            <>
+              <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.likely_to_recommend}</p>
+              <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+            </>
+          );
+        }
+        break;
+      case 'Governance Research & Analytics':
+        if ('useful_for_understanding' in attestation) {
+          return (
+            <>
+              <p className='text-sm text-gray-500 mb-2'>Useful for Understanding: {attestation.useful_for_understanding}</p>
+              <p className='text-sm text-gray-500 mb-2'>Effective for Improvements: {attestation.effective_for_improvements}</p>
+              <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+            </>
+          );
+        }
+        break;
+      case 'Collaboration & Onboarding':
+        if ('governance_knowledge' in attestation) {
+          return (
+            <>
+              <p className='text-sm text-gray-500 mb-2'>Governance Knowledge: {attestation.governance_knowledge}</p>
+              <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.recommend_contribution}</p>
+              <p className='text-sm text-gray-500 mb-2'>Feeling if didn't exist: {attestation.feeling_if_didnt_exist}</p>
+              <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+            </>
+          );
+        }
+        break;
+      default:
+        return null;
+    }
+  };
+  
 
   const renderContent = () => {
     switch (activeTab) {
@@ -130,12 +186,6 @@ export default function ContributionPage({
               >
                 Share<FaCopy className="ml-1" />
               </button>
-              {/* <button
-                className="btn text-center bg-headerblack text-white hover:bg-blue-500 ml-2"
-                onClick={handleMakeFrame}
-              >
-                Make Frame
-              </button> */}
             </div>
           </>
         );
@@ -163,8 +213,7 @@ export default function ContributionPage({
                         )}
                         <div>
                           <h3 className='text-lg font-semibold'>{attestation.username}</h3>
-                          <p className='text-sm text-gray-500'>Rating: {attestation.rating} </p>
-                          <p className='text-sm text-gray-500 mb-2'>{attestation.feedback}</p>
+                          {renderAttestationContent(attestation)}
                           <p className='text-sm text-gray-500'>
                             {format(new Date(attestation.createdAt || ''), 'MMMM dd, yyyy')}
                           </p>
@@ -212,13 +261,6 @@ export default function ContributionPage({
         </div>
       </div>
       {isAttestationModalOpen && (
-        // <AttestationModal
-        //   contribution={contribution}
-        //   project={project}
-        //   attestationCount={attestationCount}
-        //   onClose={() => setIsAttestationModalOpen(false)}
-        //   isOpen={isAttestationModalOpen}
-        // />
         <AttestationModal2
           contribution={contribution}
           project={project}

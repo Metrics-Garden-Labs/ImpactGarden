@@ -360,3 +360,27 @@ export type NewContributionAttestationGov =
   | GovernanceInfraAndToolingAttestation
   | GovernanceRandAAttestation
   | GovernanceCollabAndOnboardingAttestation;
+
+//these are the types that will hopefully work for displaying the attestations on the contribution page
+export interface GovInfraAndToolingDisplay
+  extends GovernanceInfraAndToolingAttestation {
+  username: string;
+  pfp: string | null;
+}
+
+export interface GovRandADisplay extends GovernanceRandAAttestation {
+  username: string;
+  pfp: string | null;
+}
+
+export interface GovCollabAndOnboardingDisplay
+  extends GovernanceCollabAndOnboardingAttestation {
+  username: string;
+  pfp: string | null;
+}
+
+export type AttestationDisplay =
+  | GovInfraAndToolingDisplay
+  | GovRandADisplay
+  | GovCollabAndOnboardingDisplay
+  | ContributionAttestationWithUsername;

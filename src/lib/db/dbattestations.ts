@@ -27,6 +27,7 @@ import {
 import { count } from "console";
 import { desc, sql as drizzlesql } from "drizzle-orm";
 import { inArray, eq, sql } from "drizzle-orm";
+import { string } from "zod";
 
 export const db = drizzle(vercelsql, { schema });
 
@@ -63,8 +64,7 @@ export const getContributionAttestationList = async (contribution: string) => {
       .from(contributionattestations)
       .innerJoin(users, eq(contributionattestations.userFid, users.fid))
       .where(eq(contributionattestations.contribution, contribution))
-      .orderBy(desc(contributionattestations.createdAt))
-      .limit(3);
+      .orderBy(desc(contributionattestations.createdAt));
 
     return contributionAttestationsList;
   } catch (error) {
@@ -218,6 +218,152 @@ export const insertGovernanceCollabAndOnboardingAttestation = async (
       "Error inserting Governance Collaboration & Onboarding attestation:",
       error
     );
+    throw error;
+  }
+};
+
+// for getting the attestations depending on the category and subcaegory
+
+const subcategoryTableMap: { [key: string]: any } = {
+  "Infra & Tooling": governance_infra_and_tooling,
+  "Governance Research & Analytics": governance_r_and_a,
+  "Collaboration & Onboarding": governance_collab_and_onboarding,
+  //add the other categories here
+};
+
+export const getInfraToolingAttestationsByContribution = async (
+  contribution: string
+) => {
+  try {
+    const attestations = await db
+      .select({
+        id: governance_infra_and_tooling.id,
+        userfid: governance_infra_and_tooling.userfid,
+        username: users.username,
+        pfp: users.pfp_url,
+        projectName: governance_infra_and_tooling.projectName,
+        category: governance_infra_and_tooling.category,
+        subcategory: governance_infra_and_tooling.subcategory,
+        ecosystem: governance_infra_and_tooling.ecosystem,
+        attestationUID: governance_infra_and_tooling.attestationUID,
+        likely_to_recommend: governance_infra_and_tooling.likely_to_recommend,
+        feeling_if_didnt_exist:
+          governance_infra_and_tooling.feeling_if_didnt_exist,
+        explanation: governance_infra_and_tooling.explanation,
+        private_feedback: governance_infra_and_tooling.private_feedback,
+        createdAt: governance_infra_and_tooling.createdAt,
+      })
+      .from(governance_infra_and_tooling)
+      .innerJoin(users, eq(governance_infra_and_tooling.userfid, users.fid))
+      .where(eq(governance_infra_and_tooling.contribution, contribution))
+      .orderBy(desc(governance_infra_and_tooling.createdAt));
+
+    return attestations;
+  } catch (error) {
+    console.error("Error retrieving infra & tooling attestations:", error);
+    throw error;
+  }
+};
+
+export const getRandAAttestationsByContribution = async (
+  contribution: string
+) => {
+  try {
+    const attestations = await db
+      .select({
+        id: governance_r_and_a.id,
+        userfid: governance_r_and_a.userfid,
+        username: users.username,
+        pfp: users.pfp_url,
+        projectName: governance_r_and_a.projectName,
+        category: governance_r_and_a.category,
+        subcategory: governance_r_and_a.subcategory,
+        ecosystem: governance_r_and_a.ecosystem,
+        attestationUID: governance_r_and_a.attestationUID,
+        likely_to_recommend: governance_r_and_a.likely_to_recommend,
+        useful_for_understanding: governance_r_and_a.useful_for_understanding,
+        effective_for_improvements:
+          governance_r_and_a.effective_for_improvements,
+        explanation: governance_r_and_a.explanation,
+        private_feedback: governance_r_and_a.private_feedback,
+        createdAt: governance_r_and_a.createdAt,
+      })
+      .from(governance_r_and_a)
+      .innerJoin(users, eq(governance_r_and_a.userfid, users.fid))
+      .where(eq(governance_r_and_a.contribution, contribution))
+      .orderBy(desc(governance_r_and_a.createdAt));
+
+    return attestations;
+  } catch (error) {
+    console.error("Error retrieving research & analytics attestations:", error);
+    throw error;
+  }
+};
+
+export const getCollabAndOnboardingAttestationsByContribution = async (
+  contribution: string
+) => {
+  try {
+    const attestations = await db
+      .select({
+        id: governance_collab_and_onboarding.id,
+        userfid: governance_collab_and_onboarding.userfid,
+        username: users.username,
+        pfp: users.pfp_url,
+        projectName: governance_collab_and_onboarding.projectName,
+        category: governance_collab_and_onboarding.category,
+        subcategory: governance_collab_and_onboarding.subcategory,
+        ecosystem: governance_collab_and_onboarding.ecosystem,
+        attestationUID: governance_collab_and_onboarding.attestationUID,
+        governance_knowledge:
+          governance_collab_and_onboarding.governance_knowledge,
+        recommend_contribution:
+          governance_collab_and_onboarding.recommend_contribution,
+        feeling_if_didnt_exist:
+          governance_collab_and_onboarding.feeling_if_didnt_exist,
+        explanation: governance_collab_and_onboarding.explanation,
+        private_feedback: governance_collab_and_onboarding.private_feedback,
+        createdAt: governance_collab_and_onboarding.createdAt,
+      })
+      .from(governance_collab_and_onboarding)
+      .innerJoin(users, eq(governance_collab_and_onboarding.userfid, users.fid))
+      .where(eq(governance_collab_and_onboarding.contribution, contribution))
+      .orderBy(desc(governance_collab_and_onboarding.createdAt));
+
+    return attestations;
+  } catch (error) {
+    console.error(
+      "Error retrieving collaboration & onboarding attestations:",
+      error
+    );
+    throw error;
+  }
+};
+
+export const getAttestationsByContributionAndSubcategory = async (
+  contribution: string,
+  subcategory: string | null
+) => {
+  try {
+    if (!subcategory) {
+      // If subcategory is null or an empty string, use the default table
+      return await getContributionAttestationList(contribution);
+    }
+
+    switch (subcategory) {
+      case "Infra & Tooling":
+        return await getInfraToolingAttestationsByContribution(contribution);
+      case "Governance Research & Analytics":
+        return await getRandAAttestationsByContribution(contribution);
+      case "Collaboration & Onboarding":
+        return await getCollabAndOnboardingAttestationsByContribution(
+          contribution
+        );
+      default:
+        throw new Error(`Unsupported subcategory: ${subcategory}`);
+    }
+  } catch (error) {
+    console.error("Error retrieving attestations:", error);
     throw error;
   }
 };

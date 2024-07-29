@@ -12,11 +12,6 @@ import {
 import { useGlobalState } from "../config/config";
 import { number } from "zod";
 
-//to add columns to the schema you can add them in as usual then
-//run yarn drizzle-kit push:pg, it will add the columns to the database
-//useful for prototyping
-//when there is more data use the migrations
-
 //This is the schema for the users that login to use the app
 export const users = pgTable(
   "users",
@@ -65,22 +60,7 @@ export const projects = pgTable(
     };
   }
 );
-//gonna have to rethink the whole db design
 
-//make the project have to be unique for the linking, will
-//have to be a pop up that says if a username has already been taken
-//hopefully that will migrate easily
-
-//contributions that are linked to the project
-//does the primarykey have to ve the id
-//linked to the FID? or linked to the projectName -
-
-//do i put in the ethAddy
-//see if contIdIdx makes sense
-//store the eth address that the project is using
-
-//need to store the uid of the contribution for reference
-//contribution uid: 0xc2b54ed545c65de9f5058c2893b8e8cb51ff731e2c90b189c2cf97bac04b5953
 export const contributions = pgTable(
   "contributions",
   {
@@ -113,17 +93,6 @@ export const contributions = pgTable(
 );
 
 //need to make a table for the contributions
-
-//table for the attestations that are linked to the contribution
-//this table will track the number of attestations to a contribution
-//userFid tracked to see who made the attestation
-//this will be the basic one to say that you liked a project
-//track the type of attestation that they made
-//will need to attest to the contributionID?
-//attestation type will be what they thought about the project, "like", built with etc
-
-//for this maybe only one attestation towards a certain contribution per fid
-//pop up that says this user has already attested to this contibution
 
 export const contributionattestations = pgTable(
   "contributionattestations",
@@ -216,6 +185,9 @@ export const governance_infra_and_tooling = pgTable(
     projectName: text("projectName")
       .references(() => projects.projectName)
       .notNull(),
+    contribution: text("contribution").references(
+      () => contributions.contribution
+    ),
     category: text("category")
       .references(() => projects.category)
       .notNull(),
@@ -252,6 +224,9 @@ export const governance_r_and_a = pgTable(
     projectName: text("projectName")
       .references(() => projects.projectName)
       .notNull(),
+    contribution: text("contribution").references(
+      () => contributions.contribution
+    ),
     category: text("category")
       .references(() => projects.category)
       .notNull(),
@@ -289,6 +264,9 @@ export const governance_collab_and_onboarding = pgTable(
     projectName: text("projectName")
       .references(() => projects.projectName)
       .notNull(),
+    contribution: text("contribution").references(
+      () => contributions.contribution
+    ),
     category: text("category")
       .references(() => projects.category)
       .notNull(),

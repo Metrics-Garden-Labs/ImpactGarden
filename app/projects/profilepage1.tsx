@@ -243,9 +243,9 @@ export default function ProfilePage({
             </div>
         );
         case 'insights':
-        return <div className="text-black">Content for Insights</div>;
+        return <div className="text-black">Content for Insights, coming soon!</div>;
         case 'charts':
-        return <div className="text-black">Content for Charts</div>;
+        return <div className="text-black">Content for Charts, coming soon!</div>;
         default:
         return <div className="text-black">Select a tab</div>;
     }
