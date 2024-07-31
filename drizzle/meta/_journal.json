@@ -225,6 +225,20 @@
       "when": 1722272504769,
       "tag": "0031_lush_bloodstorm",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1722363098295,
+      "tag": "0032_lowly_otto_octavius",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1722449946877,
+      "tag": "0033_easy_tana_nile",
+      "breakpoints": true
     }
   ]
 }

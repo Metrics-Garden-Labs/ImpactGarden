@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { NEXT_PUBLIC_URL, useGlobalState } from '../../src/config/config';
-import { AttestationNetworkType, Contribution, Project } from '../../src/types';
+import { AttestationNetworkType, CategoryKey, Contribution, Project, higherCategoryKey } from '../../src/types';
 import { useEAS, useSigner } from '../../src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder, ZERO_BYTES32 } from '@ethereum-attestation-service/eas-sdk';
 import { ethers } from 'ethers';
@@ -34,6 +34,8 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   const [attestationUID, setAttestationUID] = useState<string>('');
   const [ecosystem, setEcosystem] = useState<AttestationNetworkType>('Optimism');
   const { switchChain } = useSwitchChain();
+  const [selectedHigherCategory, setSelectedHigherCategory] = useState<higherCategoryKey | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<{ [key in CategoryKey]?: boolean }>({});
   const NO_EXPIRATION = 0n;
   const [user] = useLocalStorage('user', {
     fid: '',
@@ -81,7 +83,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       setFormData((prevFormData) => ({
         ...prevFormData,
         projectName: selectedProject.projectName,
-        category: selectedProject.category || '',
+        // category: selectedProject.category || '',
         ethAddress: currentAddress || '',
       }));
     }
@@ -94,7 +96,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     ecosystem: selectedNetwork,
     secondaryecosystem: '',
     contribution: '',
-    category: storedProject?.category || '',
+    category: '',
     subcategory: '',
     desc: '',
     link: '',
@@ -132,7 +134,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       const attestationMetadata = {
         name: selectedProject?.projectName,
         farcaster: user.fid,
-        category: selectedProject?.category,
+        category: formData.category,
         subcategory: formData.subcategory,
         ecosystem: formData.ecosystem,
         secondaryEcosystem: formData.secondaryecosystem,
@@ -171,6 +173,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     }
 
     if (
+      formData.category === '' ||
       formData.subcategory === '' ||
       formData.contribution === '' ||
       formData.desc === '' ||
@@ -195,7 +198,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
         { name: 'projectRefUID', value: selectedProject?.projectUid || '', type: 'bytes32' },
         { name: 'farcasterID', value: user.fid, type: 'uint256' },
         { name: 'name', value: selectedProject?.projectName || '', type: 'string' },
-        { name: 'category', value: formData.governancetype || '', type: 'string' },
+        { name: 'category', value: formData.category || '', type: 'string' },
         { name: 'parentProjectRefUID', value: selectedProject?.primaryprojectuid || '', type: 'bytes32' },
         { name: 'metadataType', value: '0', type: 'uint8' },
         { name: 'metadataURL', value: pinataURL, type: 'string' },
@@ -325,8 +328,21 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     }
   };
 
+  const handleHigherCategoryChange = (category: higherCategoryKey) => {
+    setSelectedHigherCategory(category);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      category: category, // Update category in formData
+      subcategory: '', // Reset subcategory when higher category changes
+    }));
+    setSelectedCategories({});
+  };
+  
   const handleSubcategorySelect = (subcategory: Subcategory) => {
-    setFormData({ ...formData, subcategory });
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      subcategory: subcategory, // Update subcategory in formData
+    }));
   };
 
   if (!isOpen) return null;
@@ -354,38 +370,43 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
           <div className="text-center pt-8 p-2">
             <h2 className="text-xl font-bold mb-4">Add New Contribution</h2>
           </div>
-          <div className="mb-4 items-center py-3 max-h-96 overflow-y-auto">
+          <div className="mb-4 items-center py-3 max-h-96 ">
             <div>
               <h3 className="font-semibold text-center mb-2">Type of Contribution</h3>
-              <div className="flex flex-wrap justify-center">
-                {getSubcategories(selectedProject?.category as Category).map((subcategory) => (
-                  <button
-                    key={subcategory}
-                    onClick={() => handleSubcategorySelect(subcategory)}
-                    className={`mb-2 mr-2 px-4 py-2 rounded-lg text-sm ${formData.subcategory === subcategory ? 'bg-black text-white' : 'bg-gray-200 text-gray-800'}`}
-                  >
-                    {subcategory}
-                  </button>
-                ))}
+  
+              <div>
+                <h2 className="font-semibold mt-4">Category *</h2>
+                <div className="flex flex-wrap mt-2">
+                  {Object.keys(higherCategories).map((key) => (
+                    <button
+                      key={key}
+                      onClick={() => handleHigherCategoryChange(key as higherCategoryKey)}
+                      className={`mb-2 mr-2 px-4 py-2 rounded-lg text-sm ${selectedHigherCategory === key ? 'bg-black text-white' : 'bg-gray-200 text-gray-800'}`}
+                    >
+                      {higherCategories[key as higherCategoryKey]}
+                    </button>
+                  ))}
+                </div>
+              </div> 
+  
+              <div className="relative mt-8">
+                <h2 className="text-center">What is the subcategory?</h2>
+                <div className="flex flex-wrap justify-center mt-4 h-48 overflow-y-auto p-2"> {/* Fixed height and scrollable area */}
+                  {getSubcategories(selectedHigherCategory as Category).map((subcategory) => (
+                    <button
+                      key={subcategory}
+                      onClick={() => handleSubcategorySelect(subcategory)}
+                      className={`mb-2 mr-2 px-4 py-2 rounded-lg text-sm ${formData.subcategory === subcategory ? 'bg-black text-white' : 'bg-gray-200 text-gray-800'}`}
+                    >
+                      {subcategory}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-
-           {/* <div>
-              <h2 className="font-semibold mt-4">Subcategories *</h2>
-              <div className="flex flex-wrap mt-2">
-                {Object.keys(renderSubcategories()).map((key) => (
-                  <button
-                    key={key}
-                    onClick={() => handleCategoryToggle(key as CategoryKey)}
-                    className={`mb-2 mr-2 px-4 py-2 rounded-lg text-sm ${selectedCategories[key as CategoryKey] ? 'bg-black text-white' : 'bg-gray-200 text-gray-800'}`}
-                  >
-                    {selectedCategories[key as CategoryKey] ? '✓' : '+'} {renderSubcategories()[key as CategoryKey]}
-                  </button>
-                ))}
-              </div>
-            </div> */}
-          <div className="mb-2">
+  
+          <div className="mb-2 mt-14">
             <h3 className="font-semibold p-2 text-center">Title <span className="tooltip tooltip-top" data-tip="Required"><FaInfoCircle className="inline ml-2 text-blue-500 relative" style={{ top: '-2px' }} /></span></h3>
             <textarea
               value={formData.contribution}
@@ -436,4 +457,5 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       </div>
     </div>
   );
-}
+  
+            }

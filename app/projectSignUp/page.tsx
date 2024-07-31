@@ -70,7 +70,7 @@ export default function ProjectSignUp() {
   const { switchChain } = useSwitchChain();
   const ZERO_BYTES32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
   const NO_EXPIRATION = 0n;
-  const [selectedHigherCategory, setSelectedHigherCategory] = useState<higherCategoryKey | null>(null);
+  // const [selectedHigherCategory, setSelectedHigherCategory] = useState<higherCategoryKey | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<{ [key in CategoryKey]?: boolean }>({});
 
   console.log('Ecosystem', ecosystem);
@@ -95,7 +95,7 @@ export default function ProjectSignUp() {
         oneliner: attestationData.oneliner,
         websiteUrl: attestationData.websiteUrl,
         twitterUrl: attestationData.twitterUrl,
-        category: selectedHigherCategory,
+        // category: selectedHigherCategory,
         githubUrl: attestationData.githubURL,
         logoUrl: imageUrl,
         projectUid: attestationUID1,
@@ -141,23 +141,23 @@ export default function ProjectSignUp() {
     }));
   };
 
-  const handleHigherCategoryChange = (category: higherCategoryKey) => {
-    setSelectedHigherCategory(category);
-    setSelectedCategories({});
-  };
+  // const handleHigherCategoryChange = (category: higherCategoryKey) => {
+  //   setSelectedHigherCategory(category);
+  //   setSelectedCategories({});
+  // };
 
-  const handleCategoryToggle = (category: CategoryKey) => {
-    setSelectedCategories(prev => ({
-      ...prev,
-      [category]: !prev[category]
-    }));
-  };
+  // const handleCategoryToggle = (category: CategoryKey) => {
+  //   setSelectedCategories(prev => ({
+  //     ...prev,
+  //     [category]: !prev[category]
+  //   }));
+  // };
 
-  const formatCategories = (categories: { [key in CategoryKey]?: boolean }) => {
-    return Object.keys(categories)
-      .filter(key => categories[key as CategoryKey])
-      .join(', ');
-  };
+  // const formatCategories = (categories: { [key in CategoryKey]?: boolean }) => {
+  //   return Object.keys(categories)
+  //     .filter(key => categories[key as CategoryKey])
+  //     .join(', ');
+  // };
 
   const handleNext = () => {
     // Ensure required fields are filled before allowing a preview
@@ -298,7 +298,7 @@ export default function ProjectSignUp() {
         projectREFId: attestationUID,
         logoURL: imageUrl,
         mirror: attestationData.mirror,
-        category : selectedHigherCategory,
+        // category : selectedHigherCategory,
         // subcategories: selectedCategories,
       };
 
@@ -362,7 +362,8 @@ export default function ProjectSignUp() {
         { name: 'projectRefUID', value: attestationUID, type: 'bytes32' },
         { name: 'farcasterID', value: user.fid, type: 'uint256' },
         { name: 'name', value: attestationData.projectName, type: 'string' },
-        { name: 'category', value: formatCategories(selectedCategories), type: 'string' },
+        // { name: 'category', value: formatCategories(selectedCategories), type: 'string' },
+        { name: 'category', value: '', type: 'string' },
         { name: 'parentProjectRefUID', value: ZERO_BYTES32, type: 'bytes32' },
         { name: 'metadataType', value: '0', type: 'uint8' },
         { name: 'metadataURL', value: pinataURL, type: 'string' },
@@ -433,7 +434,7 @@ export default function ProjectSignUp() {
           projectName: attestationData.projectName,
           websiteUrl: attestationData.websiteUrl,
           oneliner: attestationData.oneliner,
-          category: selectedHigherCategory,
+          // category: selectedHigherCategory,
           twitterUrl: attestationData.twitterUrl,
           githubUrl: attestationData.githubURL,
           ecosystem: ecosystem,
@@ -612,9 +613,9 @@ export default function ProjectSignUp() {
                   <p className='text-center mt-2 text-gray-400'>
                     {attestationData.oneliner || 'Project description'}
                   </p>
-                  <h2 className='text-center mt-2 text-gray-500'>
+                  {/* <h2 className='text-center mt-2 text-gray-500'>
                     Category: {higherCategories[selectedHigherCategory as higherCategoryKey] || 'None'}
-                  </h2>
+                  </h2> */}
                   {/* <h3 className="text-center mt-2 font-semibold text-gray-500">
                     Categories: {formatCategories(selectedCategories) || 'None'}
                   </h3> */}
@@ -656,9 +657,9 @@ export default function ProjectSignUp() {
               <p className='text-center mt-2 mb-2 text-gray-400'>
                 {attestationData.oneliner || 'Project description'}
               </p>
-              <h3 className="text-center mt-2 font-semibold text-gray-500">
+              {/* <h3 className="text-center mt-2 font-semibold text-gray-500">
                 Categories: {formatCategories(selectedCategories) || 'None'}
-              </h3>
+              </h3> */}
               <div className="flex justify-center py-4 items-center">
                 <Link href={checkwebsiteUrl || '#'}>
                   <BsGlobe2 className="text-black mx-2 text-lg" />
@@ -752,7 +753,7 @@ export default function ProjectSignUp() {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <h2 className="font-semibold mt-4">Category *</h2>
               <div className="flex flex-wrap mt-2">
                 {Object.keys(higherCategories).map((key) => (
@@ -765,7 +766,7 @@ export default function ProjectSignUp() {
                   </button>
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* <div>
               <h2 className="font-semibold mt-4">Subcategories *</h2>

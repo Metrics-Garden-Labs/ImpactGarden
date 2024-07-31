@@ -7,9 +7,9 @@ interface SmileyRatingScaleProps {
 
 const SmileyRatingScale: React.FC<SmileyRatingScaleProps> = ({ rating, handleRating }) => {
   const options = [
-    { value: 1, label: '😭 Extremely Upset', color: 'bg-red-600' },
-    { value: 2, label: '🫠 Somewhat Upset', color: 'bg-yellow-400' },
-    { value: 3, label: '🙂 Neutral', color: 'bg-green-400' }
+    { value: 1, label: '😭 Extremely Upset', color: 'bg-red-200', brightColor: 'bg-red-600' },
+    { value: 2, label: '🫠 Somewhat Upset', color: 'bg-yellow-200', brightColor: 'bg-yellow-400' },
+    { value: 3, label: '🙂 Neutral', color: 'bg-green-200', brightColor: 'bg-green-400' }
   ];
 
   return (
@@ -22,8 +22,10 @@ const SmileyRatingScale: React.FC<SmileyRatingScaleProps> = ({ rating, handleRat
             onClick={() => handleRating(option.value)}
           >
             <div
-              className={`w-12 h-12 flex items-center justify-center rounded-full text-white ${option.color} ${
-                rating === option.value ? 'ring-2 ring-offset-2 ring-blue-500' : ''
+              className={`w-12 h-12 flex items-center justify-center rounded-full text-white ${
+                rating === option.value ? option.brightColor : option.color
+              } ${
+                rating === option.value ? 'ring-2 ring-offset-2 ring-gray-500' : ''
               }`}
             >
               <span className="text-3xl">{option.label.split(' ')[0]}</span>

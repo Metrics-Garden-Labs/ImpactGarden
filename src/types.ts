@@ -5,7 +5,7 @@ export interface Project {
   ethAddress?: string;
   ecosystem: string;
   projectName: string;
-  category: string | null;
+  // category: string | null;
   oneliner: string | null;
   websiteUrl: string | null;
   twitterUrl: string | null;

@@ -4,8 +4,7 @@ export type Category =
   | "Governance"
   | "Onchain Builders"
   | "Developer Tooling"
-  | "OP Stack"
-  | "";
+  | "OP Stack";
 export type Subcategory =
   | "Infra & Tooling"
   | "Governance Research & Analytics"
@@ -47,7 +46,6 @@ export const subcategoryMap: Record<Category, Subcategory[]> = {
     "OP Stack Research and Development",
     "OP Stack Tooling",
   ],
-  "": [],
 };
 
 export const getSubcategories = (category: Category): Subcategory[] => {
@@ -71,5 +69,4 @@ export const higherCategories: { [key in Category]: string } = {
   Governance: "Governance",
   "Onchain Builders": "Onchain Builders",
   "OP Stack": "OP Stack",
-  "": "",
 };

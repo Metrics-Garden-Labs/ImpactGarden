@@ -75,7 +75,7 @@ export const contributions = pgTable(
       .references(() => projects.ecosystem)
       .notNull(),
     governancetype: text("governancetype"),
-    category: text("category").references(() => projects.category),
+    category: text("category"),
     subcategory: text("subcategory"),
     secondaryecosystem: text("secondaryecosystem"),
     contribution: text("contribution").notNull().unique(),
@@ -197,7 +197,7 @@ export const governance_infra_and_tooling = pgTable(
     ecosystem: text("ecosystem")
       .references(() => projects.ecosystem)
       .notNull(),
-    attestationUID: text("attestationUID").notNull().unique(),
+    attestationUID: text("attestationUID").notNull(),
     likely_to_recommend: text("likely_to_recommend"),
     feeling_if_didnt_exist: text("feeling_if_didnt_exist"),
     explanation: text("explanation"),
@@ -236,7 +236,7 @@ export const governance_r_and_a = pgTable(
     ecosystem: text("ecosystem")
       .references(() => projects.ecosystem)
       .notNull(),
-    attestationUID: text("attestationUID").notNull().unique(),
+    attestationUID: text("attestationUID").notNull(),
     likely_to_recommend: text("likely_to_recommend"),
     useful_for_understanding: text("useful_for_understanding"),
     effective_for_improvements: text("effective_for_improvements"),
@@ -276,7 +276,7 @@ export const governance_collab_and_onboarding = pgTable(
     ecosystem: text("ecosystem")
       .references(() => projects.ecosystem)
       .notNull(),
-    attestationUID: text("attestationUID").notNull().unique(),
+    attestationUID: text("attestationUID").notNull(),
     governance_knowledge: text("governance_knowledge"),
     recommend_contribution: text("recommend_contribution"),
     feeling_if_didnt_exist: text("feeling_if_didnt_exist"),

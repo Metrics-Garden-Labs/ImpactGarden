@@ -75,7 +75,7 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
 
           {/* Q1 */}
           <div className="mb-6">
-            <h3 className='font-semibold text-center'>Your knowledge level about Optimism’s Governance</h3>
+            {/* <h3 className='font-semibold text-center'>Your knowledge level about Optimism’s Governance</h3> */}
             <select
               value={knowledgeLevel}
               onChange={handleKnowledgeLevelChange}
@@ -99,7 +99,7 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
           <hr className="my-4" />
 
           {/* Q3 */}
-          <div className="mb-6">
+          <div className="mb-8">
             <h3 className='font-semibold text-center'>How would you feel if this contribution ceased to exist?</h3>
             <SmileyRatingScale rating={localSmileyRating} handleRating={setLocalSmileyRating} />
             <p className='text-sm mt-2'><span className='font-semibold'>Extremely Upset:</span>  I wouldn’t have been able to understand and engage in governance without it.</p>
@@ -110,7 +110,11 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
 
           {/* Q4 */}
           <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2">Please give examples of how this collaboration or onboarding contribution has been useful for you. <span className='italic'>Did it increase your participation?</span></label>
+          <label className="block text-gray-700 font-bold mb-2">
+            Please give examples of how this collaboration or onboarding contribution has been useful for you. 
+            <div className="italic">Did it increase your participation?</div>
+          </label>
+
             <textarea
               value={localFeedback}
               onChange={(e) => setLocalFeedback(e.target.value)}
