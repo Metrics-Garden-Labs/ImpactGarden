@@ -192,6 +192,12 @@ export interface Attestation2 {
   subcategory?: string;
   createdAt: Date | null;
   logoUrl?: string | null;
+  likely_to_recommend?: string;
+  feeling_if_didnt_exist?: string;
+  useful_for_understanding?: string;
+  effective_for_improvements?: string;
+  governance_knowledge?: string;
+  recommend_contribution?: string;
 }
 
 export interface userAddresses {

@@ -106,14 +106,87 @@ export const getAttestationCountByProject = async (projectName: string) => {
 
 // src/lib/db.ts
 //gets the attestations a user has made to different contributions
-export const getAttestationsByUserId = async (userFid: string) => {
+// export const getAttestationsByUserId = async (userFid: string) => {
+//   try {
+//     const attestations = await db
+//       .select()
+//       .from(contributionattestations)
+//       .where(eq(contributionattestations.userFid, userFid))
+//       .execute();
+//     return attestations;
+//   } catch (error) {
+//     console.error(
+//       `Error retrieving attestations for user '${userFid}':`,
+//       error
+//     );
+//     throw error;
+//   }
+// };
+// src/lib/db.ts
+// src/lib/db.ts
+export const getAttestationsByUserId = async (
+  userFid: string
+): Promise<Attestation2[]> => {
   try {
-    const attestations = await db
+    const contributionAttestations = await db
       .select()
       .from(contributionattestations)
       .where(eq(contributionattestations.userFid, userFid))
       .execute();
-    return attestations;
+
+    const infraToolingAttestations = await db
+      .select()
+      .from(governance_infra_and_tooling)
+      .where(eq(governance_infra_and_tooling.userfid, userFid))
+      .execute();
+
+    const rAndAAttestations = await db
+      .select()
+      .from(governance_r_and_a)
+      .where(eq(governance_r_and_a.userfid, userFid))
+      .execute();
+
+    const collabOnboardingAttestations = await db
+      .select()
+      .from(governance_collab_and_onboarding)
+      .where(eq(governance_collab_and_onboarding.userfid, userFid))
+      .execute();
+
+    // Normalize the data to fit Attestation2 interface
+    const normalizeAttestation = (att: any): Attestation2 => ({
+      id: att.id,
+      userFid: att.userFid || att.userfid,
+      projectName: att.projectName,
+      contribution: att.contribution,
+      ecosystem: att.ecosystem,
+      attestationUID: att.attestationUID,
+      attesterAddy: att.attesterAddy,
+      feedback: att.feedback || att.explanation,
+      isdelegate: att.isdelegate,
+      rating: att.rating,
+      improvementareas: att.improvementareas,
+      extrafeedback: att.extrafeedback,
+      category: att.category,
+      subcategory: att.subcategory,
+      createdAt: att.createdAt,
+      logoUrl: att.logoUrl,
+      likely_to_recommend: att.likely_to_recommend,
+      feeling_if_didnt_exist: att.feeling_if_didnt_exist,
+      useful_for_understanding: att.useful_for_understanding,
+      effective_for_improvements: att.effective_for_improvements,
+      governance_knowledge: att.governance_knowledge,
+      recommend_contribution: att.recommend_contribution,
+    });
+
+    // Combine and normalize all attestations
+    const allAttestations: Attestation2[] = [
+      ...contributionAttestations.map(normalizeAttestation),
+      ...infraToolingAttestations.map(normalizeAttestation),
+      ...rAndAAttestations.map(normalizeAttestation),
+      ...collabOnboardingAttestations.map(normalizeAttestation),
+    ];
+
+    return allAttestations;
   } catch (error) {
     console.error(
       `Error retrieving attestations for user '${userFid}':`,
@@ -122,7 +195,6 @@ export const getAttestationsByUserId = async (userFid: string) => {
     throw error;
   }
 };
-
 //user attestations
 
 export const fetchAttestationsWithLogos = async (
