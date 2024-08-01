@@ -175,6 +175,25 @@ export interface Attestation {
   logoUrl?: string | null;
 }
 
+export interface Attestation2 {
+  id: number;
+  userFid: string;
+  projectName: string | null;
+  contribution: string | null;
+  ecosystem: string;
+  attestationUID: string;
+  attesterAddy?: string;
+  feedback: string | null;
+  isdelegate?: boolean | null;
+  rating?: string | null;
+  improvementareas?: string | null;
+  extrafeedback?: string | null;
+  category?: string;
+  subcategory?: string;
+  createdAt: Date | null;
+  logoUrl?: string | null;
+}
+
 export interface userAddresses {
   id: number;
   userfid: string;

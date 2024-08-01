@@ -83,7 +83,7 @@ export default async function UserList({ users, query, filter, verificationFilte
                 <span className="flex items-center space-x-2 ml-2"> {/* Added ml-2 for margin */}
                   {user.isCoinbaseVerified && (
                     <span className="tooltip" data-tip="Coinbase Verified Wallet">
-                      <Image src="/coinbaseWallet.png" alt="Coinbase Wallet Badge" width={25} height={25} />
+                      <Image src="/coinbaseWallet.png" alt="Coinbase Wallet Badge" width={25} height={25} style={{ height: "auto" }} />
                     </span>
                   )}
                   {user.isOpBadgeholder && (
@@ -93,17 +93,17 @@ export default async function UserList({ users, query, filter, verificationFilte
                   )}
                   {user.isPowerBadgeholder && (
                     <span className="tooltip" data-tip="Warpcast Power User">
-                      <Image src="/powerBadge.png" alt="Warpcast Power Badge" width={20} height={20} />
+                      <Image src="/powerBadge.png" alt="Warpcast Power Badge" width={20} height={20} style={{  height: "auto" }} />
                     </span>
                   )}
                   {user.isDelegate && (
                     <span className="tooltip" data-tip="Optimism Delegate">
-                      <Image src="/opDelegate.png" alt="Optimism Delegate Badge" width={20} height={20} />
+                      <Image src="/opDelegate.png" alt="Optimism Delegate Badge" width={20} height={20} style={{  height: "auto" }} />
                     </span>
                   )}
                   {user.s4Participant && (
                     <span className="tooltip" data-tip="Season 4 Participant">
-                      <Image src="/s-4grantparticipants.png" alt="Season 4 Participant Badge" width={20} height={20} />
+                      <Image src="/s-4grantparticipants.png" alt="Season 4 Participant Badge" width={20} height={20} style={{  height: "auto" }}/>
                     </span>
                   )}
                 </span>

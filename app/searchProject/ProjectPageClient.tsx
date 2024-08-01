@@ -39,7 +39,9 @@ const ProjectPageClient = ({ projects, query, filter, sortOrder, searchResults, 
         onSortOrderChange={handleSortOrderChange} 
       />
       {error ? (
-        <p>{error}</p>
+        <div>
+          <p>{error}</p>
+        </div>
       ) : (
         <ProjectList
           projects={projects}

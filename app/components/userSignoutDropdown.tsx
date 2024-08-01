@@ -13,7 +13,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({onSignout}) => {
         <div className=" w-12 h-12 h-full mr-6 flex items-center">
           <svg width="93" height="64" viewBox="0 0 93 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute top-[60%] transform -translate-y-1/2">
             <g filter="url(#filter0_d_351_2429)">
-            <rect x="12.8311" y="8" width="68.1689" height="40" rx="14" fill="white" shape-rendering="crispEdges"/>
+            <rect x="12.8311" y="8" width="68.1689" height="40" rx="14" fill="white" shapeRendering="crispEdges"/>
             <rect x="28.8311" y="17.9155" width="20.1689" height="20.1689" rx="4.48199" fill="#855DCD"/>
             <path d="M34.0302 21.0529H43.8009V34.9471H42.3667V28.5827H42.3526C42.1941 26.8237 40.7158 25.4453 38.9155 25.4453C37.1153 25.4453 35.637 26.8237 35.4785 28.5827H35.4644V34.9471H34.0302V21.0529Z" fill="white"/>
             <path d="M31.4306 23.025L32.0133 24.9971H32.5063V32.975C32.2587 32.975 32.0581 33.1757 32.0581 33.4232V33.961H31.9684C31.7209 33.961 31.5202 34.1617 31.5202 34.4092V34.9471H36.5401V34.4092C36.5401 34.1617 36.3394 33.961 36.0919 33.961H36.0022V33.4232C36.0022 33.1757 35.8016 32.975 35.554 32.975H35.0162V23.025H31.4306Z" fill="white"/>
@@ -21,8 +21,8 @@ const UserDropdown: React.FC<UserDropdownProps> = ({onSignout}) => {
             <circle cx="61" cy="28" r="4" fill="#04DF00"/>
             </g>
             <defs>
-            <filter id="filter0_d_351_2429" x="0.831055" y="0" width="92.1689" height="64" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <filter id="filter0_d_351_2429" x="0.831055" y="0" width="92.1689" height="64" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+            <feFlood floodOpacity="0" result="BackgroundImageFix"/>
             <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
             <feOffset dy="4"/>
             <feGaussianBlur stdDeviation="6"/>

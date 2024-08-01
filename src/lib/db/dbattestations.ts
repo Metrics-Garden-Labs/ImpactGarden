@@ -23,6 +23,7 @@ import {
   Contribution,
   NewProject,
   NewContributionAttestationGov,
+  Attestation2,
 } from "@/src/types";
 import { count } from "console";
 import { desc, sql as drizzlesql } from "drizzle-orm";
@@ -122,6 +123,8 @@ export const getAttestationsByUserId = async (userFid: string) => {
   }
 };
 
+//user attestations
+
 export const fetchAttestationsWithLogos = async (
   userFid: string
 ): Promise<Attestation[]> => {
@@ -152,6 +155,121 @@ export const fetchAttestationsWithLogos = async (
   return attestationsWithLogos;
 };
 
+export const fetchGovernanceAttestationsWithLogos = async (
+  userFid: string
+): Promise<Attestation2[]> => {
+  const infraToolingAttestations = await db
+    .select({
+      id: governance_infra_and_tooling.id,
+      userFid: governance_infra_and_tooling.userfid,
+      projectName: governance_infra_and_tooling.projectName,
+      contribution: governance_infra_and_tooling.contribution,
+      ecosystem: governance_infra_and_tooling.ecosystem,
+      attestationUID: governance_infra_and_tooling.attestationUID,
+      category: governance_infra_and_tooling.category,
+      subcategory: governance_infra_and_tooling.subcategory,
+      feedback: governance_infra_and_tooling.explanation,
+      createdAt: governance_infra_and_tooling.createdAt,
+      logoUrl: projects.logoUrl,
+    })
+    .from(governance_infra_and_tooling)
+    .leftJoin(
+      projects,
+      eq(governance_infra_and_tooling.projectName, projects.projectName)
+    )
+    .where(eq(governance_infra_and_tooling.userfid, userFid));
+
+  const rAndAAttestations = await db
+    .select({
+      id: governance_r_and_a.id,
+      userFid: governance_r_and_a.userfid,
+      projectName: governance_r_and_a.projectName,
+      contribution: governance_r_and_a.contribution,
+      ecosystem: governance_r_and_a.ecosystem,
+      attestationUID: governance_r_and_a.attestationUID,
+      category: governance_r_and_a.category,
+      subcategory: governance_r_and_a.subcategory,
+      feedback: governance_r_and_a.explanation,
+      createdAt: governance_r_and_a.createdAt,
+      logoUrl: projects.logoUrl,
+    })
+    .from(governance_r_and_a)
+    .leftJoin(
+      projects,
+      eq(governance_r_and_a.projectName, projects.projectName)
+    )
+    .where(eq(governance_r_and_a.userfid, userFid));
+
+  const collabOnboardingAttestations = await db
+    .select({
+      id: governance_collab_and_onboarding.id,
+      userFid: governance_collab_and_onboarding.userfid,
+      projectName: governance_collab_and_onboarding.projectName,
+      contribution: governance_collab_and_onboarding.contribution,
+      ecosystem: governance_collab_and_onboarding.ecosystem,
+      attestationUID: governance_collab_and_onboarding.attestationUID,
+      category: governance_collab_and_onboarding.category,
+      subcategory: governance_collab_and_onboarding.subcategory,
+      feedback: governance_collab_and_onboarding.explanation,
+      createdAt: governance_collab_and_onboarding.createdAt,
+      logoUrl: projects.logoUrl,
+    })
+    .from(governance_collab_and_onboarding)
+    .leftJoin(
+      projects,
+      eq(governance_collab_and_onboarding.projectName, projects.projectName)
+    )
+    .where(eq(governance_collab_and_onboarding.userfid, userFid));
+
+  return [
+    ...infraToolingAttestations,
+    ...rAndAAttestations,
+    ...collabOnboardingAttestations,
+  ];
+};
+
+export const fetchAllAttestationsWithLogos = async (
+  userFid: string
+): Promise<Attestation2[]> => {
+  try {
+    // Fetch attestations from the contributionattestations table
+    const contributionAttestations = await fetchAttestationsWithLogos(userFid);
+
+    // Fetch attestations from governance-related tables
+    const governanceAttestations = await fetchGovernanceAttestationsWithLogos(
+      userFid
+    );
+
+    // Ensure that the governanceAttestations match the Attestation type
+    const formattedGovernanceAttestations: Attestation2[] =
+      governanceAttestations.map((att) => ({
+        id: att.id,
+        userFid: att.userFid,
+        projectName: att.projectName,
+        contribution: att.contribution,
+        ecosystem: att.ecosystem,
+        attestationUID: att.attestationUID,
+        feedback: att.feedback,
+        category: att.category,
+        subcategory: att.subcategory,
+        createdAt: att.createdAt,
+        logoUrl: att.logoUrl,
+        // Add fields that exist in Attestation but not in governanceAttestations
+        attesterAddy: "",
+        isdelegate: null,
+        improvementareas: null,
+        extrafeedback: null,
+        rating: null,
+      }));
+
+    // Combine and return all attestations
+    return [...contributionAttestations, ...formattedGovernanceAttestations];
+  } catch (error) {
+    console.error("Error fetching all attestations:", error);
+    throw error;
+  }
+};
+/////////////////
 export const insertGovernanceInfraToolingAttestation = async (
   attestation: NewContributionAttestationGov
 ) => {

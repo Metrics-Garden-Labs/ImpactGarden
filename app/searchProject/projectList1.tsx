@@ -144,9 +144,9 @@ export default function ProjectList({
             <h3 className="font-semibold text-center">Website</h3>
             <p className="text-center overflow-wrap break-words max-w-full mx-auto truncate">
                 <Link href={`${checkwebsiteUrl}`}>
-                  <p className="text-black hover:text-gray-300 visited:text-indigo-600 ">
+                  <span className="text-black hover:text-gray-300 visited:text-indigo-600 ">
                     {selectedProject.websiteUrl}
-                  </p>
+                  </span>
                 </Link>
             </p>
           </div>
@@ -155,9 +155,9 @@ export default function ProjectList({
           <div className="mb-4">
             <h3 className="font-semibold text-center">Twitter</h3>
             <p className="text-center">
-                <a href={selectedProject.twitterUrl} target="_blank" rel="noopener noreferrer">
+                <Link href={selectedProject.twitterUrl} target="_blank" rel="noopener noreferrer">
                   {selectedProject.twitterUrl}
-                </a>
+                </Link>
             </p>
           </div>
           )}
@@ -165,9 +165,9 @@ export default function ProjectList({
           <div className="mb-4">
             <h3 className="font-semibold text-center">Github</h3>
             <p className="text-center">
-                <a href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer">
+                <Link href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer">
                   {selectedProject.githubUrl}
-                </a>
+                </Link>
             </p>
           </div>
           )}
@@ -205,6 +205,7 @@ export default function ProjectList({
                   alt="Project Logo"
                   width={64}
                   height={64}
+                  style={{  height: "auto" }}
                   className="object-cover w-full h-full"
                 />
               ) : (

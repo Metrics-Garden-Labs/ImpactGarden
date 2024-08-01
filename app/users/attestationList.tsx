@@ -1,7 +1,7 @@
 import React from 'react';
 import { getProjectsByUserId } from '@/src/lib/db/dbprojects';
-import { fetchAttestationsWithLogos } from '@/src/lib/db/dbattestations';
-import { Attestation, AttestationNetworkType, User } from '@/src/types';
+import { fetchAllAttestationsWithLogos } from '@/src/lib/db/dbattestations';
+import { Attestation, Attestation2, AttestationNetworkType, User } from '@/src/types';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { easScanEndpoints } from '../../src/utils/easScan';
@@ -13,7 +13,7 @@ interface Props {
 
 const AttestationList = async ({ user }: Props) => {
   try {
-    const attestations: Attestation[] = await fetchAttestationsWithLogos(user.fid);
+    const attestations: Attestation2[] = await fetchAllAttestationsWithLogos(user.fid);
     const projects = await getProjectsByUserId(user.fid);
 
     // Sort attestations by createdAt timestamp in descending order
@@ -68,8 +68,6 @@ const AttestationList = async ({ user }: Props) => {
             {attestations.length > 0 ? (
               attestations.map((attestation) => {
                 const attestationLink = `${easScanEndpoints[attestation.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`;
-                console.log('Attestation Link:', attestationLink);
-                console.log('attestationuid:', attestation.attestationUID);
 
                 return (
                   <div key={attestation.id} className='p-4 bg-white border rounded-lg shadow-md'>
@@ -85,16 +83,22 @@ const AttestationList = async ({ user }: Props) => {
                       )}
                       <div>
                         <h3 className='text-lg font-semibold'>{attestation.projectName}</h3>
-                        <p className='text-sm text-gray-500'> {attestation.contribution}</p>
+                        <p className='text-sm text-gray-500'>{attestation.contribution}</p>
+                        {attestation.subcategory && (
+                          <p className='text-sm text-gray-500'>{attestation.subcategory}</p>
+                        )}
                         <p className='text-gray-700 mb-2'>
-                          “{attestation.feedback}”
+                          {attestation.feedback} 
                         </p>
+                        {attestation.rating && (
+                          <p className='text-sm text-gray-500'>Rating: {attestation.rating}</p>
+                        )}
                         <p className='text-sm text-gray-500'>
                           {format(new Date(attestation.createdAt || ''), 'MMMM dd, yyyy')}
                         </p>
-                        <Link href={attestationLink}>
+                        {/* <Link href={attestationLink}>
                           <p className='text-black hover:underline'>View Attestation</p>
-                        </Link>
+                        </Link> */}
                       </div>
                     </div>
                   </div>
@@ -109,7 +113,6 @@ const AttestationList = async ({ user }: Props) => {
     );
   } catch (error) {
     console.error('Failed to fetch attestations:', error);
-    // Handle the error, display an error message, or return a fallback UI
     return <p>Failed to fetch attestations. Please try again later.</p>;
   }
 };

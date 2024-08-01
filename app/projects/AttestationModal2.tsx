@@ -117,6 +117,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
         userfid: user.fid,
         ethaddress: user.ethAddress,
         projectName: contribution.projectName,
+        contribution: contribution.contribution,
         category: contribution.category,
         subcategory: contribution.subcategory,
         ecosystem: contribution.ecosystem,
