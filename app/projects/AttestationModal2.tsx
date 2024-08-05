@@ -8,10 +8,10 @@ import { isAddress } from 'ethers';
 import { EIP712AttestationParams, EAS, SchemaEncoder, ZERO_ADDRESS, NO_EXPIRATION } from '@ethereum-attestation-service/eas-sdk';
 import { ethers } from 'ethers';
 import { Contribution, ContributionAttestationWithUsername, Project, contributionRolesKey } from '@/src/types';
-import GovernanceInfraToolingForm from '@/src/utils/contributionAttestations/GovernanceInfraToolingForm';
-import GovernanceRAndAForm from '@/src/utils/contributionAttestations/GovernanceR&A';
+import GovernanceInfraToolingForm from '@/app/components/contributionAttestations/GovernanceInfraToolingForm';
+import GovernanceRAndAForm from '@/app/components/contributionAttestations/GovernanceR&A';
 import { easScanEndpoints } from '@/src/utils/easScan';
-import GovernanceCollabAndOnboarding from '@/src/utils/contributionAttestations/GovernanceCollabAndOnboarding';
+import GovernanceCollabAndOnboarding from '@/app/components/contributionAttestations/GovernanceCollabAndOnboarding';
 import { ZeroAddress } from 'ethers';
 
 interface AttestationModalProps {

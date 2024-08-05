@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 import { easScanEndpoints } from '../../../../src/utils/easScan';
 import Image from 'next/image';
+import AttestationModalView from '@/app/components/AttestationModalView';
 
 interface ContributionPageProps {
   contribution: Contribution;
@@ -28,6 +29,8 @@ export default function ContributionPage({
   const [isAttestationModalOpen, setIsAttestationModalOpen] = useState(false);
   const [recentAttestations, setRecentAttestations] = useState<AttestationDisplay[]>([]);
   const [recentAttestationsLoading, setRecentAttestationsLoading] = useState(true);
+  const [selectedAttestation, setSelectedAttestation] = useState<AttestationDisplay | null>(null);
+  const [isAttestationViewModalOpen, setIsAttestationViewModalOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -88,6 +91,12 @@ export default function ContributionPage({
 
   const handleMakeFrame = () => {
     router.push(`/makeFrame/${contribution.id}`);
+  };
+
+
+  const handleAttestationClick = (attestation: AttestationDisplay) => {
+    setSelectedAttestation(attestation);
+    setIsAttestationViewModalOpen(true);
   };
 
   const renderAttestationContent = (attestation: AttestationDisplay) => {
@@ -164,12 +173,12 @@ export default function ContributionPage({
               <div className="mb-4 justify-start items-center overflow-y-auto">
                 <h3 className="font-semibold text-left">Link/Evidence</h3>
                 <div className="flex justify-start items-center">
-                  <a
+                  <Link
                     href={contribution.link || ""}
                     className="text-gray-500 hover:text-gray-300 visited:text-indigo-600 flex items-center"
                   >
                     <p className='text-left'>{contribution.link}</p>
-                  </a>
+                  </Link>
                 </div>
               </div>
             )}
@@ -200,7 +209,10 @@ export default function ContributionPage({
                 {recentAttestations.map((attestation, index) => {
                   const attestationLink = `${easScanEndpoints[contribution.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`;
                   return (
-                    <div key={index} className='p-4 bg-white border rounded-lg shadow-md'>
+                    <div key={index} 
+                      className='p-4 bg-white border rounded-lg shadow-md'
+                      onClick={() => handleAttestationClick(attestation)}
+                      >
                       <div className='flex items-start mb-2'>
                         {attestation.pfp && (
                           <Image
@@ -269,6 +281,11 @@ export default function ContributionPage({
           isOpen={isAttestationModalOpen}
         />
       )}
+      <AttestationModalView
+        attestation={selectedAttestation}
+        isOpen={isAttestationViewModalOpen}
+        onClose={() => setIsAttestationViewModalOpen(false)}
+      />
     </main>
   );
 }

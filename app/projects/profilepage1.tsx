@@ -20,6 +20,7 @@ import { easScanEndpoints } from '@/src/utils/easScan';
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { GovRandADisplay, GovCollabAndOnboardingDisplay, GovInfraAndToolingDisplay } from '@/src/types';
+import AttestationModalView from '../components/AttestationModalView';
 
 function isGovRandADisplay(attestation: AttestationDisplay): attestation is GovRandADisplay {
   return (attestation as GovRandADisplay).useful_for_understanding !== undefined;
@@ -49,6 +50,8 @@ export default function ProfilePage({
   const [selectedContribution, setSelectedContribution] = useState<ContributionWithAttestationCount | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedAttestation, setSelectedAttestation] = useState<AttestationDisplay | null>(null);
+  const [isAttestationModalOpen, setIsAttestationModalOpen] = useState(false);    
   const { eas } = useEAS();
   const [fid] = useGlobalState('fid');
   const [walletAddress] = useGlobalState('walletAddress');
@@ -292,6 +295,11 @@ export default function ProfilePage({
     router.push(`${pathname}?contribution=${contribution.id}`);
   };
 
+  const handleAttestationClick = (attestation: AttestationDisplay) => {
+    setSelectedAttestation(attestation);
+    setIsAttestationModalOpen(true);
+  };
+
   const closeModal = () => {
     setSelectedContribution(null);
     setIsModalOpen(false);
@@ -377,6 +385,7 @@ export default function ProfilePage({
                     <div
                       key={index}
                       className="p-4 bg-white border rounded-lg shadow-md"
+                      onClick={() => handleAttestationClick(attestation)}
                     >
                       <div className="flex items-start mb-2">
                         {attestation.pfp && (
@@ -502,6 +511,11 @@ export default function ProfilePage({
 
         <div className="flex-1 p-4">{renderContent()}</div>
       </div>
+      <AttestationModalView
+        attestation={selectedAttestation}
+        isOpen={isAttestationModalOpen}
+        onClose={() => setIsAttestationModalOpen(false)}
+        />
     </main>
   );
 }

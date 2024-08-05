@@ -224,6 +224,7 @@ export interface Attestation2 {
   subcategory?: string;
   createdAt: Date | null;
   logoUrl?: string | null;
+  explanation?: string | null;
   likely_to_recommend?: string;
   feeling_if_didnt_exist?: string;
   useful_for_understanding?: string;
@@ -445,25 +446,64 @@ export type NewContributionAttestationGov =
   | GovernanceCollabAndOnboardingAttestation;
 
 //these are the types that will hopefully work for displaying the attestations on the contribution page
-export interface GovInfraAndToolingDisplay
-  extends GovernanceInfraAndToolingAttestation {
+// export interface GovInfraAndToolingDisplay
+//   extends GovernanceInfraAndToolingAttestation {
+//   username: string;
+//   pfp: string | null;
+// }
+
+// export interface GovRandADisplay extends GovernanceRandAAttestation {
+//   username: string;
+//   pfp: string | null;
+// }
+
+// export interface GovCollabAndOnboardingDisplay
+//   extends GovernanceCollabAndOnboardingAttestation {
+//   username: string;
+//   pfp: string | null;
+// }
+
+// export type AttestationDisplay =
+//   | GovInfraAndToolingDisplay
+//   | GovRandADisplay
+//   | GovCollabAndOnboardingDisplay
+//   | ContributionAttestationWithUsername;
+
+interface BaseAttestationDisplay {
+  id: number; // Add this line
   username: string;
   pfp: string | null;
+  createdAt: string | null;
+  attestationUID: string;
+  contribution: string;
+  ecosystem: string;
 }
 
-export interface GovRandADisplay extends GovernanceRandAAttestation {
-  username: string;
-  pfp: string | null;
+export interface GovRandADisplay extends BaseAttestationDisplay {
+  useful_for_understanding: string;
+  effective_for_improvements: string;
+  explanation: string;
 }
 
-export interface GovCollabAndOnboardingDisplay
-  extends GovernanceCollabAndOnboardingAttestation {
-  username: string;
-  pfp: string | null;
+export interface GovCollabAndOnboardingDisplay extends BaseAttestationDisplay {
+  governance_knowledge: string;
+  recommend_contribution: string;
+  feeling_if_didnt_exist: string;
+  explanation: string;
+}
+
+export interface GovInfraAndToolingDisplay extends BaseAttestationDisplay {
+  likely_to_recommend: string;
+  explanation: string;
+}
+
+export interface GeneralAttestationDisplay extends BaseAttestationDisplay {
+  feedback: string;
+  rating: string;
 }
 
 export type AttestationDisplay =
-  | GovInfraAndToolingDisplay
   | GovRandADisplay
   | GovCollabAndOnboardingDisplay
-  | ContributionAttestationWithUsername;
+  | GovInfraAndToolingDisplay
+  | GeneralAttestationDisplay;
