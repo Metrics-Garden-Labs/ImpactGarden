@@ -175,6 +175,33 @@ export interface Attestation {
   logoUrl?: string | null;
 }
 
+export interface ProjectAttestations {
+  id: number;
+  userFid: string;
+  username: string | null;
+  projectName: string | null;
+  pfp: string | null;
+  contribution: string | null;
+  ecosystem: string;
+  attestationUID: string;
+  attesterAddy?: string;
+  feedback: string | null;
+  isdelegate?: boolean | null;
+  rating?: string | null;
+  improvementareas?: string | null;
+  extrafeedback?: string | null;
+  category?: string;
+  subcategory?: string;
+  createdAt: Date | null;
+  logoUrl?: string | null;
+  likely_to_recommend?: string;
+  feeling_if_didnt_exist?: string;
+  useful_for_understanding?: string;
+  effective_for_improvements?: string;
+  governance_knowledge?: string;
+  recommend_contribution?: string;
+}
+
 export interface Attestation2 {
   id: number;
   userFid: string;
@@ -337,6 +364,7 @@ export interface GovernanceInfraAndToolingAttestation {
   userfid: string;
   ethaddress: string;
   projectName: string;
+  contribution: string;
   category: string;
   subcategory: string;
   ecosystem: string;
@@ -352,6 +380,7 @@ export interface GovernanceRandAAttestation {
   userfid: string;
   ethaddress: string;
   projectName: string;
+  contribution: string;
   category: string;
   subcategory: string;
   ecosystem: string;
@@ -368,6 +397,7 @@ export interface GovernanceCollabAndOnboardingAttestation {
   userfid: string;
   ethaddress: string;
   projectName: string;
+  contribution: string;
   category: string;
   subcategory: string;
   ecosystem: string;

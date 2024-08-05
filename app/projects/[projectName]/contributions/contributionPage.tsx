@@ -217,9 +217,9 @@ export default function ContributionPage({
                           <p className='text-sm text-gray-500'>
                             {format(new Date(attestation.createdAt || ''), 'MMMM dd, yyyy')}
                           </p>
-                          <Link href={attestationLink}>
+                          {/* <Link href={attestationLink}>
                             <p className='text-black hover:underline'>View Attestation</p>
-                          </Link>
+                          </Link> */}
                         </div>
                       </div>
                     </div>

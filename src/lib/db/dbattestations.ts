@@ -24,6 +24,7 @@ import {
   NewProject,
   NewContributionAttestationGov,
   Attestation2,
+  ProjectAttestations,
 } from "@/src/types";
 import { count } from "console";
 import { desc, sql as drizzlesql } from "drizzle-orm";
@@ -552,6 +553,137 @@ export const getAttestationsByContributionAndSubcategory = async (
       default:
         throw new Error(`Unsupported subcategory: ${subcategory}`);
     }
+  } catch (error) {
+    console.error("Error retrieving attestations:", error);
+    throw error;
+  }
+};
+
+export const getAttestationsByProject = async (projectName: string) => {
+  try {
+    const contributionAttestations = await db
+      .select({
+        id: contributionattestations.id,
+        userFid: contributionattestations.userFid,
+        username: users.username,
+        pfp: users.pfp_url,
+        projectName: contributionattestations.projectName,
+        contribution: contributionattestations.contribution,
+        ecosystem: contributionattestations.ecosystem,
+        attestationUID: contributionattestations.attestationUID,
+        feedback: contributionattestations.feedback,
+        rating: contributionattestations.rating,
+        improvementareas: contributionattestations.improvementareas,
+        isdelegate: contributionattestations.isdelegate,
+        extrafeedback: contributionattestations.extrafeedback,
+        createdAt: contributionattestations.createdAt,
+      })
+      .from(contributionattestations)
+      .innerJoin(users, eq(contributionattestations.userFid, users.fid))
+      .where(eq(contributionattestations.projectName, projectName))
+      .orderBy(desc(contributionattestations.createdAt));
+
+    const infraToolingAttestations = await db
+      .select({
+        id: governance_infra_and_tooling.id,
+        userFid: governance_infra_and_tooling.userfid,
+        username: users.username,
+        pfp: users.pfp_url,
+        projectName: governance_infra_and_tooling.projectName,
+        contribution: governance_infra_and_tooling.contribution,
+        ecosystem: governance_infra_and_tooling.ecosystem,
+        attestationUID: governance_infra_and_tooling.attestationUID,
+        likely_to_recommend: governance_infra_and_tooling.likely_to_recommend,
+        feeling_if_didnt_exist:
+          governance_infra_and_tooling.feeling_if_didnt_exist,
+        explanation: governance_infra_and_tooling.explanation,
+        createdAt: governance_infra_and_tooling.createdAt,
+      })
+      .from(governance_infra_and_tooling)
+      .innerJoin(users, eq(governance_infra_and_tooling.userfid, users.fid))
+      .where(eq(governance_infra_and_tooling.projectName, projectName))
+      .orderBy(desc(governance_infra_and_tooling.createdAt));
+
+    const rAndAAttestations = await db
+      .select({
+        id: governance_r_and_a.id,
+        userFid: governance_r_and_a.userfid,
+        username: users.username,
+        pfp: users.pfp_url,
+        projectName: governance_r_and_a.projectName,
+        contribution: governance_r_and_a.contribution,
+        ecosystem: governance_r_and_a.ecosystem,
+        attestationUID: governance_r_and_a.attestationUID,
+        likely_to_recommend: governance_r_and_a.likely_to_recommend,
+        useful_for_understanding: governance_r_and_a.useful_for_understanding,
+        effective_for_improvements:
+          governance_r_and_a.effective_for_improvements,
+        explanation: governance_r_and_a.explanation,
+        createdAt: governance_r_and_a.createdAt,
+      })
+      .from(governance_r_and_a)
+      .innerJoin(users, eq(governance_r_and_a.userfid, users.fid))
+      .where(eq(governance_r_and_a.projectName, projectName))
+      .orderBy(desc(governance_r_and_a.createdAt));
+
+    const collabOnboardingAttestations = await db
+      .select({
+        id: governance_collab_and_onboarding.id,
+        userFid: governance_collab_and_onboarding.userfid,
+        username: users.username,
+        pfp: users.pfp_url,
+        projectName: governance_collab_and_onboarding.projectName,
+        contribution: governance_collab_and_onboarding.contribution,
+        ecosystem: governance_collab_and_onboarding.ecosystem,
+        attestationUID: governance_collab_and_onboarding.attestationUID,
+        governance_knowledge:
+          governance_collab_and_onboarding.governance_knowledge,
+        recommend_contribution:
+          governance_collab_and_onboarding.recommend_contribution,
+        feeling_if_didnt_exist:
+          governance_collab_and_onboarding.feeling_if_didnt_exist,
+        explanation: governance_collab_and_onboarding.explanation,
+        createdAt: governance_collab_and_onboarding.createdAt,
+      })
+      .from(governance_collab_and_onboarding)
+      .innerJoin(users, eq(governance_collab_and_onboarding.userfid, users.fid))
+      .where(eq(governance_collab_and_onboarding.projectName, projectName))
+      .orderBy(desc(governance_collab_and_onboarding.createdAt));
+
+    const normalizeAttestation = (att: any): ProjectAttestations => ({
+      id: att.id,
+      userFid: att.userFid || att.userfid,
+      username: att.username,
+      pfp: att.pfp,
+      projectName: att.projectName,
+      contribution: att.contribution,
+      ecosystem: att.ecosystem,
+      attestationUID: att.attestationUID,
+      feedback: att.feedback || att.explanation,
+      isdelegate: att.isdelegate,
+      rating: att.rating,
+      improvementareas: att.improvementareas,
+      extrafeedback: att.extrafeedback,
+      category: att.category,
+      subcategory: att.subcategory,
+      createdAt: att.createdAt,
+      logoUrl: att.logoUrl,
+      likely_to_recommend: att.likely_to_recommend,
+      feeling_if_didnt_exist: att.feeling_if_didnt_exist,
+      useful_for_understanding: att.useful_for_understanding,
+      effective_for_improvements: att.effective_for_improvements,
+      governance_knowledge: att.governance_knowledge,
+      recommend_contribution: att.recommend_contribution,
+    });
+
+    const allAttestations: ProjectAttestations[] = [
+      ...contributionAttestations.map(normalizeAttestation),
+      ...infraToolingAttestations.map(normalizeAttestation),
+      ...rAndAAttestations.map(normalizeAttestation),
+      ...collabOnboardingAttestations.map(normalizeAttestation),
+    ];
+
+    return allAttestations;
   } catch (error) {
     console.error("Error retrieving attestations:", error);
     throw error;

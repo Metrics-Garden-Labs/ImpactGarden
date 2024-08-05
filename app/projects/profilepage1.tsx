@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
 import { IoIosArrowBack, IoIosMenu } from "react-icons/io";
-import { Project, Contribution, AttestationNetworkType } from '@/src/types';
+import { Project, Contribution, AttestationNetworkType, AttestationDisplay } from '@/src/types';
 import AddContributionModal from './addContributionModal';
 import { useGlobalState } from '@/src/config/config';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
@@ -16,6 +16,23 @@ import { useEAS } from '@/src/hooks/useEAS';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { isMobile } from 'react-device-detect'; // Import the hook
 import Link from 'next/link';
+import { easScanEndpoints } from '@/src/utils/easScan';
+import Image from 'next/image';
+import { format } from 'date-fns';
+import { GovRandADisplay, GovCollabAndOnboardingDisplay, GovInfraAndToolingDisplay } from '@/src/types';
+
+function isGovRandADisplay(attestation: AttestationDisplay): attestation is GovRandADisplay {
+  return (attestation as GovRandADisplay).useful_for_understanding !== undefined;
+}
+
+function isGovCollabAndOnboardingDisplay(attestation: AttestationDisplay): attestation is GovCollabAndOnboardingDisplay {
+  return (attestation as GovCollabAndOnboardingDisplay).governance_knowledge !== undefined;
+}
+
+function isGovInfraAndToolingDisplay(attestation: AttestationDisplay): attestation is GovInfraAndToolingDisplay {
+  return (attestation as GovInfraAndToolingDisplay).likely_to_recommend !== undefined;
+}
+
 
 interface ProfilePageProps {
     contributions: Contribution[];
@@ -29,7 +46,8 @@ export default function ProfilePage({
     projectAttestationCount,
   }: ProfilePageProps) {
     console.log('Contributions in profile page:', contributions);
-    const [activeTab, setActiveTab] = useState('attestations');
+    console.log('Project in profile page:', project);
+    const [activeTab, setActiveTab] = useState('contributions');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedContribution, setSelectedContribution] = useState<Contribution | null>(null);
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -43,6 +61,8 @@ export default function ProfilePage({
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { switchChain } = useSwitchChain();
     const [contributionCards, setContributionCards] = useState<Contribution[]>([]);
+    const [recentAttestations, setRecentAttestations] = useState<AttestationDisplay[]>([]);
+    const [recentAttestationsLoading, setRecentAttestationsLoading] = useState(true);
     const [user] = useLocalStorage("user", {
         fid: '',
         username: '',
@@ -69,6 +89,12 @@ export default function ProfilePage({
 
         switchToProjectChain();
     }, [project, switchChain]);
+
+    useEffect(() => {
+        if (activeTab === 'insights') {
+          fetchRecentAttestations();
+        }
+      }, [activeTab]);
 
     useEffect(() => {
         const fetchContributions = async () => {
@@ -134,6 +160,29 @@ export default function ProfilePage({
         setSidebarOpen(!sidebarOpen);
     };
 
+    const fetchRecentAttestations = async () => {
+        try {
+          const response = await fetch(`${NEXT_PUBLIC_URL}/api/getAttestationsByProject`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ projectName: project.projectName }),
+          });
+    
+          const responseData = await response.json();
+          console.log('Fetched attestation data:', responseData);
+    
+          if (responseData && responseData.attestations) {
+            setRecentAttestations(responseData.attestations);
+          }
+        } catch (error) {
+          console.error('Error fetching attestations:', error);
+        } finally {
+          setRecentAttestationsLoading(false);
+        }
+      };
+
     const handleContributionAdded = (newContribution: string) => {
         const addedContribution: Contribution = {
             userFid: user.fid || '',
@@ -178,6 +227,57 @@ export default function ProfilePage({
         }
     };
 
+    const renderAttestationContent = (attestation: AttestationDisplay) => {
+        if (isGovRandADisplay(attestation)) {
+          return (
+            <>
+              <p className='text-md text-black mb-2'>{attestation.contribution}</p>
+              <p className='text-sm text-gray-500 mb-2'>Governance and Analytics</p>
+              <p className='text-sm text-gray-500 mb-2'>Useful for Understanding: {attestation.useful_for_understanding}</p>
+              <p className='text-sm text-gray-500 mb-2'>Effective for Improvements: {attestation.effective_for_improvements}</p>
+              <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+            </>
+          );
+        }
+      
+        if (isGovCollabAndOnboardingDisplay(attestation)) {
+          return (
+            <>
+              <p className='text-md text-black mb-2'>{attestation.contribution}</p>
+              <p className='text-sm text-gray-500 mb-2'>Collaboration and Onboarding</p>
+              <p className='text-sm text-gray-500 mb-2'>Governance Knowledge: {attestation.governance_knowledge}</p>
+              <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.recommend_contribution}</p>
+              <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
+              <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+            </>
+          );
+        }
+      
+        if (isGovInfraAndToolingDisplay(attestation)) {
+          return (
+            <>
+              <p className='text-md text-black mb-2'>{attestation.contribution}</p>
+              <p className='text-sm text-gray-500 mb-2'>Infrastructure and Tooling</p>
+              <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.likely_to_recommend}</p>
+              <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+            </>
+          );
+        }
+      
+        // Default case for generic attestations
+        if ('feedback' in attestation) {
+          return (
+            <>
+              <p className='text-sm text-gray-500 mb-2'>Feedback: {attestation.feedback}</p>
+              <p className='text-sm text-gray-500 mb-2'>Rating: {attestation.rating}</p>
+            </>
+          );
+        }
+      
+        return null;
+      };
+      
+
     const filteredContributions = contributions.filter((contribution) =>
         contribution.contribution.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -196,7 +296,7 @@ export default function ProfilePage({
 
     const renderContent = () => {
     switch (activeTab) {
-        case 'attestations':
+        case 'contributions':
         return (
             <div className="px-3 bg-backgroundgray">
             <div className="mb-4 flex justify-between items-center flex-col sm:flex-row">
@@ -232,7 +332,7 @@ export default function ProfilePage({
                         </p>
                     </div>
                     <div className='text-center'>
-                    <button className='btn w-1/2  '>
+                    <button className='btn w-1/2'>
                         View Contribution
                     </button>
                     </div>
@@ -243,7 +343,48 @@ export default function ProfilePage({
             </div>
         );
         case 'insights':
-        return <div className="text-black">Content for Insights, coming soon!</div>;
+        return (
+            <div className="text-black text-left">
+              <h3 className="font-semibold mb-4">Insights</h3>
+              {recentAttestationsLoading ? (
+                <p>Loading...</p>
+              ) : recentAttestations.length > 0 ? (
+                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-3 lg:gap-8 max-w-6xl overflow-y-auto'>
+                  {recentAttestations.map((attestation, index) => {
+                    const attestationLink = `${easScanEndpoints[project.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`;
+                    return (
+                      <div key={index} className='p-4 bg-white border rounded-lg shadow-md'>
+                        <div className='flex items-start mb-2'>
+                          {attestation.pfp && (
+                            <Image
+                              src={attestation.pfp}
+                              alt={attestation.username}
+                              width={40}
+                              height={40}
+                              className='mr-2 rounded-full'
+                            />
+                          )}
+                          <div>
+                            <h3 className='text-lg font-semibold'>{attestation.username}</h3>
+                            {renderAttestationContent(attestation)}
+                            <p className='text-sm text-gray-500'>
+                              {format(new Date(attestation.createdAt || ''), 'MMMM dd, yyyy')}
+                            </p>
+                            {/* <Link href={attestationLink}>
+                              <p className='text-black hover:underline'>View Attestation</p>
+                            </Link> */}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p>No attestations yet.</p>
+              )}
+            </div>
+          );
+          
         case 'charts':
         return <div className="text-black">Content for Charts, coming soon!</div>;
         default:
@@ -296,7 +437,7 @@ export default function ProfilePage({
                     </button>
 
 
-                    <button onClick={() => setActiveTab('attestations')} className={tabClasses('attestations')}>
+                    <button onClick={() => setActiveTab('contributions')} className={tabClasses('contributions')}>
                         Contributions
                     </button>
                     <button onClick={() => setActiveTab('insights')} className={tabClasses('insights')}>
