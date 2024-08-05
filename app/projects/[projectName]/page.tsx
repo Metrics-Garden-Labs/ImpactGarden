@@ -3,7 +3,7 @@
 import {  getProjectByName } from '../../../src/lib/db/dbprojects';
 import {getContributionsByProjectName} from '../../../src/lib/db/dbcontributions';
 import { getAttestationCountByProject } from '../../../src/lib/db/dbattestations';
-import { Contribution, Project } from '../../../src/types';
+import { Contribution, ContributionWithAttestationCount, Project } from '../../../src/types';
 import ProfilePage from '../profilepage1';
 import Navbar from '../../components/navbar1';
 import Footer from '../../components/footer';

@@ -24,6 +24,7 @@ import {
   NewProject,
   NewContributionAttestationGov,
   Attestation2,
+  Attestation3,
   ProjectAttestations,
 } from "@/src/types";
 import { count } from "console";
@@ -197,7 +198,6 @@ export const getAttestationsByUserId = async (
   }
 };
 //user attestations
-
 export const fetchAttestationsWithLogos = async (
   userFid: string
 ): Promise<Attestation[]> => {
@@ -244,6 +244,9 @@ export const fetchGovernanceAttestationsWithLogos = async (
       feedback: governance_infra_and_tooling.explanation,
       createdAt: governance_infra_and_tooling.createdAt,
       logoUrl: projects.logoUrl,
+      likely_to_recommend: governance_infra_and_tooling.likely_to_recommend,
+      feeling_if_didnt_exist:
+        governance_infra_and_tooling.feeling_if_didnt_exist,
     })
     .from(governance_infra_and_tooling)
     .leftJoin(
@@ -265,6 +268,9 @@ export const fetchGovernanceAttestationsWithLogos = async (
       feedback: governance_r_and_a.explanation,
       createdAt: governance_r_and_a.createdAt,
       logoUrl: projects.logoUrl,
+      likely_to_recommend: governance_r_and_a.likely_to_recommend,
+      useful_for_understanding: governance_r_and_a.useful_for_understanding,
+      effective_for_improvements: governance_r_and_a.effective_for_improvements,
     })
     .from(governance_r_and_a)
     .leftJoin(
@@ -286,6 +292,12 @@ export const fetchGovernanceAttestationsWithLogos = async (
       feedback: governance_collab_and_onboarding.explanation,
       createdAt: governance_collab_and_onboarding.createdAt,
       logoUrl: projects.logoUrl,
+      governance_knowledge:
+        governance_collab_and_onboarding.governance_knowledge,
+      recommend_contribution:
+        governance_collab_and_onboarding.recommend_contribution,
+      feeling_if_didnt_exist:
+        governance_collab_and_onboarding.feeling_if_didnt_exist,
     })
     .from(governance_collab_and_onboarding)
     .leftJoin(
@@ -294,10 +306,21 @@ export const fetchGovernanceAttestationsWithLogos = async (
     )
     .where(eq(governance_collab_and_onboarding.userfid, userFid));
 
+  const transformAttestations = (attestations: any[]): Attestation2[] =>
+    attestations.map((att) => ({
+      ...att,
+      likely_to_recommend: att.likely_to_recommend ?? undefined,
+      feeling_if_didnt_exist: att.feeling_if_didnt_exist ?? undefined,
+      useful_for_understanding: att.useful_for_understanding ?? undefined,
+      effective_for_improvements: att.effective_for_improvements ?? undefined,
+      governance_knowledge: att.governance_knowledge ?? undefined,
+      recommend_contribution: att.recommend_contribution ?? undefined,
+    }));
+
   return [
-    ...infraToolingAttestations,
-    ...rAndAAttestations,
-    ...collabOnboardingAttestations,
+    ...transformAttestations(infraToolingAttestations),
+    ...transformAttestations(rAndAAttestations),
+    ...transformAttestations(collabOnboardingAttestations),
   ];
 };
 
@@ -313,30 +336,22 @@ export const fetchAllAttestationsWithLogos = async (
       userFid
     );
 
-    // Ensure that the governanceAttestations match the Attestation type
-    const formattedGovernanceAttestations: Attestation2[] =
-      governanceAttestations.map((att) => ({
-        id: att.id,
-        userFid: att.userFid,
-        projectName: att.projectName,
-        contribution: att.contribution,
-        ecosystem: att.ecosystem,
-        attestationUID: att.attestationUID,
-        feedback: att.feedback,
-        category: att.category,
-        subcategory: att.subcategory,
-        createdAt: att.createdAt,
-        logoUrl: att.logoUrl,
-        // Add fields that exist in Attestation but not in governanceAttestations
-        attesterAddy: "",
-        isdelegate: null,
-        improvementareas: null,
-        extrafeedback: null,
-        rating: null,
+    // Ensure that the contributionAttestations match the Attestation2 type
+    const formattedContributionAttestations: Attestation2[] =
+      contributionAttestations.map((att) => ({
+        ...att,
+        category: undefined,
+        subcategory: undefined,
+        likely_to_recommend: undefined,
+        feeling_if_didnt_exist: undefined,
+        useful_for_understanding: undefined,
+        effective_for_improvements: undefined,
+        governance_knowledge: undefined,
+        recommend_contribution: undefined,
       }));
 
     // Combine and return all attestations
-    return [...contributionAttestations, ...formattedGovernanceAttestations];
+    return [...formattedContributionAttestations, ...governanceAttestations];
   } catch (error) {
     console.error("Error fetching all attestations:", error);
     throw error;

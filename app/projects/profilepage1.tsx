@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
 import { IoIosArrowBack, IoIosMenu } from "react-icons/io";
-import { Project, ContributionWithAttestationCount, AttestationNetworkType, AttestationDisplay } from '@/src/types';
+import { Project, ContributionWithAttestationCount, AttestationNetworkType, AttestationDisplay, Contribution } from '@/src/types';
 import AddContributionModal from './addContributionModal';
 import { useGlobalState } from '@/src/config/config';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
@@ -34,7 +34,7 @@ function isGovInfraAndToolingDisplay(attestation: AttestationDisplay): attestati
 }
 
 interface ProfilePageProps {
-  contributions: ContributionWithAttestationCount[];
+  contributions: Contribution[];
   project: Project;
   projectAttestationCount: number;
 }
@@ -57,7 +57,7 @@ export default function ProfilePage({
   const [attestationCount, setAttestationCount] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { switchChain } = useSwitchChain();
-  const [contributions, setContributions] = useState<ContributionWithAttestationCount[]>(initialContributions);
+  const [contributions, setContributions] = useState< Contribution[]>(initialContributions);
   const [contributionCards, setContributionCards] = useState<ContributionWithAttestationCount[]>([]);
   const [recentAttestations, setRecentAttestations] = useState<AttestationDisplay[]>([]);
   const [recentAttestationsLoading, setRecentAttestationsLoading] = useState(true);
@@ -319,9 +319,11 @@ export default function ProfilePage({
                 className="px-4 py-2 bg-backgroundgray text-black rounded-full w-full sm:w-60 border-none focus:ring-0 focus:border-none text-sm"
                 onChange={(e) => {
                   if (e.target.value === 'Most Attestations') {
-                    const sorted = [...contributions].sort(
-                      (a, b) => b.attestationCount - a.attestationCount
-                    );
+                    const sorted = [...contributions].sort((a, b) => {
+                        const countA = ( a ).attestationCount ?? 0;
+                        const countB = ( b ).attestationCount ?? 0;
+                        return countB - countA;
+                      });
                     setContributions(sorted);
                   }
                 }}

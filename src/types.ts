@@ -35,11 +35,12 @@ export interface Contribution {
   link: string | null;
   easUid: string | null;
   ethAddress: string | null;
+  attestationCount?: number;
   createdAt?: Date | null;
 }
 
 export interface ContributionWithAttestationCount extends Contribution {
-  attestationCount: number;
+  attestationCount?: number;
 }
 
 export interface NewProject {
@@ -230,7 +231,30 @@ export interface Attestation2 {
   governance_knowledge?: string;
   recommend_contribution?: string;
 }
-
+export type Attestation3 = {
+  id: number;
+  userFid: string;
+  projectName: string;
+  contribution: string | null;
+  ecosystem: string;
+  attestationUID: string;
+  feedback: string | null;
+  category: string | null;
+  subcategory: string | null;
+  createdAt: Date | null;
+  logoUrl: string | null;
+  likely_to_recommend: string | null | undefined;
+  feeling_if_didnt_exist: string | null | undefined;
+  useful_for_understanding: string | null | undefined;
+  effective_for_improvements: string | null | undefined;
+  governance_knowledge: string | null | undefined;
+  recommend_contribution: string | null | undefined;
+  attesterAddy: string | null | undefined;
+  isdelegate: boolean | null | undefined;
+  improvementareas: string | null | undefined;
+  extrafeedback: string | null | undefined;
+  rating: string | null | undefined;
+};
 export interface userAddresses {
   id: number;
   userfid: string;
