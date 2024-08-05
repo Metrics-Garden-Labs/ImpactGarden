@@ -38,6 +38,10 @@ export interface Contribution {
   createdAt?: Date | null;
 }
 
+export interface ContributionWithAttestationCount extends Contribution {
+  attestationCount: number;
+}
+
 export interface NewProject {
   userFid: string | null;
   ethAddress: string;

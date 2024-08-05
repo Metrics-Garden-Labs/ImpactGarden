@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { NEXT_PUBLIC_URL, useGlobalState } from '../../src/config/config';
-import { AttestationNetworkType, CategoryKey, Contribution, Project, higherCategoryKey } from '../../src/types';
+import { AttestationNetworkType, CategoryKey, Contribution, ContributionWithAttestationCount, Project, higherCategoryKey } from '../../src/types';
 import { useEAS, useSigner } from '../../src/hooks/useEAS';
 import { EAS, EIP712AttestationParams, SchemaEncoder, ZERO_BYTES32 } from '@ethereum-attestation-service/eas-sdk';
 import { ethers } from 'ethers';
@@ -21,7 +21,7 @@ import { Category, Subcategory, higherCategories, getSubcategories } from '@/src
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  addContribution: (contribution: Contribution) => Promise<void>;
+  addContribution: (contribution: ContributionWithAttestationCount) => Promise<void>;
   addContributionCallback: (contribution: string) => void;
 }
 

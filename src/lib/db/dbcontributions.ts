@@ -8,6 +8,9 @@ import {
   contributionattestations,
   user_addresses,
   op_delegates,
+  governance_collab_and_onboarding,
+  governance_infra_and_tooling,
+  governance_r_and_a,
 } from "../schema";
 import * as schema from "../schema";
 import { getAttestationsByAttester } from "../eas";
@@ -19,10 +22,11 @@ import {
   ProjectCount,
   Contribution,
   NewProject,
+  ContributionWithAttestationCount,
 } from "@/src/types";
 import { count } from "console";
 import { desc, sql as drizzlesql } from "drizzle-orm";
-import { inArray, eq, sql } from "drizzle-orm";
+import { inArray, eq, sql, and } from "drizzle-orm";
 
 export const db = drizzle(vercelsql, { schema });
 
@@ -65,7 +69,125 @@ export const getContributionById = async (contributionId: number) => {
 
     return contribution[0];
   } catch (error) {
-    console.error(`Error retrieving contribution '${contributionId}':`, error);
+    console.error("Error retrieving contribution:", error);
+    throw error;
+  }
+};
+
+export const getContributionsWithAttestationCounts = async (
+  projectName: string,
+  contributionName?: string
+): Promise<ContributionWithAttestationCount[]> => {
+  try {
+    const baseCondition = eq(contributions.projectName, projectName);
+    const condition = contributionName
+      ? and(baseCondition, eq(contributions.contribution, contributionName))
+      : baseCondition;
+
+    const contributionsData = await db
+      .select()
+      .from(contributions)
+      .where(condition)
+      .execute();
+
+    const results = await Promise.all(
+      contributionsData.map(async (contribution) => {
+        const count1 = await db
+          .select({ count: sql<number>`count(*)` })
+          .from(contributionattestations)
+          .where(
+            and(
+              eq(
+                contributionattestations.projectName,
+                contribution.projectName
+              ),
+              eq(
+                contributionattestations.contribution,
+                contribution.contribution
+              )
+            )
+          )
+          .execute();
+
+        const count2 = await db
+          .select({ count: sql<number>`count(*)` })
+          .from(governance_infra_and_tooling)
+          .where(
+            and(
+              eq(
+                governance_infra_and_tooling.projectName,
+                contribution.projectName
+              ),
+              eq(
+                governance_infra_and_tooling.contribution,
+                contribution.contribution
+              )
+            )
+          )
+          .execute();
+
+        const count3 = await db
+          .select({ count: sql<number>`count(*)` })
+          .from(governance_r_and_a)
+          .where(
+            and(
+              eq(governance_r_and_a.projectName, contribution.projectName),
+              eq(governance_r_and_a.contribution, contribution.contribution)
+            )
+          )
+          .execute();
+
+        const count4 = await db
+          .select({ count: sql<number>`count(*)` })
+          .from(governance_collab_and_onboarding)
+          .where(
+            and(
+              eq(
+                governance_collab_and_onboarding.projectName,
+                contribution.projectName
+              ),
+              eq(
+                governance_collab_and_onboarding.contribution,
+                contribution.contribution
+              )
+            )
+          )
+          .execute();
+
+        const totalCount =
+          Number(count1[0]?.count || 0) +
+          Number(count2[0]?.count || 0) +
+          Number(count3[0]?.count || 0) +
+          Number(count4[0]?.count || 0);
+
+        console.log(`Contribution: ${contribution.contribution}`);
+        console.log(
+          `Count from contributionattestations: ${count1[0]?.count || 0}`
+        );
+        console.log(
+          `Count from governance_infra_and_tooling: ${count2[0]?.count || 0}`
+        );
+        console.log(`Count from governance_r_and_a: ${count3[0]?.count || 0}`);
+        console.log(
+          `Count from governance_collab_and_onboarding: ${
+            count4[0]?.count || 0
+          }`
+        );
+        console.log(`Total count: ${totalCount}`);
+
+        return {
+          ...contribution,
+          attestationCount: Number(totalCount),
+        };
+      })
+    );
+
+    return results;
+  } catch (error) {
+    console.error(
+      "Error retrieving contributions with attestation counts:",
+      error
+    );
     throw error;
   }
 };
