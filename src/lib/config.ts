@@ -12,8 +12,7 @@ import { config } from "dotenv";
 // Load environment variables from .env file
 config();
 
-const POSTGRES_URL =
-  "postgres://default:4PYgnlCu3IhM@ep-calm-union-a4ngoy74-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require";
+const POSTGRES_URL = process.env.POSTGRES_URL;
 
 console.log("postgres", POSTGRES_URL);
 
