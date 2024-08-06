@@ -246,7 +246,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                 recipient: project.ethAddress || ZERO_ADDRESS,
                 expirationTime: NO_EXPIRATION,
                 revocable: true,
-                refUID: contribution.easUid || zero_uid,
+                refUID: project.primaryprojectuid || contribution.easUid || zero_uid,
                 data: encodedData,
                 value: 0n,
                 deadline: NO_EXPIRATION,

@@ -43,6 +43,7 @@ export default function ContributionPage({
         },
         body: JSON.stringify({ contribution: contribution.contribution, subcategory: contribution.subcategory }),
       });
+      console.log('Fetching attestations for:', contribution);
 
       const responseData = await response.json();
       console.log('Fetched attestation data:', responseData);
