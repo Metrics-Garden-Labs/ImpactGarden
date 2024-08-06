@@ -359,14 +359,12 @@ export type OnchainBuildersCategoryKey =
 export type GovernanceCategoryKey =
   | "Infra & Tooling"
   | "Governance Research & Analytics"
-  | "Collaboration & Onboarding"
-  | "Governance Leadership";
+  | "Collaboration & Onboarding";
+// | "Governance Leadership";
 
 export type higherCategoryKey =
-  | "Developer Tooling"
-  | "Governance"
-  | "Onchain Builders"
-  | "OP Stack";
+  // | "Developer Tooling"
+  "Governance" | "Onchain Builders" | "OP Stack";
 
 export type OPStackCategoryKey =
   | "Ethereum Core Contributions"

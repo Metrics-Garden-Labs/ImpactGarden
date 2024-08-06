@@ -3,13 +3,13 @@ import { AttestationNetworkType, Contribution, Project } from "@/src/types";
 export type Category =
   | "Governance"
   | "Onchain Builders"
-  | "Developer Tooling"
+  // | "Developer Tooling"
   | "OP Stack";
 export type Subcategory =
   | "Infra & Tooling"
   | "Governance Research & Analytics"
   | "Collaboration & Onboarding"
-  | "Governance Leadership"
+  // | "Governance Leadership"
   | "CeFi"
   | "Crosschain"
   | "DeFi"
@@ -29,7 +29,7 @@ export const subcategoryMap: Record<Category, Subcategory[]> = {
     "Infra & Tooling",
     "Governance Research & Analytics",
     "Collaboration & Onboarding",
-    "Governance Leadership",
+    // "Governance Leadership",
   ],
   "Onchain Builders": [
     "CeFi",
@@ -40,7 +40,7 @@ export const subcategoryMap: Record<Category, Subcategory[]> = {
     "Social",
     "Utilities",
   ],
-  "Developer Tooling": ["Undefined", "Waiting for Update"],
+  // "Developer Tooling": ["Undefined", "Waiting for Update"],
   "OP Stack": [
     "Ethereum Core Contributions",
     "OP Stack Research and Development",
@@ -65,7 +65,7 @@ export const networks: AttestationNetworkType[] = [
 ];
 
 export const higherCategories: { [key in Category]: string } = {
-  "Developer Tooling": "Developer Tooling",
+  // "Developer Tooling": "Developer Tooling",
   Governance: "Governance",
   "Onchain Builders": "Onchain Builders",
   "OP Stack": "OP Stack",

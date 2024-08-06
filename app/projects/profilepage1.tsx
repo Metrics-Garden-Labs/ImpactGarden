@@ -361,7 +361,7 @@ export default function ProfilePage({
                       </p>
                     </div>
                     <div className="text-center">
-                      <button className="btn w-1/2">View Contribution</button>
+                      <button className="btn w-2/3">View Contribution</button>
                     </div>
                   </div>
                 </Link>

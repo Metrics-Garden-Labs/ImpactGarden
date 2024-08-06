@@ -13,6 +13,7 @@ import GovernanceRAndAForm from '@/app/components/contributionAttestations/Gover
 import { easScanEndpoints } from '@/src/utils/easScan';
 import GovernanceCollabAndOnboarding from '@/app/components/contributionAttestations/GovernanceCollabAndOnboarding';
 import { ZeroAddress } from 'ethers';
+import AttestationModal from './AttestationModal';
 
 interface AttestationModalProps {
   isOpen: boolean;
@@ -224,6 +225,16 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
         }
         break;
       // Add more cases here for other categories...
+      default:
+        return(
+          <AttestationModal
+            isOpen={isOpen}
+            onClose={onClose}
+            contribution={contribution}
+            project={project}
+            attestationCount={attestationCount}
+          />
+        );
     }
     return null;
   };

@@ -32,7 +32,7 @@ export const networks: AttestationNetworkType[] = [
 // };
 
 export const higherCategories: { [key in higherCategoryKey]: string } = {
-  "Developer Tooling": "Developer Tooling",
+  // "Developer Tooling": "Developer Tooling",
   Governance: "Governance",
   "Onchain Builders": "Onchain Builders",
   "OP Stack": "OP Stack",
@@ -43,7 +43,7 @@ export const governanceCategories: { [key in GovernanceCategoryKey]: string } =
     "Infra & Tooling": "Infra & Tooling",
     "Governance Research & Analytics": "Governance Research & Analytics",
     "Collaboration & Onboarding": "Collaboration & Onboarding",
-    "Governance Leadership": "Governance Leadership",
+    // "Governance Leadership": "Governance Leadership",
   };
 
 export const onchainBuildersCategories: {

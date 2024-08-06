@@ -365,7 +365,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50" onClick={onClose}>
-      <div className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20" onClick={(e) => e.stopPropagation()}>
+      <div className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-2/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20" onClick={(e) => e.stopPropagation()}>
         <form className="bg-white p-8 rounded-lg" onSubmit={handleSubmit}>
           <div className="text-center pt-8 p-2">
             <h2 className="text-xl font-bold mb-4">Add New Contribution</h2>
