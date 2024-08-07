@@ -19,7 +19,7 @@ import Link from 'next/link';
 import { easScanEndpoints } from '@/src/utils/easScan';
 import Image from 'next/image';
 import { format } from 'date-fns';
-import { GovRandADisplay, GovCollabAndOnboardingDisplay, GovInfraAndToolingDisplay } from '@/src/types';
+import { GovRandADisplay, GovCollabAndOnboardingDisplay, GovInfraAndToolingDisplay, GovStructuresDisplay } from '@/src/types';
 import AttestationModalView from '../components/AttestationModalView';
 
 function isGovRandADisplay(attestation: AttestationDisplay): attestation is GovRandADisplay {
@@ -32,6 +32,10 @@ function isGovCollabAndOnboardingDisplay(attestation: AttestationDisplay): attes
 
 function isGovInfraAndToolingDisplay(attestation: AttestationDisplay): attestation is GovInfraAndToolingDisplay {
   return (attestation as GovInfraAndToolingDisplay).likely_to_recommend !== undefined;
+}
+
+function isGovStructuresOpDisplay(attestation: AttestationDisplay): attestation is GovStructuresDisplay {
+  return (attestation as GovStructuresDisplay).examples_of_usefulness !== undefined;
 }
 
 interface ProfilePageProps {
@@ -267,6 +271,17 @@ export default function ProfilePage({
           <p className='text-md text-black mb-2'>{attestation.contribution}</p>
           <p className='text-sm text-gray-500 mb-2'>Infrastructure and Tooling</p>
           <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.likely_to_recommend}</p>
+          <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+        </>
+      );
+    }
+
+    if (isGovStructuresOpDisplay(attestation)) {
+      return(
+        <>
+          <p className='text-md text-black mb-2'>{attestation.contribution}</p>
+          <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
+          <p className='text-sm text-gray-500 mb-2'>Examples of Usefulness: {attestation.examples_of_usefulness}</p>
           <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
         </>
       );

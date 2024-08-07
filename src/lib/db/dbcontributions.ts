@@ -11,6 +11,7 @@ import {
   governance_collab_and_onboarding,
   governance_infra_and_tooling,
   governance_r_and_a,
+  governance_structures_op,
 } from "../schema";
 import * as schema from "../schema";
 import { getAttestationsByAttester } from "../eas";
@@ -154,11 +155,29 @@ export const getContributionsWithAttestationCounts = async (
           )
           .execute();
 
+        const count5 = await db
+          .select({ count: sql<number>`count(*)` })
+          .from(governance_structures_op)
+          .where(
+            and(
+              eq(
+                governance_structures_op.projectName,
+                contribution.projectName
+              ),
+              eq(
+                governance_structures_op.contribution,
+                contribution.contribution
+              )
+            )
+          )
+          .execute();
+
         const totalCount =
           Number(count1[0]?.count || 0) +
           Number(count2[0]?.count || 0) +
           Number(count3[0]?.count || 0) +
           Number(count4[0]?.count || 0);
+        Number(count5[0]?.count || 0);
 
         console.log(`Contribution: ${contribution.contribution}`);
         console.log(
@@ -172,6 +191,9 @@ export const getContributionsWithAttestationCounts = async (
           `Count from governance_collab_and_onboarding: ${
             count4[0]?.count || 0
           }`
+        );
+        console.log(
+          `Count from governance_structures_op: ${count5[0]?.count || 0}`
         );
         console.log(`Total count: ${totalCount}`);
 

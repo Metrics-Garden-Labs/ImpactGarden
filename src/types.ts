@@ -200,6 +200,7 @@ export interface ProjectAttestations {
   createdAt: Date | null;
   logoUrl?: string | null;
   likely_to_recommend?: string;
+  examples_of_usefulness?: string;
   feeling_if_didnt_exist?: string;
   useful_for_understanding?: string;
   effective_for_improvements?: string;
@@ -495,10 +496,10 @@ interface BaseAttestationDisplay {
   ecosystem: string;
 }
 
-export interface GovStructures extends BaseAttestationDisplay {
+export interface GovStructuresDisplay extends BaseAttestationDisplay {
   feeling_if_didnt_exist: string;
   explanation: string;
-  examples_of_how_usefulness: string;
+  examples_of_usefulness: string;
 }
 
 export interface GovRandADisplay extends BaseAttestationDisplay {
@@ -529,4 +530,4 @@ export type AttestationDisplay =
   | GovCollabAndOnboardingDisplay
   | GovInfraAndToolingDisplay
   | GeneralAttestationDisplay
-  | GovStructures;
+  | GovStructuresDisplay;

@@ -149,6 +149,17 @@ export default function ContributionPage({
           );
         }
         break;
+        case 'Governance Structures':
+          if ('examples_of_usefulness' in attestation) {
+          return(
+            <>
+              <p className='text-md text-black mb-2'>{attestation.contribution}</p>
+              <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
+              <p className='text-sm text-gray-500 mb-2'>Examples of Usefulness: {attestation.examples_of_usefulness}</p>
+              <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+            </>
+          );
+        }
       default:
         return null;
     }

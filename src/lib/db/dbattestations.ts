@@ -32,6 +32,7 @@ import { count } from "console";
 import { desc, sql as drizzlesql } from "drizzle-orm";
 import { inArray, eq, sql } from "drizzle-orm";
 import { string } from "zod";
+import { get } from "http";
 
 export const db = drizzle(vercelsql, { schema });
 
@@ -566,6 +567,42 @@ export const getCollabAndOnboardingAttestationsByContribution = async (
   }
 };
 
+const getGovernanceStructuresAttestationsByContribution = async (
+  contribution: string
+) => {
+  try {
+    const attestations = await db
+      .select({
+        id: governance_structures_op.id,
+        userfid: governance_structures_op.userfid,
+        username: users.username,
+        pfp: users.pfp_url,
+        projectName: governance_structures_op.projectName,
+        category: governance_structures_op.category,
+        subcategory: governance_structures_op.subcategory,
+        ecosystem: governance_structures_op.ecosystem,
+        attestationUID: governance_structures_op.attestationUID,
+        feeling_if_didnt_exist: governance_structures_op.feeling_if_didnt_exist,
+        explanation: governance_structures_op.explanation,
+        examples_of_usefulness: governance_structures_op.examples_of_usefulness,
+        private_feedback: governance_structures_op.private_feedback,
+        createdAt: governance_structures_op.createdAt,
+      })
+      .from(governance_structures_op)
+      .innerJoin(users, eq(governance_structures_op.userfid, users.fid))
+      .where(eq(governance_structures_op.contribution, contribution))
+      .orderBy(desc(governance_structures_op.createdAt));
+
+    return attestations;
+  } catch (error) {
+    console.error(
+      "Error retrieving governance structures attestations:",
+      error
+    );
+    throw error;
+  }
+};
+
 export const getAttestationsByContributionAndSubcategory = async (
   contribution: string,
   subcategory: string | null
@@ -583,6 +620,10 @@ export const getAttestationsByContributionAndSubcategory = async (
         return await getRandAAttestationsByContribution(contribution);
       case "Collaboration & Onboarding":
         return await getCollabAndOnboardingAttestationsByContribution(
+          contribution
+        );
+      case "Governance Structures":
+        return await getGovernanceStructuresAttestationsByContribution(
           contribution
         );
       default:
@@ -685,6 +726,26 @@ export const getAttestationsByProject = async (projectName: string) => {
       .where(eq(governance_collab_and_onboarding.projectName, projectName))
       .orderBy(desc(governance_collab_and_onboarding.createdAt));
 
+    const govstructuresAttestations = await db
+      .select({
+        id: governance_structures_op.id,
+        userFid: governance_structures_op.userfid,
+        username: users.username,
+        pfp: users.pfp_url,
+        projectName: governance_structures_op.projectName,
+        contribution: governance_structures_op.contribution,
+        ecosystem: governance_structures_op.ecosystem,
+        attestationUID: governance_structures_op.attestationUID,
+        feeling_if_didnt_exist: governance_structures_op.feeling_if_didnt_exist,
+        explanation: governance_structures_op.explanation,
+        examples_of_usefulness: governance_structures_op.examples_of_usefulness,
+        createdAt: governance_structures_op.createdAt,
+      })
+      .from(governance_structures_op)
+      .innerJoin(users, eq(governance_structures_op.userfid, users.fid))
+      .where(eq(governance_structures_op.projectName, projectName))
+      .orderBy(desc(governance_structures_op.createdAt));
+
     const normalizeAttestation = (att: any): ProjectAttestations => ({
       id: att.id,
       userFid: att.userFid || att.userfid,
@@ -704,6 +765,7 @@ export const getAttestationsByProject = async (projectName: string) => {
       createdAt: att.createdAt,
       logoUrl: att.logoUrl,
       likely_to_recommend: att.likely_to_recommend,
+      examples_of_usefulness: att.examples_of_usefulness,
       feeling_if_didnt_exist: att.feeling_if_didnt_exist,
       useful_for_understanding: att.useful_for_understanding,
       effective_for_improvements: att.effective_for_improvements,
@@ -716,6 +778,7 @@ export const getAttestationsByProject = async (projectName: string) => {
       ...infraToolingAttestations.map(normalizeAttestation),
       ...rAndAAttestations.map(normalizeAttestation),
       ...collabOnboardingAttestations.map(normalizeAttestation),
+      ...govstructuresAttestations.map(normalizeAttestation),
     ];
 
     return allAttestations;
