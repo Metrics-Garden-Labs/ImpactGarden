@@ -1,5 +1,8 @@
 "use client";
 
+//notes added link but it is not a cateogry in the db schema, check to see if we add it in. 
+// assume link is website acc
+
 import { networkContractAddresses, getChainId } from '../../src/utils/networkContractAddresses';
 import { useEAS, useSigner } from '../../src/hooks/useEAS';
 import { AttestationRequestData, EAS, EIP712AttestationParams, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
@@ -39,6 +42,7 @@ export default function ProjectSignUp() {
     oneliner: '',
     websiteUrl: '',
     twitterUrl: '',
+    // link: '',
     githubURL: '',
     category: "",
     farcaster: user.fid,
@@ -65,6 +69,7 @@ export default function ProjectSignUp() {
   const [attestationUID1, setAttestationUID1] = useState<string>('');
   const [imageUrl, setImageUrl] = useState<string>('');
   const [ecosystem, setEcosystem] = useState<string>('Optimism');
+  const [secondaryEcosystem, setSecondaryEcosystem] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const { switchChain } = useSwitchChain();
@@ -95,6 +100,7 @@ export default function ProjectSignUp() {
         oneliner: attestationData.oneliner,
         websiteUrl: attestationData.websiteUrl,
         twitterUrl: attestationData.twitterUrl,
+        // link: attestationData.link,
         // category: selectedHigherCategory,
         githubUrl: attestationData.githubURL,
         logoUrl: imageUrl,
@@ -127,6 +133,11 @@ export default function ProjectSignUp() {
       }
     }
   };
+
+  const handleSecondaryEcosystemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = e.target.value;
+    setSecondaryEcosystem(selectedValue);
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -289,15 +300,18 @@ export default function ProjectSignUp() {
 
     try {
       const attestationMetadata = {
-        name: attestationData.projectName,
-        farcaster: user.fid,
+        // name: attestationData.projectName,
+        // farcaster: user.fid,
+        ecosystem: ecosystem,
+        secondaryEcosystem: secondaryEcosystem,
         description: attestationData.oneliner,
-        website: attestationData.websiteUrl,
-        twitter: attestationData.twitterUrl,
-        github: attestationData.githubURL,
-        projectREFId: attestationUID,
-        logoURL: imageUrl,
-        mirror: attestationData.mirror,
+        link: attestationData.websiteUrl,
+        // link: attestationData.link, the link above was website
+        // twitter: attestationData.twitterUrl,
+        // github: attestationData.githubURL,
+        // projectREFId: attestationUID,
+        // logoURL: imageUrl,
+        // mirror: attestationData.mirror,
         // category : selectedHigherCategory,
         // subcategories: selectedCategories,
       };
@@ -348,26 +362,40 @@ export default function ProjectSignUp() {
     }
 
     try {
-      const schema2 = '0xe035e3fe27a64c8d7291ae54c6e85676addcbc2d179224fe7fc1f7f05a8c6eac';
+      // const schema2 = '0xe035e3fe27a64c8d7291ae54c6e85676addcbc2d179224fe7fc1f7f05a8c6eac';
+      const schema2 = "0x95eaf4112e9367ba2a647d107be40ac04e9f35028c1e6d64c285e9b63310cdf3";
       //need to do some research into what actually the metadata type is. 
+      // const schemaEncoder2 = new SchemaEncoder(
+      //   'bytes32 projectRefUID, uint256 farcasterID, string name, string category, bytes32 parentProjectRefUID, uint8 metadataType, string metadataURL'
+      // );
       const schemaEncoder2 = new SchemaEncoder(
-        'bytes32 projectRefUID, uint256 farcasterID, string name, string category, bytes32 parentProjectRefUID, uint8 metadataType, string metadataURL'
+          'bytes32 projectRegistrationUID, uint256 farcasterID, string projectName, string metadataUrl'
       );
 
       //for the attestaion uid this will work in this test, however i need to store this as a separate value,
       //for the confirmation to show i need to also make it dependeent of the attestationUID2
       //which will be the result of this attestation
       //the other metadata will be stored in the pinata url which i am yet to create. 
-      const encodedData2 = schemaEncoder2.encodeData([
-        { name: 'projectRefUID', value: attestationUID, type: 'bytes32' },
-        { name: 'farcasterID', value: user.fid, type: 'uint256' },
-        { name: 'name', value: attestationData.projectName, type: 'string' },
-        // { name: 'category', value: formatCategories(selectedCategories), type: 'string' },
-        { name: 'category', value: '', type: 'string' },
-        { name: 'parentProjectRefUID', value: ZERO_BYTES32, type: 'bytes32' },
-        { name: 'metadataType', value: '0', type: 'uint8' },
-        { name: 'metadataURL', value: pinataURL, type: 'string' },
+      // const encodedData2 = schemaEncoder2.encodeData([
+      //   { name: 'projectRefUID', value: attestationUID, type: 'bytes32' },
+      //   { name: 'farcasterID', value: user.fid, type: 'uint256' },
+      //   { name: 'name', value: attestationData.projectName, type: 'string' },
+      //   // { name: 'category', value: formatCategories(selectedCategories), type: 'string' },
+      //   { name: 'category', value: '', type: 'string' },
+      //   { name: 'parentProjectRefUID', value: ZERO_BYTES32, type: 'bytes32' },
+      //   { name: 'metadataType', value: '0', type: 'uint8' },
+      //   { name: 'metadataURL', value: pinataURL, type: 'string' },
+      // ]);
+
+        const encodedData2 = schemaEncoder2.encodeData([
+          { name: 'projectRegistrationUID', value: attestationUID, type: 'bytes32' },
+          { name: 'farcasterID', value: user.fid, type: 'uint256' },
+          { name: 'projectName', value: attestationData.projectName, type: 'string' },
+          { name: 'metadataUrl', value: pinataURL, type: 'string' },
       ]);
+
+      //this should be everything that is needed for the new attestation
+
       const eas3 = new EAS(networkContractAddresses[selectedNetwork]?.attestAddress);
       eas3.connect(signer);
       const delegatedSigner = await eas3.getDelegated();
@@ -514,8 +542,6 @@ export default function ProjectSignUp() {
         //i am testing the new attestation.
         //maybe split these into a different try block for error handling and to figure out where the error is coming from.  
         await createAttestation1();
-        console.log('starting second attestation')
-        // await createAttestation2();
       } else {
         // If the response is not OK, assume the CAPTCHA was invalid
         console.error('Captcha is invalid');
@@ -708,6 +734,28 @@ export default function ProjectSignUp() {
                   onChange={handleNetworkChangeEvent}
                   className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 >
+                  {networks.map((network) => (
+                    <option key={network} value={network}>
+                      {network}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="secondaryEcosystem" className="block text-sm font-medium leading-6 text-gray-900">
+                What is the Secondary Ecosystem of your project? * (Optional) 
+              </label>
+              <div className="mt-2">
+                <select
+                  id="secondaryEcosystem"
+                  name="secondaryEcosystem"
+                  value={secondaryEcosystem}
+                  onChange={handleSecondaryEcosystemChange}
+                  className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                >
+                    <option>Choose Option</option>
                   {networks.map((network) => (
                     <option key={network} value={network}>
                       {network}

@@ -34,7 +34,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
               <p className="text-center">{attestation.likely_to_recommend || 'N/A'}</p>
             </div>
             <div className="mb-4">
-              <h3 className="font-semibold text-center">Feeling if Didn’t Exist</h3>
+              <h3 className="font-semibold text-center">Feeling if Contribution Didn’t Exist</h3>
               <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
             </div>
           </>
@@ -68,12 +68,24 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
               <p className="text-center">{attestation.recommend_contribution || 'N/A'}</p>
             </div>
             <div className="mb-4">
-              <h3 className="font-semibold text-center">Feeling if Didn’t Exist</h3>
+              <h3 className="font-semibold text-center">Feeling if Contribution Didn’t Exist</h3>
               <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
             </div>
           </>
         );
-      }
+      } else if (attestation.subcategory === "OP Governance Structure")
+        return (
+          <>
+            <div className="mb-4">
+              <h3 className="font-semibold text-center">Feeling If Contribution Didn’</h3>
+              <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
+            </div>
+            <div className="mb-4">
+              <h3 className="font-semibold text-center">Examples of Usefulness</h3>
+              <p className="text-center">{attestation.examples_of_usefulness}</p>
+            </div>
+          </>
+        );
     } else if ('useful_for_understanding' in attestation) {
       return (
         <>
@@ -103,7 +115,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
             <p className="text-center">{attestation.recommend_contribution}</p>
           </div>
           <div className="mb-4">
-            <h3 className="font-semibold text-center">Feeling if Didn’t Exist</h3>
+            <h3 className="font-semibold text-center">Feeling if Contribution Didn’t Exist</h3>
             <p className="text-center">{attestation.feeling_if_didnt_exist}</p>
           </div>
           {/* <div className="mb-4">
@@ -119,10 +131,6 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
             <h3 className="font-semibold text-center">Likely to Recommend</h3>
             <p className="text-center">{attestation.likely_to_recommend}</p>
           </div>
-          {/* <div className="mb-4">
-            <h3 className="font-semibold text-center">Explanation</h3>
-            <p className="text-center">{attestation.explanation}</p>
-          </div> */}
         </>
       );
     } else {

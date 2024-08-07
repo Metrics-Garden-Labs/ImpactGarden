@@ -206,6 +206,7 @@ export default function ProfilePage({
       contribution: newContribution,
       desc: '',
       link: '',
+      primarycontributionuid: '',
       easUid: '',
       ethAddress: walletAddress,
       attestationCount: 0, // Initial attestation count is 0

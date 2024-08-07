@@ -1,0 +1,2 @@
+ALTER TABLE "contributions" ADD COLUMN "primarycontributionuid" text;--> statement-breakpoint
+ALTER TABLE "contributions" ADD CONSTRAINT "contributions_primarycontributionuid_unique" UNIQUE("primarycontributionuid");

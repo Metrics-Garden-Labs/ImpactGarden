@@ -43,7 +43,7 @@ export const governanceCategories: { [key in GovernanceCategoryKey]: string } =
     "Infra & Tooling": "Infra & Tooling",
     "Governance Research & Analytics": "Governance Research & Analytics",
     "Collaboration & Onboarding": "Collaboration & Onboarding",
-    // "Governance Leadership": "Governance Leadership",
+    "OP Governance Structure": "OP Governance Structure",
   };
 
 export const onchainBuildersCategories: {

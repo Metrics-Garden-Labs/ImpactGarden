@@ -6,6 +6,7 @@ export interface Project {
   ecosystem: string;
   projectName: string;
   // category: string | null;
+  // link: string | null;
   oneliner: string | null;
   websiteUrl: string | null;
   twitterUrl: string | null;
@@ -33,6 +34,7 @@ export interface Contribution {
   secondaryecosystem: string | null;
   desc: string;
   link: string | null;
+  primarycontributionuid: string | null;
   easUid: string | null;
   ethAddress: string | null;
   attestationCount?: number;
@@ -81,6 +83,7 @@ export interface NewContribution {
   secondaryecosystem?: string;
   desc: string;
   link: string;
+  primarycontributionuid: string;
   easUid: string | null;
   ethAddress: string;
   createdAt?: Date | null;
@@ -327,6 +330,7 @@ export type AttestationData = {
   oneliner: string | "";
   websiteUrl: string;
   twitterUrl: string;
+  // link: string;
   githubURL: string;
   category: string;
   farcaster: string;
@@ -362,7 +366,7 @@ export type GovernanceCategoryKey =
   | "Infra & Tooling"
   | "Governance Research & Analytics"
   | "Collaboration & Onboarding"
-  | "OP Govenance Structures";
+  | "OP Governance Structure";
 
 export type higherCategoryKey =
   // | "Developer Tooling"
@@ -500,6 +504,7 @@ export interface GovStructuresDisplay extends BaseAttestationDisplay {
   feeling_if_didnt_exist: string;
   explanation: string;
   examples_of_usefulness: string;
+  rating?: string;
 }
 
 export interface GovRandADisplay extends BaseAttestationDisplay {

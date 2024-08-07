@@ -246,6 +246,13 @@
       "when": 1723038337560,
       "tag": "0034_dark_slyde",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1723049509662,
+      "tag": "0035_chilly_slipstream",
+      "breakpoints": true
     }
   ]
 }

@@ -82,6 +82,7 @@ export const contributions = pgTable(
     desc: text("desc").notNull(),
     link: text("link"),
     ethAddress: text("ethAddress").references(() => projects.ethAddress),
+    primarycontributionuid: text("primarycontributionuid").unique(),
     easUid: text("easUid"),
     createdAt: timestamp("createdAt").defaultNow(),
   },
