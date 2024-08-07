@@ -9,7 +9,7 @@ export type Subcategory =
   | "Infra & Tooling"
   | "Governance Research & Analytics"
   | "Collaboration & Onboarding"
-  // | "Governance Leadership"
+  | "Governance Structures"
   | "CeFi"
   | "Crosschain"
   | "DeFi"
@@ -29,7 +29,7 @@ export const subcategoryMap: Record<Category, Subcategory[]> = {
     "Infra & Tooling",
     "Governance Research & Analytics",
     "Collaboration & Onboarding",
-    // "Governance Leadership",
+    "Governance Structures",
   ],
   "Onchain Builders": [
     "CeFi",

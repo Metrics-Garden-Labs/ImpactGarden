@@ -120,6 +120,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     useEffect(() => {
         const getContributionAttestations = async () => {
             try {
+                console.log('Fetching attestations for contribution:', contribution.contribution);
                 const response = await fetch(`${NEXT_PUBLIC_URL}/api/getContributionAttestations`, {
                     method: 'POST',
                     headers: {
@@ -252,6 +253,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                 deadline: NO_EXPIRATION,
                 nonce: easnonce,
             };
+            console.log('Attestationuid reference:', project.primaryprojectuid || contribution.easUid || zero_uid);
             console.log('Attestation:', attestation);
 
             const signDelegated = await delegatedSigner.signDelegatedAttestation(attestation, signer);

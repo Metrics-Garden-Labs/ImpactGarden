@@ -11,6 +11,7 @@ import {
   governance_collab_and_onboarding,
   governance_infra_and_tooling,
   governance_r_and_a,
+  governance_structures_op,
 } from "../schema";
 import * as schema from "../schema";
 import { getAttestationsByAttester } from "../eas";
@@ -358,6 +359,25 @@ export const fetchAllAttestationsWithLogos = async (
   }
 };
 /////////////////
+export const insertGovernanceStructuresAttestation = async (
+  attestation: NewContributionAttestationGov
+) => {
+  try {
+    console.log(
+      "Inserting Governance Structures attestation into the database"
+    );
+    const result = await db
+      .insert(governance_structures_op)
+      .values(attestation)
+      .returning();
+    console.log("Governance Structures attestation inserted successfully");
+    return result;
+  } catch (error) {
+    console.error("Error inserting Governance Structures attestation:", error);
+    throw error;
+  }
+};
+
 export const insertGovernanceInfraToolingAttestation = async (
   attestation: NewContributionAttestationGov
 ) => {

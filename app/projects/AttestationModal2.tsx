@@ -12,6 +12,7 @@ import GovernanceInfraToolingForm from '@/app/components/contributionAttestation
 import GovernanceRAndAForm from '@/app/components/contributionAttestations/GovernanceR&A';
 import { easScanEndpoints } from '@/src/utils/easScan';
 import GovernanceCollabAndOnboarding from '@/app/components/contributionAttestations/GovernanceCollabAndOnboarding';
+import GovernanceStructuresFrom from '../components/contributionAttestations/GovernanceStructures';
 import { ZeroAddress } from 'ethers';
 import AttestationModal from './AttestationModal';
 
@@ -32,6 +33,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
 }) => {
   const [isdelegate, setIsDelegate] = useState(false);
   const [feedback, setFeedback] = useState('');
+  const [feedback2, setFeedback2] = useState('');
   const [extrafeedback, setExtraFeedback] = useState('');
   const [walletAddress] = useGlobalState('walletAddress');
   const [fid] = useGlobalState('fid');
@@ -221,6 +223,30 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 onClose={onClose}
               />
             );
+          case 'Governance Structures':
+            return (
+              <GovernanceStructuresFrom
+                handleRating1={handleRating1}
+                handleRating2={handleRating2}
+                handleRating3={handleRating3}
+                handleSmileyRating={handleSmileyRating}
+                smileyRating={smileyRating}
+                rating1={rating1}
+                rating2={rating2}
+                rating3={rating3}
+                contributionRoles={contributionRoles}
+                handleClick={handleClick}
+                labels={labels}
+                feedback={feedback}
+                setFeedback={setFeedback}
+                feedback2={feedback2}
+                setFeedback2={setFeedback2}
+                extrafeedback={extrafeedback}
+                setExtraFeedback={setExtraFeedback}
+                onSubmit={handleFormSubmit}
+                onClose={onClose}
+              />
+            )
           // Add more cases here for other subcategories under Governance...
         }
         break;

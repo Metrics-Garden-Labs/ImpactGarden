@@ -5,11 +5,13 @@ import {
   GovernanceRandAAttestation,
   GovernanceCollabAndOnboardingAttestation,
   NewContributionAttestationGov,
+  GovernanceStrucutresAttestation,
 } from "@/src/types";
 import {
   insertGovernanceInfraToolingAttestation,
   insertGovernanceRandAAttestation,
   insertGovernanceCollabAndOnboardingAttestation,
+  insertGovernanceStructuresAttestation,
 } from "@/src/lib/db/dbattestations";
 
 export const POST = async (request: Request) => {
@@ -40,6 +42,11 @@ export const POST = async (request: Request) => {
               await insertGovernanceCollabAndOnboardingAttestation(
                 newAttestation as GovernanceCollabAndOnboardingAttestation
               );
+            break;
+          case "Governance Structures":
+            insertedAttestation = await insertGovernanceStructuresAttestation(
+              newAttestation as GovernanceStrucutresAttestation
+            );
             break;
           default:
             throw new Error(`Unsupported category: ${newAttestation.category}`);

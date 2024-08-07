@@ -197,7 +197,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       const encodedData1 = schemaEncoder2.encodeData([
         { name: 'projectRefUID', value: selectedProject?.projectUid || '', type: 'bytes32' },
         { name: 'farcasterID', value: user.fid, type: 'uint256' },
-        { name: 'name', value: selectedProject?.projectName || '', type: 'string' },
+        { name: 'name', value: formData.contribution || '', type: 'string' },
         { name: 'category', value: formData.category || '', type: 'string' },
         { name: 'parentProjectRefUID', value: selectedProject?.primaryprojectuid || '', type: 'bytes32' },
         { name: 'metadataType', value: '0', type: 'uint8' },
@@ -217,7 +217,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
         recipient: selectedProject?.ethAddress || '',
         expirationTime: NO_EXPIRATION,
         revocable: true,
-        refUID: selectedProject?.projectUid || ZERO_BYTES32,
+        refUID: selectedProject?.primaryprojectuid || ZERO_BYTES32,
         data: encodedData1,
         value: 0n,
         deadline: NO_EXPIRATION,

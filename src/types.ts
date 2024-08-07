@@ -228,6 +228,7 @@ export interface Attestation2 {
   likely_to_recommend?: string;
   feeling_if_didnt_exist?: string;
   useful_for_understanding?: string;
+  examples_of_usefulness?: string;
   effective_for_improvements?: string;
   governance_knowledge?: string;
   recommend_contribution?: string;
@@ -359,8 +360,8 @@ export type OnchainBuildersCategoryKey =
 export type GovernanceCategoryKey =
   | "Infra & Tooling"
   | "Governance Research & Analytics"
-  | "Collaboration & Onboarding";
-// | "Governance Leadership";
+  | "Collaboration & Onboarding"
+  | "OP Govenance Structures";
 
 export type higherCategoryKey =
   // | "Developer Tooling"
@@ -437,11 +438,28 @@ export interface GovernanceCollabAndOnboardingAttestation {
   createdAt?: Date;
 }
 
+export interface GovernanceStrucutresAttestation {
+  userfid: string;
+  ethAddress: string;
+  projectName: string;
+  contribution: string;
+  category: string;
+  subcategory: string;
+  ecosystem: string;
+  attestationUID: string;
+  feeling_if_didnt_exist: string;
+  explanation: string;
+  examples_of_usefulness: string;
+  private_feedback: string;
+  createdAt?: Date;
+}
+
 // NewContributionAttestation will act as a union type
 export type NewContributionAttestationGov =
   | GovernanceInfraAndToolingAttestation
   | GovernanceRandAAttestation
-  | GovernanceCollabAndOnboardingAttestation;
+  | GovernanceCollabAndOnboardingAttestation
+  | GovernanceStrucutresAttestation;
 
 //these are the types that will hopefully work for displaying the attestations on the contribution page
 // export interface GovInfraAndToolingDisplay
@@ -477,6 +495,12 @@ interface BaseAttestationDisplay {
   ecosystem: string;
 }
 
+export interface GovStructures extends BaseAttestationDisplay {
+  feeling_if_didnt_exist: string;
+  explanation: string;
+  examples_of_how_usefulness: string;
+}
+
 export interface GovRandADisplay extends BaseAttestationDisplay {
   useful_for_understanding: string;
   effective_for_improvements: string;
@@ -504,4 +528,5 @@ export type AttestationDisplay =
   | GovRandADisplay
   | GovCollabAndOnboardingDisplay
   | GovInfraAndToolingDisplay
-  | GeneralAttestationDisplay;
+  | GeneralAttestationDisplay
+  | GovStructures;

@@ -112,7 +112,7 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
           <div className="mb-6">
           <label className="block text-gray-700 font-bold mb-2">
             Please give examples of how this collaboration or onboarding contribution has been useful for you. 
-            <div className="italic">Did it increase your participation?</div>
+            {/* <div className="italic">Did it increase your participation?</div> */}
           </label>
 
             <textarea

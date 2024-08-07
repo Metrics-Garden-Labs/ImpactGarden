@@ -239,6 +239,13 @@
       "when": 1722449946877,
       "tag": "0033_easy_tana_nile",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1723038337560,
+      "tag": "0034_dark_slyde",
+      "breakpoints": true
     }
   ]
 }
