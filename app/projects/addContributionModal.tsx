@@ -313,14 +313,14 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     }
   
     try {
-      const schema2 = '0xd7da3655f6cd28c4d0d4191049f9f0f1254484a9dd4d624a51242fe2089f9bd5';
+      const schema2 = '0x4921fe519ace82fb51a7318b9f79904c77800ca1db4ce8cc4d7c18293ae92f5a';
       const schemaEncoder2 = new SchemaEncoder(
-        'bytes32 contributionRegistrationUID, string subcategory, string metadataUrl'
+        'bytes32 contributionRegUID, string subcategory, string metadataurl'
       );
       const encodedData2 = schemaEncoder2.encodeData([
-        { name: 'contributionRegistrationUID', value: attestationUID1, type: 'bytes32' },
+        { name: 'contributionRegUID', value: attestationUID1, type: 'bytes32' },
         { name: 'subcategory', value: formData.subcategory || '', type: 'string' },
-        { name: 'metadataUrl', value: pinataURL2, type: 'string' },
+        { name: 'metadataurl', value: pinataURL2, type: 'string' },
       ]);
       console.log('Encoded Data2:', encodedData2);
       const easop = new EAS('0x4200000000000000000000000000000000000021');

@@ -154,15 +154,16 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     const recipientAddress = project.ethAddress && isValidEthereumAddress(project.ethAddress) ? project.ethAddress : ZERO_ADDRESS;
   
     try {
-      const schema = "0x82b263e87ec2a77abdc0994646f6bf89b6736c3e8610afc4a83b11d47a22959b";
+      const schema = "0xc9bc703e3c48be23c1c09e2f58b2b6657e42d8794d2008e3738b4ab0e2a3a8b6";
       const schemaEncoder = new SchemaEncoder(
-        'bytes32 contributionRegUID, bytes32 projectRegUID, uint256 farcasterID, string metadataUrl'
+        'bytes32 contributionRegUID, bytes32 projectRegUID, uint256 farcasterID, string issuer, string metadataurl'
       );
       const encodedData = schemaEncoder.encodeData([
         { name: 'contributionRegUID', type: 'bytes32', value: contribution.primarycontributionuid || "" },
         { name: 'projectRegUID', type: 'bytes32', value: project.primaryprojectuid || "" },
         { name: 'farcasterID', type: 'uint256', value: user.fid },
-        { name: 'metadataUrl', type: 'string', value: pinataURL },
+        { name: 'issuer', type: 'string', value: "MGL" },
+        { name: 'metadataurl', type: 'string', value: pinataURL },
       ]);
       const easop = new EAS('0x4200000000000000000000000000000000000021');
       easop.connect(signer);

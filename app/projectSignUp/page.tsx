@@ -363,13 +363,13 @@ export default function ProjectSignUp() {
 
     try {
       // const schema2 = '0xe035e3fe27a64c8d7291ae54c6e85676addcbc2d179224fe7fc1f7f05a8c6eac';
-      const schema2 = "0x95eaf4112e9367ba2a647d107be40ac04e9f35028c1e6d64c285e9b63310cdf3";
+      const schema2 = "0x0de72a1e3d38bf069bce8e5b705dbf8421f921a830b046a6605d6050d1760dcd";
       //need to do some research into what actually the metadata type is. 
       // const schemaEncoder2 = new SchemaEncoder(
       //   'bytes32 projectRefUID, uint256 farcasterID, string name, string category, bytes32 parentProjectRefUID, uint8 metadataType, string metadataURL'
       // );
       const schemaEncoder2 = new SchemaEncoder(
-          'bytes32 projectRegistrationUID, uint256 farcasterID, string projectName, string metadataUrl'
+          'bytes32 projectRegUID, uint256 farcasterID, string projectname, string metadataurl'
       );
 
       //for the attestaion uid this will work in this test, however i need to store this as a separate value,
@@ -388,10 +388,10 @@ export default function ProjectSignUp() {
       // ]);
 
         const encodedData2 = schemaEncoder2.encodeData([
-          { name: 'projectRegistrationUID', value: attestationUID, type: 'bytes32' },
+          { name: 'projectRegUID', value: attestationUID, type: 'bytes32' },
           { name: 'farcasterID', value: user.fid, type: 'uint256' },
-          { name: 'projectName', value: attestationData.projectName, type: 'string' },
-          { name: 'metadataUrl', value: pinataURL, type: 'string' },
+          { name: 'projectname', value: attestationData.projectName, type: 'string' },
+          { name: 'metadataurl', value: pinataURL, type: 'string' },
       ]);
 
       //this should be everything that is needed for the new attestation
