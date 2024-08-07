@@ -6,15 +6,14 @@ import AttestationCreationModal from '../components/attestationCreationModal';
 import AttestationConfirmationModal from '../components/attestationConfirmationModal';
 import { isAddress } from 'ethers';
 import { EIP712AttestationParams, EAS, SchemaEncoder, ZERO_ADDRESS, NO_EXPIRATION } from '@ethereum-attestation-service/eas-sdk';
-import { ethers } from 'ethers';
 import { Contribution, ContributionAttestationWithUsername, Project, contributionRolesKey } from '@/src/types';
 import GovernanceInfraToolingForm from '@/app/components/contributionAttestations/GovernanceInfraToolingForm';
 import GovernanceRAndAForm from '@/app/components/contributionAttestations/GovernanceR&A';
 import { easScanEndpoints } from '@/src/utils/easScan';
 import GovernanceCollabAndOnboarding from '@/app/components/contributionAttestations/GovernanceCollabAndOnboarding';
 import GovernanceStructuresFrom from '../components/contributionAttestations/GovernanceStructures';
-import { ZeroAddress } from 'ethers';
-import AttestationModal from './AttestationModal';
+import { useSigner, useEAS } from '../../src/hooks/useEAS';
+import pinataSDK from '@pinata/sdk';
 
 interface AttestationModalProps {
   isOpen: boolean;
@@ -46,6 +45,8 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   const [rating2, setRating2] = useState(0);
   const [rating3, setRating3] = useState(0);
   const [smileyRating, setSmileyRating] = useState(0);
+  const signer = useSigner();
+  const { eas, currentAddress, address, handleNetworkChange, selectedNetwork } = useEAS();
   const [user] = useLocalStorage("user", {
     fid: '',
     username: '',
@@ -112,13 +113,196 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     }));
   };
 
+  const isValidEthereumAddress = (address: string): boolean => {
+    return isAddress(project.ethAddress);
+  };
+
+  const pinataUpload = async (compiledData: any) => {
+    const pin = new pinataSDK({ pinataJWTKey: process.env.NEXT_PUBLIC_PINATA_JWT_KEY });
+
+    try {
+      const res = await pin.pinJSONToIPFS(compiledData);
+      if (!res || !res.IpfsHash) {
+        throw new Error('Invalid response from Pinata');
+      }
+      const pinataURL = `https://gateway.pinata.cloud/ipfs/${res.IpfsHash}`;
+      console.log('Pinata URL:', pinataURL);
+      return pinataURL;
+    } catch (error) {
+      console.error('Failed to upload to pinata:', error);
+      alert('An error occurred while uploading to pinata. Please try again.');
+      return '';
+    }
+  };
+
+  const createAttestation = async (pinataURL: string): Promise<string> => {
+    if (!user.fid) {
+      alert('User not logged in');
+      return '';
+    }
+  
+    if (!eas || !currentAddress) {
+      alert('Please connect your wallet to continue');
+      return '';
+    }
+  
+    if (!signer) {
+      console.error('Signer not available');
+      return '';
+    }
+  
+    const recipientAddress = project.ethAddress && isValidEthereumAddress(project.ethAddress) ? project.ethAddress : ZERO_ADDRESS;
+  
+    try {
+      const schema = "0x82b263e87ec2a77abdc0994646f6bf89b6736c3e8610afc4a83b11d47a22959b";
+      const schemaEncoder = new SchemaEncoder(
+        'bytes32 contributionRegUID, bytes32 projectRegUID, uint256 farcasterID, string metadataUrl'
+      );
+      const encodedData = schemaEncoder.encodeData([
+        { name: 'contributionRegUID', type: 'bytes32', value: contribution.primarycontributionuid || "" },
+        { name: 'projectRegUID', type: 'bytes32', value: project.primaryprojectuid || "" },
+        { name: 'farcasterID', type: 'uint256', value: user.fid },
+        { name: 'metadataUrl', type: 'string', value: pinataURL },
+      ]);
+      const easop = new EAS('0x4200000000000000000000000000000000000021');
+      easop.connect(signer);
+      const delegatedSigner = await easop.getDelegated();
+      const easnonce = await easop.getNonce(currentAddress);
+  
+      const attestationData: EIP712AttestationParams = {
+        schema: schema,
+        recipient: recipientAddress,
+        expirationTime: NO_EXPIRATION,
+        revocable: true,
+        refUID: contribution.primarycontributionuid || "",
+        data: encodedData,
+        value: 0n,
+        deadline: NO_EXPIRATION,
+        nonce: easnonce,
+      };
+  
+      const signDelegated = await delegatedSigner.signDelegatedAttestation(attestationData, signer);
+      attestationData.data = encodedData;
+      const signature = signDelegated.signature;
+  
+      const dataToSend = {
+        ...attestationData,
+        signature: signature,
+        attester: currentAddress,
+      };
+  
+      const serialisedData = JSON.stringify(dataToSend, (key, value) =>
+        typeof value === 'bigint' ? value.toString() : value
+      );
+  
+      const response = await fetch(`${NEXT_PUBLIC_URL}/api/delegateAttestation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: serialisedData,
+      });
+      const responseData = await response.json();
+  
+      if (responseData.success) {
+        setAttestationUID(responseData.attestationUID);
+        return responseData.attestationUID;
+      } else {
+        throw new Error(`Failed to create attestations, Error: ${responseData.error}`);
+      }
+    } catch (error: any) {
+      if (error.code === 4001) {
+        alert('Transaction was rejected by the user.');
+      } else {
+        alert('An error occurred while creating attestation. Please try again.');
+      }
+      return '';
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+
+  const extractCollabAndOnboardingData = (formData: any) => {
+    return {
+      governance_knowledge: formData.governance_knowledge,
+      recommend_contribution: formData.recommend_contribution,
+      feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
+      explanation: formData.explanation,
+      private_feedback: formData.private_feedback,
+    };
+  };
+
+  const extractInfraToolingData = (formData: any) => {
+    return {
+      likely_to_recommend: formData.likely_to_recommend,
+      feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
+      explanation: formData.explanation,
+      private_feedback: formData.private_feedback,
+    };
+  };
+
+  const extractRAndDData = (formData: any) => {
+    return {
+      likely_to_recommend: formData.likely_to_recommend,
+      useful_for_understanding: formData.useful_for_understanding,
+      effective_for_improvements: formData.effective_for_improvements,
+      explanation: formData.explanation,
+      private_feedback: formData.private_feedback,
+    };
+  };
+
+  const extractStructuresData = (formData: any) => {
+    return {
+      feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
+      why: formData.why,
+      explanation: formData.explanation,
+      private_feedback: formData.private_feedback,
+    };
+  };
+
+  const compileFormData = (commonData: any, subcategory: string, specificData: any) => {
+    return {
+      ...commonData,
+      subcategory,
+      data: specificData,
+    };
+  };
+
   const handleFormSubmit = async (formData: any) => {
     try {
+      setIsLoading(true);
       console.log('Form Data:', formData);
-      const attestationUID = ZeroAddress;
-      const attestationData = { 
+
+      let specificData;
+      switch (contribution.subcategory) {
+        case 'Collaboration & Onboarding':
+          specificData = extractCollabAndOnboardingData(formData);
+          break;
+        case 'Infra & Tooling':
+          specificData = extractInfraToolingData(formData);
+          break;
+        case 'Governance Research & Analytics':
+          specificData = extractRAndDData(formData);
+          break;
+        case 'Governance Structures':
+          specificData = extractStructuresData(formData);
+          break;
+        default:
+          throw new Error('Unknown subcategory');
+      }
+
+      const compiledData = compileFormData(contribution, contribution.subcategory, specificData);
+
+      const pinataURL = await pinataUpload(compiledData);
+      if (!pinataURL) throw new Error('Failed to upload data to IPFS');
+
+      const attestationUID = await createAttestation(pinataURL);
+      if (!attestationUID) throw new Error('Failed to create attestation');
+
+      const attestationData = {
         userfid: user.fid,
-        ethaddress: user.ethAddress,
+        ethaddress: currentAddress,
         projectName: contribution.projectName,
         contribution: contribution.contribution,
         category: contribution.category,
@@ -129,7 +313,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
       };
 
       console.log('Attestation Data:', attestationData);
-  
+
       const response = await fetch(`${NEXT_PUBLIC_URL}/api/addGovernanceAttestation`, {
         method: 'POST',
         headers: {
@@ -137,21 +321,22 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
         },
         body: JSON.stringify(attestationData),
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to submit attestation');
       }
-  
+
       const result = await response.json();
       console.log('Submission result:', result);
-  
+
       // Close the modal after submission
       onClose();
     } catch (error) {
       console.error('Error submitting form:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
-  
 
   if (!isOpen) return null;
 
@@ -246,20 +431,14 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 onSubmit={handleFormSubmit}
                 onClose={onClose}
               />
-            )
+            );
           // Add more cases here for other subcategories under Governance...
         }
         break;
       // Add more cases here for other categories...
       default:
-        return(
-          <AttestationModal
-            isOpen={isOpen}
-            onClose={onClose}
-            contribution={contribution}
-            project={project}
-            attestationCount={attestationCount}
-          />
+        return (
+          <div>No form available for the selected subcategory.</div>
         );
     }
     return null;
@@ -269,7 +448,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     <div>
       {renderForm()}
       {isLoading && <AttestationCreationModal />}
-      {attestationUID && selectedProject &&(
+      {attestationUID  && (
         <AttestationConfirmationModal
           attestationUID={attestationUID}
           attestationType={contribution}

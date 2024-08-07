@@ -232,7 +232,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       );
       console.log('Serialised Data:', serialisedData);
   
-      const response = await fetch(`/api/projectAttestation`, {
+      const response = await fetch(`${NEXT_PUBLIC_URL}/api/projectAttestation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -361,7 +361,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       );
       console.log('Serialised Data:', serialisedData);
   
-      const response = await fetch(`/api/delegateAttestation`, {
+      const response = await fetch(`${NEXT_PUBLIC_URL}/api/delegateAttestation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
