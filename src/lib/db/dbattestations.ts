@@ -12,6 +12,7 @@ import {
   governance_infra_and_tooling,
   governance_r_and_a,
   governance_structures_op,
+  onchain_builders,
 } from "../schema";
 import * as schema from "../schema";
 import { getAttestationsByAttester } from "../eas";
@@ -379,6 +380,23 @@ export const insertGovernanceStructuresAttestation = async (
   }
 };
 
+export const insertOnchainBuildersAttestation = async (
+  attestation: NewContributionAttestationGov
+) => {
+  try {
+    console.log("Inserting Onchain Builders attestation into the database");
+    const result = await db
+      .insert(onchain_builders)
+      .values(attestation)
+      .returning();
+    console.log("Onchain Builders attestation inserted successfully");
+    return result;
+  } catch (error) {
+    console.error("Error inserting Onchain Builders attestation:", error);
+    throw error;
+  }
+};
+
 export const insertGovernanceInfraToolingAttestation = async (
   attestation: NewContributionAttestationGov
 ) => {
@@ -456,6 +474,38 @@ const subcategoryTableMap: { [key: string]: any } = {
   "Governance Research & Analytics": governance_r_and_a,
   "Collaboration & Onboarding": governance_collab_and_onboarding,
   //add the other categories here
+};
+export const getOnchainBuildersAttestationsByContribution = async (
+  contribution: string
+) => {
+  try {
+    const attestations = await db
+      .select({
+        id: onchain_builders.id,
+        userfid: onchain_builders.userfid,
+        username: users.username,
+        pfp: users.pfp_url,
+        projectName: onchain_builders.projectName,
+        category: onchain_builders.category,
+        subcategory: onchain_builders.subcategory,
+        ecosystem: onchain_builders.ecosystem,
+        attestationUID: onchain_builders.attestationUID,
+        feeling_if_didnt_exist: onchain_builders.feeling_if_didnt_exist,
+        likely_to_recommend: onchain_builders.recommend_contribution,
+        explanation: onchain_builders.explanation,
+        private_feedback: onchain_builders.private_feedback,
+        createdAt: onchain_builders.createdAt,
+      })
+      .from(onchain_builders)
+      .innerJoin(users, eq(onchain_builders.userfid, users.fid))
+      .where(eq(onchain_builders.contribution, contribution))
+      .orderBy(desc(onchain_builders.createdAt));
+
+    return attestations;
+  } catch (error) {
+    console.error("Error retrieving onchain builders attestations:", error);
+    throw error;
+  }
 };
 
 export const getInfraToolingAttestationsByContribution = async (
@@ -605,29 +655,43 @@ const getGovernanceStructuresAttestationsByContribution = async (
 
 export const getAttestationsByContributionAndSubcategory = async (
   contribution: string,
+  category: string,
   subcategory: string | null
 ) => {
   try {
+    if (!category) {
+      throw new Error("Category is required");
+    }
+
     if (!subcategory) {
       // If subcategory is null or an empty string, use the default table
       return await getContributionAttestationList(contribution);
     }
 
-    switch (subcategory) {
-      case "Infra & Tooling":
-        return await getInfraToolingAttestationsByContribution(contribution);
-      case "Governance Research & Analytics":
-        return await getRandAAttestationsByContribution(contribution);
-      case "Collaboration & Onboarding":
-        return await getCollabAndOnboardingAttestationsByContribution(
-          contribution
-        );
-      case "Governance Structures":
-        return await getGovernanceStructuresAttestationsByContribution(
-          contribution
-        );
+    switch (category) {
+      case "Onchain Builders":
+        return await getOnchainBuildersAttestationsByContribution(contribution);
+      case "Governance":
+        switch (subcategory) {
+          case "Infra & Tooling":
+            return await getInfraToolingAttestationsByContribution(
+              contribution
+            );
+          case "Governance Research & Analytics":
+            return await getRandAAttestationsByContribution(contribution);
+          case "Collaboration & Onboarding":
+            return await getCollabAndOnboardingAttestationsByContribution(
+              contribution
+            );
+          case "Governance Structures":
+            return await getGovernanceStructuresAttestationsByContribution(
+              contribution
+            );
+          default:
+            throw new Error(`Unsupported subcategory: ${subcategory}`);
+        }
       default:
-        throw new Error(`Unsupported subcategory: ${subcategory}`);
+        throw new Error(`Unsupported category: ${category}`);
     }
   } catch (error) {
     console.error("Error retrieving attestations:", error);
@@ -746,6 +810,26 @@ export const getAttestationsByProject = async (projectName: string) => {
       .where(eq(governance_structures_op.projectName, projectName))
       .orderBy(desc(governance_structures_op.createdAt));
 
+    const onchainBuildersAttestations = await db
+      .select({
+        id: onchain_builders.id,
+        userFid: onchain_builders.userfid,
+        username: users.username,
+        pfp: users.pfp_url,
+        projectName: onchain_builders.projectName,
+        contribution: onchain_builders.contribution,
+        ecosystem: onchain_builders.ecosystem,
+        attestationUID: onchain_builders.attestationUID,
+        recommend_contribution: onchain_builders.recommend_contribution,
+        feeling_if_didnt_exist: onchain_builders.feeling_if_didnt_exist,
+        explanation: onchain_builders.explanation,
+        createdAt: onchain_builders.createdAt,
+      })
+      .from(onchain_builders)
+      .innerJoin(users, eq(onchain_builders.userfid, users.fid))
+      .where(eq(onchain_builders.projectName, projectName))
+      .orderBy(desc(onchain_builders.createdAt));
+
     const normalizeAttestation = (att: any): ProjectAttestations => ({
       id: att.id,
       userFid: att.userFid || att.userfid,
@@ -779,6 +863,7 @@ export const getAttestationsByProject = async (projectName: string) => {
       ...rAndAAttestations.map(normalizeAttestation),
       ...collabOnboardingAttestations.map(normalizeAttestation),
       ...govstructuresAttestations.map(normalizeAttestation),
+      ...onchainBuildersAttestations.map(normalizeAttestation),
     ];
 
     return allAttestations;

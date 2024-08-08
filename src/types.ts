@@ -402,7 +402,7 @@ export interface OnchainBuildersAttestation {
   subcategory: string;
   ecosystem: string;
   attestationUID: string;
-  likely_to_recommend: string;
+  recommend_contribution: string;
   feeling_if_didnt_exist: string;
   createdAt?: Date;
 }
@@ -516,7 +516,7 @@ interface BaseAttestationDisplay {
 }
 
 export interface OnchainBuildersDisplay extends BaseAttestationDisplay {
-  likely_to_recommend: string;
+  recommend_contribution: string;
   feeling_if_didnt_exist: string;
   explanation?: string;
   rating?: string;

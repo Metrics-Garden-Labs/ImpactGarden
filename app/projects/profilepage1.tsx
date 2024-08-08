@@ -296,7 +296,7 @@ export default function ProfilePage({
       return (
         <>
           <p className='text-md text-black mb-2'>{attestation.contribution}</p>
-          <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.likely_to_recommend}</p>
+          <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.recommend_contribution}</p>
           <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
         </>
       );

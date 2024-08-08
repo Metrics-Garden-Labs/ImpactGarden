@@ -36,12 +36,13 @@ export default function ContributionPage({
 
   const fetchRecentAttestations = async () => {
     try {
+      console.log('Fetching attestations for:', contribution);
       const response = await fetch(`${NEXT_PUBLIC_URL}/api/getContributionAttestations2`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ contribution: contribution.contribution, subcategory: contribution.subcategory }),
+        body: JSON.stringify({ contribution: contribution.contribution, category: contribution.category, subcategory: contribution.subcategory }),
       });
       console.log('Fetching attestations for:', contribution);
 

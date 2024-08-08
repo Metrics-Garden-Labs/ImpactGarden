@@ -332,3 +332,42 @@ export const governance_structures_op = pgTable(
     };
   }
 );
+
+export const onchain_builders = pgTable(
+  "onchain_builders",
+  {
+    id: serial("id").primaryKey(),
+    userfid: text("userfid")
+      .references(() => users.fid)
+      .notNull(),
+    ethaddress: text("ethaddress"),
+    projectName: text("projectName")
+      .references(() => projects.projectName)
+      .notNull(),
+    contribution: text("contribution").references(
+      () => contributions.contribution
+    ),
+    category: text("category")
+      .references(() => projects.category)
+      .notNull(),
+    subcategory: text("subcategory")
+      .references(() => contributions.subcategory)
+      .notNull(),
+    ecosystem: text("ecosystem")
+      .references(() => projects.ecosystem)
+      .notNull(),
+    attestationUID: text("attestationUID").notNull(),
+    recommend_contribution: text("recommend_contribution"),
+    feeling_if_didnt_exist: text("feeling_if_didnt_exist"),
+    explanation: text("explanation"),
+    private_feedback: text("private_feedback"),
+    createdAt: timestamp("createdAt").defaultNow(),
+  },
+  (onchain_builders) => {
+    return {
+      onchain_buildersIdx: uniqueIndex("onchain_builders_idx").on(
+        onchain_builders.id
+      ),
+    };
+  }
+);

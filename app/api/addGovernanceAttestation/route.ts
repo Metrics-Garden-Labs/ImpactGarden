@@ -6,12 +6,14 @@ import {
   GovernanceCollabAndOnboardingAttestation,
   NewContributionAttestationGov,
   GovernanceStrucutresAttestation,
+  OnchainBuildersAttestation,
 } from "@/src/types";
 import {
   insertGovernanceInfraToolingAttestation,
   insertGovernanceRandAAttestation,
   insertGovernanceCollabAndOnboardingAttestation,
   insertGovernanceStructuresAttestation,
+  insertOnchainBuildersAttestation,
 } from "@/src/lib/db/dbattestations";
 
 export const POST = async (request: Request) => {
@@ -25,6 +27,12 @@ export const POST = async (request: Request) => {
 
     let insertedAttestation;
     switch (newAttestation.category) {
+      case "Onchain Builders":
+        insertedAttestation = await insertOnchainBuildersAttestation(
+          newAttestation
+        );
+        console.log("Inserted Attestation", insertedAttestation);
+        return NextResponse.json(insertedAttestation, { status: 200 });
       case "Governance":
         switch (newAttestation.subcategory) {
           case "Infra & Tooling":
@@ -49,11 +57,14 @@ export const POST = async (request: Request) => {
             );
             break;
           default:
-            throw new Error(`Unsupported category: ${newAttestation.category}`);
+            throw new Error(
+              `Unsupported subcategory: ${newAttestation.subcategory}`
+            );
         }
         console.log("Inserted Attestation", insertedAttestation);
-
         return NextResponse.json(insertedAttestation, { status: 200 });
+      default:
+        throw new Error(`Unsupported category: ${newAttestation.category}`);
     }
   } catch (error) {
     console.error("Error inserting Attestation", error);

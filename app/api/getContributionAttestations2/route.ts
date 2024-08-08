@@ -5,12 +5,14 @@ export const POST = async (request: Request) => {
   try {
     console.log("Received request to get attestation count");
 
-    const { contribution, subcategory } = await request.json();
+    const { contribution, category, subcategory } = await request.json();
     console.log("Contribution:", contribution);
+    console.log("Category:", category);
     console.log("Subcategory:", subcategory);
 
     const attestations = await getAttestationsByContributionAndSubcategory(
       contribution,
+      category,
       subcategory
     );
     console.log("Contribution Attestations", attestations);
