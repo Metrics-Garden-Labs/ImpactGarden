@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
 import { IoIosArrowBack, IoIosMenu } from "react-icons/io";
-import { Project, ContributionWithAttestationCount, AttestationNetworkType, AttestationDisplay, Contribution } from '@/src/types';
+import { Project, ContributionWithAttestationCount, AttestationNetworkType, AttestationDisplay, Contribution, OnchainBuildersDisplay } from '@/src/types';
 import AddContributionModal from './addContributionModal';
 import { useGlobalState } from '@/src/config/config';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
@@ -36,6 +36,10 @@ function isGovInfraAndToolingDisplay(attestation: AttestationDisplay): attestati
 
 function isGovStructuresOpDisplay(attestation: AttestationDisplay): attestation is GovStructuresDisplay {
   return (attestation as GovStructuresDisplay).examples_of_usefulness !== undefined;
+}
+
+function isOnchainBuildersDisplay(attestation : AttestationDisplay): attestation is OnchainBuildersDisplay {
+  return (attestation as OnchainBuildersDisplay).explanation == undefined;
 }
 
 interface ProfilePageProps {
@@ -284,6 +288,16 @@ export default function ProfilePage({
           <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
           <p className='text-sm text-gray-500 mb-2'>Examples of Usefulness: {attestation.examples_of_usefulness}</p>
           <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+        </>
+      );
+    }
+    
+    if(isOnchainBuildersDisplay(attestation)) {
+      return (
+        <>
+          <p className='text-md text-black mb-2'>{attestation.contribution}</p>
+          <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.likely_to_recommend}</p>
+          <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
         </>
       );
     }

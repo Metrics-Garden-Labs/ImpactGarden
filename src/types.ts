@@ -393,6 +393,20 @@ export interface RatingScaleProps {
   handleRating: (rate: number) => void;
 }
 
+export interface OnchainBuildersAttestation {
+  userfid: string;
+  ethaddress: string;
+  projectName: string;
+  contribution: string;
+  category: string;
+  subcategory: string;
+  ecosystem: string;
+  attestationUID: string;
+  likely_to_recommend: string;
+  feeling_if_didnt_exist: string;
+  createdAt?: Date;
+}
+
 export interface GovernanceInfraAndToolingAttestation {
   userfid: string;
   ethaddress: string;
@@ -464,7 +478,8 @@ export type NewContributionAttestationGov =
   | GovernanceInfraAndToolingAttestation
   | GovernanceRandAAttestation
   | GovernanceCollabAndOnboardingAttestation
-  | GovernanceStrucutresAttestation;
+  | GovernanceStrucutresAttestation
+  | OnchainBuildersAttestation;
 
 //these are the types that will hopefully work for displaying the attestations on the contribution page
 // export interface GovInfraAndToolingDisplay
@@ -498,6 +513,13 @@ interface BaseAttestationDisplay {
   attestationUID: string;
   contribution: string;
   ecosystem: string;
+}
+
+export interface OnchainBuildersDisplay extends BaseAttestationDisplay {
+  likely_to_recommend: string;
+  feeling_if_didnt_exist: string;
+  explanation?: string;
+  rating?: string;
 }
 
 export interface GovStructuresDisplay extends BaseAttestationDisplay {
@@ -535,4 +557,5 @@ export type AttestationDisplay =
   | GovCollabAndOnboardingDisplay
   | GovInfraAndToolingDisplay
   | GeneralAttestationDisplay
-  | GovStructuresDisplay;
+  | GovStructuresDisplay
+  | OnchainBuildersDisplay;

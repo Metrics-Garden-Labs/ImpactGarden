@@ -101,9 +101,9 @@ export default function ContributionPage({
   };
 
   const renderAttestationContent = (attestation: AttestationDisplay) => {
-    const { subcategory } = contribution;
+    const { subcategory, category } = contribution;
 
-    if (!subcategory || subcategory === '') {
+    if (!subcategory || subcategory === "" || category === "" || !category ) {
       if('feedback' in attestation) {
       // Default case for generic attestations
       return (
@@ -114,9 +114,8 @@ export default function ContributionPage({
       );
     }
     }
-
-    switch (contribution.subcategory) {
-      case 'Infra & Tooling':
+    switch (contribution.category)  {
+      case "Onchain Builders":
         if ('likely_to_recommend' in attestation) {
           return (
             <>
@@ -126,40 +125,53 @@ export default function ContributionPage({
           );
         }
         break;
-      case 'Governance Research & Analytics':
-        if ('useful_for_understanding' in attestation) {
-          return (
-            <>
-              <p className='text-sm text-gray-500 mb-2'>Useful for Understanding: {attestation.useful_for_understanding}</p>
-              <p className='text-sm text-gray-500 mb-2'>Effective for Improvements: {attestation.effective_for_improvements}</p>
-              <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
-            </>
-          );
-        }
-        break;
-      case 'Collaboration & Onboarding':
-        if ('governance_knowledge' in attestation) {
-          return (
-            <>
-              <p className='text-sm text-gray-500 mb-2'>Governance Knowledge: {attestation.governance_knowledge}</p>
-              <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.recommend_contribution}</p>
-              <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
-              <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
-            </>
-          );
-        }
-        break;
-        case 'Governance Structures':
-          if ('examples_of_usefulness' in attestation) {
-          return(
-            <>
-              <p className='text-md text-black mb-2'>{attestation.contribution}</p>
-              <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
-              <p className='text-sm text-gray-500 mb-2'>Examples of Usefulness: {attestation.examples_of_usefulness}</p>
-              <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
-            </>
-          );
-        }
+      case "Governance":
+        switch (contribution.subcategory) {
+          case 'Infra & Tooling':
+            if ('likely_to_recommend' in attestation) {
+              return (
+                <>
+                  <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.likely_to_recommend}</p>
+                  <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+                </>
+              );
+            }
+            break;
+          case 'Governance Research & Analytics':
+            if ('useful_for_understanding' in attestation) {
+              return (
+                <>
+                  <p className='text-sm text-gray-500 mb-2'>Useful for Understanding: {attestation.useful_for_understanding}</p>
+                  <p className='text-sm text-gray-500 mb-2'>Effective for Improvements: {attestation.effective_for_improvements}</p>
+                  <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+                </>
+              );
+            }
+            break;
+          case 'Collaboration & Onboarding':
+            if ('governance_knowledge' in attestation) {
+              return (
+                <>
+                  <p className='text-sm text-gray-500 mb-2'>Governance Knowledge: {attestation.governance_knowledge}</p>
+                  <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.recommend_contribution}</p>
+                  <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
+                  <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+                </>
+              );
+            }
+            break;
+            case 'Governance Structures':
+              if ('examples_of_usefulness' in attestation) {
+              return(
+                <>
+                  <p className='text-md text-black mb-2'>{attestation.contribution}</p>
+                  <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
+                  <p className='text-sm text-gray-500 mb-2'>Examples of Usefulness: {attestation.examples_of_usefulness}</p>
+                  <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+                </>
+              );
+            }
+    }
       default:
         return null;
     }
@@ -175,6 +187,9 @@ export default function ContributionPage({
               <h2 className="text-xl font-bold mb-4">
                 {contribution.contribution}
               </h2>
+              <h3 className="font-semibold text-left">{contribution.category}</h3>
+              <h3 className="font-semibold text-left">{contribution.subcategory}</h3>
+
             </div>
             <hr className="border-1 border-gray-300 my-2 mx-auto w-1/2" />
             <div className="mb-4 items-left py-3 max-h-96 overflow-y-auto">

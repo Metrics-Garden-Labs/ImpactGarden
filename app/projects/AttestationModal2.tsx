@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { NEXT_PUBLIC_URL, useGlobalState } from '@/src/config/config';
@@ -5,15 +7,17 @@ import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import AttestationCreationModal from '../components/attestationCreationModal';
 import AttestationConfirmationModal from '../components/attestationConfirmationModal';
 import { isAddress } from 'ethers';
-import { EIP712AttestationParams, EAS, SchemaEncoder, ZERO_ADDRESS, NO_EXPIRATION } from '@ethereum-attestation-service/eas-sdk';
+import { EIP712AttestationParams, EAS, SchemaEncoder, ZERO_ADDRESS, NO_EXPIRATION, ZERO_BYTES32 } from '@ethereum-attestation-service/eas-sdk';
 import { Contribution, ContributionAttestationWithUsername, Project, contributionRolesKey } from '@/src/types';
-import GovernanceInfraToolingForm from '@/app/components/contributionAttestations/GovernanceInfraToolingForm';
-import GovernanceRAndAForm from '@/app/components/contributionAttestations/GovernanceR&A';
-import { easScanEndpoints } from '@/src/utils/easScan';
-import GovernanceCollabAndOnboarding from '@/app/components/contributionAttestations/GovernanceCollabAndOnboarding';
-import GovernanceStructuresFrom from '../components/contributionAttestations/GovernanceStructures';
+import GovernanceInfraToolingForm from '@/app/components/governanceAttestations/GovernanceInfraToolingForm';
+import GovernanceRAndAForm from '@/app/components/governanceAttestations/GovernanceR&A';
+import GovernanceCollabAndOnboarding from '@/app/components/governanceAttestations/GovernanceCollabAndOnboarding';
+import GovernanceStructuresFrom from '../components/governanceAttestations/GovernanceStructures';
+import OnchainBuildersForm from '@/app/components/onchainBuildersAttstations/attesttationForm';
 import { useSigner, useEAS } from '../../src/hooks/useEAS';
 import pinataSDK from '@pinata/sdk';
+import { easScanEndpoints } from '@/src/utils/easScan';
+import AttestationModal from './AttestationModal';
 
 interface AttestationModalProps {
   isOpen: boolean;
@@ -121,7 +125,9 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     const pin = new pinataSDK({ pinataJWTKey: process.env.NEXT_PUBLIC_PINATA_JWT_KEY });
 
     try {
+      console.log('Uploading to Pinata:', compiledData);
       const res = await pin.pinJSONToIPFS(compiledData);
+      console.log('Pinata response:', res);
       if (!res || !res.IpfsHash) {
         throw new Error('Invalid response from Pinata');
       }
@@ -154,6 +160,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     const recipientAddress = project.ethAddress && isValidEthereumAddress(project.ethAddress) ? project.ethAddress : ZERO_ADDRESS;
   
     try {
+      console.log('Creating attestation with URL:', pinataURL);
       const schema = "0xc9bc703e3c48be23c1c09e2f58b2b6657e42d8794d2008e3738b4ab0e2a3a8b6";
       const schemaEncoder = new SchemaEncoder(
         'bytes32 contributionRegUID, bytes32 projectRegUID, uint256 farcasterID, string issuer, string metadataurl'
@@ -165,6 +172,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
         { name: 'issuer', type: 'string', value: "MGL" },
         { name: 'metadataurl', type: 'string', value: pinataURL },
       ]);
+      console.log('Encoded data for attestation:', encodedData);
       const easop = new EAS('0x4200000000000000000000000000000000000021');
       easop.connect(signer);
       const delegatedSigner = await easop.getDelegated();
@@ -175,7 +183,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
         recipient: recipientAddress,
         expirationTime: NO_EXPIRATION,
         revocable: true,
-        refUID: contribution.primarycontributionuid || "",
+        refUID: contribution.primarycontributionuid || contribution.easUid || ZERO_BYTES32,
         data: encodedData,
         value: 0n,
         deadline: NO_EXPIRATION,
@@ -183,6 +191,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
       };
   
       const signDelegated = await delegatedSigner.signDelegatedAttestation(attestationData, signer);
+      console.log('Signed attestation data:', signDelegated);
       attestationData.data = encodedData;
       const signature = signDelegated.signature;
   
@@ -191,9 +200,10 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
         signature: signature,
         attester: currentAddress,
       };
+      console.log('Data to send:', dataToSend);
   
       const serialisedData = JSON.stringify(dataToSend, (key, value) =>
-        typeof value === 'bigint' ? value.toString() : value
+        typeof value === 'bigint' ? '0x' + value.toString(16) : value
       );
   
       const response = await fetch(`${NEXT_PUBLIC_URL}/api/delegateAttestation`, {
@@ -204,6 +214,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
         body: serialisedData,
       });
       const responseData = await response.json();
+      console.log('Delegate attestation response:', responseData);
   
       if (responseData.success) {
         setAttestationUID(responseData.attestationUID);
@@ -217,12 +228,19 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
       } else {
         alert('An error occurred while creating attestation. Please try again.');
       }
-      return '';
+      console.error('Error in createAttestation:', error);
+      return "" ;
     } finally {
       setIsLoading(false);
     }
   };
-  
+
+  const extractOnchainBuildersData = (formData: any) => {
+    return {
+      likely_to_recommend: formData.likely_to_recommend,
+      feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
+    }
+  }
 
   const extractCollabAndOnboardingData = (formData: any) => {
     return {
@@ -262,10 +280,9 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     };
   };
 
-  const compileFormData = (commonData: any, subcategory: string, specificData: any) => {
+  const compileFormData = (commonData: any, specificData: any) => {
     return {
       ...commonData,
-      subcategory,
       data: specificData,
     };
   };
@@ -276,24 +293,34 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
       console.log('Form Data:', formData);
 
       let specificData;
-      switch (contribution.subcategory) {
-        case 'Collaboration & Onboarding':
-          specificData = extractCollabAndOnboardingData(formData);
+      switch (contribution.category) {
+        case 'Onchain Builders':
+          specificData = extractOnchainBuildersData(formData);
           break;
-        case 'Infra & Tooling':
-          specificData = extractInfraToolingData(formData);
-          break;
-        case 'Governance Research & Analytics':
-          specificData = extractRAndDData(formData);
-          break;
-        case 'Governance Structures':
-          specificData = extractStructuresData(formData);
+        case 'Governance':
+          switch (contribution.subcategory) {
+            case 'Collaboration & Onboarding':
+              specificData = extractCollabAndOnboardingData(formData);
+              break;
+            case 'Infra & Tooling':
+              specificData = extractInfraToolingData(formData);
+              break;
+            case 'Governance Research & Analytics':
+              specificData = extractRAndDData(formData);
+              break;
+            case 'Governance Structures':
+              specificData = extractStructuresData(formData);
+              break;
+            default:
+              throw new Error('Unknown subcategory');
+          }
           break;
         default:
-          throw new Error('Unknown subcategory');
+          throw new Error('Unknown category');
       }
 
-      const compiledData = compileFormData(contribution, contribution.subcategory, specificData);
+      const compiledData = compileFormData(contribution, specificData);
+      console.log('Compiled Data:', compiledData);
 
       const pinataURL = await pinataUpload(compiledData);
       if (!pinataURL) throw new Error('Failed to upload data to IPFS');
@@ -342,6 +369,12 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   if (!isOpen) return null;
 
   const renderForm = () => {
+    // if (!contribution.category || !contribution.subcategory) {
+    //   return (
+    //     <div>No form available for the selected category or subcategory.</div>
+    //   );
+    // }
+    
     switch (contribution.category) {
       case 'Governance':
         switch (contribution.subcategory) {
@@ -433,13 +466,43 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 onClose={onClose}
               />
             );
-          // Add more cases here for other subcategories under Governance...
         }
         break;
-      // Add more cases here for other categories...
+      case 'Onchain Builders':
+        return (
+          <OnchainBuildersForm
+            handleRating1={handleRating1}
+            handleRating2={handleRating2}
+            handleRating3={handleRating3}
+            handleSmileyRating={handleSmileyRating}
+            smileyRating={smileyRating}
+            rating1={rating1}
+            rating2={rating2}
+            rating3={rating3}
+            contributionRoles={contributionRoles}
+            handleClick={handleClick}
+            labels={labels}
+            feedback={feedback}
+            setFeedback={setFeedback}
+            extrafeedback={extrafeedback}
+            setExtraFeedback={setExtraFeedback}
+            onSubmit={handleFormSubmit}
+            onClose={onClose}
+          />
+        );
+      case 'OP Stack':
+        return (
+          <div>No form available for OP Stack.</div>
+        );
       default:
         return (
-          <div>No form available for the selected subcategory.</div>
+          <AttestationModal 
+            contribution={contribution}
+            project={project}
+            attestationCount={attestationCount}
+            onClose={onClose}
+            isOpen={isOpen}
+          />
         );
     }
     return null;
