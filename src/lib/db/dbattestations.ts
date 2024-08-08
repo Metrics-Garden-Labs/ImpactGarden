@@ -670,7 +670,12 @@ export const getAttestationsByContributionAndSubcategory = async (
 
     switch (category) {
       case "Onchain Builders":
-        return await getOnchainBuildersAttestationsByContribution(contribution);
+        const [onchainBuildersAttestations, contributionAttestations] =
+          await Promise.all([
+            getOnchainBuildersAttestationsByContribution(contribution),
+            getContributionAttestationList(contribution),
+          ]);
+        return [...onchainBuildersAttestations, ...contributionAttestations];
       case "Governance":
         switch (subcategory) {
           case "Infra & Tooling":
@@ -688,7 +693,7 @@ export const getAttestationsByContributionAndSubcategory = async (
               contribution
             );
           default:
-            throw new Error(`Unsupported subcategory: ${subcategory}`);
+          // throw new Error(`Unsupported subcategory: ${subcategory}`);
         }
       default:
         throw new Error(`Unsupported category: ${category}`);
