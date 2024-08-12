@@ -15,7 +15,10 @@ import OnchainBuildersForm from '@/app/components/attestations/onchainBuildersAt
 import { useSigner, useEAS } from '../../src/hooks/useEAS';
 import { easScanEndpoints } from '@/src/utils/easScan';
 import AttestationModal from './AttestationModal';
-import { useContributionAttestation } from '@/src/hooks/useNormalAttestation';
+import { usePinataUpload } from '@/src/hooks/usePinataUpload';
+import { useDelegatedAttestation } from '@/src/hooks/useDelegatedAttestation';
+import { SchemaEncoder, ZERO_ADDRESS } from "@ethereum-attestation-service/eas-sdk";
+import { isAddress } from 'viem';
 
 interface AttestationModalProps {
   isOpen: boolean;
@@ -37,24 +40,22 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   const [rating2, setRating2] = useState(0);
   const [rating3, setRating3] = useState(0);
   const [smileyRating, setSmileyRating] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [attestationUID, setAttestationUID] = useState<string | null>(null);
+
   const signer = useSigner();
-  const { eas, currentAddress} = useEAS();
+  const { eas, currentAddress } = useEAS();
   const [user] = useLocalStorage("user", {
     fid: '',
     username: '',
     ethAddress: '',
   });
 
-  const [attestationUID, setAttestationUID] = useState<string | null>(null);
+  const { uploadToPinata, isUploading } = usePinataUpload();
+  const { createDelegatedAttestation, isCreating: isCreatingDelegated } = useDelegatedAttestation();
 
   const router = useRouter();
   const pathname = usePathname();
-
-  const {
-    isLoading,
-    pinataUpload,
-    createAttestation
-  } = useContributionAttestation();
 
   useEffect(() => {
     if (isOpen) {
@@ -67,6 +68,44 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     }
   }, [isOpen, contribution.id, router, pathname]);
 
+  const isValidEthereumAddress = (address: string | undefined): boolean => {
+    if (!address) return false;
+    return isAddress(address);
+  };
+
+  const createAttestation = async (pinataURL: string): Promise<string> => {
+    if (!user.fid || !eas || !currentAddress || !signer) {
+      throw new Error('Missing required data for attestation');
+    }
+
+    const schema = "0xc9bc703e3c48be23c1c09e2f58b2b6657e42d8794d2008e3738b4ab0e2a3a8b6";
+    const schemaEncoder = new SchemaEncoder(
+      'bytes32 contributionRegUID, bytes32 projectRegUID, uint256 farcasterID, string issuer, string metadataurl'
+    );
+    const encodedData = schemaEncoder.encodeData([
+      { name: 'contributionRegUID', type: 'bytes32', value: contribution.primarycontributionuid || "" },
+      { name: 'projectRegUID', type: 'bytes32', value: project.primaryprojectuid || "" },
+      { name: 'farcasterID', type: 'uint256', value: user.fid },
+      { name: 'issuer', type: 'string', value: "MGL" },
+      { name: 'metadataurl', type: 'string', value: pinataURL },
+    ]);
+
+    try {
+      const recipientAddress = project.ethAddress && isValidEthereumAddress(project.ethAddress) ? project.ethAddress : ZERO_ADDRESS;
+      const attestationUID = await createDelegatedAttestation(
+        schema,
+        encodedData,
+        recipientAddress,
+        contribution.primarycontributionuid || contribution.easUid || ""
+      );
+
+      return attestationUID;
+    } catch (error) {
+      console.error('Error in createAttestation:', error);
+      throw error;
+    }
+  };
+
   const compileFormData = (commonData: any, specificData: any) => {
     return {
       ...commonData,
@@ -76,6 +115,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
 
   const handleFormSubmit = async (formData: any) => {
     try {
+      setIsLoading(true);
       console.log('Form Data:', formData);
 
       let specificData;
@@ -130,15 +170,16 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
           throw new Error('Unknown category');
       }
 
-
       const compiledData = compileFormData(contribution, specificData);
       console.log('Compiled Data:', compiledData);
 
-      const pinataURL = await pinataUpload(compiledData);
+      const pinataURL = await uploadToPinata(compiledData);
       if (!pinataURL) throw new Error('Failed to upload data to IPFS');
 
-      const attestationUID = await createAttestation(pinataURL, contribution, project, user);
+      const attestationUID = await createAttestation(pinataURL);
       if (!attestationUID) throw new Error('Failed to create attestation');
+
+      setAttestationUID(attestationUID);
 
       const attestationData = {
         userfid: user.fid,
@@ -173,19 +214,14 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
       onClose();
     } catch (error) {
       console.error('Error submitting form:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
-  };
-
 
   if (!isOpen) return null;
 
   const renderForm = () => {
-    // if (!contribution.category || !contribution.subcategory) {
-    //   return (
-    //     <div>No form available for the selected category or subcategory.</div>
-    //   );
-    // }
-    
     switch (contribution.category) {
       case 'Governance':
         switch (contribution.subcategory) {
@@ -219,14 +255,14 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
           case 'Collaboration & Onboarding':
             return (
               <GovernanceCollabAndOnboarding
-              smileyRating={smileyRating}
-              rating1={rating1}
-              feedback={feedback}
-              extrafeedback={extrafeedback}
-              setFeedback={setFeedback}
-              setExtraFeedback={setExtraFeedback}
-              onSubmit={handleFormSubmit}
-              onClose={onClose}
+                smileyRating={smileyRating}
+                rating1={rating1}
+                feedback={feedback}
+                extrafeedback={extrafeedback}
+                setFeedback={setFeedback}
+                setExtraFeedback={setExtraFeedback}
+                onSubmit={handleFormSubmit}
+                onClose={onClose}
               />
             );
           case 'Governance Structures':
@@ -278,8 +314,8 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   return (
     <div>
       {renderForm()}
-      {isLoading && <AttestationCreationModal />}
-      {attestationUID  &&  (
+      {(isLoading || isUploading || isCreatingDelegated) && <AttestationCreationModal />}
+      {attestationUID && (
         <AttestationConfirmationModal
           attestationUID={attestationUID}
           attestationType={contribution}
@@ -290,6 +326,5 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     </div>
   );
 };
-
 
 export default AttestationModal2;

@@ -24,7 +24,7 @@ export const useNormalAttestation = () => {
 
       const eas = new EAS('0x4200000000000000000000000000000000000021');
       eas.connect(signer);
-
+      
       const attestationData: AttestationRequestData = {
         data,
         recipient,
