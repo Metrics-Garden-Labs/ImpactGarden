@@ -2,23 +2,20 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { NEXT_PUBLIC_URL, useGlobalState } from '@/src/config/config';
+import { NEXT_PUBLIC_URL } from '@/src/config/config';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import AttestationCreationModal from '../components/ui/AttestationCreationModal';
 import AttestationConfirmationModal from '../components/ui/AttestationConfirmationModal';
-import { isAddress } from 'ethers';
-import { EIP712AttestationParams, EAS, SchemaEncoder, ZERO_ADDRESS, NO_EXPIRATION, ZERO_BYTES32 } from '@ethereum-attestation-service/eas-sdk';
-import { Contribution, ContributionAttestationWithUsername, Project, contributionRolesKey } from '@/src/types';
+import { Contribution, Project } from '@/src/types';
 import GovernanceInfraToolingForm from '../components/attestations/governanceAttestationForms/GovernanceInfraToolingForm';
 import GovernanceRAndAForm from '../components/attestations/governanceAttestationForms/GovernanceR&A';
 import GovernanceCollabAndOnboarding from '../components/attestations/governanceAttestationForms/GovernanceCollabAndOnboarding';
 import GovernanceStructuresFrom from '../components/attestations/governanceAttestationForms/GovernanceStructures';
 import OnchainBuildersForm from '@/app/components/attestations/onchainBuildersAttstationForms/attesttationForm';
 import { useSigner, useEAS } from '../../src/hooks/useEAS';
-import pinataSDK from '@pinata/sdk';
 import { easScanEndpoints } from '@/src/utils/easScan';
 import AttestationModal from './AttestationModal';
-import { useContributionAttestation } from '@/src/hooks/useContributionAttestation';
+import { useContributionAttestation } from '@/src/hooks/useNormalAttestation';
 
 interface AttestationModalProps {
   isOpen: boolean;

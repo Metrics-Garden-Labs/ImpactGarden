@@ -2,16 +2,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { AttestationNetworkType, Contribution, AttestationDisplay, Project, GovInfraAndToolingDisplay } from '@/src/types'; 
+import { Contribution, AttestationDisplay, Project } from '@/src/types'; 
 import { usePathname, useRouter } from 'next/navigation';
 import { IoIosArrowBack } from "react-icons/io";
-import { FaCopy } from 'react-icons/fa';
 import AttestationModal2 from '../../AttestationModal2';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
-import Link from 'next/link';
-import { format } from 'date-fns';
-import { easScanEndpoints } from '../../../../src/utils/easScan';
-import Image from 'next/image';
 import AttestationModalView from '@/app/components/attestations/AttestationModalView';
 import AttestationCard from '@/app/components/attestations/AttestationCard';
 import ContributionDetails from '@/app/components/contributions/ContributionDetails';
@@ -158,7 +153,6 @@ export default function ContributionPage({
         <AttestationModal2
           contribution={contribution}
           project={project}
-          attestationCount={attestationCount}
           onClose={() => setIsAttestationModalOpen(false)}
           isOpen={isAttestationModalOpen}
         />
