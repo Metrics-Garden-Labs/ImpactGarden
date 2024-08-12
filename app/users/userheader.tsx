@@ -3,7 +3,7 @@ import { getUserByUsername, getUserAddressesByFid, getUserProjectAttestations } 
 import { getProjectsByUserId } from '../../src/lib/db/dbprojects';
 import { getAttestationsByUserId } from '../../src/lib/db/dbattestations';
 import { Attestation, Attestation2, Project, User } from '../../src/types';
-import Navbar from '../components/navbar1';
+import Navbar from '../components/ui/Navbar';
 import AttestationList from './attestationList';
 import { getAttestationsByCoinbaseVerified } from '../../src/utils/badges/coinbaseVerified';
 import { checkOpBadgeholder } from '../../src/utils/badges/opBadgeholder';

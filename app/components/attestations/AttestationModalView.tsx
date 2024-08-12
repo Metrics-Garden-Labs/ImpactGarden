@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 import { RxCross2 } from 'react-icons/rx';
 import { Attestation2, AttestationDisplay, AttestationNetworkType } from '@/src/types';
-import { easScanEndpoints } from '../../src/utils/easScan';
+import { easScanEndpoints } from '../../../src/utils/easScan';
 
 interface AttestationModalProps {
   attestation: Attestation2 | AttestationDisplay | null;

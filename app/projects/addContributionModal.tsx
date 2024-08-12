@@ -8,8 +8,8 @@ import { ethers } from 'ethers';
 import { RxCross2 } from 'react-icons/rx';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import Link from 'next/link';
-import AttestationCreationModal from '../components/attestationCreationModal';
-import AttestationConfirmationModal from '../components/attestationConfirmationModal';
+import AttestationCreationModal from '../components/ui/AttestationCreationModal';
+import AttestationConfirmationModal from '../components/ui/AttestationConfirmationModal';
 import { useSwitchChain } from 'wagmi';
 import { getChainId, networkContractAddresses } from '../../src/utils/networkContractAddresses';
 import pinataSDK from '@pinata/sdk';
@@ -578,7 +578,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
             )}
           </div>
           <div className="mb-4 text-center">
-            <button className="btn items-center" type="submit" disabled={isLoading}>
+            <button className="btn items-center bg-blue-500" type="submit" disabled={isLoading}>
               {isLoading ? 'Adding...' : 'Add Contribution'}
             </button>
           </div>

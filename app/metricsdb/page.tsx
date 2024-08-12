@@ -1,8 +1,8 @@
 
 import AIChatButton from '../components/ai/aichatbutton'
 import React from 'react'
-import Navbar from '@/app/components/navbar1'
-import Footer from '@/app/components/footer'
+import Navbar from '@/app/components/ui/Navbar'
+import Footer from '@/app/components/ui/Footer'
 
 
 export default function page() {

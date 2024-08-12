@@ -1,5 +1,5 @@
-import Image from 'next/image';
-import SpinnerIcon from './spinnermgl/mglspinner'; 
+
+import SpinnerIcon from './spinnermgl/mglspinner';
 import Mgltree from './spinnermgl/mgltree';
 
 export default function AttestationCreationModal() {

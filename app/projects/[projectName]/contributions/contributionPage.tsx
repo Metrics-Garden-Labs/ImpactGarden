@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 import { easScanEndpoints } from '../../../../src/utils/easScan';
 import Image from 'next/image';
-import AttestationModalView from '@/app/components/AttestationModalView';
+import AttestationModalView from '@/app/components/attestations/AttestationModalView';
 
 interface ContributionPageProps {
   contribution: Contribution;

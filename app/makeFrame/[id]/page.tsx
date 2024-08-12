@@ -1,5 +1,5 @@
 import { Contribution, Project } from '../../../src/types';
-import FrameCustomization from '../../components/FrameCustomization';
+import FrameCustomization from '../../components/frames/FrameCustomization';
 
 async function getContributionData(id: string) {
   try {

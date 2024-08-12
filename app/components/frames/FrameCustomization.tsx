@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Contribution, Project } from '../../src/types';
+import { Contribution, Project } from '../../../src/types';
 import Image from 'next/image';
 
 interface FrameCustomizationProps {

@@ -9,7 +9,7 @@ import ClientHelmetProvider from "./components/ClientHelmetProvider";
 import MatomoTracker from '../src/utils/MatomoTracker';
 import "./globals.css";
 import { Providers } from './providers';
-import Navbar from "./components/navbar1";
+import Navbar from "./components/ui/Navbar";
 
 const manrope = Manrope({ subsets: ["latin"] });
 

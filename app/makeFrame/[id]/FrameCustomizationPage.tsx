@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Contribution, Project } from '../../../src/types';
-import FramePreview from '../../components/framePreview';
+import FramePreview from '../../components/frames/framePreview';
 
 interface FrameCustomizationPageProps {
   contribution: Contribution;

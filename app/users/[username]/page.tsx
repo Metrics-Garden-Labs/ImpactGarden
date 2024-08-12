@@ -3,7 +3,7 @@
 import React from 'react';
 import { getUserByUsername, getUserAddressesByFid } from '../../../src/lib/db/dbusers';
 import { User } from '../../../src/types';
-import Navbar from '../../components/navbar1';
+import Navbar from '../../components/ui/Navbar';
 import UserHeader from '../userheader';
 import AttestationList from '../attestationList';
 import { Metadata } from 'next';

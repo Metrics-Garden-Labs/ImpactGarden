@@ -12,9 +12,9 @@ import { FaCopy } from 'react-icons/fa';
 import Link from 'next/link';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import { easScanEndpoints } from '../../src/utils/easScan';
-import AttestationCreationModal from '../components/attestationCreationModal';
+import AttestationCreationModal from '../components/ui/AttestationCreationModal';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'; // Import hooks from next/navigation
-import AttestationConfirmationModal from '../components/attestationConfirmationModal';
+import AttestationConfirmationModal from '../components/ui/AttestationConfirmationModal';
 import { useSigner, useEAS   } from '../../src/hooks/useEAS';
 import { isMobile } from 'react-device-detect';
 import { isAddress } from 'ethers';

@@ -5,8 +5,8 @@ import {getContributionsByProjectName} from '../../../src/lib/db/dbcontributions
 import { getAttestationCountByProject } from '../../../src/lib/db/dbattestations';
 import { Contribution, ContributionWithAttestationCount, Project } from '../../../src/types';
 import ProfilePage from '../profilepage1';
-import Navbar from '../../components/navbar1';
-import Footer from '../../components/footer';
+import Navbar from '../../components/ui/Navbar';
+import Footer from '../../components/ui/Footer';
 import Sidebar from '../sidebar1';
 import React from 'react';
 import { Metadata } from 'next';

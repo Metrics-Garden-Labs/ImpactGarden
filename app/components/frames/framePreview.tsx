@@ -1,5 +1,5 @@
 import React from 'react';
-import { Contribution, Project } from '../../src/types';
+import { Contribution, Project } from '../../../src/types';
 
 interface FramePreviewProps {
   contribution: Contribution;

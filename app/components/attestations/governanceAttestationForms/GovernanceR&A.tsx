@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import { contributionRolesKey } from '@/src/types';
-import RatingScale5 from '@/app/components/RatingScale5';
-import RatingScale10 from '@/app/components/RatingScale10';
+import RatingScale5 from '@/app/components/ui/RatingScale5';
+import RatingScale10 from '@/app/components/ui/RatingScale10';
 
 interface GovernanceRAndAFormProps {
   contributionRoles: { [key in contributionRolesKey]: boolean };

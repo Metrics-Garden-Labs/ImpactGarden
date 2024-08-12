@@ -2,7 +2,7 @@ import {   getProjectByName } from '../../../../../src/lib/db/dbprojects';
 import { getAttestationsByContribution } from '../../../../../src/lib/db/dbattestations';
 import { getContributionById } from '../../../../../src/lib/db/dbcontributions';
 import { Contribution, Project } from '../../../../../src/types';
-import Footer from '../../../../components/footer';
+import Footer from '../../../../components/ui/Footer';
 import Sidebar from '../../../sidebar1';
 import React from 'react';
 import ContributionPage from '../contributionPage';

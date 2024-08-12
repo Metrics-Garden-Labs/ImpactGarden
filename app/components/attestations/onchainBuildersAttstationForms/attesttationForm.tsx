@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import { contributionRolesKey } from '@/src/types';
-import SmileyRatingScale from '@/app/components/SmileyRatingScale';
-import RatingScale10 from '@/app/components/RatingScale10';
+import SmileyRatingScale from '@/app/components/ui/SmileyRatingScale';
+import RatingScale10 from '@/app/components/ui/RatingScale10';
 
-interface GovernanceCollabAndOnboardingProps {
+interface OnchainBuildersProps {
   handleRating1: (rate: number) => void;
   handleRating2: (rate: number) => void;
   handleRating3: (rate: number) => void;
@@ -24,7 +24,7 @@ interface GovernanceCollabAndOnboardingProps {
   onClose: () => void;
 }
 
-const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps> = ({
+const OnchainBuilders: React.FC<OnchainBuildersProps> = ({
   handleRating1,
   handleRating2,
   handleRating3,
@@ -75,30 +75,12 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
 
           {/* Q1 */}
           <div className="mb-6">
-            {/* <h3 className='font-semibold text-center'>Your knowledge level about Optimism’s Governance</h3> */}
-            <select
-              value={knowledgeLevel}
-              onChange={handleKnowledgeLevelChange}
-              className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none mt-2"
-            >
-              <option value="" disabled>Select your knowledge level</option>
-              <option value="No Knowledge">No Knowledge: I am not familiar with Optimism’s Governance at all.</option>
-              <option value="Basic Knowledge">Basic Knowledge: I have limited understanding of its principles and structure.</option>
-              <option value="Intermediate Knowledge">Intermediate Knowledge: I understand the basic principles and structure, and have some familiarity with its processes.</option>
-              <option value="Advanced Knowledge">Advanced Knowledge: I have a good understanding of Optimism’s Governance, and have followed its development closely.</option>
-              <option value="Expert Knowledge">Expert Knowledge: I have an in-depth understanding of Optimism’s Governance, and have actively contributed to its governance discussions or activities.</option>
-            </select>
-          </div>
-          <hr className="my-4" />
-
-          {/* Q2 */}
-          <div className="mb-6">
             <h3 className='font-semibold text-center'>How likely are you to recommend this contribution to someone in your role or an ecosystem participant?</h3>
             <RatingScale10 rating={localRating1} handleRating={setLocalRating1} />
           </div>
           <hr className="my-4" />
 
-          {/* Q3 */}
+          {/* Q2 */}
           <div className="mb-8">
             <h3 className='font-semibold text-center'>How would you feel if this contribution ceased to exist?</h3>
             <SmileyRatingScale rating={localSmileyRating} handleRating={setLocalSmileyRating} />
@@ -108,13 +90,12 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
           </div>
           <hr className="my-4" />
 
-          {/* Q4 */}
-          <div className="mb-6">
+          {/* Q3 */}
+          {/* <div className="mb-6">
           <label className="block text-gray-700 font-bold mb-2">
             Please give examples of how this collaboration or onboarding contribution has been useful for you. 
-            {/* <div className="italic">Did it increase your participation?</div> */}
+            <div className="italic">Did it increase your participation?</div> 
           </label>
-
             <textarea
               value={localFeedback}
               onChange={(e) => setLocalFeedback(e.target.value)}
@@ -126,8 +107,8 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
           </div>
           <hr className="my-4" />
 
-          {/* Q5 */}
-          <div className="mb-6">
+          {/* Q4 */}
+          {/* <div className="mb-6">
             <label className="block text-gray-700 font-bold mb-2">Any additional feedback or suggestions on this contribution? This response will be confidential and only shared with the contributor.</label>
             <textarea
               value={localExtraFeedback}
@@ -138,7 +119,7 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
             />
             <div className="text-right text-xs text-gray-500 mt-1">{localExtraFeedback.length}/200</div>
           </div>
-          <hr className="my-4" />
+          <hr className="my-4" />  */}
 
           <div className="text-center py-3">
             <button className='btn bg-headerblack text-white hover:bg-blue-500 mr-2' onClick={onClose}>Back</button>
@@ -153,4 +134,4 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
   );
 };
 
-export default GovernanceCollabAndOnboarding;
+export default OnchainBuilders;

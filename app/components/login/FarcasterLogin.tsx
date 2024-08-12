@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { NeynarAPIClient } from "@neynar/nodejs-sdk";
-import useLocalStorage from '../../src/hooks/use-local-storage-state';
-import { NEXT_PUBLIC_URL, useGlobalState } from '../../src/config/config';
+import useLocalStorage from '../../../src/hooks/use-local-storage-state';
+import { NEXT_PUBLIC_URL, useGlobalState } from '../../../src/config/config';
 import dotenv from 'dotenv';
 import Image from 'next/image';
 import { ConnectButton } from '@rainbow-me/rainbowkit';

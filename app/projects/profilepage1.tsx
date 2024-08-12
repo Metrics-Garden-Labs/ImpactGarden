@@ -20,7 +20,7 @@ import { easScanEndpoints } from '@/src/utils/easScan';
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { GovRandADisplay, GovCollabAndOnboardingDisplay, GovInfraAndToolingDisplay, GovStructuresDisplay } from '@/src/types';
-import AttestationModalView from '../components/AttestationModalView';
+import AttestationModalView from '../components/attestations/AttestationModalView';
 
 function isGovRandADisplay(attestation: AttestationDisplay): attestation is GovRandADisplay {
   return (attestation as GovRandADisplay).useful_for_understanding !== undefined;
