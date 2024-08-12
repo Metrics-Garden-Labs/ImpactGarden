@@ -1,21 +1,11 @@
 import React, { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
-import { contributionRolesKey } from '@/src/types';
 import SmileyRatingScale from '@/app/components/ui/SmileyRatingScale';
 import RatingScale10 from '@/app/components/ui/RatingScale10';
 
 interface OnchainBuildersProps {
-  handleRating1: (rate: number) => void;
-  handleRating2: (rate: number) => void;
-  handleRating3: (rate: number) => void;
-  handleSmileyRating: (rate: number) => void;
   smileyRating: number;
   rating1: number;
-  rating2: number;
-  rating3: number;
-  contributionRoles: Record<contributionRolesKey, boolean>;
-  handleClick: (key: contributionRolesKey) => void;
-  labels: Record<contributionRolesKey, string>;
   feedback: string;
   setFeedback: (feedback: string) => void;
   extrafeedback: string;
@@ -25,17 +15,8 @@ interface OnchainBuildersProps {
 }
 
 const OnchainBuilders: React.FC<OnchainBuildersProps> = ({
-  handleRating1,
-  handleRating2,
-  handleRating3,
   rating1,
-  rating2,
-  rating3,
-  handleSmileyRating,
   smileyRating,   
-  contributionRoles,
-  handleClick,
-  labels,
   feedback,
   setFeedback,
   extrafeedback,
@@ -43,19 +24,14 @@ const OnchainBuilders: React.FC<OnchainBuildersProps> = ({
   onSubmit,
   onClose,
 }) => {
-  const [knowledgeLevel, setKnowledgeLevel] = useState('');
   const [localRating1, setLocalRating1] = useState(rating1);
   const [localSmileyRating, setLocalSmileyRating] = useState(smileyRating);
   const [localFeedback, setLocalFeedback] = useState(feedback);
   const [localExtraFeedback, setLocalExtraFeedback] = useState(extrafeedback);
 
-  const handleKnowledgeLevelChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setKnowledgeLevel(event.target.value);
-  };
 
   const handleSubmit = () => {
     const formData = {
-      governance_knowledge: knowledgeLevel,
       recommend_contribution: localRating1.toString(),
       feeling_if_didnt_exist: localSmileyRating.toString(),
       explanation: localFeedback,

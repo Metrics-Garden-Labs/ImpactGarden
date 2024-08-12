@@ -6,17 +6,7 @@ import { contributionRolesKey } from '@/src/types';
 import SmileyRatingScale from '../../ui/SmileyRatingScale';
 
 interface GovernanceStructuresFormProps {
-  contributionRoles: { [key in contributionRolesKey]: boolean };
-  handleRating1: (rate: number) => void;
-  handleRating2: (rate: number) => void;
-  handleRating3: (rate: number) => void;
-  rating1: number;
-  rating2: number;
-  rating3: number;
-  handleClick: (key: contributionRolesKey) => void;
   smileyRating: number;
-  handleSmileyRating: (rate: number) => void;
-  labels: { [key in contributionRolesKey]: string };
   feedback: string;
   setFeedback: (feedback: string) => void;
   feedback2: string;
@@ -28,17 +18,7 @@ interface GovernanceStructuresFormProps {
 }
 
 const GovernanceStructuresFrom: React.FC<GovernanceStructuresFormProps> = ({
-  handleRating1,
-  handleRating2,
-  handleRating3,
-  rating1,
-  rating2,
-  rating3,
   smileyRating,
-  handleSmileyRating,
-  contributionRoles,
-  handleClick,
-  labels,
   feedback,
   feedback2,
   setFeedback2,

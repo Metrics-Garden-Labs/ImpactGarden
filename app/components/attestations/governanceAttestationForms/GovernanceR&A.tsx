@@ -5,15 +5,9 @@ import RatingScale5 from '@/app/components/ui/RatingScale5';
 import RatingScale10 from '@/app/components/ui/RatingScale10';
 
 interface GovernanceRAndAFormProps {
-  contributionRoles: { [key in contributionRolesKey]: boolean };
-  handleRating1: (rate: number) => void;
-  handleRating2: (rate: number) => void;
-  handleRating3: (rate: number) => void;
   rating1: number;
   rating2: number;
   rating3: number;
-  handleClick: (key: contributionRolesKey) => void;
-  labels: { [key in contributionRolesKey]: string };
   feedback: string;
   setFeedback: (feedback: string) => void;
   extrafeedback: string;
@@ -23,15 +17,9 @@ interface GovernanceRAndAFormProps {
 }
 
 const GovernanceRAndDForm: React.FC<GovernanceRAndAFormProps> = ({
-  handleRating1,
-  handleRating2,
-  handleRating3,
   rating1,
   rating2,
   rating3,
-  contributionRoles,
-  handleClick,
-  labels,
   feedback,
   setFeedback,
   extrafeedback,

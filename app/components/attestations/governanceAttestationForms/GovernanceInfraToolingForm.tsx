@@ -5,17 +5,8 @@ import RatingScale10 from '@/app/components/ui/RatingScale10';
 import { contributionRolesKey } from '@/src/types';
 
 interface GovernanceInfraToolingFormProps {
-  handleRating1: (rate: number) => void;
-  handleRating2: (rate: number) => void;
-  handleRating3: (rate: number) => void;
   rating1: number;
-  rating2: number;
-  rating3: number;
   smileyRating: number;
-  handleSmileyRating: (rate: number) => void;
-  contributionRoles: { [key in contributionRolesKey]: boolean };
-  handleClick: (key: contributionRolesKey) => void;
-  labels: { [key in contributionRolesKey]: string };
   feedback: string;
   setFeedback: (feedback: string) => void;
   extrafeedback: string;
@@ -25,17 +16,8 @@ interface GovernanceInfraToolingFormProps {
 }
 
 const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
-  handleRating1,
-  handleRating2,
-  handleRating3,
   rating1,
   smileyRating,
-  handleSmileyRating,
-  rating2,
-  rating3,
-  contributionRoles,
-  handleClick,
-  labels,
   feedback,
   setFeedback,
   extrafeedback,

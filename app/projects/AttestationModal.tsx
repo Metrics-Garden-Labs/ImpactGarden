@@ -1,5 +1,8 @@
 'use client';
 
+//This page is to be compatible with legacy versions of the app that had the alpha version of the 
+//attestation framework. This will be deprecated in the future.
+
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { Attestation, EAS, EIP712AttestationParams, NO_EXPIRATION, SchemaEncoder, ZERO_ADDRESS } from '@ethereum-attestation-service/eas-sdk';
@@ -27,7 +30,6 @@ interface AttestationModalProps {
     onClose: () => void;
     contribution: Contribution;
     project: Project;
-    attestationCount: number;
 }
 
 type ImprovementAreaKey = 'participation' | 'understanding' | 'collaboration' | 'information' | 'models';
@@ -37,7 +39,6 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
     onClose,
     contribution,
     project,
-    attestationCount,
 }) => {
     const [isdelegate, setIsDelegate] = useState(false);
     const [feedback, setFeedback] = useState('');
@@ -117,34 +118,6 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
         }
     }, [isOpen, contribution.id, router, pathname]);
 
-    useEffect(() => {
-        const getContributionAttestations = async () => {
-            try {
-                console.log('Fetching attestations for contribution:', contribution.contribution);
-                const response = await fetch(`${NEXT_PUBLIC_URL}/api/getContributionAttestations`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ contribution: contribution.contribution }),
-                });
-                const responseData = await response.json();
-                console.log('Response:', responseData);
-                if (responseData && responseData.response) {
-                    setRecentAttestations(responseData.response);
-                }
-            } catch (error) {
-                console.error('Error fetching attestations:', error);
-            } finally {
-                setRecentAttestationsLoading(false);
-            }
-        };
-
-        if (contribution) {
-            getContributionAttestations();
-        }
-    }, [contribution]);
-
     const handleRating = (rate: number) => {
         setRating(rate); // Update the rating state
         console.log("Rating set to: ", rate); // Debugging or further use
@@ -182,13 +155,6 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
         }
     };
 
-    const toggleAttestationForm = () => {
-        setShowAttestationForm(!showAttestationForm);
-    };
-    const isValidEthereumAddress = (address : string): boolean => {
-        return isAddress(project.ethAddress);
-    };
-
 
     const createAttestation = async () => {
         console.log('user.fid:', user.fid);
@@ -206,8 +172,6 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             console.error('Signer not available');
             return;
           }
-
-        const recipientAddress = project.ethAddress && isValidEthereumAddress(project.ethAddress) ? project.ethAddress : zeroAddress;
 
         
         console.log('contribution:', contribution);
@@ -294,25 +258,6 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             setIsLoading(false);
         }
     };
-
-    const isWebShareSupported = !!navigator.share;
-    const copyToClipboard = () => {
-        const shareUrl = `${window.location.origin}${pathname}?contribution=${contribution.id}`;
-        navigator.clipboard.writeText(shareUrl)
-          .then(() => {
-            alert('Link copied to clipboard!');
-            if (isWebShareSupported) {
-              return navigator.share({
-                title: 'Share Contribution Link',
-                text: 'Check out this contribution:',
-                url: shareUrl,
-              });
-            }
-          })
-          .catch(err => {
-            console.error('Failed to copy: ', err);
-          });
-      };
 
     if (!isOpen) return null;
 
@@ -424,12 +369,6 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                             <div className="text-right mr-2">{extrafeedback.length}/200</div>
                         </div>
                         <div className="mb-4 text-center py-3 p-3">
-                            {/* <button 
-                                className='btn text-center bg-headerblack text-white hover:bg-blue-500 mr-4'
-                                onClick={toggleAttestationForm}
-                            >
-                                Back
-                            </button> */}
                             <button
                                 className="btn text-center bg-headerblack text-white hover:bg-blue-500 "
                                 onClick={createAttestation}
@@ -439,54 +378,6 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                         </div>
                     </>
                 
-
-                        {/* <div className="mb-4">
-                            <h3 className="font-semibold text-center">Insights</h3>
-                            <p className="text-center">
-                                {attestationCount > 0 ? (
-                                    <>This contribution has been attested to {attestationCount} times</>
-                                ) : (
-                                    <>This contribution has not been attested to yet</>
-                                )}
-                            </p>
-                        </div>
-
-                        {attestationCount > 0 && (
-                            <div className="mb-4">
-                                {recentAttestationsLoading ? (
-                                    <ul>
-                                        {[1, 2, 3].map((_, index) => (
-                                            <li key={index} className="animate-pulse">
-                                                <div className="bg-gray-200 h-4 w-3/4 mb-2 rounded"></div>
-                                                <div className="bg-gray-200 h-4 w-1/2 mb-2 rounded"></div>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                ) : recentAttestations.length > 0 ? (
-                                    <ul>
-                                        {recentAttestations.map((attestation, index) => {
-                                            console.log('attestation object:', attestation);
-                                            const attestationLink = `${easScanEndpoints[contribution?.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`;
-                                            console.log('Attestation Link:', attestationLink);
-                                            console.log('attestationuid:', attestation.attestationUID);
-
-                                            return (
-                                                <li key={index}>
-                                                    <Link href={attestationLink}>
-                                                        <p>
-                                                            <strong>{attestation.username}</strong> said: {attestation.feedback}
-                                                        </p>
-                                                    </Link>
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-
-                                ) : (
-                                    <p></p>
-                                )}
-                            </div> 
-                        )}*/}
 
                 <button
                     onClick={onClose}
