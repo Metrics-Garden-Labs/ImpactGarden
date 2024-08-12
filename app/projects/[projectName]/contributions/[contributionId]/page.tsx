@@ -3,7 +3,7 @@ import { getAttestationsByContribution } from '../../../../../src/lib/db/dbattes
 import { getContributionById } from '../../../../../src/lib/db/dbcontributions';
 import { Contribution, Project } from '../../../../../src/types';
 import Footer from '../../../../components/ui/Footer';
-import Sidebar from '../../../sidebar1';
+import Sidebar from '../../../Sidebar';
 import React from 'react';
 import ContributionPage from '../contributionPage';
 

@@ -12,7 +12,7 @@ import { useGlobalState } from "../../src/config/config";
 import SearchUsers from "./searchUsers";
 import UserList from "./userList";
 import Navbar from "../components/ui/Navbar";
-import { User } from '../..//src/types';
+import { User } from '../../src/types';
 import { getUsers } from '../../src/lib/db/dbusers';
 import Footer from "../components/ui/Footer";
 import { Metadata } from "next";

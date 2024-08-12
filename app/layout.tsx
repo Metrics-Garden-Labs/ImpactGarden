@@ -4,7 +4,7 @@ import { Manrope } from "next/font/google";
 import '@rainbow-me/rainbowkit/styles.css';
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
-import { ourFileRouter } from "../app/api/uploadthing/core";
+import { ourFileRouter } from "./api/uploadthing/core";
 import ClientHelmetProvider from "./components/ClientHelmetProvider";
 import MatomoTracker from '../src/utils/MatomoTracker';
 import "./globals.css";

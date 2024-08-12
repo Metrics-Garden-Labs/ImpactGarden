@@ -7,7 +7,7 @@ import { Contribution, ContributionWithAttestationCount, Project } from '../../.
 import ProfilePage from '../profilepage1';
 import Navbar from '../../components/ui/Navbar';
 import Footer from '../../components/ui/Footer';
-import Sidebar from '../sidebar1';
+import Sidebar from '../Sidebar';
 import React from 'react';
 import { Metadata } from 'next';
 
