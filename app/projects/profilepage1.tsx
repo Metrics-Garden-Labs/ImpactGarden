@@ -9,24 +9,27 @@ import { NEXT_PUBLIC_URL } from '@/src/config/config';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import Sidebar from './smSidebar';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import { isMobile } from 'react-device-detect'; // Import the hook
+import { isMobile } from 'react-device-detect';
 import AttestationModalView from '../components/attestations/AttestationModalView';
 import DisplayContributions from '../components/contributions/DisplayContirbutions';
 import ContributionAttestations from '../components/contributions/ContributionAttestations';
 import useContributionData from '@/src/hooks/useContributionData';
 import useChainSwitcher from '@/src/hooks/useChainSwitcher';
 
-
 interface ProfilePageProps {
   contributions: Contribution[];
   project: Project;
   projectAttestationCount: number;
+  categories: string[];
+  subcategories: string[];
 }
 
 export default function ProfilePage({ 
   contributions: initialContributions, 
   project, 
   projectAttestationCount,
+  categories,
+  subcategories,
 }: ProfilePageProps) {
   const [activeTab, setActiveTab] = useState('contributions');
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,12 +47,11 @@ export default function ProfilePage({
     ethAddress: '',
   });
 
-  const searchParams = useSearchParams(); // Use useSearchParams to get query parameters
-  const pathname = usePathname(); // Use usePathname to get the current path
-  const router = useRouter(); // Use useRouter for navigation
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
 
   useChainSwitcher(project);
-
 
   useEffect(() => {
     const contributionId = searchParams.get('contribution');
@@ -57,7 +59,6 @@ export default function ProfilePage({
       const contribution = contributions.find(c => c.id === Number(contributionId));
       if (contribution) {
         setSelectedContribution(contribution);
-        //setIsModalOpen(true);
       }
     }
   }, [searchParams, contributions]);
@@ -65,6 +66,7 @@ export default function ProfilePage({
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
   const handleContributionAdded = (newContribution: string) => {
     const addedContribution: ContributionWithAttestationCount = {
       userFid: user.fid || '',
@@ -80,7 +82,7 @@ export default function ProfilePage({
       primarycontributionuid: '',
       easUid: '',
       ethAddress: walletAddress,
-      attestationCount: 0, // Initial attestation count is 0
+      attestationCount: 0,
     };
 
     setContributionCards((prevContributions) => [...prevContributions, addedContribution]);
@@ -137,7 +139,6 @@ export default function ProfilePage({
             project={project}
           />
         );
-
       case 'charts':
         return <div className="text-black">Content for Charts, coming soon!</div>;
       default:
@@ -147,7 +148,6 @@ export default function ProfilePage({
 
   return (
     <main className="flex-grow relative p-8 sm:p-10 bg-backgroundgray w-full h-full">
-      {/* Add contribution button */}
       {user.fid === project.userFid && (
         <div className="absolute top-1.5 right-5">
           <button
@@ -221,7 +221,12 @@ export default function ProfilePage({
             sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
-          <Sidebar project={project} projectAttestationCount={projectAttestationCount} />
+          <Sidebar 
+            project={project} 
+            projectAttestationCount={projectAttestationCount} 
+            categories={categories}
+            subcategories={subcategories}
+          />
         </div>
 
         <div className="flex-1 p-4">{renderContent()}</div>
@@ -230,7 +235,7 @@ export default function ProfilePage({
         attestation={selectedAttestation}
         isOpen={isAttestationModalOpen}
         onClose={() => setIsAttestationModalOpen(false)}
-        />
+      />
     </main>
   );
 }

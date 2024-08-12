@@ -57,6 +57,8 @@ const ProjectPage = async ({ params }: Props) => {
               contributions={contributions} 
               project={project} 
               projectAttestationCount={projectAttestationCount} 
+              categories={categories}
+              subcategories={subcategories}
             />
           </main>
         </div>
