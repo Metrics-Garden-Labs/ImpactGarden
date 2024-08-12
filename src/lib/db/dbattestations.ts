@@ -15,8 +15,6 @@ import {
   onchain_builders,
 } from "../schema";
 import * as schema from "../schema";
-import { getAttestationsByAttester } from "../eas";
-import { Waterfall } from "next/font/google";
 import {
   Project,
   newUserAddresses,
@@ -29,11 +27,8 @@ import {
   Attestation3,
   ProjectAttestations,
 } from "@/src/types";
-import { count } from "console";
 import { desc, sql as drizzlesql } from "drizzle-orm";
 import { inArray, eq, sql } from "drizzle-orm";
-import { string } from "zod";
-import { get } from "http";
 
 export const db = drizzle(vercelsql, { schema });
 
@@ -660,7 +655,7 @@ export const getAttestationsByContributionAndSubcategory = async (
 ) => {
   try {
     if (!category) {
-      throw new Error("Category is required");
+      return await getContributionAttestationList(contribution);
     }
 
     if (!subcategory) {

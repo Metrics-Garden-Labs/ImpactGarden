@@ -1,4 +1,4 @@
-import {   getProjectByName } from '../../../../../src/lib/db/dbprojects';
+import { ProjectCategories, getProjectByName } from '../../../../../src/lib/db/dbprojects';
 import { getAttestationsByContribution } from '../../../../../src/lib/db/dbattestations';
 import { getContributionById } from '../../../../../src/lib/db/dbcontributions';
 import { Contribution, Project } from '../../../../../src/types';
@@ -10,7 +10,7 @@ import ContributionPage from '../contributionPage';
 interface ContributionPageProps {
   params: {
     projectName: string;
-    contributionId: number;
+    contributionId: string;
   };
 }
 
@@ -23,15 +23,25 @@ const ContributionDetailsPage = async ({ params }: ContributionPageProps) => {
   const decodedProjectName = decodeURIComponent(projectName);
 
   try {
-    const contribution: Contribution = await getContributionById(contributionId);
-    const project: Project = await getProjectByName(decodedProjectName);
-    const contributionAttestations  = await getAttestationsByContribution(contribution.contribution);
+    const [contribution, project, contributionAttestations, categoryData] = await Promise.all([
+      getContributionById(parseInt(contributionId)),
+      getProjectByName(decodedProjectName),
+      getAttestationsByContribution(contributionId),
+      ProjectCategories(decodedProjectName)
+    ]);
+
     const attestationCount = contributionAttestations.length;
+    const { categories, subcategories } = categoryData;
 
     return (
       <div className="flex flex-col min-h-screen bg-white text-black">
         <div className="flex flex-1 overflow-hidden">
-          <Sidebar project={project} projectAttestationCount={0} />
+          <Sidebar 
+            project={project} 
+            projectAttestationCount={attestationCount} 
+            categories={categories}
+            subcategories={subcategories}
+          />
           <main className="flex-1 overflow-auto">
             <ContributionPage 
               contribution={contribution} 
@@ -44,11 +54,8 @@ const ContributionDetailsPage = async ({ params }: ContributionPageProps) => {
       </div>
     );
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error('Error fetching project data:', error);
-      // Render an error page or handle the error as needed
-      return <div>Error loading contribution details</div>;
-    }
+    console.error('Error fetching contribution details:', error);
+    return <div>Error loading contribution details</div>;
   }
 };
 

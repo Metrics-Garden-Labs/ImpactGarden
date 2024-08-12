@@ -13,7 +13,7 @@ import { useDelegatedAttestation } from '@/src/hooks/useDelegatedAttestation';
 import { getChainId, networkContractAddresses } from '../../src/utils/networkContractAddresses';
 import { networks, checkNetwork } from '@/src/utils/projectSignUpUtils';
 import AttestationCreationModal from '../components/ui/AttestationCreationModal';
-import ConfirmationSection from './confirmationPage';
+import ConfirmationSection from '../components/projectSignUp/confirmationPage';
 import Footer from '../components/ui/Footer';
 import CenterColumn from '../components/projectSignUp/CenterColumn';
 import LeftColumn from '../components/projectSignUp/LeftColumn';

@@ -24,40 +24,11 @@ function classNames(...classes: any[]) {
 interface Props {
   project: Project;
   projectAttestationCount: number;
+  categories : string[];
+  subcategories : string[];
 }
 
-const Sidebar = ({ project, projectAttestationCount }: Props)=> {
-  const categories = ['Onchain Builders', 'OP Stack', 'Governance', 'Dev Tooling'];
-  //const [ attestationCount, setAttestationCount ] = useState(0);
-  //const [selectedProject, setSelectedProject] = useGlobalState('selectedProject');
-
-
-
- //maybe make it dynamic in the future
-  // useEffect(() => {
-  //   const fetchAttestationCount = async () => {
-  //     if (!project) return;
-  //     try {
-  //       const response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjectAttestationCount`, {
-  //         method: 'POST',
-  //         body: JSON.stringify({ project: selectedProject?.projectName }),
-  //         headers: {
-  //           'Content-Type': 'application/json'
-  //         }
-  //       });
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         const count = data.response.length;
-  //         setAttestationCount(count);
-  //       } else {
-  //         console.error('Failed to fetch attestation count');
-  //       }
-  //     } catch (error) {
-  //       console.error('Failed to fetch attestation count:', error);
-  //     }
-  //   }
-  //   fetchAttestationCount();
-  // } , [selectedProject]);
+const Sidebar = ({ project, projectAttestationCount, categories, subcategories }: Props)=> {
 
   const websiteurl = project?.websiteUrl;
   console.log('Selected website:', websiteurl);
@@ -89,6 +60,7 @@ const Sidebar = ({ project, projectAttestationCount }: Props)=> {
 
   const checkwebsiteUrl = urlHelper(project?.websiteUrl || '');
   console.log('Selected website:', websiteurl);
+  console.log('categories:', categories);
   const checktwitterUrl = urlHelper(project?.twitterUrl || '');
   const checkgithubUrl = urlHelper(project?.githubUrl || '');
     
@@ -155,18 +127,36 @@ const Sidebar = ({ project, projectAttestationCount }: Props)=> {
             <div>
               <div className="text-sm font-medium text-gray-500">Attestations: {projectAttestationCount}</div>
               <div className="text-sm font-medium text-gray-500">Created {getProjectDuration(project.createdAt)} <span>ago</span></div>
-              {/* <div className="text-sm py-2 font-medium text-gray-500">Categories:</div> */}
-              {/* Categories
-              The categories dont really have a use at the minute */}
-              {/* <div className='mt-4'>
-                {categories.map((category) => (
-                  <div key={category} className='mb-2'>
-                    <span className="inline-block bg-gray-100 rounded-md px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                      {category}
-                    </span>
-                  </div>
-                ))}
-              </div> */}
+              <div className="text-sm py-2 font-medium text-gray-500">Categories:</div> 
+              <div className='mt-4'>
+                {Array.isArray(categories) && categories.length > 0 ? (
+                  categories.map((category) => (
+                    <div key={category} className='mb-2'>
+                      <span className="inline-block bg-gray-100 rounded-md px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                        {category}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p></p>
+                )}
+              </div>
+
+              <div className="text-sm py-2 font-medium text-gray-500">Subcategories:</div> 
+              <div className='mt-4'>
+                {Array.isArray(subcategories) && subcategories.length > 0 ? (
+                  subcategories.map((subcategory) => (
+                    <div key={subcategory} className='mb-2'>
+                      <span className="inline-block bg-gray-200 rounded-md px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                        {subcategory}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p></p>
+                )}
+              </div>
+
             </div>
           </div>
         </div>

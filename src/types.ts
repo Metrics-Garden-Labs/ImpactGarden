@@ -559,3 +559,8 @@ export type AttestationDisplay =
   | GeneralAttestationDisplay
   | GovStructuresDisplay
   | OnchainBuildersDisplay;
+
+export interface CategoryData {
+  categories: string[];
+  subcategories: string[];
+}

@@ -10,8 +10,6 @@ import {
   op_delegates,
 } from "../schema";
 import * as schema from "../schema";
-import { getAttestationsByAttester } from "../eas";
-import { Waterfall } from "next/font/google";
 import {
   Project,
   newUserAddresses,
@@ -19,9 +17,8 @@ import {
   ProjectCount,
   Contribution,
   NewProject,
+  CategoryData,
 } from "@/src/types";
-import { count } from "console";
-import { desc, sql as drizzlesql } from "drizzle-orm";
 import { inArray, eq, sql } from "drizzle-orm";
 
 export const db = drizzle(vercelsql, { schema });
@@ -178,6 +175,44 @@ export const getProjects = async (filter: string = "") => {
   } catch (error) {
     console.error("Error retrieving projects:", error);
     throw error;
+  }
+};
+
+//get the categories for the project
+export const ProjectCategories = async (
+  projectName: string
+): Promise<CategoryData> => {
+  try {
+    const results = await db
+      .select({
+        category: contributions.category,
+        subcategory: contributions.subcategory,
+      })
+      .from(contributions)
+      .innerJoin(projects, eq(contributions.projectName, projects.projectName))
+      .where(eq(projects.projectName, projectName))
+      .groupBy(contributions.category, contributions.subcategory)
+      .execute();
+
+    const categories = [
+      ...new Set(
+        results
+          .map((r) => r.category)
+          .filter((category): category is string => category !== null)
+      ),
+    ];
+    const subcategories = [
+      ...new Set(
+        results
+          .map((r) => r.subcategory)
+          .filter((subcategory): subcategory is string => subcategory !== null)
+      ),
+    ];
+
+    return { categories, subcategories };
+  } catch (error) {
+    console.error(`Error retrieving categories for project:`, error);
+    return { categories: [], subcategories: [] };
   }
 };
 
