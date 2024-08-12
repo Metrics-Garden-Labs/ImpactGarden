@@ -167,12 +167,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       const schemaEncoder = new SchemaEncoder(
         'bytes32 projectRefUID, uint256 farcasterID, string name, string category, bytes32 parentProjectRefUID, uint8 metadataType, string metadataURL'
       );
-      console.log('Selected Project uid:', selectedProject?.projectUid);
-      console.log('fid:', user.fid);
-      console.log('name:', formData.contribution);
-      console.log('category:', formData.category);
-      console.log('parentProjectRefUID:', selectedProject?.primaryprojectuid);
-      console.log('metadataURL:', pinataURL1);
+
       const encodedData1 = schemaEncoder.encodeData([
         { name: 'projectRefUID', value: selectedProject?.projectUid || '', type: 'bytes32' },
         { name: 'farcasterID', value: user.fid, type: 'uint256' },
