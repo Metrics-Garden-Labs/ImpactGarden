@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Contribution, Project } from '@/src/types';
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaChevronDown } from "react-icons/fa";
 import Link from 'next/link';
 
 interface DisplayContributionsProps {
@@ -18,7 +18,45 @@ const DisplayContributions: React.FC<DisplayContributionsProps> = ({
   setContributions,
   project,
 }) => {
-  const filteredContributions = contributions.filter((contribution) =>
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('Most Attestations');
+  const [displayContributions, setDisplayContributions] = useState<Contribution[]>([]);
+
+  // Sort contributions when the component mounts
+  useEffect(() => {
+    handleSortChange('Most Attestations');
+  }, [contributions]); 
+
+  const handleSortChange = (option: string) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+
+    let sortedContributions = [...contributions];
+
+    if (option === 'Most Attestations') {
+      sortedContributions.sort((a, b) => {
+        const countA = a.attestationCount ?? 0;
+        const countB = b.attestationCount ?? 0;
+        return countB - countA; // Higher attestation count first
+      });
+    } else if (option === 'Last Update Date') {
+      sortedContributions.sort((a, b) => {
+        const dateA = new Date(a.createdAt || '').getTime();
+        const dateB = new Date(b.createdAt || '').getTime();
+        return dateB - dateA; // Most recent first
+      });
+    } else if (option === 'A-Z') {
+      sortedContributions.sort((a, b) => {
+        const descA = (a.desc || '').trim().toLowerCase();
+        const descB = (b.desc || '').trim().toLowerCase();
+        return descA.localeCompare(descB, undefined, { sensitivity: 'base', ignorePunctuation: true });
+      });
+    }
+
+    setDisplayContributions(sortedContributions);
+  };
+
+  const filteredContributions = displayContributions.filter((contribution) =>
     contribution.contribution.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -36,49 +74,64 @@ const DisplayContributions: React.FC<DisplayContributionsProps> = ({
             <FaSearch />
           </span>
         </div>
-        <select
-          className="px-4 py-2 bg-backgroundgray text-black rounded-full w-full sm:w-60 border-none focus:ring-0 focus:border-none text-sm"
-          onChange={(e) => {
-            if (e.target.value === 'Most Attestations') {
-              const sorted = [...contributions].sort((a, b) => {
-                const countA = a.attestationCount ?? 0;
-                const countB = b.attestationCount ?? 0;
-                return countB - countA;
-              });
-              setContributions(sorted);
-            }
-          }}
-        >
-          <option>Sort by: Most Attestations</option>
-        </select>
+        <div className="relative w-full sm:w-60">
+          <button
+            className="px-4 py-2 bg-backgroundgray text-black rounded-full w-full border-none text-sm flex justify-between items-center"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <span>Sort By: {selectedOption}</span>
+            <FaChevronDown />
+          </button>
+          {isOpen && (
+            <ul className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10">
+              <li
+                className="px-4 py-2 hover:bg-[#B0B0B0] cursor-pointer"
+                onClick={() => handleSortChange('Most Attestations')}
+              >
+                Most Attestations
+              </li>
+              <li
+                className="px-4 py-2 hover:bg-[#B0B0B0] cursor-pointer"
+                onClick={() => handleSortChange('Last Update Date')}
+              >
+                Last Update Date
+              </li>
+              <li
+                className="px-4 py-2 hover:bg-[#B0B0B0] cursor-pointer"
+                onClick={() => handleSortChange('A-Z')}
+              >
+                A-Z
+              </li>
+            </ul>
+          )}
+        </div>
       </div>
       <div className="mb-4"></div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-3 lg:gap-8 max-w-6xl overflow-y-auto">
         {filteredContributions.map((contribution) => (
-          <Link
-            href={`/projects/${project.projectName}/contributions/${contribution.id}`}
-            key={contribution.id}
-          >
-            <div
-              className="flex flex-col justify-between p-2 sm:p-2 border bg-white text-black border-gray-300 rounded-lg w-full h-56 shadow-lg"
-            >
-              <div className="flex-grow overflow-hidden">
-                <h3 className="text-xl sm:text-lg font-semibold pb-2">
-                  {contribution.contribution}
-                </h3>
-                <p className="text-gray-500 text-md sm:text-base overflow-hidden overflow-ellipsis">
-                  {contribution.desc}
-                </p>
-                <p className="text-sm text-gray-600 mt-2">
-                  Attestations: {contribution.attestationCount}
-                </p>
-              </div>
-              <div className="text-center">
-                <button className="btn w-2/3">View Contribution</button>
-              </div>
-            </div>
-          </Link>
-        ))}
+             <Link
+             href={`/projects/${project.projectName}/contributions/${contribution.id}`}
+             key={contribution.id}
+           >
+             <div
+               className="flex flex-col justify-center items-center p-4 border bg-white text-black border-gray-300 rounded-lg w-full h-56 shadow-lg"
+             >
+               <div className="justify-center items-center text-center">
+                 <h3 className="text-lg text-center font-semibold mb-2">
+                   {contribution.contribution}
+                 </h3>
+                 <p className="text-[#A6A6A6] text-center text-sm mb-4">
+                   {contribution.desc}
+                 </p>
+               </div>
+               {/* <div className="text-left mt-auto">
+                 <p className="text-[#A6A6A6] text-xs">
+                   Attestations: {contribution.attestationCount}
+                 </p>
+               </div> */}
+             </div>
+           </Link>
+         ))}
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ const ContributionDetails: React.FC<ContributionDetailsProps> = ({
 
         <h3 className="font-semibold text-left">{contribution.category}</h3>
         <h3 className="font-semibold text-left">{contribution.subcategory}</h3>
-      </div>
+      
 
       <div className="flex">
         <hr className="border-1 border-gray-300 my-2 w-1/3" />
@@ -51,19 +51,22 @@ const ContributionDetails: React.FC<ContributionDetailsProps> = ({
         </div>
       )}
       
-      <div className="flex justify-start mt-2">
+      <div className="flex justify-start mt-2 pr-2">
+      <button
+          className="btn text-center font-medium text-gray-700 underline shadow-none border-none "
+          onClick={copyToClipboard}
+        >
+          Share<FaCopy className="ml-1" />
+        </button>
+
         <button 
           className="btn bg-headerblack text-white hover:bg-gray-200 items-center justify-center hover:text-black px-2 py-1"
           onClick={() => setIsAttestationModalOpen(true)}
         >
           Endorse
         </button>
-        <button
-          className="btn text-center bg-headerblack text-white hover:bg-blue-500 ml-2"
-          onClick={copyToClipboard}
-        >
-          Share<FaCopy className="ml-1" />
-        </button>
+        
+      </div>
       </div>
     </>
   );
