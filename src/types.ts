@@ -407,6 +407,20 @@ export interface OnchainBuildersAttestation {
   createdAt?: Date;
 }
 
+export interface OPStackAttestation {
+  userfid: string;
+  ethaddress: string;
+  projectName: string;
+  contribution: string;
+  category: string;
+  subcategory: string;
+  ecosystem: string;
+  attestationUID: string;
+  feeling_if_didnt_exist: string;
+  explanation: string;
+  createdAt?: Date;
+}
+
 export interface GovernanceInfraAndToolingAttestation {
   userfid: string;
   ethaddress: string;
@@ -479,7 +493,8 @@ export type NewContributionAttestationGov =
   | GovernanceRandAAttestation
   | GovernanceCollabAndOnboardingAttestation
   | GovernanceStrucutresAttestation
-  | OnchainBuildersAttestation;
+  | OnchainBuildersAttestation
+  | OPStackAttestation;
 
 //these are the types that will hopefully work for displaying the attestations on the contribution page
 // export interface GovInfraAndToolingDisplay
@@ -522,6 +537,11 @@ export interface OnchainBuildersDisplay extends BaseAttestationDisplay {
   rating?: string;
 }
 
+export interface OPStackDisplay extends BaseAttestationDisplay {
+  feeling_if_didnt_exist: string;
+  explanation: string;
+}
+
 export interface GovStructuresDisplay extends BaseAttestationDisplay {
   feeling_if_didnt_exist: string;
   explanation: string;
@@ -558,7 +578,8 @@ export type AttestationDisplay =
   | GovInfraAndToolingDisplay
   | GeneralAttestationDisplay
   | GovStructuresDisplay
-  | OnchainBuildersDisplay;
+  | OnchainBuildersDisplay
+  | OPStackDisplay;
 
 export interface CategoryData {
   categories: string[];

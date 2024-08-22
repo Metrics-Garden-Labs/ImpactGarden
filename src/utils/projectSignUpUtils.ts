@@ -7,7 +7,6 @@ import {
   higherCategoryKey,
 } from "../types";
 import { getChainId } from "./networkContractAddresses";
-import { useSwitchChain } from "wagmi";
 
 export const networks: AttestationNetworkType[] = [
   "Ethereum",

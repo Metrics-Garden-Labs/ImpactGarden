@@ -1,5 +1,5 @@
 import React from 'react';
-import { AttestationDisplay, AttestationNetworkType, GovCollabAndOnboardingDisplay, GovInfraAndToolingDisplay, GovRandADisplay, GovStructuresDisplay, OnchainBuildersDisplay, Project } from '@/src/types';
+import { AttestationDisplay, AttestationNetworkType, GovCollabAndOnboardingDisplay, GovInfraAndToolingDisplay, GovRandADisplay, GovStructuresDisplay, OPStackDisplay, OnchainBuildersDisplay, Project } from '@/src/types';
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { easScanEndpoints } from '@/src/utils/easScan';
@@ -29,6 +29,10 @@ function isGovStructuresOpDisplay(attestation: AttestationDisplay): attestation 
 
 function isOnchainBuildersDisplay(attestation : AttestationDisplay): attestation is OnchainBuildersDisplay {
   return (attestation as OnchainBuildersDisplay).explanation == undefined;
+}
+
+function isOPStackDisplay(attestation: AttestationDisplay): attestation is OPStackDisplay {
+  return (attestation as OPStackDisplay).feeling_if_didnt_exist !== undefined;
 }
 
 const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
@@ -92,6 +96,16 @@ const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
           <p className='text-md text-black mb-2'>{attestation.contribution}</p>
           <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.recommend_contribution}</p>
           <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
+        </>
+      );
+    }
+
+    if(isOPStackDisplay(attestation)) {
+      return (
+        <>
+          <p className='text-md text-black mb-2'>{attestation.contribution}</p>
+          <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
+          <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
         </>
       );
     }

@@ -60,9 +60,9 @@ const OnchainBuilders: React.FC<OnchainBuildersProps> = ({
           <div className="mb-8">
             <h3 className='font-semibold text-center'>How would you feel if this contribution ceased to exist?</h3>
             <SmileyRatingScale rating={localSmileyRating} handleRating={setLocalSmileyRating} />
-            <p className='text-sm mt-2'><span className='font-semibold'>Extremely Upset:</span>  I wouldn’t have been able to understand and engage in governance without it.</p>
-            <p className='text-sm'><span className='font-semibold'>Somewhat Upset:</span>  Understanding and engaging in Optimism’s governance would have been considerably more challenging.</p>
-            <p className='text-sm'><span className='font-semibold'>Neutral:</span>  The absence of this tool would have had little to no impact on my journey.</p>
+            <p className='text-sm mt-2'><span className='font-semibold'>Extremely Upset:</span>   The absence of this project would significantly disrupt my interactions with web3.</p>
+            <p className='text-sm'><span className='font-semibold'>Somewhat Upset:</span>  The absence of this project would cause me a considerable inconvenience.</p>
+            <p className='text-sm'><span className='font-semibold'>Neutral:</span>  The absence of this project would have little to no impact on my life.</p>
           </div>
           <hr className="my-4" />
 

@@ -13,6 +13,7 @@ import {
   governance_r_and_a,
   governance_structures_op,
   onchain_builders,
+  op_stack,
 } from "../schema";
 import * as schema from "../schema";
 import {
@@ -392,6 +393,20 @@ export const insertOnchainBuildersAttestation = async (
   }
 };
 
+export const insertOPStackAttestation = async (
+  attestation: NewContributionAttestationGov
+) => {
+  try {
+    console.log("Inserting OP Stack attestation into the database");
+    const result = await db.insert(op_stack).values(attestation).returning();
+    console.log("OP Stack attestation inserted successfully");
+    return result;
+  } catch (error) {
+    console.error("Error inserting OP Stack attestation:", error);
+    throw error;
+  }
+};
+
 export const insertGovernanceInfraToolingAttestation = async (
   attestation: NewContributionAttestationGov
 ) => {
@@ -470,6 +485,38 @@ const subcategoryTableMap: { [key: string]: any } = {
   "Collaboration & Onboarding": governance_collab_and_onboarding,
   //add the other categories here
 };
+
+export const getOPStackAttestationsByContribution = async (
+  contibution: string
+) => {
+  try {
+    const attestations = await db
+      .select({
+        id: op_stack.id,
+        userfid: op_stack.userfid,
+        username: users.username,
+        pfp: users.pfp_url,
+        projectName: op_stack.projectName,
+        category: op_stack.category,
+        subcategory: op_stack.subcategory,
+        ecosystem: op_stack.ecosystem,
+        attestationUID: op_stack.attestationUID,
+        feeling_if_didnt_exist: op_stack.feeling_if_didnt_exist,
+        explanation: op_stack.explanation,
+        createdAt: op_stack.createdAt,
+      })
+      .from(op_stack)
+      .innerJoin(users, eq(op_stack.userfid, users.fid))
+      .where(eq(op_stack.contribution, contibution))
+      .orderBy(desc(op_stack.createdAt));
+
+    return attestations;
+  } catch (error) {
+    console.error("Error retrieving OP Stack attestations:", error);
+    throw error;
+  }
+};
+
 export const getOnchainBuildersAttestationsByContribution = async (
   contribution: string
 ) => {
@@ -671,6 +718,8 @@ export const getAttestationsByContributionAndSubcategory = async (
             getContributionAttestationList(contribution),
           ]);
         return [...onchainBuildersAttestations, ...contributionAttestations];
+      case "OP Stack":
+
       case "Governance":
         switch (subcategory) {
           case "Infra & Tooling":

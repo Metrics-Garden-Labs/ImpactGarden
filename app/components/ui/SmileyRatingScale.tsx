@@ -7,9 +7,10 @@ interface SmileyRatingScaleProps {
 
 const SmileyRatingScale: React.FC<SmileyRatingScaleProps> = ({ rating, handleRating }) => {
   const options = [
-    { value: 1, label: '😭 Extremely Upset', color: 'bg-red-200', brightColor: 'bg-red-600' },
+    { value: 1, label: '😭 Extremely Upset', color: 'bg-green-200', brightColor: 'bg-green-400'  },
     { value: 2, label: '🫠 Somewhat Upset', color: 'bg-yellow-200', brightColor: 'bg-yellow-400' },
-    { value: 3, label: '🙂 Neutral', color: 'bg-green-200', brightColor: 'bg-green-400' }
+    { value: 3, label: '🙂 Neutral', color: 'bg-red-200', brightColor: 'bg-red-600' }
+    
   ];
 
   return (

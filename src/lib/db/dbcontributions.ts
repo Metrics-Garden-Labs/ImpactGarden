@@ -12,22 +12,12 @@ import {
   governance_infra_and_tooling,
   governance_r_and_a,
   governance_structures_op,
+  onchain_builders,
+  op_stack,
 } from "../schema";
 import * as schema from "../schema";
-import { getAttestationsByAttester } from "../eas";
-import { Waterfall } from "next/font/google";
-import {
-  Project,
-  newUserAddresses,
-  Attestation,
-  ProjectCount,
-  Contribution,
-  NewProject,
-  ContributionWithAttestationCount,
-} from "@/src/types";
-import { count } from "console";
-import { desc, sql as drizzlesql } from "drizzle-orm";
-import { inArray, eq, sql, and } from "drizzle-orm";
+import { ContributionWithAttestationCount } from "@/src/types";
+import { eq, sql, and } from "drizzle-orm";
 
 export const db = drizzle(vercelsql, { schema });
 
@@ -172,12 +162,36 @@ export const getContributionsWithAttestationCounts = async (
           )
           .execute();
 
+        const count6 = await db
+          .select({ count: sql<number>`count(*)` })
+          .from(onchain_builders)
+          .where(
+            and(
+              eq(onchain_builders.projectName, contribution.projectName),
+              eq(onchain_builders.contribution, contribution.contribution)
+            )
+          )
+          .execute();
+
+        const count7 = await db
+          .select({ count: sql<number>`count(*)` })
+          .from(op_stack)
+          .where(
+            and(
+              eq(op_stack.projectName, contribution.projectName),
+              eq(op_stack.contribution, contribution.contribution)
+            )
+          )
+          .execute();
+
         const totalCount =
           Number(count1[0]?.count || 0) +
           Number(count2[0]?.count || 0) +
           Number(count3[0]?.count || 0) +
           Number(count4[0]?.count || 0);
-        Number(count5[0]?.count || 0);
+        +Number(count5[0]?.count || 0);
+        +Number(count6[0]?.count || 0);
+        +Number(count7[0]?.count || 0);
 
         console.log(`Contribution: ${contribution.contribution}`);
         console.log(
@@ -195,6 +209,8 @@ export const getContributionsWithAttestationCounts = async (
         console.log(
           `Count from governance_structures_op: ${count5[0]?.count || 0}`
         );
+        console.log(`Count from onchain_builders: ${count6[0]?.count || 0}`);
+        console.log(`Count from op_stack: ${count7[0]?.count || 0}`);
         console.log(`Total count: ${totalCount}`);
 
         return {

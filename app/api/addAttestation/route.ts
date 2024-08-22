@@ -7,6 +7,7 @@ import {
   NewContributionAttestationGov,
   GovernanceStrucutresAttestation,
   OnchainBuildersAttestation,
+  OPStackAttestation,
 } from "@/src/types";
 import {
   insertGovernanceInfraToolingAttestation,
@@ -14,6 +15,7 @@ import {
   insertGovernanceCollabAndOnboardingAttestation,
   insertGovernanceStructuresAttestation,
   insertOnchainBuildersAttestation,
+  insertOPStackAttestation,
 } from "@/src/lib/db/dbattestations";
 
 export const POST = async (request: Request) => {
@@ -29,7 +31,13 @@ export const POST = async (request: Request) => {
     switch (newAttestation.category) {
       case "Onchain Builders":
         insertedAttestation = await insertOnchainBuildersAttestation(
-          newAttestation
+          newAttestation as OnchainBuildersAttestation
+        );
+        console.log("Inserted Attestation", insertedAttestation);
+        return NextResponse.json(insertedAttestation, { status: 200 });
+      case "OP Stack":
+        insertedAttestation = await insertOPStackAttestation(
+          newAttestation as OPStackAttestation
         );
         console.log("Inserted Attestation", insertedAttestation);
         return NextResponse.json(insertedAttestation, { status: 200 });

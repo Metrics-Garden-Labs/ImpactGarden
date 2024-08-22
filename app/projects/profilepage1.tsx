@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { IoIosArrowBack, IoIosMenu } from "react-icons/io";
-import { Project, ContributionWithAttestationCount, AttestationNetworkType, AttestationDisplay, Contribution, OnchainBuildersDisplay } from '@/src/types';
+import { Project, ContributionWithAttestationCount, AttestationDisplay, Contribution } from '@/src/types';
 import AddContributionModal from './addContributionModal';
 import { useGlobalState } from '@/src/config/config';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';

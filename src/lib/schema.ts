@@ -371,3 +371,38 @@ export const onchain_builders = pgTable(
     };
   }
 );
+
+export const op_stack = pgTable(
+  "op_stack",
+  {
+    id: serial("id").primaryKey(),
+    userfid: text("userfid")
+      .references(() => users.fid)
+      .notNull(),
+    ethaddress: text("ethaddress"),
+    projectName: text("projectName")
+      .references(() => projects.projectName)
+      .notNull(),
+    contribution: text("contribution").references(
+      () => contributions.contribution
+    ),
+    category: text("category")
+      .references(() => projects.category)
+      .notNull(),
+    subcategory: text("subcategory")
+      .references(() => contributions.subcategory)
+      .notNull(),
+    ecosystem: text("ecosystem")
+      .references(() => projects.ecosystem)
+      .notNull(),
+    attestationUID: text("attestationUID").notNull(),
+    feeling_if_didnt_exist: text("feeling_if_didnt_exist"),
+    explanation: text("explanation"),
+    createdAt: timestamp("createdAt").defaultNow(),
+  },
+  (op_stack) => {
+    return {
+      op_stackIdx: uniqueIndex("opstack_idx").on(op_stack.id),
+    };
+  }
+);
