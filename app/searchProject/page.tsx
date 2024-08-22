@@ -1,5 +1,5 @@
 import { Project, SearchResult } from '../../src/types';
-import { getProjects } from '../../src/lib/db/dbprojects';
+import { getProjectsByCategoryAndSubcategory } from '../../src/lib/db/dbprojects';
 import ProjectPageClient from './ProjectPageClient';
 import { Metadata } from 'next';
 
@@ -19,15 +19,19 @@ export const metadata: Metadata = {
 const ProjectPage = async ({ searchParams }: Props) => {
   const query = searchParams?.query || '';
   const filter = searchParams?.filter || '';
-  const sortOrder = searchParams?.sortOrder || 'asc';
+  const sortOrder = searchParams?.sortOrder || 'A-Z';
 
   console.log('Received search parameters:', searchParams);
+  const [category, subcategory] = filter.split(':');
 
   try {
-    const projects: Project[] = await getProjects(filter);
-    console.log('Projects retrieved successfully:', projects);
-    console.log('Received sortOrder in ProjectPage:', sortOrder);
+    const projects: Project[] = await getProjectsByCategoryAndSubcategory(category || '', subcategory || '');
+    // console.log('Projects retrieved successfully:', projects);
+    // console.log('Received sortOrder in ProjectPage:', sortOrder);
     console.log("filter:", filter);
+    console.log("category:", category);
+    console.log("subcategory:", subcategory);
+    console.log("first 5 projects:", projects.slice(0, 5));
 
 
     return (

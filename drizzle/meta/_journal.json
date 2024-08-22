@@ -260,6 +260,13 @@
       "when": 1723115646664,
       "tag": "0036_colossal_molten_man",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1724338924764,
+      "tag": "0037_complex_goliath",
+      "breakpoints": true
     }
   ]
 }

@@ -5,6 +5,7 @@ import {
     RainbowKitProvider,
     getDefaultWallets,
     getDefaultConfig,
+    lightTheme,
 } from '@rainbow-me/rainbowkit';
 import {
     argentWallet,
@@ -70,7 +71,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <WagmiProvider config={config}>
             <QueryClientProvider client={queryClient}>
                 <GlobalStateProvider>
-                    <RainbowKitProvider initialChain={10} >
+                    <RainbowKitProvider 
+                        initialChain={10}
+                        theme={lightTheme({
+                            accentColor: '#24583C',
+                        })} >
                         {children}
                     </RainbowKitProvider>
                 </GlobalStateProvider>

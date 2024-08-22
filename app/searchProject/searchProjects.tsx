@@ -1,101 +1,76 @@
-import { FaSearch } from "react-icons/fa";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { useEffect, useState, useCallback, useTransition } from "react";
-import { useGlobalState } from "../../src/config/config";
-import { NetworkType } from '../../src/utils/graphqlEndpoints';
-import React from "react";
-import useLocalStorage from "@/src/hooks/use-local-storage-state";
-import { Project, SearchResult } from "@/src/types";
-import { NEXT_PUBLIC_URL } from "../../src/config/config";
+import { higherCategoryKey } from '@/src/types';
+import React, { useState, useEffect } from 'react';
+import { FaChevronDown, FaChevronUp, FaSearch } from "react-icons/fa";
 import { useDebouncedCallback } from 'use-debounce';
 
 interface Props {
-  onSearchResults: (results: SearchResult[]) => void;
+  onSearchChange: (query: string) => void;
   onFilterChange: (filter: string) => void;
   onSortOrderChange: (sortOrder: string) => void;
+  currentFilter: string;
+  currentSortOrder: string;
 }
 
-const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: Props) => {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
-  const [filter, setFilter] = useState("projectName");
-  const [walletAddress] = useGlobalState("walletAddress");
-  const [selectedNetwork, setSelectedNetwork] = useState<NetworkType>('Optimism');
-  const [sortOrder, setSortOrder] = useState("asc");
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [selectedFilter, setSelectedFilter] = useState("");
-  const [user] = useLocalStorage("user", {
-    fid: '',
-    username: '',
-    ethAddress: '',
-  });
+const categories: higherCategoryKey[] = ["Governance", "OP Stack", "Onchain Builders"];
 
-  const [isPending, startTransition] = useTransition();
+const subcategories = {
+  Governance: ["Infra & Tooling", "Research & Analytics", "Collaboration and Onboarding", "Governance Structures"],
+  "OP Stack": ["Ethereum Core Contributions", "OP Stack Research and Development", "OP Stack Tooling"],
+  "Onchain Builders": ["CeFi", "Crosschain", "DeFi", "Governance", "NFT", "Social", "Utilities"],
+};
 
-  const options = ["Project Name", "Recently Added", "Projects on Optimism", "Most Attested", "Best Rated"];
+const sortOptions = ["A-Z", "Recently Added", "Most Attested", "Z-A"];
 
-  console.log('walletAddress', walletAddress);
+const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, currentFilter, currentSortOrder }: Props) => {
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const [openCategory, setOpenCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubcategory, setSelectedSubcategory] = useState("");
 
   useEffect(() => {
-    handleSearch(searchParams.get("query") || "");
-  }, [selectedFilter, sortOrder]);
+    if (currentFilter) {
+      const [category, subcategory] = currentFilter.split(':');
+      setSelectedCategory(category as higherCategoryKey || "");
+      setSelectedSubcategory(subcategory || "");
+    } else {
+      setSelectedCategory("");
+      setSelectedSubcategory("");
+    }
+    console.log("Current Filter:", currentFilter);
+  }, [currentFilter]);
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newFilter = e.target.value;
-    setSelectedFilter(newFilter);
-    onFilterChange(newFilter);
-    handleSearch(searchParams.get("query") || "");
-  };
-
-  const handleSortOrderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newSortOrder = e.target.value;
-    setSortOrder(newSortOrder);
-    onSortOrderChange(newSortOrder);
-    handleSearch(searchParams.get("query") || "");
-  };
-
-  const handleSearch = useCallback(
-    async (searchTerm: string) => {
-      const params = new URLSearchParams(searchParams);
-
-      if (searchTerm) {
-        params.set("query", searchTerm);
-      } else {
-        params.delete("query");
-      }
-      params.set("filter", selectedFilter);
-      params.set("sortOrder", sortOrder);
-
-      replace(`${pathname}?${params.toString()}`);
-
-      try {
-        const response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjects`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            query: searchTerm,
-            filter: selectedFilter,
-            sortOrder,
-          }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          startTransition(() => {
-            setSearchResults(data.projects);
-            onSearchResults(data.projects);
-          });
-        } else {
-          console.error('Error fetching data');
-        }
-      } catch (error) {
-        console.error('Error during fetch operation:', error);
-      }
-    }, [searchParams, selectedFilter, sortOrder, replace, pathname, onSearchResults]
+  const debouncedSearch = useDebouncedCallback(
+    (value) => onSearchChange(value),
+    300
   );
 
-  const debouncedHandleSearch = useDebouncedCallback(handleSearch, 500);
+  const handleCategoryChange = (category: string) => {
+    if (selectedCategory === category) {
+      setOpenCategory(openCategory === category ? null : category);
+    } else {
+      setSelectedCategory(category);
+      setSelectedSubcategory("");
+      setOpenCategory(category);
+      onFilterChange(category);
+    }
+  };
+
+  const handleSubcategoryChange = (subcategory: string) => {
+    if (selectedSubcategory === subcategory) {
+      // Deselect subcategory if clicking on the already selected subcategory
+      setSelectedSubcategory("");
+      onFilterChange(selectedCategory);
+    } else {
+      setSelectedSubcategory(subcategory);
+      onFilterChange(`${selectedCategory}:${subcategory}`);
+    }
+  };
+
+  const handleSortOrderChange = (newSortOrder: string) => {
+    onSortOrderChange(newSortOrder);
+    setIsSortOpen(false);
+  };
 
   return (
     <div className="bg-white">
@@ -109,47 +84,86 @@ const SearchProjects = ({ onSearchResults, onFilterChange, onSortOrderChange }: 
               <input
                 className="w-full rounded-md border-gray-200 py-3 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 placeholder="Search projects"
-                defaultValue={searchParams.get("query")?.toString() || ""}
-                onChange={(e) => debouncedHandleSearch(e.target.value)}
+                onChange={(e) => debouncedSearch(e.target.value)}
               />
               <FaSearch className="absolute left-3 top-1/2 h-[20px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
-            <div className="w-full sm:w-48 border border-gray-300 rounded-md">
-              <select
-                id="filter"
-                name="filter"
-                value={selectedFilter}
-                onChange={handleFilterChange}
-                className="block w-full px-4 py-2 text-gray-900 bg-white border-0 rounded-md focus:outline-none focus:ring-0 focus:border-0 appearance-none"
+            <div className="relative w-full sm:w-48">
+              <button
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                className="w-full px-4 py-2 text-left bg-white border border-gray-300 rounded-md focus:outline-none flex justify-between items-center truncate"
               >
-                <option value="">Filters</option>
-                {options.map((option, index) => (
-                  <option key={index} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+                <span>{selectedCategory || selectedSubcategory ? `${selectedCategory}${selectedSubcategory ? `: ${selectedSubcategory}` : ''}` : 'Filter'}</span>
+                <FaChevronDown className={`transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {isFilterOpen && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
+                  {categories.map((category) => (
+                    <div key={category} className="p-2">
+                      <button
+                        onClick={() => handleCategoryChange(category)}
+                        className={`w-full text-left p-2 flex justify-between items-center rounded-md ${selectedCategory === category ? 'bg-[#B0B0B0]' : 'hover:bg-[#B0B0B0]'}`}
+                      >
+                        <span>{category}</span>
+                        {subcategories[category].length > 0 && (
+                          openCategory === category ? <FaChevronUp /> : <FaChevronDown />
+                        )}
+                      </button>
+                      {openCategory === category && subcategories[category].length > 0 && (
+                        <div className="ml-4">
+                          {subcategories[category].map((subcategory) => (
+                            <button
+                              key={subcategory}
+                              onClick={() => handleSubcategoryChange(subcategory)}
+                              className={`w-full text-left p-2 rounded-md ${selectedSubcategory === subcategory ? 'bg-[#B0B0B0]' : 'hover:bg-[#B0B0B0]'}`}
+                            >
+                              {subcategory}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-          <div className="w-full sm:w-auto">
-            <select
-              id="sortOrder"
-              name="sortOrder"
-              value={sortOrder}
-              onChange={handleSortOrderChange}
-              className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+          <div className="relative w-full sm:w-auto">
+            <button
+              onClick={() => setIsSortOpen(!isSortOpen)}
+              className="w-full px-4 py-2 text-left bg-white border border-gray-300 rounded-md focus:outline-none"
             >
-              <option value="">Sort by: A-Z</option>
-              <option value="asc">A-Z</option>
-              <option value="desc">Z-A</option>
-            </select>
+              Sort by: {currentSortOrder}
+            </button>
+            {isSortOpen && (
+              <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
+                {sortOptions.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => handleSortOrderChange(option)}
+                    className="w-full text-left hover:bg-[#B0B0B0] p-2"
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
-        {selectedFilter && (
+        {(selectedCategory || selectedSubcategory) && (
           <div className="mb-10">
             <div className="inline-block bg-white text-gray-800 text-sm font-medium py-2 px-4 rounded-md border">
-              {selectedFilter}
-              <button className="ml-2 text-gray-600 hover:text-gray-800" onClick={() => setSelectedFilter('')}>✕</button>
+              {`${selectedCategory}${selectedSubcategory ? `: ${selectedSubcategory}` : ''}`}
+              <button
+                className="ml-2 text-gray-600 hover:text-gray-800"
+                onClick={() => {
+                  setSelectedCategory("");
+                  setSelectedSubcategory("");
+                  onFilterChange("");
+                }}
+              >
+                ✕
+              </button>
             </div>
           </div>
         )}

@@ -17,8 +17,8 @@ export interface Project {
 }
 
 export interface ProjectCount extends Project {
-  attestationCount: number; // Explicitly typing attestationCount as number
-  averageRating: number; // Explicitly typing averageRating as number
+  attestationCount: number;
+  // averageRating: number; not including the rating for now
 }
 
 export interface Contribution {
@@ -368,9 +368,8 @@ export type GovernanceCategoryKey =
   | "Collaboration & Onboarding"
   | "OP Governance Structure";
 
-export type higherCategoryKey =
-  // | "Developer Tooling"
-  "Governance" | "Onchain Builders" | "OP Stack";
+export type higherCategoryKey = "Governance" | "Onchain Builders" | "OP Stack";
+// | "Developer Tooling";
 
 export type OPStackCategoryKey =
   | "Ethereum Core Contributions"

@@ -19,7 +19,8 @@ import {
   NewProject,
   CategoryData,
 } from "@/src/types";
-import { inArray, eq, sql } from "drizzle-orm";
+import { inArray, eq, sql, and, SQL } from "drizzle-orm";
+import { PgSelect } from "drizzle-orm/pg-core";
 
 export const db = drizzle(vercelsql, { schema });
 
@@ -31,152 +32,232 @@ const isProjectRating = (project: any): project is ProjectCount => {
   return "averageRating" in project;
 };
 
-export const getProjects = async (filter: string = "") => {
+export const getProjectsByCategoryAndSubcategory = async (
+  category: string,
+  subcategory: string
+): Promise<Project[]> => {
   try {
-    console.log("Filter db", filter);
-    let dbProjects: (Project | ProjectCount)[] = [];
+    let dbProjects: {
+      projects: Project;
+      contributions: Contribution | null;
+    }[] = [];
 
-    if (filter === "Recently Added") {
-      const recentlyAddedQuery = db
+    if (category && subcategory) {
+      // Query to filter projects by both category and subcategory
+      const filteredQuery = db
         .select()
         .from(projects)
-        .orderBy(sql`${projects.createdAt} DESC`);
-      dbProjects = await recentlyAddedQuery.execute();
-    } else if (filter === "Projects on Optimism") {
-      const optimismQuery = db
-        .select()
-        .from(projects)
-        .where(sql`${projects.ecosystem} = 'Optimism'`);
-      dbProjects = await optimismQuery.execute();
-    } else if (filter === "Most Attested") {
-      const attestedQuery = db
-        .select({
-          id: projects.id,
-          userFid: projects.userFid,
-          ethAddress: projects.ethAddress,
-          ecosystem: projects.ecosystem,
-          projectName: projects.projectName,
-          oneliner: projects.oneliner,
-          category: projects.category,
-          websiteUrl: projects.websiteUrl,
-          twitterUrl: projects.twitterUrl,
-          githubUrl: projects.githubUrl,
-          logoUrl: projects.logoUrl,
-          projectUid: projects.projectUid,
-          createdAt: projects.createdAt,
-          attestationCount:
-            sql`CAST(COUNT(${contributionattestations.id}) AS INT)`.as(
-              "attestationCount"
-            ),
-        })
-        .from(projects)
         .leftJoin(
-          contributionattestations,
-          sql`${projects.projectName} = ${contributionattestations.projectName}`
+          contributions,
+          eq(projects.projectName, contributions.projectName)
         )
-        .groupBy(
-          projects.id,
-          projects.userFid,
-          projects.ethAddress,
-          projects.ecosystem,
-          projects.projectName,
-          projects.oneliner,
-          projects.category,
-          projects.websiteUrl,
-          projects.twitterUrl,
-          projects.githubUrl,
-          projects.logoUrl,
-          projects.projectUid,
-          projects.createdAt
-        )
-        .orderBy(sql`COUNT(${contributionattestations.id}) DESC`);
-      dbProjects = await attestedQuery.execute();
-
-      // Use type guard to filter and map projects
-      dbProjects = dbProjects.map((project) => {
-        if (isProjectCount(project)) {
-          return {
-            ...project,
-            attestationCount: Number(project.attestationCount),
-          };
-        }
-        return project;
-      });
-    } else if (filter === "Best Rated") {
-      const bestRatedQuery = db
-        .select({
-          id: projects.id,
-          userFid: projects.userFid,
-          ethAddress: projects.ethAddress,
-          ecosystem: projects.ecosystem,
-          projectName: projects.projectName,
-          oneliner: projects.oneliner,
-          category: projects.category,
-          websiteUrl: projects.websiteUrl,
-          twitterUrl: projects.twitterUrl,
-          githubUrl: projects.githubUrl,
-          logoUrl: projects.logoUrl,
-          projectUid: projects.projectUid,
-          createdAt: projects.createdAt,
-          averageRating:
-            sql`AVG(CAST(${contributionattestations.rating} AS FLOAT))`.as(
-              "averageRating"
-            ),
-        })
-        .from(projects)
-        .leftJoin(
-          contributionattestations,
-          sql`${projects.projectName} = ${contributionattestations.projectName}`
-        )
-        .groupBy(
-          projects.id,
-          projects.userFid,
-          projects.ethAddress,
-          projects.ecosystem,
-          projects.projectName,
-          projects.oneliner,
-          projects.websiteUrl,
-          projects.twitterUrl,
-          projects.githubUrl,
-          projects.logoUrl,
-          projects.projectUid,
-          projects.createdAt
-        )
-        .orderBy(
-          sql`AVG(CAST(${contributionattestations.rating} AS FLOAT)) DESC`
+        .where(
+          and(
+            eq(contributions.category, category),
+            eq(contributions.subcategory, subcategory)
+          )
         );
-      dbProjects = await bestRatedQuery.execute();
 
-      // Use type guard to filter and map projects
-      dbProjects = dbProjects.map((project) => {
-        if (isProjectRating(project)) {
-          return {
-            ...project,
-            averageRating:
-              project.averageRating !== null
-                ? Number(project.averageRating)
-                : null,
-          };
-        }
-        return project;
-      });
+      dbProjects = await filteredQuery.execute();
+    } else if (category) {
+      // Query to filter projects by category only
+      const filteredQuery = db
+        .select()
+        .from(projects)
+        .leftJoin(
+          contributions,
+          eq(projects.projectName, contributions.projectName)
+        )
+        .where(eq(contributions.category, category));
+
+      dbProjects = await filteredQuery.execute();
     } else {
-      const allProjectsQuery = db.select().from(projects);
+      // Fallback if no category or subcategory is provided
+      const allProjectsQuery = db
+        .select()
+        .from(projects)
+        .leftJoin(
+          contributions,
+          eq(projects.projectName, contributions.projectName)
+        );
       dbProjects = await allProjectsQuery.execute();
     }
 
-    // Enhanced logging
-    console.log("Raw database response:", dbProjects);
-    console.log(`Number of projects returned: ${dbProjects.length}`);
-    dbProjects.forEach((project, index) => {
-      console.log(`Project ${index + 1}:`, project);
-    });
-    return dbProjects;
+    // Map the result to extract only the project fields
+    const projectsOnly: Project[] = dbProjects.map((result) => ({
+      id: result.projects.id,
+      createdAt: result.projects.createdAt,
+      userFid: result.projects.userFid,
+      ethAddress: result.projects.ethAddress,
+      ecosystem: result.projects.ecosystem,
+      projectName: result.projects.projectName,
+      oneliner: result.projects.oneliner,
+      websiteUrl: result.projects.websiteUrl,
+      twitterUrl: result.projects.twitterUrl,
+      githubUrl: result.projects.githubUrl,
+      logoUrl: result.projects.logoUrl,
+      primaryprojectuid: result.projects.primaryprojectuid,
+      projectUid: result.projects.projectUid,
+    }));
+
+    console.log("Mapped projects:", projectsOnly);
+    return projectsOnly;
   } catch (error) {
-    console.error("Error retrieving projects:", error);
+    console.error(
+      "Error retrieving projects by category and subcategory:",
+      error
+    );
     throw error;
   }
 };
+
+// export const getProjects = async (filter: string = "") => {
+//   try {
+//     console.log("Filter db", filter);
+//     let dbProjects: (Project | ProjectCount)[] = [];
+
+//     if (filter === "Recently Added") {
+//       const recentlyAddedQuery = db
+//         .select()
+//         .from(projects)
+//         .orderBy(sql`${projects.createdAt} DESC`);
+//       dbProjects = await recentlyAddedQuery.execute();
+//     } else if (filter === "Projects on Optimism") {
+//       const optimismQuery = db
+//         .select()
+//         .from(projects)
+//         .where(sql`${projects.ecosystem} = 'Optimism'`);
+//       dbProjects = await optimismQuery.execute();
+//     } else if (filter === "Most Attested") {
+//       const attestedQuery = db
+//         .select({
+//           id: projects.id,
+//           userFid: projects.userFid,
+//           ethAddress: projects.ethAddress,
+//           ecosystem: projects.ecosystem,
+//           projectName: projects.projectName,
+//           oneliner: projects.oneliner,
+//           category: projects.category,
+//           websiteUrl: projects.websiteUrl,
+//           twitterUrl: projects.twitterUrl,
+//           githubUrl: projects.githubUrl,
+//           logoUrl: projects.logoUrl,
+//           projectUid: projects.projectUid,
+//           createdAt: projects.createdAt,
+//           attestationCount:
+//             sql`CAST(COUNT(${contributionattestations.id}) AS INT)`.as(
+//               "attestationCount"
+//             ),
+//         })
+//         .from(projects)
+//         .leftJoin(
+//           contributionattestations,
+//           sql`${projects.projectName} = ${contributionattestations.projectName}`
+//         )
+//         .groupBy(
+//           projects.id,
+//           projects.userFid,
+//           projects.ethAddress,
+//           projects.ecosystem,
+//           projects.projectName,
+//           projects.oneliner,
+//           projects.category,
+//           projects.websiteUrl,
+//           projects.twitterUrl,
+//           projects.githubUrl,
+//           projects.logoUrl,
+//           projects.projectUid,
+//           projects.createdAt
+//         )
+//         .orderBy(sql`COUNT(${contributionattestations.id}) DESC`);
+//       dbProjects = await attestedQuery.execute();
+
+//       // Use type guard to filter and map projects
+//       dbProjects = dbProjects.map((project) => {
+//         if (isProjectCount(project)) {
+//           return {
+//             ...project,
+//             attestationCount: Number(project.attestationCount),
+//           };
+//         }
+//         return project;
+//       });
+//     } else if (filter === "Best Rated") {
+//       const bestRatedQuery = db
+//         .select({
+//           id: projects.id,
+//           userFid: projects.userFid,
+//           ethAddress: projects.ethAddress,
+//           ecosystem: projects.ecosystem,
+//           projectName: projects.projectName,
+//           oneliner: projects.oneliner,
+//           category: projects.category,
+//           websiteUrl: projects.websiteUrl,
+//           twitterUrl: projects.twitterUrl,
+//           githubUrl: projects.githubUrl,
+//           logoUrl: projects.logoUrl,
+//           projectUid: projects.projectUid,
+//           createdAt: projects.createdAt,
+//           averageRating:
+//             sql`AVG(CAST(${contributionattestations.rating} AS FLOAT))`.as(
+//               "averageRating"
+//             ),
+//         })
+//         .from(projects)
+//         .leftJoin(
+//           contributionattestations,
+//           sql`${projects.projectName} = ${contributionattestations.projectName}`
+//         )
+//         .groupBy(
+//           projects.id,
+//           projects.userFid,
+//           projects.ethAddress,
+//           projects.ecosystem,
+//           projects.projectName,
+//           projects.oneliner,
+//           projects.websiteUrl,
+//           projects.twitterUrl,
+//           projects.githubUrl,
+//           projects.logoUrl,
+//           projects.projectUid,
+//           projects.createdAt
+//         )
+//         .orderBy(
+//           sql`AVG(CAST(${contributionattestations.rating} AS FLOAT)) DESC`
+//         );
+//       dbProjects = await bestRatedQuery.execute();
+
+//       // Use type guard to filter and map projects
+//       //rating is deprecated for the moment
+//       // dbProjects = dbProjects.map((project) => {
+//       //   if (isProjectRating(project)) {
+//       //     return {
+//       //       ...project,
+//       //       averageRating:
+//       //         project.averageRating !== null
+//       //           ? Number(project.averageRating)
+//       //           : null,
+//       //     };
+//       //   }
+//       //   return project;
+//       // });
+//     } else {
+//       const allProjectsQuery = db.select().from(projects);
+//       dbProjects = await allProjectsQuery.execute();
+//     }
+
+//     // Enhanced logging
+//     console.log("Raw database response:", dbProjects);
+//     console.log(`Number of projects returned: ${dbProjects.length}`);
+//     dbProjects.forEach((project, index) => {
+//       console.log(`Project ${index + 1}:`, project);
+//     });
+//     return dbProjects;
+//   } catch (error) {
+//     console.error("Error retrieving projects:", error);
+//     throw error;
+//   }
+// };
 
 //get the categories for the project
 export const ProjectCategories = async (

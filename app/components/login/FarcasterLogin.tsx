@@ -132,6 +132,7 @@ const FarcasterLogin = () => {
               accountStatus="address"
               chainStatus="icon"
               showBalance={false}
+              
             />
           </div>
         </>

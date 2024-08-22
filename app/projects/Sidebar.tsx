@@ -71,9 +71,7 @@ const Sidebar = ({ project, projectAttestationCount, categories, subcategories }
         <div className="flex flex-col h-full overflow-y-auto">
           {/* Sidebar content */}
           <div className="py-10 px-8 flex grow flex-col gap-y-5 bg-white overflow-y-auto px-6 pb-4">
-            {/* Company image placeholder */}
             <div className="h-60 bg-gray-300 rounded-full flex justify-center items-center">
-              {/* Replace src with your image path */}
               {project.logoUrl ? (
                     <Image
                       src={project.logoUrl}
