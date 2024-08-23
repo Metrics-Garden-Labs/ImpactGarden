@@ -97,7 +97,7 @@ const AddContributionForm: React.FC<AddContributionFormProps> = ({
           />
 
           <div className="mb-4 text-center">
-            <button className="btn items-center bg-blue-500" type="submit" disabled={isLoading}>
+            <button className="btn text-sm  items-center font-medium text-white bg-black rounded-md shadow-sm hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="submit" disabled={isLoading}>
               {isLoading ? 'Adding...' : 'Add Contribution'}
             </button>
           </div>

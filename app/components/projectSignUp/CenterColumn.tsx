@@ -307,7 +307,7 @@ const CenterColumn: React.FC<CenterColumnProps> = ({
 
       <div className="mt-6 flex justify-end justify-center space-x-4">
         <button
-          className="px-4 py-2 w-1/5 text-sm font-medium text-white bg-black rounded-md shadow-sm hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="px-4 py-2 w-1/5 text-sm font-medium text-white bg-black rounded-md shadow-sm hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           type="button"
           onClick={handleNext}
         >
