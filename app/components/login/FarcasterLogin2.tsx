@@ -1,39 +1,46 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { NeynarAPIClient } from "@neynar/nodejs-sdk";
+import { verifyUser, removeSearchParams } from '../../../src/utils/verifyUserHelper';
 import useLocalStorage from '../../../src/hooks/use-local-storage-state';
 import { NEXT_PUBLIC_URL, useGlobalState } from '../../../src/config/config';
 import dotenv from 'dotenv';
-import Image from 'next/image';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import FarcasterConnected from '../../public/farcasterConnected.svg';
 import UserDropdown from './userSignoutDropdown';
 
 dotenv.config();
 
-// declare global {
-//   interface Window {
-//     onSignInSuccess?: (data: SignInSuccessData) => void | undefined;
-//   }
-// }
+declare global {
+  interface Window {
+    onSignInSuccess?: (data: SignInSuccessData) => Promise<void> | void;
+  }
+}
 
 interface SignInSuccessData {
   signer_uuid: string;
   fid: string;
+  is_authenticated: boolean;
+  user: {
+    username: string;
+    ethAddress: string;
+    pfp_url: string;
+  };
+  signer_permissions: string[];
 }
 
 const FarcasterLogin = () => {
   const [user, setUser, removeUser] = useLocalStorage("user", {
     fid: '',
     username: '',
-    ethAddress: [],
+    ethAddress: '',
+    isAuthenticated: false,
   });
   
   const [fid, setFid] = useGlobalState('fid');
   const [username, setUsername] = useState("");
   const [firstVerifiedEthAddress, setFirstVerifiedEthAddress] = useGlobalState("ethAddress");
   const [isSignedIn, setIsSignedIn] = useState(Boolean(user.fid));
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const client_id = process.env.NEXT_PUBLIC_NEYNAR_CLIENT_ID;
 
@@ -42,6 +49,7 @@ const FarcasterLogin = () => {
   }
 
   useEffect(() => {
+
     const scriptId = "neynar-signin-script";
     let script = document.getElementById(scriptId) as HTMLScriptElement | null;
 
@@ -53,16 +61,26 @@ const FarcasterLogin = () => {
       script.defer = true;
       document.body.appendChild(script);
     }
-    
-    window.onSignInSuccess = (data) => {
+
+    window.onSignInSuccess = async (data: SignInSuccessData) => {
       console.log("Sign in success", data);
-      setUser({
-        fid: data.fid,
-        username: user.username,
-        ethAddress: user.ethAddress,
-      });
-      setFid(data.fid);
-      setIsSignedIn(true);
+
+      const isVerifiedUser = await verifyUser(data.signer_uuid, data.fid);
+      if (isVerifiedUser && data.is_authenticated) {
+        setIsAuthenticated(true);
+        await fetchData(data.fid);
+        setIsSignedIn(true);
+        removeSearchParams();
+        setUser({
+          fid: data.fid,
+          username: data.user.username,
+          ethAddress: data.user.ethAddress,
+          isAuthenticated: true,
+        });
+        console.log("User verified successfully", user);
+      } else {
+        console.error("User verification failed");
+      }
     };
 
     return () => {
@@ -71,23 +89,15 @@ const FarcasterLogin = () => {
     };
   }, [setUser, setFid, user.username, user.ethAddress]);
 
-  console.log("user", user);
-
   const handleSignout = () => {
     removeUser();
     setFid("");
-    setUser({ fid: '', username: '', ethAddress: [] });
+    setUser({ fid: '', username: '', ethAddress: '', isAuthenticated: false });
     setUsername("");
     setFirstVerifiedEthAddress("");
     setIsSignedIn(false);
+    setIsAuthenticated(false);
   };
-
-  useEffect(() => {
-    if (fid) {
-      console.log("FID changed, now fetching data for FID:", fid);
-      fetchData(fid);
-    }
-  }, [fid]);
 
   async function fetchData(fid: string) {
     try {
@@ -120,11 +130,9 @@ const FarcasterLogin = () => {
     }
   }
 
-  console.log("FID", fid);
-
   return (
     <div className="bg-headerblack flex items-center">
-      {isSignedIn ? (
+      {isAuthenticated ? (
         <>
           <UserDropdown onSignout={handleSignout} />
           <div className="inline-block ml-4">
@@ -132,7 +140,6 @@ const FarcasterLogin = () => {
               accountStatus="address"
               chainStatus="icon"
               showBalance={false}
-              
             />
           </div>
         </>
@@ -140,7 +147,7 @@ const FarcasterLogin = () => {
         <div
           className="neynar_signin rounded-lg"
           data-client_id={client_id}
-          data-success-callback="onSignInSuccess"
+          data-success_callback="onSignInSuccess"
           data-theme='light'
           data-variant='farcaster'
           data-logo_size='25px'

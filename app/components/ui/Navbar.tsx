@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import Image from "next/image";
 import { FaBars, FaTimes } from "react-icons/fa";
-import FarcasterLogin from '../login/FarcasterLogin';
+import FarcasterLogin from '../login/FarcasterLogin2';
 import { isMobile } from 'react-device-detect';
 
 export default function Navbar() {
