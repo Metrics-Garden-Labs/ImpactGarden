@@ -539,6 +539,7 @@ export interface OnchainBuildersDisplay extends BaseAttestationDisplay {
 export interface OPStackDisplay extends BaseAttestationDisplay {
   feeling_if_didnt_exist: string;
   explanation: string;
+  rating?: string;
 }
 
 export interface GovStructuresDisplay extends BaseAttestationDisplay {
