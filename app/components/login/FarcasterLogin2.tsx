@@ -132,7 +132,7 @@ const FarcasterLogin = () => {
 
   return (
     <div className="bg-headerblack flex items-center">
-      {isAuthenticated ? (
+      {isSignedIn ? (
         <>
           <UserDropdown onSignout={handleSignout} />
           <div className="inline-block ml-4">
