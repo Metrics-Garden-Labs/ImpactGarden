@@ -25,11 +25,11 @@ export default function Footer() {
           </div>
         </div>
         <div className="flex flex-1 justify-end items-center gap-2 sm:gap-8 mt-4 md:mt-0 pl-70">
-          <Link href="https://discord.com/invite/" target="_blank" className="flex items-center">
+          {/* <Link href="https://discord.com/invite/" target="_blank" className="flex items-center">
             <FaDiscord className="text-white text-lg w-6 h-6" />
             <p className="ml-1 text-lg">Discord</p>
-          </Link>
-          <Link href="https://twitter.com/" target="_blank" className="flex items-center">
+          </Link> */}
+          <Link href="https://x.com/metricsgarden" target="_blank" className="flex items-center">
             <FaXTwitter className="text-white text-lg w-6 h-6" />
             <p className="ml-1 text-lg">Twitter</p>
           </Link>

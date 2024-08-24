@@ -67,6 +67,11 @@ export default function ContributionPage({
       activeTab === tabName ? 'border-b-2 border-black' : 'text-gray-600 hover:text-black'
     }`;
 
+  const handleBackClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push('/searchProject');
+  };
   const isWebShareSupported = typeof navigator !== 'undefined' && !!navigator.share;
   const copyToClipboard = () => {
     const shareUrl = `${window.location.origin}${pathname}?contribution=${contribution.id}`;
@@ -131,7 +136,7 @@ export default function ContributionPage({
         <nav className="flex space-x-4 text-black">
           <button
             className=""
-            onClick={() => router.back()}
+            onClick={handleBackClick}
             aria-label="Go Back"
           >
             <IoIosArrowBack className="h-6 w-6" />

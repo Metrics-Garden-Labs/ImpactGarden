@@ -719,7 +719,7 @@ export const getAttestationsByContributionAndSubcategory = async (
           ]);
         return [...onchainBuildersAttestations, ...contributionAttestations];
       case "OP Stack":
-
+        return await getOPStackAttestationsByContribution(contribution);
       case "Governance":
         switch (subcategory) {
           case "Infra & Tooling":

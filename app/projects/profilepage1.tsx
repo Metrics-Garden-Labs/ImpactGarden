@@ -88,6 +88,12 @@ export default function ProfilePage({
     setContributionCards((prevContributions) => [...prevContributions, addedContribution]);
   };
 
+  const handleBackClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push('/searchProject');
+  };
+
   const tabClasses = (tabName: string) =>
     `cursor-pointer px-4 py-2 text-sm font-semibold mr-2 ${
       activeTab === tabName ? 'border-b-2 border-black' : 'text-gray-600 hover:text-black'
@@ -182,7 +188,7 @@ export default function ProfilePage({
 
           <button
             className=""
-            onClick={() => router.push('/searchProject')}
+            onClick={handleBackClick}
             aria-label="Go Back"
           >
             <IoIosArrowBack className="h-6 w-6" />
