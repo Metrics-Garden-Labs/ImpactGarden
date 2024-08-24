@@ -879,6 +879,25 @@ export const getAttestationsByProject = async (projectName: string) => {
       .where(eq(onchain_builders.projectName, projectName))
       .orderBy(desc(onchain_builders.createdAt));
 
+    const OPStackAttestations = await db
+      .select({
+        id: op_stack.id,
+        userFid: op_stack.userfid,
+        username: users.username,
+        pfp: users.pfp_url,
+        projectName: op_stack.projectName,
+        contribution: op_stack.contribution,
+        ecosystem: op_stack.ecosystem,
+        attestationUID: op_stack.attestationUID,
+        feeling_if_didnt_exist: op_stack.feeling_if_didnt_exist,
+        explanation: op_stack.explanation,
+        createdAt: op_stack.createdAt,
+      })
+      .from(op_stack)
+      .innerJoin(users, eq(op_stack.userfid, users.fid))
+      .where(eq(op_stack.projectName, projectName))
+      .orderBy(desc(op_stack.createdAt));
+
     const normalizeAttestation = (att: any): ProjectAttestations => ({
       id: att.id,
       userFid: att.userFid || att.userfid,
@@ -913,6 +932,7 @@ export const getAttestationsByProject = async (projectName: string) => {
       ...collabOnboardingAttestations.map(normalizeAttestation),
       ...govstructuresAttestations.map(normalizeAttestation),
       ...onchainBuildersAttestations.map(normalizeAttestation),
+      ...OPStackAttestations.map(normalizeAttestation),
     ];
 
     return allAttestations;

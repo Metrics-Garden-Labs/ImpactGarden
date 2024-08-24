@@ -48,6 +48,15 @@ const AttestationCard: React.FC<AttestationCardProps> = ({
           );
         }
         break;
+      case "OP Stack":
+        if('feeling_if_didnt_exist' in attestation) {
+          return (
+            <>
+              <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
+              <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+            </>
+          );
+        }
       case "Governance":
         switch (contribution.subcategory) {
           case 'Infra & Tooling':

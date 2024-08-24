@@ -25,114 +25,114 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
   const renderAttestationDetails = () => {
     console.log('Rendering attestation details:', attestation);
 
-    if ('category' in attestation && attestation.category === "Governance") {
-      if (attestation.subcategory === "Infra & Tooling") {
-        return (
-          <>
-            <div className="mb-4">
-              <h3 className="font-semibold text-center">Likely to Recommend</h3>
-              <p className="text-center">{attestation.likely_to_recommend || 'N/A'}</p>
-            </div>
-            <div className="mb-4">
-              <h3 className="font-semibold text-center">Feeling if Contribution Didn’t Exist</h3>
-              <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
-            </div>
-          </>
-        );
-      } else if (attestation.subcategory === "Governance Research & Analytics") {
-        return (
-          <>
-            <div className="mb-4">
-              <h3 className="font-semibold text-center">Likely to Recommend</h3>
-              <p className="text-center">{attestation.likely_to_recommend || 'N/A'}</p>
-            </div>
-            <div className="mb-4">
-              <h3 className="font-semibold text-center">Useful for Understanding</h3>
-              <p className="text-center">{attestation.useful_for_understanding || 'N/A'}</p>
-            </div>
-            <div className="mb-4">
-              <h3 className="font-semibold text-center">Effective for Improvements</h3>
-              <p className="text-center">{attestation.effective_for_improvements || 'N/A'}</p>
-            </div>
-          </>
-        );
-      } else if (attestation.subcategory === "Collaboration & Onboarding") {
-        return (
-          <>
-            <div className="mb-4">
-              <h3 className="font-semibold text-center">Governance Knowledge</h3>
-              <p className="text-center">{attestation.governance_knowledge || 'N/A'}</p>
-            </div>
-            <div className="mb-4">
-              <h3 className="font-semibold text-center">Recommend Contribution</h3>
-              <p className="text-center">{attestation.recommend_contribution || 'N/A'}</p>
-            </div>
-            <div className="mb-4">
-              <h3 className="font-semibold text-center">Feeling if Contribution Didn’t Exist</h3>
-              <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
-            </div>
-          </>
-        );
-      } else if (attestation.subcategory === "OP Governance Structure")
-        return (
-          <>
-            <div className="mb-4">
-              <h3 className="font-semibold text-center">Feeling If Contribution Didn’</h3>
-              <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
-            </div>
-            <div className="mb-4">
-              <h3 className="font-semibold text-center">Examples of Usefulness</h3>
-              <p className="text-center">{attestation.examples_of_usefulness}</p>
-            </div>
-          </>
-        );
-    } else if ('useful_for_understanding' in attestation) {
-      return (
-        <>
-          <div className="mb-4">
-            <h3 className="font-semibold text-center">Useful for Understanding</h3>
-            <p className="text-center">{attestation.useful_for_understanding}</p>
-          </div>
-          <div className="mb-4">
-            <h3 className="font-semibold text-center">Effective for Improvements</h3>
-            <p className="text-center">{attestation.effective_for_improvements}</p>
-          </div>
-          {/* <div className="mb-4">
-            <h3 className="font-semibold text-center">Explanation</h3>
-            <p className="text-center">{attestation.explanation}</p>
-          </div> */}
-        </>
-      );
-    } else if ('governance_knowledge' in attestation) {
-      return (
-        <>
-          <div className="mb-4">
-            <h3 className="font-semibold text-center">Governance Knowledge</h3>
-            <p className="text-center">{attestation.governance_knowledge}</p>
-          </div>
-          <div className="mb-4">
-            <h3 className="font-semibold text-center">Recommend Contribution</h3>
-            <p className="text-center">{attestation.recommend_contribution}</p>
-          </div>
-          <div className="mb-4">
-            <h3 className="font-semibold text-center">Feeling if Contribution Didn’t Exist</h3>
-            <p className="text-center">{attestation.feeling_if_didnt_exist}</p>
-          </div>
-          {/* <div className="mb-4">
-            <h3 className="font-semibold text-center">Explanation</h3>
-            <p className="text-center">{attestation.explanation}</p>
-          </div> */}
-        </>
-      );
-    } else if ('likely_to_recommend' in attestation) {
-      return (
-        <>
-          <div className="mb-4">
-            <h3 className="font-semibold text-center">Likely to Recommend</h3>
-            <p className="text-center">{attestation.likely_to_recommend}</p>
-          </div>
-        </>
-      );
+    if ('category' in attestation) {
+      switch (attestation.category) {
+        case "Onchain Builders":
+          return (
+            <>
+              <div className="mb-4">
+                <h3 className="font-semibold text-center">Likely to Recommend</h3>
+                <p className="text-center">{attestation.likely_to_recommend || 'N/A'}</p>
+              </div>
+              <div className="mb-4">
+                <h3 className="font-semibold text-center">Explanation</h3>
+                <p className="text-center">{attestation.explanation || 'N/A'}</p>
+              </div>
+            </>
+          );
+        case "OP Stack":
+          return (
+            <>
+              <div className="mb-4">
+                <h3 className="font-semibold text-center">Feeling if Contribution Didn't Exist</h3>
+                <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
+              </div>
+              <div className="mb-4">
+                <h3 className="font-semibold text-center">Explanation</h3>
+                <p className="text-center">{attestation.explanation || 'N/A'}</p>
+              </div>
+            </>
+          );
+        case "Governance":
+          switch (attestation.subcategory) {
+            case "Infra & Tooling":
+              return (
+                <>
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-center">Likely to Recommend</h3>
+                    <p className="text-center">{attestation.likely_to_recommend || 'N/A'}</p>
+                  </div>
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-center">Feeling if Contribution Didn't Exist</h3>
+                    <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
+                  </div>
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-center">Explanation</h3>
+                    <p className="text-center">{attestation.explanation || 'N/A'}</p>
+                  </div>
+                </>
+              );
+            case "Governance Research & Analytics":
+              return (
+                <>
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-center">Useful for Understanding</h3>
+                    <p className="text-center">{attestation.useful_for_understanding || 'N/A'}</p>
+                  </div>
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-center">Effective for Improvements</h3>
+                    <p className="text-center">{attestation.effective_for_improvements || 'N/A'}</p>
+                  </div>
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-center">Explanation</h3>
+                    <p className="text-center">{attestation.explanation || 'N/A'}</p>
+                  </div>
+                </>
+              );
+            case "Collaboration & Onboarding":
+              return (
+                <>
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-center">Governance Knowledge</h3>
+                    <p className="text-center">{attestation.governance_knowledge || 'N/A'}</p>
+                  </div>
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-center">Recommend Contribution</h3>
+                    <p className="text-center">{attestation.recommend_contribution || 'N/A'}</p>
+                  </div>
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-center">Feeling if Contribution Didn't Exist</h3>
+                    <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
+                  </div>
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-center">Explanation</h3>
+                    <p className="text-center">{attestation.explanation || 'N/A'}</p>
+                  </div>
+                </>
+              );
+            case "Governance Structures":
+              return (
+                <>
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-center">Feeling If Contribution Didn't Exist</h3>
+                    <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
+                  </div>
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-center">Examples of Usefulness</h3>
+                    <p className="text-center">{attestation.examples_of_usefulness || 'N/A'}</p>
+                  </div>
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-center">Explanation</h3>
+                    <p className="text-center">{attestation.explanation || 'N/A'}</p>
+                  </div>
+                </>
+              );
+            default:
+              return null;
+          }
+        default:
+          return null;
+      }
     } else {
       return (
         <>
@@ -163,10 +163,6 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
           <h2 className="text-xl font-bold mb-4">{('projectName' in attestation) ? attestation.projectName : 'Project'}</h2>
         </div>
         <hr className="border-1 border-gray-300 my-2 mx-auto w-1/2" />
-        <div className="mb-4 items-center py-3">
-          <h3 className="font-semibold text-center">Contribution</h3>
-          <p className="text-center">{attestation.contribution}</p>
-        </div>
         {renderAttestationDetails()}
         <div className="mb-4">
           <h3 className="font-semibold text-center">Feedback</h3>

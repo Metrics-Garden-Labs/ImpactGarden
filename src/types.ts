@@ -553,6 +553,7 @@ export interface GovRandADisplay extends BaseAttestationDisplay {
   useful_for_understanding: string;
   effective_for_improvements: string;
   explanation: string;
+  rating?: string;
 }
 
 export interface GovCollabAndOnboardingDisplay extends BaseAttestationDisplay {
@@ -560,11 +561,13 @@ export interface GovCollabAndOnboardingDisplay extends BaseAttestationDisplay {
   recommend_contribution: string;
   feeling_if_didnt_exist: string;
   explanation: string;
+  rating?: string;
 }
 
 export interface GovInfraAndToolingDisplay extends BaseAttestationDisplay {
   likely_to_recommend: string;
   explanation: string;
+  rating?: string;
 }
 
 export interface GeneralAttestationDisplay extends BaseAttestationDisplay {
