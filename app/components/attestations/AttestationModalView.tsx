@@ -44,7 +44,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
           return (
             <>
               <div className="mb-4">
-                <h3 className="font-semibold text-center">Feeling if Contribution Didn't Exist</h3>
+                <h3 className="font-semibold text-center">Feeling if Contribution Didn’t Exist</h3>
                 <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
               </div>
               <div className="mb-4">
@@ -63,7 +63,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
                     <p className="text-center">{attestation.likely_to_recommend || 'N/A'}</p>
                   </div>
                   <div className="mb-4">
-                    <h3 className="font-semibold text-center">Feeling if Contribution Didn't Exist</h3>
+                    <h3 className="font-semibold text-center">Feeling if Contribution Didn’t Exist</h3>
                     <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
                   </div>
                   <div className="mb-4">
@@ -101,7 +101,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
                     <p className="text-center">{attestation.recommend_contribution || 'N/A'}</p>
                   </div>
                   <div className="mb-4">
-                    <h3 className="font-semibold text-center">Feeling if Contribution Didn't Exist</h3>
+                    <h3 className="font-semibold text-center">Feeling if Contribution Didn’t Exist</h3>
                     <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
                   </div>
                   <div className="mb-4">
@@ -114,7 +114,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
               return (
                 <>
                   <div className="mb-4">
-                    <h3 className="font-semibold text-center">Feeling If Contribution Didn't Exist</h3>
+                    <h3 className="font-semibold text-center">Feeling If Contribution Didn’t Exist</h3>
                     <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
                   </div>
                   <div className="mb-4">
