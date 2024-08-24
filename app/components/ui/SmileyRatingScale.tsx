@@ -15,7 +15,7 @@ const SmileyRatingScale: React.FC<SmileyRatingScaleProps> = ({ rating, handleRat
 
   return (
     <div className="text-center">
-      <div className="flex justify-center mt-4 space-x-4">
+      <div className="flex justify-center mt-4 space-x-2">
         {options.map((option) => (
           <div
             key={option.value}

@@ -64,7 +64,7 @@ const OPStackAttestationForm: React.FC<OPStackAttestationFormProps> = ({
                     {/* Submit */}
                     <div className="flex justify-center">
                         <button
-                            className="bg-green-500 text-white px-4 py-2 rounded-md"
+                            className="btn text-sm  items-center font-medium text-white bg-black rounded-md shadow-sm hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             onClick={handleSubmit}
                         >
                             Submit
