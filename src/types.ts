@@ -229,8 +229,8 @@ export interface Attestation2 {
   createdAt: Date | null;
   logoUrl?: string | null;
   explanation?: string | null;
-  likely_to_recommend?: string;
-  feeling_if_didnt_exist?: string;
+  likely_to_recommend?: string | null;
+  feeling_if_didnt_exist?: string | null;
   useful_for_understanding?: string;
   examples_of_usefulness?: string;
   effective_for_improvements?: string;

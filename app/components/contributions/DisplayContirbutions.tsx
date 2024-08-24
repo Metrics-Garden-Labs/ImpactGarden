@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Contribution, Project } from '@/src/types';
 import { FaSearch, FaChevronDown } from "react-icons/fa";
 import Link from 'next/link';
+import { formatOneliner } from '@/src/utils/fomatOneliner';
 
 interface DisplayContributionsProps {
   contributions: Contribution[];
@@ -117,11 +118,11 @@ const DisplayContributions: React.FC<DisplayContributionsProps> = ({
                className="flex flex-col justify-center items-center p-4 border bg-white text-black border-gray-300 rounded-lg w-full h-56 shadow-lg"
              >
                <div className="justify-center items-center text-center">
-                 <h3 className="text-lg text-center font-semibold mb-2">
+                 <h3 className="text-lg text-center font-semibold mb-2 line-clamp-2">
                    {contribution.contribution}
                  </h3>
-                 <p className="text-[#A6A6A6] text-center text-sm mb-4">
-                   {contribution.desc}
+                 <p className="text-[#A6A6A6] text-center text-sm mb-4 line-clamp-3">
+                   {formatOneliner(contribution.desc)}
                  </p>
                </div>
                {/* <div className="text-left mt-auto">

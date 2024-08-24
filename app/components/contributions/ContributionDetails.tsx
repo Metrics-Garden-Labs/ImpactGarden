@@ -2,6 +2,7 @@ import React from 'react';
 import { Contribution, Project } from '@/src/types';
 import Link from 'next/link';
 import { FaCopy } from 'react-icons/fa';
+import { formatOneliner } from '@/src/utils/fomatOneliner';
 
 interface ContributionDetailsProps {
   contribution: Contribution;
@@ -18,7 +19,7 @@ const ContributionDetails: React.FC<ContributionDetailsProps> = ({
 }) => {
   return (
     <>
-      <div className="text-left pt-8 p-2">
+      <div className="text-left w-1/2 pt-8 p-2">
 
         <h2 className="text-xl font-bold mb-4">
           {contribution.contribution}
@@ -34,7 +35,7 @@ const ContributionDetails: React.FC<ContributionDetailsProps> = ({
 
       <div className="mb-4 items-left py-3 max-h-96 overflow-y-auto">
         <h3 className="font-semibold text-left">Description</h3>
-        <p className="text-left">{contribution.desc}</p>
+        <p className="text-left">{formatOneliner(contribution.desc)}</p>
       </div>
 
       {contribution.link && (

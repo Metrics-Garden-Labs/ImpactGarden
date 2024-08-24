@@ -153,6 +153,24 @@ export const getAttestationsByUserId = async (
       .where(eq(governance_collab_and_onboarding.userfid, userFid))
       .execute();
 
+    const govStructuresAttestationDisplay = await db
+      .select()
+      .from(governance_structures_op)
+      .where(eq(governance_structures_op.userfid, userFid))
+      .execute();
+
+    const onchainBuildersAttestationDisplay = await db
+      .select()
+      .from(onchain_builders)
+      .where(eq(onchain_builders.userfid, userFid))
+      .execute();
+
+    const opStackAttestationDisplay = await db
+      .select()
+      .from(op_stack)
+      .where(eq(op_stack.userfid, userFid))
+      .execute();
+
     // Normalize the data to fit Attestation2 interface
     const normalizeAttestation = (att: any): Attestation2 => ({
       id: att.id,
@@ -185,6 +203,9 @@ export const getAttestationsByUserId = async (
       ...infraToolingAttestations.map(normalizeAttestation),
       ...rAndAAttestations.map(normalizeAttestation),
       ...collabOnboardingAttestations.map(normalizeAttestation),
+      ...govStructuresAttestationDisplay.map(normalizeAttestation),
+      ...onchainBuildersAttestationDisplay.map(normalizeAttestation),
+      ...opStackAttestationDisplay.map(normalizeAttestation),
     ];
 
     return allAttestations;
@@ -323,6 +344,57 @@ export const fetchGovernanceAttestationsWithLogos = async (
   ];
 };
 
+export const fetchOnchainBuildersAttestationsWithLogos = async (
+  userFid: string
+): Promise<Attestation2[]> => {
+  const onchainBuildersAttestations = await db
+    .select({
+      id: onchain_builders.id,
+      userFid: onchain_builders.userfid,
+      projectName: onchain_builders.projectName,
+      contribution: onchain_builders.contribution,
+      ecosystem: onchain_builders.ecosystem,
+      attestationUID: onchain_builders.attestationUID,
+      category: onchain_builders.category,
+      subcategory: onchain_builders.subcategory,
+      feedback: onchain_builders.explanation,
+      createdAt: onchain_builders.createdAt,
+      logoUrl: projects.logoUrl,
+      likely_to_recommend: onchain_builders.recommend_contribution,
+      feeling_if_didnt_exist: onchain_builders.feeling_if_didnt_exist,
+    })
+    .from(onchain_builders)
+    .leftJoin(projects, eq(onchain_builders.projectName, projects.projectName))
+    .where(eq(onchain_builders.userfid, userFid));
+
+  return onchainBuildersAttestations;
+};
+
+export const fetchOPStackAttestationsWithLogos = async (
+  userFid: string
+): Promise<Attestation2[]> => {
+  const opStackAttestations = await db
+    .select({
+      id: op_stack.id,
+      userFid: op_stack.userfid,
+      projectName: op_stack.projectName,
+      contribution: op_stack.contribution,
+      ecosystem: op_stack.ecosystem,
+      attestationUID: op_stack.attestationUID,
+      category: op_stack.category,
+      subcategory: op_stack.subcategory,
+      feedback: op_stack.explanation,
+      createdAt: op_stack.createdAt,
+      logoUrl: projects.logoUrl,
+      feeling_if_didnt_exist: op_stack.feeling_if_didnt_exist,
+    })
+    .from(op_stack)
+    .leftJoin(projects, eq(op_stack.projectName, projects.projectName))
+    .where(eq(op_stack.userfid, userFid));
+
+  return opStackAttestations;
+};
+
 export const fetchAllAttestationsWithLogos = async (
   userFid: string
 ): Promise<Attestation2[]> => {
@@ -332,6 +404,13 @@ export const fetchAllAttestationsWithLogos = async (
 
     // Fetch attestations from governance-related tables
     const governanceAttestations = await fetchGovernanceAttestationsWithLogos(
+      userFid
+    );
+
+    const onchainBuildersAttestations =
+      await fetchOnchainBuildersAttestationsWithLogos(userFid);
+
+    const opStackAttestations = await fetchOPStackAttestationsWithLogos(
       userFid
     );
 
@@ -350,7 +429,12 @@ export const fetchAllAttestationsWithLogos = async (
       }));
 
     // Combine and return all attestations
-    return [...formattedContributionAttestations, ...governanceAttestations];
+    return [
+      ...formattedContributionAttestations,
+      ...governanceAttestations,
+      ...onchainBuildersAttestations,
+      ...opStackAttestations,
+    ];
   } catch (error) {
     console.error("Error fetching all attestations:", error);
     throw error;
