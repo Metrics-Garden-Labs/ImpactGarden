@@ -37,71 +37,46 @@ export const getProjectsByCategoryAndSubcategory = async (
   subcategory: string
 ): Promise<Project[]> => {
   try {
-    let dbProjects: {
-      projects: Project;
-      contributions: Contribution | null;
-    }[] = [];
+    let query;
 
     if (category && subcategory) {
       // Query to filter projects by both category and subcategory
-      const filteredQuery = db
-        .select()
-        .from(projects)
-        .leftJoin(
-          contributions,
-          eq(projects.projectName, contributions.projectName)
-        )
+      const subquery = db
+        .select({ projectName: contributions.projectName })
+        .from(contributions)
         .where(
           and(
             eq(contributions.category, category),
             eq(contributions.subcategory, subcategory)
           )
-        );
+        )
+        .groupBy(contributions.projectName);
 
-      dbProjects = await filteredQuery.execute();
+      query = db
+        .select()
+        .from(projects)
+        .where(inArray(projects.projectName, subquery));
     } else if (category) {
       // Query to filter projects by category only
-      const filteredQuery = db
+      const subquery = db
+        .select({ projectName: contributions.projectName })
+        .from(contributions)
+        .where(eq(contributions.category, category))
+        .groupBy(contributions.projectName);
+
+      query = db
         .select()
         .from(projects)
-        .leftJoin(
-          contributions,
-          eq(projects.projectName, contributions.projectName)
-        )
-        .where(eq(contributions.category, category));
-
-      dbProjects = await filteredQuery.execute();
+        .where(inArray(projects.projectName, subquery));
     } else {
       // Fallback if no category or subcategory is provided
-      const allProjectsQuery = db
-        .select()
-        .from(projects)
-        .leftJoin(
-          contributions,
-          eq(projects.projectName, contributions.projectName)
-        );
-      dbProjects = await allProjectsQuery.execute();
+      query = db.select().from(projects);
     }
 
-    // Map the result to extract only the project fields
-    const projectsOnly: Project[] = dbProjects.map((result) => ({
-      id: result.projects.id,
-      createdAt: result.projects.createdAt,
-      userFid: result.projects.userFid,
-      ethAddress: result.projects.ethAddress,
-      ecosystem: result.projects.ecosystem,
-      projectName: result.projects.projectName,
-      oneliner: result.projects.oneliner,
-      websiteUrl: result.projects.websiteUrl,
-      twitterUrl: result.projects.twitterUrl,
-      githubUrl: result.projects.githubUrl,
-      logoUrl: result.projects.logoUrl,
-      primaryprojectuid: result.projects.primaryprojectuid,
-      projectUid: result.projects.projectUid,
-    }));
+    const dbProjects = await query.execute();
 
-    console.log("Mapped projects:", projectsOnly);
-    return projectsOnly;
+    console.log("Fetched projects:", dbProjects);
+    return dbProjects;
   } catch (error) {
     console.error(
       "Error retrieving projects by category and subcategory:",
@@ -110,7 +85,6 @@ export const getProjectsByCategoryAndSubcategory = async (
     throw error;
   }
 };
-
 // export const getProjects = async (filter: string = "") => {
 //   try {
 //     console.log("Filter db", filter);
