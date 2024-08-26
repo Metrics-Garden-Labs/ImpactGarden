@@ -6,10 +6,6 @@ import Link from 'next/link';
 import { BsGlobe2 } from 'react-icons/bs';
 import { FaGithub, FaXTwitter } from 'react-icons/fa6';
 
-function classNames(...classes: any[]) {
-  return classes.filter(Boolean).join(' ');
-}
-
 interface Props {
   project: Project;
   projectAttestationCount: number;
@@ -65,30 +61,39 @@ const Sidebar: React.FC<Props> = ({ project, projectAttestationCount, categories
             )}
           </div>
           <h2 className="text-2xl font-bold text-gray-900">{project.projectName}</h2>
-          <div className="">
-            <Link href={checkwebsiteUrl || '#'}>
-              <p className='flex items-center '>
-                <BsGlobe2 className="text-black mx-2 text-lg" />
-                <span>Website</span>
-              </p>
-            </Link>
-          </div>
-          <div>
-            <Link href={checktwitterUrl || '#'}>
-              <p className='flex items-center'>
-                <FaXTwitter className="text-black mx-2 text-lg" />
-                <span>Twitter</span>
-              </p>
-            </Link>
-          </div>
-          <div>
-            <Link href={checkgithubUrl || '#'}>
-              <p className='flex items-center'>
-                <FaGithub className="text-black mx-2 text-lg" />
-                <span>Github</span>
-              </p>
-            </Link>
-          </div>
+          {checkwebsiteUrl && (
+              <div className="">
+                <Link href={checkwebsiteUrl || '#'}>
+                  <p className='flex items-center '>
+                  <BsGlobe2 className="text-black mx-2 text-lg" />
+                  <span>Website</span>
+                  </p>
+                </Link>
+                </div>
+            )}
+            
+            {checktwitterUrl && (
+              <div>
+                <Link href={checktwitterUrl || '#'}>
+                  <p className='flex items-center'>
+                  <FaXTwitter className="text-black mx-2 text-lg" />
+                  <span>Twitter</span>
+                  </p>
+                </Link>
+              </div>
+            )}
+
+
+            {checkgithubUrl && (
+              <div>
+                <Link href={checkgithubUrl || '#'}>
+                  <p className='flex items-center'>
+                    <FaGithub className="text-black mx-2 text-lg" />
+                    <span>Github</span>
+                  </p>
+                </Link>
+              </div>
+            )}
           <div>
             <div className="text-sm font-medium text-gray-500">Attestations: {projectAttestationCount}</div>
             <div className="text-sm font-medium text-gray-500">Created {getProjectDuration(project.createdAt)} <span>ago</span></div>

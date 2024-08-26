@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import React from 'react';
-import { FaDiscord } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import Image from "next/image";
 
@@ -25,12 +24,8 @@ export default function Footer() {
           </div>
         </div>
         <div className="flex flex-1 justify-end items-center gap-2 sm:gap-8 mt-4 md:mt-0 pl-70">
-          {/* <Link href="https://discord.com/invite/" target="_blank" className="flex items-center">
-            <FaDiscord className="text-white text-lg w-6 h-6" />
-            <p className="ml-1 text-lg">Discord</p>
-          </Link> */}
           <Link href="https://x.com/metricsgarden" target="_blank" className="flex items-center">
-            <FaXTwitter className="text-white text-lg w-6 h-6" />
+            <FaXTwitter className="text-white text-lg w-6 h-6 hover:text-[#2C3F2D]" />
             <p className="ml-1 text-lg">Twitter</p>
           </Link>
         </div>

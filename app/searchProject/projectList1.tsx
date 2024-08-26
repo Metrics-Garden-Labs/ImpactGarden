@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import Link from 'next/link';
-import { RxCross2 } from 'react-icons/rx';
 import { useGlobalState } from '../../src/config/config';
 import { Project, ProjectCount, SearchResult } from '../../src/types';
 import Image from 'next/image';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
-import RenderStars from '../components/searchProjects/RenderStars';
 import ProjectModal from '../components/searchProjects/ProjectModal';
 
 interface Props {

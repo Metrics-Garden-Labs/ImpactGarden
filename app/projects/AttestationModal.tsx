@@ -4,25 +4,17 @@
 //attestation framework. This will be deprecated in the future.
 
 import React, { useEffect, useState } from 'react';
-import { ethers } from 'ethers';
-import { Attestation, EAS, EIP712AttestationParams, NO_EXPIRATION, SchemaEncoder, ZERO_ADDRESS } from '@ethereum-attestation-service/eas-sdk';
-import { AttestationNetworkType, Contribution, ContributionAttestation, ContributionAttestationWithUsername, Project } from '@/src/types'; 
+import { EAS, EIP712AttestationParams, SchemaEncoder, ZERO_ADDRESS } from '@ethereum-attestation-service/eas-sdk';
+import {  Contribution, ContributionAttestationWithUsername, Project } from '@/src/types'; 
 import { NEXT_PUBLIC_URL, WHITELISTED_USERS } from '@/src/config/config'; 
 import { useGlobalState } from '@/src/config/config'; 
-import { LuArrowUpRight } from 'react-icons/lu';
 import { RxCross2 } from 'react-icons/rx';
-import { FaCopy } from 'react-icons/fa';
-import Link from 'next/link';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import { easScanEndpoints } from '../../src/utils/easScan';
 import AttestationCreationModal from '../components/ui/AttestationCreationModal';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation'; // Import hooks from next/navigation
+import { useRouter, usePathname} from 'next/navigation'; // Import hooks from next/navigation
 import AttestationConfirmationModal from '../components/ui/AttestationConfirmationModal';
 import { useSigner, useEAS   } from '../../src/hooks/useEAS';
-import { isMobile } from 'react-device-detect';
-import { isAddress } from 'ethers';
-import { zeroAddress } from 'viem';
-import { Alchemy, Network } from 'alchemy-sdk';
 
 
 interface AttestationModalProps {

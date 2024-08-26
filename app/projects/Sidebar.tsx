@@ -5,21 +5,11 @@
 //otherwise its too much hassle to make it a client component and have it update in real time.
 //TODO: make this a server component
 'use client';
-import { Fragment, SetStateAction, useState, Dispatch, useEffect } from 'react';
-import { LuArrowUpRight } from "react-icons/lu";
 import { Project } from '../../src/types';
 import Image from 'next/image';
-import { NEXT_PUBLIC_URL } from '@/src/config/config';
-import {useGlobalState} from '@/src/config/config';
 import Link from 'next/link';
 import { BsGlobe2 } from 'react-icons/bs';
 import { FaGithub, FaXTwitter } from 'react-icons/fa6';
-import { getAttestationCountByProject } from '@/src/lib/db/dbattestations';
-
-function classNames(...classes: any[]) {
-  return classes.filter(Boolean).join(' ');
-}
-
 
 interface Props {
   project: Project;
@@ -63,6 +53,10 @@ const Sidebar = ({ project, projectAttestationCount, categories, subcategories }
   console.log('categories:', categories);
   const checktwitterUrl = urlHelper(project?.twitterUrl || '');
   const checkgithubUrl = urlHelper(project?.githubUrl || '');
+
+  console.log('websiteUrl:', checkwebsiteUrl);
+  console.log('twitterUrl:', checktwitterUrl);
+  console.log('githubUrl:', checkgithubUrl);
     
 
   return (
@@ -88,39 +82,41 @@ const Sidebar = ({ project, projectAttestationCount, categories, subcategories }
             {/* Project Name */}
             <h2 className="text-2xl font-bold text-gray-900">{project.projectName}</h2>
             {/* Project Link */}
-            {/* {project.websiteUrl && (
-              <Link href={`${checkwebsiteUrl}`}>
-                <p className="text-gray-500 hover:text-gray-300 visited:text-indigo-600 flex items-center">
-                {project.websiteUrl}
-                <LuArrowUpRight className="ml-1" />
-                </p>
-              </Link>
-            )} */}
-            <div className="">
-              <Link href={checkwebsiteUrl || '#'}>
-                <p className='flex items-center '>
-                <BsGlobe2 className="text-black mx-2 text-lg" />
-                <span>Website</span>
-                </p>
-              </Link>
+
+            {checkwebsiteUrl && (
+              <div className="">
+                <Link href={checkwebsiteUrl || '#'}>
+                  <p className='flex items-center '>
+                  <BsGlobe2 className="text-black mx-2 text-lg" />
+                  <span>Website</span>
+                  </p>
+                </Link>
+                </div>
+            )}
             
-            </div>
-            <div>
-              <Link href={checktwitterUrl || '#'}>
-                <p className='flex items-center'>
-                <FaXTwitter className="text-black mx-2 text-lg" />
-                <span>Twitter</span>
-                </p>
-              </Link>
-            </div>
-            <div>
-              <Link href={checkgithubUrl || '#'}>
-                <p className='flex items-center'>
-                  <FaGithub className="text-black mx-2 text-lg" />
-                  <span>Github</span>
-                </p>
-              </Link>
-            </div>
+            {checktwitterUrl && (
+              <div>
+                <Link href={checktwitterUrl || '#'}>
+                  <p className='flex items-center'>
+                  <FaXTwitter className="text-black mx-2 text-lg" />
+                  <span>Twitter</span>
+                  </p>
+                </Link>
+              </div>
+            )}
+
+
+            {checkgithubUrl && (
+              <div>
+                <Link href={checkgithubUrl || '#'}>
+                  <p className='flex items-center'>
+                    <FaGithub className="text-black mx-2 text-lg" />
+                    <span>Github</span>
+                  </p>
+                </Link>
+              </div>
+            )}
+
             {/* Stats and Categories */}
             <div>
               <div className="text-sm font-medium text-gray-500">Attestations: {projectAttestationCount}</div>

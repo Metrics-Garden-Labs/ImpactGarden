@@ -2,7 +2,7 @@ import React from 'react';
 import { Contribution, Project } from '@/src/types';
 import Link from 'next/link';
 import { FaCopy } from 'react-icons/fa';
-import { formatOneliner } from '@/src/utils/fomatOneliner';
+import { formatOneliner, splitLinks } from '@/src/utils/fomatOneliner';
 
 interface ContributionDetailsProps {
   contribution: Contribution;
@@ -17,6 +17,8 @@ const ContributionDetails: React.FC<ContributionDetailsProps> = ({
   setIsAttestationModalOpen,
   copyToClipboard,
 }) => {
+
+
   return (
     <>
       <div className="text-left w-1/2 pt-8 p-2">
@@ -41,13 +43,16 @@ const ContributionDetails: React.FC<ContributionDetailsProps> = ({
       {contribution.link && (
         <div className="mb-4 justify-start items-center overflow-y-auto">
           <h3 className="font-semibold text-left">Link/Evidence</h3>
-          <div className="flex justify-start items-center">
-            <Link
-              href={contribution.link || ""}
-              className="text-gray-500 hover:text-gray-300 visited:text-indigo-600 flex items-center"
-            >
-              <p className='text-left'>{contribution.link}</p>
-            </Link>
+          <div className="flex flex-col justify-start">
+            {splitLinks(contribution.link).map((link, index) => (
+              <Link
+                key={index}
+                href={contribution.link || ""}
+                className="text-gray-500 hover:text-[#2C3F2D] visited:text-indigo-600 flex items-center mb-2 "
+              >
+                <p className='text-left'>{link}</p>
+              </Link>
+            ))}
           </div>
         </div>
       )}

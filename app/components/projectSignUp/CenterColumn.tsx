@@ -74,13 +74,13 @@ const CenterColumn: React.FC<CenterColumnProps> = ({
           </p>
           <div className="flex justify-center py-4 items-center">
             <Link href={checkwebsiteUrl || '#'}>
-              <BsGlobe2 className="text-black mx-2 text-lg" />
+              <BsGlobe2 className="text-black mx-2 text-lg hover:text-[#2C3F2D]" />
             </Link>
             <Link href={checktwitterUrl || '#'}>
-              <FaXTwitter className="text-black mx-2 text-lg" />
+              <FaXTwitter className="text-black mx-2 text-lg hover:text-[#2C3F2D]" />
             </Link>
             <Link href={checkgithubUrl || '#'}>
-              <FaGithub className="text-black mx-2 text-lg" />
+              <FaGithub className="text-black mx-2 text-lg hover:text-[#2C3F2D]" />
             </Link>
           </div>
         </div>

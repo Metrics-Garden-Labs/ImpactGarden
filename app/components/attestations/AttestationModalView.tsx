@@ -176,7 +176,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
         </div>
         <div className="mb-4 text-center">
           <Link href={attestationLink}>
-            <button className='btn'>
+            <button className='btn bg-headerblack text-white hover:bg-gray-200 items-center justify-center hover:text-black px-2 py-1'>
               View on EAS
             </button>
           </Link>

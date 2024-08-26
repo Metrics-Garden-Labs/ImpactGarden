@@ -1,5 +1,5 @@
 import { higherCategoryKey } from '@/src/types';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaChevronDown, FaChevronUp, FaSearch } from "react-icons/fa";
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -27,6 +27,8 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
+  const filterRef = useRef<HTMLDivElement>(null);
+  const sortRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (currentFilter) {
@@ -39,6 +41,23 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
     }
     console.log("Current Filter:", currentFilter);
   }, [currentFilter]);
+
+  useEffect(() => {
+    //this deals when the user clicks outside the filter or sort dropdown, it closes them.
+    const handleClickOutside = (event: MouseEvent) => {
+      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+        setIsFilterOpen(false);
+      }
+      if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
+        setIsSortOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const debouncedSearch = useDebouncedCallback(
     (value) => onSearchChange(value),
@@ -58,7 +77,6 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
 
   const handleSubcategoryChange = (subcategory: string) => {
     if (selectedSubcategory === subcategory) {
-      // Deselect subcategory if clicking on the already selected subcategory
       setSelectedSubcategory("");
       onFilterChange(selectedCategory);
     } else {
@@ -88,7 +106,7 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
               />
               <FaSearch className="absolute left-3 top-1/2 h-[20px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
-            <div className="relative w-full sm:w-48">
+            <div className="relative w-full sm:w-48" ref={filterRef}>
               <button
                 onClick={() => setIsFilterOpen(!isFilterOpen)}
                 className="w-full px-4 py-2 text-left bg-white border border-gray-300 rounded-md focus:outline-none flex justify-between items-center truncate"
@@ -128,7 +146,7 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
               )}
             </div>
           </div>
-          <div className="relative w-full sm:w-auto">
+          <div className="relative w-full sm:w-auto" ref={sortRef}>
             <button
               onClick={() => setIsSortOpen(!isSortOpen)}
               className="w-full px-4 py-2 text-left bg-white border border-gray-300 rounded-md focus:outline-none"

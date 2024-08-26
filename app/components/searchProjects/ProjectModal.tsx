@@ -35,7 +35,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, project, c
             <h3 className="font-semibold text-center">Website</h3>
             <p className="text-left font-sm text-[#A6A6A6] leading-relaxed  overflow-wrap break-words max-w-full mx-auto truncate">
               <Link href={`${checkwebsiteUrl(project.websiteUrl)}`}>
-                <span className="text-left font-sm text-[#A6A6A6] leading-relaxed hover:text-gray-300 visited:text-indigo-600">
+                <span className="text-left font-sm text-[#A6A6A6] leading-relaxed hover:text-[#2C3F2D] visited:text-indigo-600">
                   {project.websiteUrl}
                 </span>
               </Link>
@@ -45,7 +45,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, project, c
         {project.twitterUrl && (
           <div className="mb-4">
             <h3 className="font-semibold text-center">Twitter</h3>
-            <p className="text-left font-sm text-[#A6A6A6] leading-relaxed">
+            <p className="text-left font-sm text-[#A6A6A6] hover:text-[#2C3F2D] leading-relaxed">
               <Link href={project.twitterUrl} target="_blank" rel="noopener noreferrer">
                 {project.twitterUrl}
               </Link>
@@ -55,7 +55,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, project, c
         {project.githubUrl && (
           <div className="mb-4">
             <h3 className="font-semibold text-center">Github</h3>
-            <p className="text-left font-sm text-[#A6A6A6] leading-relaxed">
+            <p className="text-left font-sm text-[#A6A6A6] hover:text-[#2C3F2D] leading-relaxed">
               <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
                 {project.githubUrl}
               </Link>
