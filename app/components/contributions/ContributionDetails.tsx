@@ -21,7 +21,7 @@ const ContributionDetails: React.FC<ContributionDetailsProps> = ({
 
   return (
     <>
-      <div className="text-left w-1/2 pt-8 p-2">
+      <div className="text-left w-full pt-8 p-2">
 
         <h2 className="text-xl font-bold mb-4">
           {contribution.contribution}
@@ -35,13 +35,13 @@ const ContributionDetails: React.FC<ContributionDetailsProps> = ({
         <hr className="border-1 border-gray-300 my-2 w-1/3" />
       </div>
 
-      <div className="mb-4 items-left py-3 max-h-96 overflow-y-auto">
+      <div className="mb-4 items-left py-3 ">
         <h3 className="font-semibold text-left">Description</h3>
         <p className="text-left">{formatOneliner(contribution.desc)}</p>
       </div>
 
       {contribution.link && (
-        <div className="mb-4 justify-start items-center overflow-y-auto">
+        <div className="mb-4 justify-start items-center ">
           <h3 className="font-semibold text-left">Link/Evidence</h3>
           <div className="flex flex-col justify-start">
             {splitLinks(contribution.link).map((link, index) => (
