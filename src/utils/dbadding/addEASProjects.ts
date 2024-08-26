@@ -28,7 +28,7 @@ const db = drizzle(vsql);
 
 const addProjectsToDB = async () => {
   try {
-    const filePath = path.join(__dirname, "graphQLProjects2.json");
+    const filePath = path.join(__dirname, "easprojectsopstack1.json");
     const jsonData = fs.readFileSync(filePath, "utf-8");
     const projectsData = JSON.parse(jsonData);
 

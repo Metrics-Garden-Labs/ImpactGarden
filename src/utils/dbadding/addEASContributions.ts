@@ -28,7 +28,7 @@ const db = drizzle(vsql);
 
 const addContributionsToDB = async () => {
   try {
-    const filePath = path.join(__dirname, "graphQLProjects2.json");
+    const filePath = path.join(__dirname, "easprojectsopstack1.json");
     const jsonData = fs.readFileSync(filePath, "utf-8");
     const projectsData = JSON.parse(jsonData);
 
@@ -50,7 +50,6 @@ const addContributionsToDB = async () => {
         continue;
       }
 
-      // Set the category to "Onchain Builders"
       const category = "OP Stack";
 
       await db
@@ -60,7 +59,8 @@ const addContributionsToDB = async () => {
           projectName: project.name,
           ecosystem: "Optimism", // Assume the same ecosystem as the project
           governancetype: "", // Empty governance type
-          category: category,
+          category: category, // Use the category
+          subcategory: "", // Empty subcategory
           contribution: project.name, // Use project name as contribution
           desc: project.description, // Use project description
           link: project.socialLinks?.website?.[0] || "", // Use website as the link, if available
