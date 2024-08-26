@@ -28,23 +28,23 @@ export default function ProjectList({
   // console.log("Received projects:", projects);
   console.log("Current sortOrder:", sortOrder);
 
-  const uniqueProjects = useMemo(() => {
-    const uniqueMap = new Map<string, Project | ProjectCount>();
-    projects.forEach(project => {
-      if (!uniqueMap.has(project.projectName)) {
-        uniqueMap.set(project.projectName, project);
-      } else if ('attestationCount' in project) {
-        // If the project already exists, update it if the new one has an attestationCount
-        const existingProject = uniqueMap.get(project.projectName);
-        if(existingProject) {
-        if (!('attestationCount' in existingProject) || project.attestationCount > existingProject.attestationCount) {
-          uniqueMap.set(project.projectName, project);
-        }
-      }
-    }
-    });
-    return Array.from(uniqueMap.values());
-  }, [projects]);
+  // const uniqueProjects = useMemo(() => {
+  //   const uniqueMap = new Map<string, Project | ProjectCount>();
+  //   projects.forEach(project => {
+  //     if (!uniqueMap.has(project.projectName)) {
+  //       uniqueMap.set(project.projectName, project);
+  //     } else if ('attestationCount' in project) {
+  //       // If the project already exists, update it if the new one has an attestationCount
+  //       const existingProject = uniqueMap.get(project.projectName);
+  //       if(existingProject) {
+  //       if (!('attestationCount' in existingProject) || project.attestationCount > existingProject.attestationCount) {
+  //         uniqueMap.set(project.projectName, project);
+  //       }
+  //     }
+  //   }
+  //   });
+  //   return Array.from(uniqueMap.values());
+  // }, [projects]);
 
   const filteredProjects = useMemo(() => {
     return projects.filter((project) => {
@@ -53,7 +53,7 @@ export default function ProjectList({
       }
       return true;
     });
-  }, [uniqueProjects, query]);
+  }, [projects, query]);
 
   const sortedProjects = useMemo(() => {
     console.log("Sorting projects with sortOrder:", sortOrder);

@@ -1,6 +1,5 @@
 'use client';
-
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import SearchProjects from './searchProjects';
 import ProjectList from './projectList1';
 import { Project, ProjectCount, SearchResult } from '../../src/types';
@@ -21,12 +20,23 @@ const ProjectPageClient = ({ projects: initialProjects, query: initialQuery, fil
   const [filter, setFilter] = useState(initialFilter || "");
   const [sortOrder, setSortOrder] = useState(initialSortOrder || "A-Z");
   const [query, setQuery] = useState(initialQuery);
-  const [category, subcategory] = filter.split(':');
+
+  const uniqueProjects = useMemo(() => {
+    const projectMap = new Map<string, Project | ProjectCount>();
+    projects.forEach(project => {
+      if (!projectMap.has(project.projectName) || 
+          ('attestationCount' in project && 
+           (!('attestationCount' in projectMap.get(project.projectName)!) || 
+            project.attestationCount > (projectMap.get(project.projectName) as ProjectCount).attestationCount))) {
+        projectMap.set(project.projectName, project);
+      }
+    });
+    return Array.from(projectMap.values());
+  }, [projects]);
 
   const fetchProjects = useCallback(async (newQuery: string, newFilter: string, newSortOrder: string) => {
     try {
-      const category = newFilter.split(':')[0];
-      const subcategory = newFilter.split(':')[1];
+      const [category, subcategory] = newFilter.split(':');
       const response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjects`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -80,7 +90,7 @@ const ProjectPageClient = ({ projects: initialProjects, query: initialQuery, fil
         </div>
       ) : (
         <ProjectList
-          projects={projects}
+          projects={uniqueProjects}
           query={query}
           filter={filter}
           sortOrder={sortOrder}

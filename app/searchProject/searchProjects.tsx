@@ -43,7 +43,6 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
   }, [currentFilter]);
 
   useEffect(() => {
-    //this deals when the user clicks outside the filter or sort dropdown, it closes them.
     const handleClickOutside = (event: MouseEvent) => {
       if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
         setIsFilterOpen(false);
@@ -73,6 +72,7 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
       setOpenCategory(category);
       onFilterChange(category);
     }
+    setIsFilterOpen(true); // Keep the filter open after selection
   };
 
   const handleSubcategoryChange = (subcategory: string) => {
@@ -83,6 +83,7 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
       setSelectedSubcategory(subcategory);
       onFilterChange(`${selectedCategory}:${subcategory}`);
     }
+    setIsFilterOpen(false); // Close the filter after subcategory selection
   };
 
   const handleSortOrderChange = (newSortOrder: string) => {
