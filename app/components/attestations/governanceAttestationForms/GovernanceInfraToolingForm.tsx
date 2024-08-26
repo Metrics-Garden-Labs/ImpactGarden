@@ -30,6 +30,13 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
   const [localFeedback, setLocalFeedback] = useState(feedback);
   const [localExtraFeedback, setLocalExtraFeedback] = useState(extrafeedback);
 
+  const additionalInfo = [
+    "The absence of this tool would significantly disrupt my work.",
+    "The absence of this tool would cause considerable inconvenience.",
+    "The absence of this tool would have little to no impact on my work.",
+  ];
+
+
   const handleSubmit = () => {
     const formData = {
       likely_to_recommend: localRating1,
@@ -74,10 +81,12 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
           {/* Q2 */}
           <div className="mb-6">
             <h3 className='font-semibold text-center'>How would you feel if this tool/contribution ceased to exist?</h3>
-            <SmileyRatingScale rating={localSmileyRating} handleRating={setLocalSmileyRating} />
-            <p className='text-sm mt-4'><span className='font-semibold'>Extremely Upset:</span> The absence of this tool would significantly disrupt my work.</p>
-            <p className='text-sm'><span className='font-semibold'>Somewhat Upset:</span> The absence of this tool would cause considerable inconvenience.</p>
-            <p className='text-sm'><span className='font-semibold'>Neutral:</span> The absence of this tool would have little to no impact on my work.</p>
+            <SmileyRatingScale 
+              rating={localSmileyRating} 
+              handleRating={setLocalSmileyRating} 
+              additionalInfo={additionalInfo}
+              />
+
           </div>
           <hr className="my-4" />
 

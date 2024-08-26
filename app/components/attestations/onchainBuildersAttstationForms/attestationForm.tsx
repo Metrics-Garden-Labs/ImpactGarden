@@ -29,6 +29,13 @@ const OnchainBuilders: React.FC<OnchainBuildersProps> = ({
   const [localFeedback, setLocalFeedback] = useState(feedback);
   const [localExtraFeedback, setLocalExtraFeedback] = useState(extrafeedback);
 
+  const additionalInfo = [
+    "The absence of this project would significantly disrupt my interactions with web3.",
+    "The absence of this project would cause me a considerable inconvenience.",
+    "The absence of this project would have little to no impact on my life."
+  ];
+
+
 
   const handleSubmit = () => {
     const formData = {
@@ -59,10 +66,10 @@ const OnchainBuilders: React.FC<OnchainBuildersProps> = ({
           {/* Q2 */}
           <div className="mb-8">
             <h3 className='font-semibold text-center'>How would you feel if this contribution ceased to exist?</h3>
-            <SmileyRatingScale rating={localSmileyRating} handleRating={setLocalSmileyRating} />
-            <p className='text-sm mt-2'><span className='font-semibold'>Extremely Upset:</span>   The absence of this project would significantly disrupt my interactions with web3.</p>
-            <p className='text-sm'><span className='font-semibold'>Somewhat Upset:</span>  The absence of this project would cause me a considerable inconvenience.</p>
-            <p className='text-sm'><span className='font-semibold'>Neutral:</span>  The absence of this project would have little to no impact on my life.</p>
+            <SmileyRatingScale 
+              rating={localSmileyRating} 
+              handleRating={setLocalSmileyRating}
+              additionalInfo={additionalInfo} />
           </div>
           <hr className="my-4" />
 

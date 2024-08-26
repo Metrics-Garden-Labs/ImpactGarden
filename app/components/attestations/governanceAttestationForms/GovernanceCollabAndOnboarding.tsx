@@ -31,6 +31,13 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
   const [localFeedback, setLocalFeedback] = useState(feedback);
   const [localExtraFeedback, setLocalExtraFeedback] = useState(extrafeedback);
 
+  const additionalInfo = [
+    "I wouldn’t have been able to understand and engage in governance without it.",
+    "Understanding and engaging in Optimism’s governance would have been considerably more challenging.",
+    "The absence of this tool would have had little to no impact on my journey."
+  ];
+
+
   const handleKnowledgeLevelChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setKnowledgeLevel(event.target.value);
   };
@@ -83,10 +90,12 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
           {/* Q3 */}
           <div className="mb-8">
             <h3 className='font-semibold text-center'>How would you feel if this contribution ceased to exist?</h3>
-            <SmileyRatingScale rating={localSmileyRating} handleRating={setLocalSmileyRating} />
-            <p className='text-sm mt-2'><span className='font-semibold'>Extremely Upset:</span>  I wouldn’t have been able to understand and engage in governance without it.</p>
-            <p className='text-sm'><span className='font-semibold'>Somewhat Upset:</span>  Understanding and engaging in Optimism’s governance would have been considerably more challenging.</p>
-            <p className='text-sm'><span className='font-semibold'>Neutral:</span>  The absence of this tool would have had little to no impact on my journey.</p>
+            <SmileyRatingScale 
+              rating={localSmileyRating} 
+              handleRating={setLocalSmileyRating} 
+              additionalInfo={additionalInfo}
+              />
+
           </div>
           <hr className="my-4" />
 

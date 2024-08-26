@@ -1,16 +1,20 @@
-import React from 'react';
+// SmileyRatingScale.tsx
+import React, { useState } from 'react';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 interface SmileyRatingScaleProps {
   rating: number;
   handleRating: (rate: number) => void;
+  additionalInfo: string[];
 }
 
-const SmileyRatingScale: React.FC<SmileyRatingScaleProps> = ({ rating, handleRating }) => {
+const SmileyRatingScale: React.FC<SmileyRatingScaleProps> = ({ rating, handleRating, additionalInfo }) => {
+  const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
+
   const options = [
-    { value: 1, label: '😭 Extremely Upset', color: 'bg-green-200', brightColor: 'bg-green-400'  },
-    { value: 2, label: '🫠 Somewhat Upset', color: 'bg-yellow-200', brightColor: 'bg-yellow-400' },
-    { value: 3, label: '🙂 Neutral', color: 'bg-red-200', brightColor: 'bg-red-600' }
-    
+    { value: 1, label: 'Neutral', emoji: '🙂', color: 'bg-red-200', brightColor: 'bg-red-600' },
+    { value: 2, label: 'Somewhat Upset', emoji: '🫠', color: 'bg-yellow-200', brightColor: 'bg-yellow-400' },
+    { value: 3, label: 'Extremely Upset', emoji: '😭', color: 'bg-green-200', brightColor: 'bg-green-400' }
   ];
 
   return (
@@ -29,12 +33,30 @@ const SmileyRatingScale: React.FC<SmileyRatingScaleProps> = ({ rating, handleRat
                 rating === option.value ? 'ring-2 ring-offset-2 ring-gray-500' : ''
               }`}
             >
-              <span className="text-3xl">{option.label.split(' ')[0]}</span>
+              <span className="text-3xl">{option.emoji}</span>
             </div>
-            <span className="text-xs mt-1 w-24 text-center">{option.label.split(' ').slice(1).join(' ')}</span>
+            <span className="text-xs mt-1 w-24 text-center">{option.label}</span>
           </div>
         ))}
       </div>
+
+      <button 
+        className="flex items-center justify-center w-full mt-4 text-sm text-gray-600 hover:text-gray-800"
+        onClick={() => setShowAdditionalInfo(!showAdditionalInfo)}
+      >
+        {showAdditionalInfo ? "Hide" : "View"} additional info
+        {showAdditionalInfo ? <FaChevronUp className="ml-2" /> : <FaChevronDown className="ml-2" />}
+      </button>
+
+      {showAdditionalInfo && (
+        <div className="flex flex-col mt-2 text-sm items-center justify-center">
+          {options.map((option, index) => (
+            <p key={option.value} className='text-sm mt-2'>
+              <span className='font-semibold'>{option.label}:</span> {additionalInfo[index]}
+            </p>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

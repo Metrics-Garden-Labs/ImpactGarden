@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import SmileyRatingScale from '@/app/components/ui/SmileyRatingScale';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 
 interface OPStackAttestationFormProps {
@@ -22,6 +23,12 @@ const OPStackAttestationForm: React.FC<OPStackAttestationFormProps> = ({
     const [localSmileyRating, setLocalSmileyRating] = useState(smileyRating);
     const [localFeedback, setLocalFeedback] = useState(feedback);
 
+    const additionalInfo = [
+        "The absence of this tool would cause me considerable inconvenience.",
+        "The absence of this tool would cause me considerable inconvenience.",
+        "The absence of this tool would have little to no impact on my work."
+      ];
+
     const handleSubmit= () => {
         const formData = {
             feeling_if_didnt_exist: localSmileyRating.toString(),
@@ -42,11 +49,10 @@ const OPStackAttestationForm: React.FC<OPStackAttestationFormProps> = ({
                     {/* Q1 */}
                     <div className="mb-6">
                         <h3 className='font-semibold text-center'>How would you feel if this contribution did not exist?</h3>
-                        <SmileyRatingScale rating={localSmileyRating} handleRating={setLocalSmileyRating} />
-                        <p className='text-sm mt-2'><span className='font-semibold' >Extremely Upset:</span>  The absence of this tool would have little to no impact on my work. </p>
-                        <p className='text-sm mt-2'><span className='font-semibold' >Somewhat Upset:</span>  The absence of this tool would cause me considerable inconvience.</p>
-                        <p className='text-sm mt-2'><span className='font-semibold' >Neutral:</span>  The absence of this tool would cause me considerable inconvience.</p>
-
+                        <SmileyRatingScale 
+                            rating={localSmileyRating} 
+                            handleRating={setLocalSmileyRating} 
+                            additionalInfo={additionalInfo}/>
                     </div>
                     <hr className="my-4" />
 
