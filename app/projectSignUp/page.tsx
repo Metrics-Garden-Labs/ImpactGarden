@@ -257,7 +257,7 @@ export default function ProjectSignUp() {
           imageUrl={imageUrl}
           ecosystem={ecosystem}
           selectedProject={selectedProject}
-          selectedNetwork={"Optimism"}
+          selectedNetwork={selectedNetwork}
         />
         <Footer />
       </div>
