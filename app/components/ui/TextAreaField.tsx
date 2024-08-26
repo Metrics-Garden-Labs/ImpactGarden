@@ -1,9 +1,9 @@
 import React from 'react';
-import { FaInfoCircle } from 'react-icons/fa';
 
 interface TextAreaFieldProps {
   label: string;
   value: string;
+  description?: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder: string;
   maxLength?: number;
@@ -12,6 +12,7 @@ interface TextAreaFieldProps {
 
 const TextAreaField: React.FC<TextAreaFieldProps> = ({
   label,
+  description,
   value,
   onChange,
   placeholder,
@@ -19,9 +20,10 @@ const TextAreaField: React.FC<TextAreaFieldProps> = ({
   required,
 }) => (
   <div className="mb-2">
-    <h3 className="font-semibold p-2 text-center">
-      {label} <span className="tooltip tooltip-top" data-tip="Required"><FaInfoCircle className="inline ml-2 text-blue-500 relative" style={{ top: '-2px' }} /></span>
+    <h3 className="font-semibold p-1 text-left">
+      {label} {required && <span className="text-[#24583C]">*</span>}
     </h3>
+    <p className='text-sm text-[#B5B5B6] pl-1 mb-2'>{description}</p>
     <textarea
       value={value}
       onChange={onChange}

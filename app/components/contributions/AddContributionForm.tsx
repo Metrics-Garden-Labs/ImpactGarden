@@ -32,20 +32,20 @@ const AddContributionForm: React.FC<AddContributionFormProps> = ({
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50" onClick={onClose}>
       <div className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-2/3 lg:w-2/5 max-h-[90vh] overflow-y-auto mx-4 md:mx-20" onClick={(e) => e.stopPropagation()}>
         <form className="bg-white p-8 rounded-lg" onSubmit={handleSubmit}>
-          <div className="text-center pt-8 p-2">
-            <h2 className="text-xl font-bold mb-4">Add New Contribution</h2>
+          <div className="text-left pt-8 p-2">
+            <h2 className="text-xl font-bold mb-2">Add New Contribution</h2>
           </div>
 
-          <div className="mb-4 items-center py-3 max-h-96 ">
-            <h3 className="font-semibold text-center mb-2">Type of Contribution</h3>
-
+          <div className="mb-2 items-center py-3 max-h-96 ">
             <div>
-              <h2 className="font-semibold mt-4">Category *</h2>
+              <h2 className="font-semibold mt-2 mb-1">Category <span className='text-[#24583C]'> * </span></h2>
+              <p className='text-sm text-[#B5B5B6] mb-2'>Choose the Optimism RetroRound your project is applying to.</p>
               <div className="flex flex-wrap mt-2">
                 {Object.keys(higherCategories).map((key) => (
                   <button
                     key={key}
                     onClick={() => handleHigherCategoryChange(key as higherCategoryKey)}
+                    aria-required="true"
                     className={`mb-2 mr-2 px-4 py-2 rounded-lg text-sm ${selectedHigherCategory === key ? 'bg-black text-white' : 'bg-gray-200 text-gray-800'}`}
                   >
                     {higherCategories[key as higherCategoryKey]}
@@ -55,12 +55,14 @@ const AddContributionForm: React.FC<AddContributionFormProps> = ({
             </div>
 
             <div className="relative mt-8">
-              <h2 className="text-center">What is the subcategory?</h2>
+              <h2 className="text-left font-semibold">Subcategory<span className='text-[#E67529]'> * </span> </h2>
+              <p className='text-sm text-[#B5B5B6]'>Choose a single subcategory that best applies to this contribution</p>
               <div className="flex flex-wrap justify-center mt-2 max-h-32 md:max-h-64 overflow-y-auto p-2 rounded-lg">
                 {getSubcategories(selectedHigherCategory as Category).map((subcategory) => (
                   <button
                     key={subcategory}
                     onClick={() => handleSubcategorySelect(subcategory)}
+                    aria-required="true"
                     className={`mb-2 mr-2 px-4 py-2 rounded-lg text-sm ${formData.subcategory === subcategory ? 'bg-black text-white' : 'bg-gray-200 text-gray-800'}`}
                   >
                     {subcategory}
@@ -71,7 +73,7 @@ const AddContributionForm: React.FC<AddContributionFormProps> = ({
           </div>
 
           <TextAreaField
-            label="Title"
+            label="Name of your Contribution"
             value={formData.contribution}
             onChange={(e) => setFormData({ ...formData, contribution: e.target.value })}
             placeholder="Contribution Title"
@@ -82,8 +84,9 @@ const AddContributionForm: React.FC<AddContributionFormProps> = ({
           <TextAreaField
             label="Description"
             value={formData.desc ?? ''}
+            description='Introduce your contribution to the ecosystem. Share what this contribution is about.'
             onChange={(e) => setFormData({ ...formData, desc: e.target.value })}
-            placeholder="Description"
+            placeholder="Add a description"
             required
             maxLength={200}
           />
@@ -92,7 +95,7 @@ const AddContributionForm: React.FC<AddContributionFormProps> = ({
             label="Link/Evidence"
             value={formData.link ?? ''}
             onChange={(e) => setFormData({ ...formData, link: e.target.value })}
-            placeholder="Link/Evidence"
+            placeholder="Add a link"
             required
           />
 
