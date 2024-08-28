@@ -70,7 +70,7 @@ export default function ContributionPage({
   const handleBackClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    router.push('/searchProject');
+    router.back();
   };
   const isWebShareSupported = typeof navigator !== 'undefined' && !!navigator.share;
   const copyToClipboard = () => {

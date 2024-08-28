@@ -65,7 +65,7 @@ const addProjectsToDB = async () => {
           oneliner: project.description,
           websiteUrl: project.socialLinks?.website?.[0] || "",
           twitterUrl: project.socialLinks?.twitter || "",
-          githubUrl: project.github?.[0] || "",
+          githubUrl: project.github || "", // this is going to need to be improved
           logoUrl: project.projectAvatarUrl || "",
           projectUid: project.projectUid || "", // Use the correct projectUid
         })
