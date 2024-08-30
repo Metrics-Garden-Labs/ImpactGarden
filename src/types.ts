@@ -607,6 +607,7 @@ export interface GovInfraAndToolingDisplay extends BaseAttestationDisplay {
 export interface GeneralAttestationDisplay extends BaseAttestationDisplay {
   feedback: string;
   rating: string;
+  explanation?: string | null;
   likely_to_recommend?: string | null;
   examples_of_usefulness?: string | null;
   useful_for_understanding?: string | null;
