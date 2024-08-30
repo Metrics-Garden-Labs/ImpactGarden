@@ -24,6 +24,8 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
 
   const renderAttestationDetails = () => {
     console.log('Rendering attestation details:', attestation);
+    console.log('category', attestation.category);
+    console.log('subcategory', attestation.subcategory);
 
     if ('category' in attestation) {
       switch (attestation.category) {
@@ -34,10 +36,10 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
                 <h3 className="font-semibold text-center">Likely to Recommend</h3>
                 <p className="text-center">{attestation.likely_to_recommend || 'N/A'}</p>
               </div>
-              <div className="mb-4">
+              {/* <div className="mb-4">
                 <h3 className="font-semibold text-center">Explanation</h3>
                 <p className="text-center">{attestation.explanation || 'N/A'}</p>
-              </div>
+              </div> */}
             </>
           );
         case "OP Stack":
@@ -47,10 +49,10 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
                 <h3 className="font-semibold text-center">Feeling if Contribution Didn’t Exist</h3>
                 <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
               </div>
-              <div className="mb-4">
+              {/* <div className="mb-4">
                 <h3 className="font-semibold text-center">Explanation</h3>
                 <p className="text-center">{attestation.explanation || 'N/A'}</p>
-              </div>
+              </div> */}
             </>
           );
         case "Governance":
@@ -66,10 +68,10 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
                     <h3 className="font-semibold text-center">Feeling if Contribution Didn’t Exist</h3>
                     <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
                   </div>
-                  <div className="mb-4">
+                  {/* <div className="mb-4">
                     <h3 className="font-semibold text-center">Explanation</h3>
                     <p className="text-center">{attestation.explanation || 'N/A'}</p>
-                  </div>
+                  </div> */}
                 </>
               );
             case "Governance Research & Analytics":
@@ -83,10 +85,10 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
                     <h3 className="font-semibold text-center">Effective for Improvements</h3>
                     <p className="text-center">{attestation.effective_for_improvements || 'N/A'}</p>
                   </div>
-                  <div className="mb-4">
+                  {/* <div className="mb-4">
                     <h3 className="font-semibold text-center">Explanation</h3>
                     <p className="text-center">{attestation.explanation || 'N/A'}</p>
-                  </div>
+                  </div> */}
                 </>
               );
             case "Collaboration & Onboarding":
@@ -104,10 +106,10 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
                     <h3 className="font-semibold text-center">Feeling if Contribution Didn’t Exist</h3>
                     <p className="text-center">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
                   </div>
-                  <div className="mb-4">
+                  {/* <div className="mb-4">
                     <h3 className="font-semibold text-center">Explanation</h3>
                     <p className="text-center">{attestation.explanation || 'N/A'}</p>
-                  </div>
+                  </div> */}
                 </>
               );
             case "Governance Structures":
@@ -121,10 +123,10 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
                     <h3 className="font-semibold text-center">Examples of Usefulness</h3>
                     <p className="text-center">{attestation.examples_of_usefulness || 'N/A'}</p>
                   </div>
-                  <div className="mb-4">
+                  {/* <div className="mb-4">
                     <h3 className="font-semibold text-center">Explanation</h3>
                     <p className="text-center">{attestation.explanation || 'N/A'}</p>
-                  </div>
+                  </div> */}
                 </>
               );
             default:
@@ -160,12 +162,12 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
         onClick={(e) => e.stopPropagation()}
       >
         <div className="text-center pt-8 p-2">
-          <h2 className="text-xl font-bold mb-4">{('projectName' in attestation) ? attestation.projectName : 'Project'}</h2>
+          <h2 className="text-xl font-bold mb-4">{attestation.contribution}</h2>
         </div>
         <hr className="border-1 border-gray-300 my-2 mx-auto w-1/2" />
         {renderAttestationDetails()}
         <div className="mb-4">
-          <h3 className="font-semibold text-center">Feedback</h3>
+          <h3 className="font-semibold text-center">Explanation</h3>
           <p className="text-center">{('feedback' in attestation) ? attestation.feedback : (('explanation' in attestation) ? attestation.explanation : 'N/A')}</p>
         </div>
         <div className="mb-4">

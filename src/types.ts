@@ -526,27 +526,46 @@ interface BaseAttestationDisplay {
   createdAt: string | null;
   attestationUID: string;
   contribution: string;
+  projectName: string;
+  category: string;
+  subcategory: string;
   ecosystem: string;
 }
 
 export interface OnchainBuildersDisplay extends BaseAttestationDisplay {
   recommend_contribution: string;
   feeling_if_didnt_exist: string;
+  likely_to_recommend?: string | null;
+  governance_knowledge?: string | null;
+  useful_for_understanding?: string | null;
+  effective_for_improvements?: string | null;
   explanation?: string;
   rating?: string;
+  examples_of_usefulness?: string | null;
 }
 
 export interface OPStackDisplay extends BaseAttestationDisplay {
   feeling_if_didnt_exist: string;
   explanation: string;
+  governance_knowledge?: string | null;
+  useful_for_understanding?: string | null;
+  effective_for_improvements?: string | null;
+  recommend_contribution?: string | null;
+  examples_of_usefulness?: string | null;
+  likely_to_recommend?: string | null;
   rating?: string;
 }
 
 export interface GovStructuresDisplay extends BaseAttestationDisplay {
-  feeling_if_didnt_exist: string;
   explanation: string;
   examples_of_usefulness: string;
+  recommend_contribution?: string | null;
   rating?: string;
+  feeling_if_didnt_exist: string;
+  likely_to_recommend?: string | null;
+  useful_for_understanding?: string | null;
+  effective_for_improvements?: string | null;
+  governance_knowledge?: string | null;
 }
 
 export interface GovRandADisplay extends BaseAttestationDisplay {
@@ -554,6 +573,11 @@ export interface GovRandADisplay extends BaseAttestationDisplay {
   effective_for_improvements: string;
   explanation: string;
   rating?: string;
+  feeling_if_didnt_exist?: string | null;
+  examples_of_usefulness?: string | null;
+  governance_knowledge?: string | null;
+  likely_to_recommend?: string | null;
+  recommend_contribution?: string | null;
 }
 
 export interface GovCollabAndOnboardingDisplay extends BaseAttestationDisplay {
@@ -562,17 +586,34 @@ export interface GovCollabAndOnboardingDisplay extends BaseAttestationDisplay {
   feeling_if_didnt_exist: string;
   explanation: string;
   rating?: string;
+  useful_for_understanding?: string | null;
+  examples_of_usefulness?: string | null;
+  effective_for_improvements?: string | null;
+  likely_to_recommend?: string | null;
 }
 
 export interface GovInfraAndToolingDisplay extends BaseAttestationDisplay {
   likely_to_recommend: string;
   explanation: string;
   rating?: string;
+  feeling_if_didnt_exist?: string | null;
+  examples_of_usefulness?: string | null;
+  governance_knowledge?: string | null;
+  useful_for_understanding?: string | null;
+  recommend_contribution?: string | null;
+  effective_for_improvements?: string | null;
 }
 
 export interface GeneralAttestationDisplay extends BaseAttestationDisplay {
   feedback: string;
   rating: string;
+  likely_to_recommend?: string | null;
+  examples_of_usefulness?: string | null;
+  useful_for_understanding?: string | null;
+  recommend_contribution?: string | null;
+  governance_knowledge?: string | null;
+  effective_for_improvements?: string | null;
+  feeling_if_didnt_exist?: string | null;
 }
 
 export type AttestationDisplay =
