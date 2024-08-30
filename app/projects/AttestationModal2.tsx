@@ -141,7 +141,6 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 recommend_contribution: formData.recommend_contribution,
                 feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
                 explanation: formData.explanation,
-                private_feedback: formData.private_feedback,
               }
               break;
             case 'Infra & Tooling':
@@ -149,7 +148,6 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 likely_to_recommend: formData.likely_to_recommend,
                 feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
                 explanation: formData.explanation,
-                private_feedback: formData.private_feedback,
               }
               break;
             case 'Governance Research & Analytics':
@@ -158,7 +156,6 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 useful_for_understanding: formData.useful_for_understanding,
                 effective_for_improvements: formData.effective_for_improvements,
                 explanation: formData.explanation,
-                private_feedback: formData.private_feedback,
               }
               break;
             case 'Governance Structures':
@@ -166,7 +163,6 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
                 why: formData.why,
                 explanation: formData.explanation,
-                private_feedback: formData.private_feedback,
               }
               break;
             default:
