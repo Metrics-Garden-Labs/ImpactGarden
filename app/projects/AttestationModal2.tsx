@@ -108,8 +108,12 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   };
 
   const compileFormData = (commonData: any, specificData: any) => {
+    //destructre to remove the governancetype from being uploaded
+    
+    const { governancetype, ...restOfCommonData } = commonData;
+
     return {
-      ...commonData,
+      ...restOfCommonData,
       data: specificData,
     };
   };

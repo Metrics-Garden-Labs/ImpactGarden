@@ -47,10 +47,10 @@ const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
       return (
         <>
           <p className='text-md text-black mb-2'>{attestation.contribution}</p>
-          <p className='text-sm text-gray-500 mb-2'>Governance Research and Analytics</p>
-          <p className='text-sm text-gray-500 mb-2'>Useful for Understanding: {attestation.useful_for_understanding}</p>
+          {/* <p className='text-sm text-gray-500 mb-2'>Governance Research and Analytics</p> */}
           <p className='text-sm text-gray-500 mb-2'>Effective for Improvements: {attestation.effective_for_improvements}</p>
-          <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+          <p className='text-sm text-gray-500 mb-2'>Useful for Understanding: {attestation.useful_for_understanding}</p>
+          {/* <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p> */}
         </>
       );
     }
@@ -59,11 +59,11 @@ const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
       return (
         <>
           <p className='text-md text-black mb-2'>{attestation.contribution}</p>
-          <p className='text-sm text-gray-500 mb-2'>Collaboration and Onboarding</p>
+          {/* <p className='text-sm text-gray-500 mb-2'>Collaboration and Onboarding</p> */}
           <p className='text-sm text-gray-500 mb-2'>Governance Knowledge: {attestation.governance_knowledge}</p>
           <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.recommend_contribution}</p>
           <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
-          <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+          {/* <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p> */}
         </>
       );
     }
@@ -72,9 +72,9 @@ const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
       return (
         <>
           <p className='text-md text-black mb-2'>{attestation.contribution}</p>
-          <p className='text-sm text-gray-500 mb-2'>Infrastructure and Tooling</p>
+          {/* <p className='text-sm text-gray-500 mb-2'>Infrastructure and Tooling</p> */}
           <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.likely_to_recommend}</p>
-          <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+          {/* <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p> */}
         </>
       );
     }
@@ -85,7 +85,7 @@ const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
           <p className='text-md text-black mb-2'>{attestation.contribution}</p>
           <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
           <p className='text-sm text-gray-500 mb-2'>Examples of Usefulness: {attestation.examples_of_usefulness}</p>
-          <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+          {/* <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p> */}
         </>
       );
     }
@@ -105,7 +105,7 @@ const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
         <>
           <p className='text-md text-black mb-2'>{attestation.contribution}</p>
           <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
-          <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p>
+          {/* <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p> */}
         </>
       );
     }
@@ -114,7 +114,7 @@ const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
     if ('feedback' in attestation) {
       return (
         <>
-          <p className='text-sm text-gray-500 mb-2'>Feedback: {attestation.feedback}</p>
+          {/* <p className='text-sm text-gray-500 mb-2'>Feedback: {attestation.feedback}</p> */}
           <p className='text-sm text-gray-500 mb-2'>Rating: {attestation.rating}</p>
         </>
       );
