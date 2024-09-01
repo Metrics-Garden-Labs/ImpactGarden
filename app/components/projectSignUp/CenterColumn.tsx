@@ -180,7 +180,7 @@ const CenterColumn: React.FC<CenterColumnProps> = ({
 
           <div>
             <label htmlFor="oneliner" className="block text-sm font-medium leading-6 text-gray-900">
-              Description of your Project <span className="text-[#24583C] text-sm">*</span>
+              Description of your project <span className="text-[#24583C] text-sm">*</span>
             </label>
             <div className="mt-2">
               <input
