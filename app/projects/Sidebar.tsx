@@ -21,7 +21,6 @@ interface Props {
 const Sidebar = ({ project, projectAttestationCount, categories, subcategories }: Props)=> {
 
   const websiteurl = project?.websiteUrl;
-  console.log('Selected website:', websiteurl);
 
   const getProjectDuration = (createdAt: Date | null | undefined) => {
     if (!createdAt) return 'Unknown';
@@ -49,14 +48,9 @@ const Sidebar = ({ project, projectAttestationCount, categories, subcategories }
   };
 
   const checkwebsiteUrl = urlHelper(project?.websiteUrl || '');
-  console.log('Selected website:', websiteurl);
-  console.log('categories:', categories);
   const checktwitterUrl = urlHelper(project?.twitterUrl || '');
   const checkgithubUrl = urlHelper(project?.githubUrl || '');
 
-  console.log('websiteUrl:', checkwebsiteUrl);
-  console.log('twitterUrl:', checktwitterUrl);
-  console.log('githubUrl:', checkgithubUrl);
     
 
   return (

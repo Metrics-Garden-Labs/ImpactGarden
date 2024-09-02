@@ -61,7 +61,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
               return (
                 <>
                   <div className="mb-4">
-                    <h3 className="font-semibold text-center">Likely to Recommend</h3>
+                    <h3 className="font-semibold text-center">Reccomendation</h3>
                     <p className="text-center">{attestation.likely_to_recommend || 'N/A'}</p>
                   </div>
                   <div className="mb-4">
@@ -77,6 +77,10 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
             case "Governance Research & Analytics":
               return (
                 <>
+                <div className="mb-4">
+                    <h3 className="font-semibold text-center">Recommendation</h3>
+                    <p className="text-center">{attestation.likely_to_recommend || 'N/A'}</p>
+                  </div>
                   <div className="mb-4">
                     <h3 className="font-semibold text-center">Useful for Understanding</h3>
                     <p className="text-center">{attestation.useful_for_understanding || 'N/A'}</p>
@@ -99,7 +103,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
                     <p className="text-center">{attestation.governance_knowledge || 'N/A'}</p>
                   </div>
                   <div className="mb-4">
-                    <h3 className="font-semibold text-center">Recommend Contribution</h3>
+                    <h3 className="font-semibold text-center">Recommendation</h3>
                     <p className="text-center">{attestation.recommend_contribution || 'N/A'}</p>
                   </div>
                   <div className="mb-4">

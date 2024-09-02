@@ -48,6 +48,7 @@ const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
         <>
           <p className='text-md text-black mb-2'>{attestation.contribution}</p>
           {/* <p className='text-sm text-gray-500 mb-2'>Governance Research and Analytics</p> */}
+          <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.likely_to_recommend}</p>
           <p className='text-sm text-gray-500 mb-2'>Effective for Improvements: {attestation.effective_for_improvements}</p>
           <p className='text-sm text-gray-500 mb-2'>Useful for Understanding: {attestation.useful_for_understanding}</p>
           {/* <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p> */}

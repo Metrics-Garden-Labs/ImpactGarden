@@ -152,7 +152,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     try {
       const pinataURL1 = await uploadToPinata({
         name: selectedProject?.projectName,
-        farcaster: fid,
+        farcaster: user.fid,
         category: formData.category,
         subcategory: formData.subcategory,
         ecosystem: formData.ecosystem,

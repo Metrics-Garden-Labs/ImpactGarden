@@ -5,6 +5,7 @@ import { RxCross2 } from 'react-icons/rx';
 import { higherCategoryKey } from '@/src/types';
 import TextAreaField from '../ui/TextAreaField'; // Assuming you created this as per the previous refactor.
 import { getSubcategories, higherCategories, Subcategory, Category } from '@/src/utils/addContributionModalUtils';
+import MultiLinkInput from './MultiLinkInput';
 
 interface AddContributionFormProps {
   formData: any;
@@ -96,10 +97,17 @@ const AddContributionForm: React.FC<AddContributionFormProps> = ({
   renderModal,
 }) => {
   const [showSubcategoryInfo, setShowSubcategoryInfo] = useState(false);
+  const [links, setLinks] = useState<string[]>([]);
 
   const toggleSubcategoryInfo = () => {
     setShowSubcategoryInfo(!showSubcategoryInfo);
   };
+
+  const handleLinksChange = (newLinks: string[]) => {
+    setLinks(newLinks);
+    setFormData({ ...formData, link: newLinks.join(' ') });
+  };
+
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50" onClick={onClose}>
       <div className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-2/3 lg:w-2/5 max-h-[90vh] overflow-y-auto mx-4 md:mx-20" onClick={(e) => e.stopPropagation()}>
@@ -187,13 +195,13 @@ const AddContributionForm: React.FC<AddContributionFormProps> = ({
             maxLength={200}
           />
 
-          <TextAreaField
-            label="Link/Evidence"
-            value={formData.link ?? ''}
-            onChange={(e) => setFormData({ ...formData, link: e.target.value })}
-            placeholder="Add a link"
-            required
-          />
+          <div className="mb-2">
+            <h3 className="font-semibold p-1 text-left">
+              Link/Evidence <span className="text-[#24583C]">*</span>
+            </h3>
+            <p className='text-sm text-[#B5B5B6] pl-1 mb-2'>Add links to your contribution or evidence (include https://)</p>
+            <MultiLinkInput links={links} setLinks={handleLinksChange} />
+          </div>
 
           <div className="mb-4 text-center">
             <button className="btn text-sm  items-center font-medium text-white bg-black rounded-md shadow-sm hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="submit" disabled={isLoading}>

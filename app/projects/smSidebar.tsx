@@ -15,7 +15,7 @@ interface Props {
 
 const Sidebar: React.FC<Props> = ({ project, projectAttestationCount, categories, subcategories }) => {
   const websiteurl = project?.websiteUrl;
-  console.log('Selected website:', websiteurl);
+
 
   const getProjectDuration = (createdAt: Date | null | undefined) => {
     if (!createdAt) return 'Unknown';
