@@ -15,8 +15,6 @@ if (!POSTGRES_URL) {
   process.exit(1); // Exit with failure
 }
 
-console.log("POSTGRES_URL:", POSTGRES_URL);
-
 const pool = createPool({ connectionString: POSTGRES_URL });
 
 // Pass the pool to drizzle

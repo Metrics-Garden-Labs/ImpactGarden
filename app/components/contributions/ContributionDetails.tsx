@@ -48,7 +48,7 @@ const ContributionDetails: React.FC<ContributionDetailsProps> = ({
               <Link
                 key={index}
                 href={contribution.link || ""}
-                className="text-gray-500 hover:text-[#2C3F2D] visited:text-indigo-600 flex items-center mb-2 "
+                className="text-gray-500 underline hover:text-[#2C3F2D] transition-colors duration-200"
               >
                 <p className='text-left'>{link}</p>
               </Link>

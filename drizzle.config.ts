@@ -4,8 +4,6 @@ import * as dotenv from "dotenv";
 dotenv.config();
 const POSTGRES_URL = process.env.POSTGRES_URL;
 
-console.log("postgres", process.env.POSTGRES_URL);
-
 export default defineConfig({
   schema: "./src/lib/schema.ts",
   out: "./drizzle",

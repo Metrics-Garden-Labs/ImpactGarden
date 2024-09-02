@@ -14,8 +14,6 @@ config();
 
 const POSTGRES_URL = process.env.POSTGRES_URL;
 
-console.log("postgres", POSTGRES_URL);
-
 export const dbConfig = {
   url: POSTGRES_URL as string,
 };

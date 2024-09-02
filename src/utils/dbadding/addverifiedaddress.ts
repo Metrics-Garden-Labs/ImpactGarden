@@ -24,8 +24,6 @@ if (!NEYNAR_API_KEY) {
   process.exit(1); // Exit with failure
 }
 
-console.log("POSTGRES_URL:", POSTGRES_URL);
-
 process.env.POSTGRES_URL = POSTGRES_URL;
 
 const __filename = fileURLToPath(import.meta.url);

@@ -16,8 +16,6 @@ if (!POSTGRES_URL) {
   process.exit(1); // Exit with failure
 }
 
-console.log("POSTGRES_URL:", POSTGRES_URL);
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
