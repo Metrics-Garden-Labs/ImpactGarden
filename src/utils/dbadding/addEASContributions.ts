@@ -28,7 +28,7 @@ const db = drizzle(vsql);
 
 const addContributionsToDB = async () => {
   try {
-    const filePath = path.join(__dirname, "easprojectsopstack1.json");
+    const filePath = path.join(__dirname, "EASprojectsOpstack.json");
     const jsonData = fs.readFileSync(filePath, "utf-8");
     const projectsData = JSON.parse(jsonData);
 
@@ -59,7 +59,7 @@ const addContributionsToDB = async () => {
           projectName: project.name,
           ecosystem: "Optimism", // Assume the same ecosystem as the project
           governancetype: "", // Empty governance type
-          category: category, // Use the category
+          category: "OP Stack", // Use the category
           subcategory: "", // Empty subcategory
           contribution: project.name, // Use project name as contribution
           desc: project.description, // Use project description

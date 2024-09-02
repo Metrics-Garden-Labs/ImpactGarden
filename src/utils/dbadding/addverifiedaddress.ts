@@ -12,7 +12,6 @@ import { NeynarAPIClient } from "@neynar/nodejs-sdk";
 dotenv.config();
 
 const POSTGRES_URL = process.env.POSTGRES_URL;
-
 const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY;
 
 if (!POSTGRES_URL) {
@@ -37,7 +36,7 @@ const client = new NeynarAPIClient(NEYNAR_API_KEY);
 
 const updateProjectsInDB = async () => {
   try {
-    const filePath = path.join(__dirname, "agoraProjects.json");
+    const filePath = path.join(__dirname, "EASprojectsOpstack.json");
     const jsonData = fs.readFileSync(filePath, "utf-8");
 
     // Ensure jsonData is parsed correctly
@@ -45,12 +44,13 @@ const updateProjectsInDB = async () => {
     try {
       const parsedData = JSON.parse(jsonData);
       console.log("Parsed JSON data:", parsedData);
+      projectsData = parsedData;
 
       // Access the projects array
-      projectsData = parsedData.projects;
-      if (!Array.isArray(projectsData)) {
-        throw new Error("Parsed data is not an array");
-      }
+      // projectsData = parsedData.projects;
+      // if (!Array.isArray(projectsData)) {
+      //   throw new Error("Parsed data is not an array");
+      // }
     } catch (parseError) {
       console.error("Error parsing JSON data:", parseError);
       return;

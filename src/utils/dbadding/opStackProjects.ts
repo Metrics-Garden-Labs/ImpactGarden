@@ -31,8 +31,12 @@ export const getOpStackProjects = async (): Promise<void> => {
   const endpoint = "https://optimism.easscan.org/graphql";
 
   // Specify the date filter (projects created on or after August 22, 2024)
-  const dateFilter = Math.floor(
+  const dateFilte1r = Math.floor(
     new Date("2024-08-22T00:00:00Z").getTime() / 1000
+  );
+  //for date after 26th august 21:32
+  const dateFilter = Math.floor(
+    new Date("2024-08-26T21:32:00Z").getTime() / 1000
   );
 
   // Save the file in the same folder as `opStackProjects.ts`
@@ -323,3 +327,4 @@ getOpStackProjects()
   .catch((error) => console.error("Caught error:", error));
 
 //last queried 26th august 21:32
+//last queried 2nd sept 11:45

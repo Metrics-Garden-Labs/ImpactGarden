@@ -28,7 +28,7 @@ const db = drizzle(vsql);
 
 const addProjectsToDB = async () => {
   try {
-    const filePath = path.join(__dirname, "easprojectsopstack1.json");
+    const filePath = path.join(__dirname, "EASprojectsOpstack.json");
     const jsonData = fs.readFileSync(filePath, "utf-8");
     const projectsData = JSON.parse(jsonData);
 
@@ -53,6 +53,17 @@ const addProjectsToDB = async () => {
       // Assume category is "OP Stack"
       const category = "OP Stack";
 
+      let githubUrl = "";
+      if (Array.isArray(project.github) && project.github.length > 0) {
+        githubUrl = project.github[0].url || "";
+      } else if (typeof project.github === "object" && project.github.url) {
+        githubUrl = project.github.url;
+      } else if (typeof project.github === "string") {
+        githubUrl = project.github;
+      }
+
+      // console.log("GitHub field:", JSON.stringify(project.github, null, 2));
+      // console.log("Extracted GitHub URL:", githubUrl);
       await db
         .insert(projects)
         .values({
@@ -65,7 +76,7 @@ const addProjectsToDB = async () => {
           oneliner: project.description,
           websiteUrl: project.socialLinks?.website?.[0] || "",
           twitterUrl: project.socialLinks?.twitter || "",
-          githubUrl: project.github || "", // this is going to need to be improved
+          githubUrl: githubUrl || "",
           logoUrl: project.projectAvatarUrl || "",
           projectUid: project.projectUid || "", // Use the correct projectUid
         })
