@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Contribution, Project } from '@/src/types';
 import { FaSearch, FaChevronDown } from "react-icons/fa";
@@ -115,13 +116,13 @@ const DisplayContributions: React.FC<DisplayContributionsProps> = ({
              key={contribution.id}
            >
              <div
-               className="flex flex-col justify-between p-4 border bg-white text-black border-gray-300 rounded-lg w-full h-56 shadow-lg overflow-hidden"
+               className="flex flex-col p-4 border bg-white text-black border-gray-300 rounded-lg w-full h-56 shadow-lg overflow-hidden"
              >
-               <div className="flex-grow overflow-hidden">
+               <div className="flex-grow flex flex-col justify-center items-center overflow-hidden">
                  <h3 className="text-lg text-center font-semibold mb-2 line-clamp-2 overflow-ellipsis">
                    {contribution.contribution}
                  </h3>
-                 <p className="text-[#A6A6A6] text-center text-sm mb-4 line-clamp-3 overflow-ellipsis">
+                 <p className="text-[#A6A6A6] justify-center text-center text-sm mb-4 line-clamp-3 overflow-ellipsis">
                    {formatOneliner(contribution.desc)}
                  </p>
                </div>
