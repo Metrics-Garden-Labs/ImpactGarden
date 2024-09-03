@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 const ProjectPage = async ({ searchParams }: Props) => {
   const query = searchParams?.query || '';
-  const filter = searchParams?.filter || '';
+  const filter = searchParams?.filter || 'OP Stack';
   const sortOrder = searchParams?.sortOrder || 'A-Z';
 
   console.log('Received search parameters:', searchParams);
