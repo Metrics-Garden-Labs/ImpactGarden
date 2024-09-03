@@ -22,6 +22,7 @@ interface CenterColumnProps {
   handleBackToEdit: () => void;
   onSubmit: (event: React.FormEvent) => Promise<void>;
   setCaptcha: (value: string | null) => void;
+  isLoading: boolean;
 }
 
 const CenterColumn: React.FC<CenterColumnProps> = ({
@@ -38,6 +39,7 @@ const CenterColumn: React.FC<CenterColumnProps> = ({
   handleBackToEdit,
   onSubmit,
   setCaptcha,
+  isLoading,
 }) => {
   const urlHelper = (url: string) => {
     if (!url.trim()) return null;
@@ -90,11 +92,14 @@ const CenterColumn: React.FC<CenterColumnProps> = ({
           <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha} />
         </div>
 
+        <p className='text-center text-sm text-gray-500 mb-2'> Clicking "Confirm & Attest" will create 2 attestations. Please wait for the first attestation to complete. You will then be prompted to sign a second attestation.</p>
+
         <div className="flex justify-center space-x-4 mt-20 mb-20">
           <button
             className="px-4 py-2 w-full sm:w-1/3 md:w-1/4 lg:w-1/5 text-xs sm:text-sm font-medium text-white bg-black rounded-md shadow-sm hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             type="button"
             onClick={onSubmit}
+            disabled={isLoading}
           >
             Confirm & Attest
           </button>
@@ -102,6 +107,7 @@ const CenterColumn: React.FC<CenterColumnProps> = ({
             className="px-4 py-2 w-full sm:w-1/3 md:w-1/4 lg:w-1/5 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             type="button"
             onClick={handleBackToEdit}
+            disabled={isLoading}
           >
             Back to Edit
           </button>

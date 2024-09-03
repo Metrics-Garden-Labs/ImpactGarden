@@ -309,6 +309,7 @@ export default function ProjectSignUp() {
           handleBackToEdit={handleBackToEdit}
           onSubmit={onSubmit}
           setCaptcha={setCaptcha}
+          isLoading={isLoading}
         />
         <div className="hidden lg:block lg:w-1/3">
         </div>
