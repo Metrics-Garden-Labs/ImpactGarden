@@ -92,7 +92,7 @@ const CenterColumn: React.FC<CenterColumnProps> = ({
           <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha} />
         </div>
 
-        <p className='text-center text-sm text-gray-500 mb-2'> Clicking "Confirm & Attest" will create 2 attestations. Please wait for the first attestation to complete. You will then be prompted to sign a second attestation.</p>
+        <p className='text-center text-sm text-gray-500 mb-2'> Clicking ’Confirm & Attest’ will create 2 attestations. Please wait for the first attestation to complete. You will then be prompted to sign a second attestation.</p>
 
         <div className="flex justify-center space-x-4 mt-20 mb-20">
           <button
