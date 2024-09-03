@@ -21,10 +21,6 @@ import { ZERO_BYTES32 } from '@ethereum-attestation-service/eas-sdk';
 import { Metadata } from 'next';
 
 
-export const metadata: Metadata = {
-  title: "Impact Garden - Project Sign Up",
-};
-
 export default function ProjectSignUp() {
   // State and hooks
   const [user, setUser] = useLocalStorage('user', { fid: '', username: '', ethAddress: '' });
