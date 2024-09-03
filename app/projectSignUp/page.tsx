@@ -18,6 +18,12 @@ import Footer from '../components/ui/Footer';
 import CenterColumn from '../components/projectSignUp/CenterColumn';
 import LeftColumn from '../components/projectSignUp/LeftColumn';
 import { ZERO_BYTES32 } from '@ethereum-attestation-service/eas-sdk';
+import { Metadata } from 'next';
+
+
+export const metadata: Metadata = {
+  title: "Impact Garden - Project Sign Up",
+};
 
 export default function ProjectSignUp() {
   // State and hooks

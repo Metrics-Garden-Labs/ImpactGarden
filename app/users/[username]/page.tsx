@@ -13,9 +13,13 @@ interface Props {
     username: string;
   };
 }
-export const metadata: Metadata = {
-  title: "Metrics Garden Labs - Users",
-};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { username } = params;
+  return {
+    title: `Metrics Garden Labs - ${username}`,
+  };
+}
 
 const UserProfilePage = async ({ params }: Props) => {
   const { username } = params;

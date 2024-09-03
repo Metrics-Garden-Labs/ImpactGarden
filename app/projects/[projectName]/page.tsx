@@ -14,9 +14,13 @@ interface Props {
   };
 }
 
-export const metadata: Metadata = {
-  title: "Metrics Garden Labs - Project",
-};
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const encodedProjectName = params?.projectName || '';
+  const decodedProjectName = decodeURIComponent(encodedProjectName);
+  return {
+    title: `Impact Garden - ${decodedProjectName}`,
+  };
+}
 
 const ProjectPage = async ({ params }: Props) => {
   const encodedProjectName = params?.projectName || '';

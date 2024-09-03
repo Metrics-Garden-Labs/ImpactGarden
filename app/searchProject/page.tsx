@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const metadata: Metadata = {
-  title: "Metrics Garden Labs - Search Projects",
+  title: "Impact Garden - Search Projects",
 };
 
 const ProjectPage = async ({ searchParams }: Props) => {

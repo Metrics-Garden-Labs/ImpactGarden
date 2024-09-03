@@ -6,6 +6,7 @@ import Footer from '../../../../components/ui/Footer';
 import Sidebar from '../../../Sidebar';
 import React from 'react';
 import ContributionPage from '../contributionPage';
+import { Metadata } from 'next';
 
 interface ContributionPageProps {
   params: {
@@ -14,9 +15,13 @@ interface ContributionPageProps {
   };
 }
 
-export const metadata = {
-  title: "Metrics Garden Labs - Contribution",
-};
+export async function generateMetadata({ params }: ContributionPageProps): Promise<Metadata> {
+  const { projectName, contributionId } = params;
+  const decodedProjectName = decodeURIComponent(projectName);
+  return {
+    title: `Impact Garden - ${decodedProjectName}`,
+  };
+}
 
 const ContributionDetailsPage = async ({ params }: ContributionPageProps) => {
   const { projectName, contributionId } = params;

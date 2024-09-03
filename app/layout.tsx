@@ -14,8 +14,8 @@ import Navbar from "./components/ui/Navbar";
 const manrope = Manrope({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Metrics Garden Labs",
-  description: "Metrics Garden Labs Attestations Platform",
+  title: "Impact Garden",
+  description: "Impact Garden, Review your favorite web3 projects",
 };
 
 export default function RootLayout({
