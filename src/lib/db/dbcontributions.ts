@@ -188,10 +188,10 @@ export const getContributionsWithAttestationCounts = async (
           Number(count1[0]?.count || 0) +
           Number(count2[0]?.count || 0) +
           Number(count3[0]?.count || 0) +
-          Number(count4[0]?.count || 0);
-        +Number(count5[0]?.count || 0);
-        +Number(count6[0]?.count || 0);
-        +Number(count7[0]?.count || 0);
+          Number(count4[0]?.count || 0) +
+          Number(count5[0]?.count || 0) +
+          Number(count6[0]?.count || 0) +
+          Number(count7[0]?.count || 0);
 
         console.log(`Contribution: ${contribution.contribution}`);
         console.log(

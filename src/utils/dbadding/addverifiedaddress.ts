@@ -12,6 +12,7 @@ import { NeynarAPIClient } from "@neynar/nodejs-sdk";
 dotenv.config();
 
 const POSTGRES_URL = process.env.POSTGRES_URL;
+
 const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY;
 
 if (!POSTGRES_URL) {
@@ -32,7 +33,7 @@ const __dirname = path.dirname(__filename);
 const db = drizzle(sql);
 const client = new NeynarAPIClient(NEYNAR_API_KEY);
 
-const updateProjectsInDB = async () => {
+export const updateProjectsInDB = async () => {
   try {
     const filePath = path.join(__dirname, "EASprojectsOpstack.json");
     const jsonData = fs.readFileSync(filePath, "utf-8");

@@ -1,5 +1,5 @@
 import { ProjectCategories, getProjectByName } from '../../../src/lib/db/dbprojects';
-import { getContributionsByProjectName } from '../../../src/lib/db/dbcontributions';
+import { getContributionsByProjectName, getContributionsWithAttestationCounts } from '../../../src/lib/db/dbcontributions';
 import { getAttestationCountByProject } from '../../../src/lib/db/dbattestations';
 import { Contribution, Project } from '../../../src/types';
 import ProfilePage from '../profilepage1';
@@ -31,7 +31,8 @@ const ProjectPage = async ({ params }: Props) => {
       ProjectCategories(decodedProjectName),
       getContributionsByProjectName(decodedProjectName),
       getProjectByName(decodedProjectName),
-      getAttestationCountByProject(decodedProjectName)
+      // getAttestationCountByProject(decodedProjectName),
+      getContributionsWithAttestationCounts(decodedProjectName)
     ]);
 
     const { categories, subcategories } = categoryData;
@@ -41,7 +42,7 @@ const ProjectPage = async ({ params }: Props) => {
     console.log('Contributions:', contributions);
     console.log('decoded Project name:', decodedProjectName);
 
-    const projectAttestationCount = projectAttestations.length;
+    const projectAttestationCount = projectAttestations.reduce((sum, contribution) => sum + (contribution.attestationCount ?? 0), 0);
 
     if (!project) {
       throw new Error('Project not found');

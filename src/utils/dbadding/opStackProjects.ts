@@ -25,18 +25,24 @@ function stringifyWithBigInt(obj: any) {
     2
   );
 }
+// const date = "2024-09-02T00:00:00Z";
 
-export const getOpStackProjects = async (): Promise<void> => {
+const getOpStackProjects = async (): Promise<void> => {
   const opAddressS4 = "0xF6872D315CC2E1AfF6abae5dd814fd54755fE97C"; // Attester's address
   const endpoint = "https://optimism.easscan.org/graphql";
 
   // Specify the date filter (projects created on or after August 22, 2024)
-  const dateFilte1r = Math.floor(
-    new Date("2024-08-22T00:00:00Z").getTime() / 1000
-  );
-  //for date after 26th august 21:32
+  // const dateFilte1r = Math.floor(
+  //   new Date("2024-08-22T00:00:00Z").getTime() / 1000
+  // );
+  // //for date after 26th august 21:32
+  // const dateFilter = Math.floor(
+  //   new Date("2024-08-26T21:32:00Z").getTime() / 1000
+  // );
+
+  //for 2nd sept 11:45
   const dateFilter = Math.floor(
-    new Date("2024-08-26T21:32:00Z").getTime() / 1000
+    new Date("2024-09-02T11:45:00Z").getTime() / 1000
   );
 
   // Save the file in the same folder as `opStackProjects.ts`
@@ -321,10 +327,11 @@ export const getOpStackProjects = async (): Promise<void> => {
   }
 };
 
-// Usage example
+// // Usage example
 getOpStackProjects()
   .then(() => console.log("Attestations fetched successfully"))
   .catch((error) => console.error("Caught error:", error));
 
 //last queried 26th august 21:32
 //last queried 2nd sept 11:45
+//last queried 4th sept 22:30
