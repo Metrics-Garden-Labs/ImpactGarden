@@ -28,7 +28,7 @@ function isGovStructuresOpDisplay(attestation: AttestationDisplay): attestation 
 }
 
 function isOnchainBuildersDisplay(attestation : AttestationDisplay): attestation is OnchainBuildersDisplay {
-  return (attestation as OnchainBuildersDisplay).explanation == undefined;
+  return (attestation as OnchainBuildersDisplay).recommend_contribution !== undefined;;
 }
 
 function isOPStackDisplay(attestation: AttestationDisplay): attestation is OPStackDisplay {
