@@ -791,12 +791,7 @@ export const getAttestationsByContributionAndSubcategory = async (
   subcategory: string | null
 ) => {
   try {
-    if (!category) {
-      return await getContributionAttestationList(contribution);
-    }
-
-    if (!subcategory) {
-      // If subcategory is null or an empty string, use the default table
+    if (!category && !subcategory) {
       return await getContributionAttestationList(contribution);
     }
 
