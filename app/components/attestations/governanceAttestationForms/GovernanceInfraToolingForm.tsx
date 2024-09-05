@@ -31,9 +31,9 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
   const [localExtraFeedback, setLocalExtraFeedback] = useState(extrafeedback);
 
   const additionalInfo = [
-    "The absence of this tool would significantly disrupt my work.",
-    "The absence of this tool would cause considerable inconvenience.",
     "The absence of this tool would have little to no impact on my work.",
+    "The absence of this tool would cause considerable inconvenience.",
+    "The absence of this tool would significantly disrupt my work.",
   ];
 
 

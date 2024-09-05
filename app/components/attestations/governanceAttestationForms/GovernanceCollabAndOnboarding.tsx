@@ -32,9 +32,9 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
   const [localExtraFeedback, setLocalExtraFeedback] = useState(extrafeedback);
 
   const additionalInfo = [
-    "I wouldn’t have been able to understand and engage in governance without it.",
+    "The absence of this tool would have had little to no impact on my journey.",
     "Understanding and engaging in Optimism’s governance would have been considerably more challenging.",
-    "The absence of this tool would have had little to no impact on my journey."
+    "I wouldn’t have been able to understand and engage in governance without it.",
   ];
 
 

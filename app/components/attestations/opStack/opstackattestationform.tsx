@@ -24,9 +24,9 @@ const OPStackAttestationForm: React.FC<OPStackAttestationFormProps> = ({
     const [localFeedback, setLocalFeedback] = useState(feedback);
 
     const additionalInfo = [
-        "The absence of this tool would cause me considerable inconvenience.",
-        "The absence of this tool would cause me considerable inconvenience.",
-        "The absence of this tool would have little to no impact on my work."
+        "The absence of this tool would have little to no impact on my work.",
+        "The absence of this tool would cause considerable inconvenience.",
+        "The absence of this tool would significantly disrupt my work."
       ];
 
     const handleSubmit= () => {

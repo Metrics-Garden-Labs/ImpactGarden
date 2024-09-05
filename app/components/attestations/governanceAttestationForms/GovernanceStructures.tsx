@@ -35,9 +35,9 @@ const GovernanceStructuresFrom: React.FC<GovernanceStructuresFormProps> = ({
   const [localSmileyRating, setLocalSmileyRating] = useState(smileyRating);
 
   const additionalInfo = [
-    "The absence of this tool would significantly disrupt my work.",
+    "The absence of this tool would have little to no impact on my work.",
     "The absence of this tool would cause considerable inconvenience.",
-    "The absence of this tool would have little to no impact on my work."
+    "The absence of this tool would significantly disrupt my work.",
   ];
 
 

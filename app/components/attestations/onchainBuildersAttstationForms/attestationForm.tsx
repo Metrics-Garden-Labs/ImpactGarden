@@ -30,9 +30,9 @@ const OnchainBuilders: React.FC<OnchainBuildersProps> = ({
   const [localExtraFeedback, setLocalExtraFeedback] = useState(extrafeedback);
 
   const additionalInfo = [
-    "The absence of this project would significantly disrupt my interactions with web3.",
+    "The absence of this project would have little to no impact on my life.",
     "The absence of this project would cause me a considerable inconvenience.",
-    "The absence of this project would have little to no impact on my life."
+    "The absence of this project would significantly disrupt my interactions with web3.",
   ];
 
 
