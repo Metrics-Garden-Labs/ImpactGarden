@@ -75,8 +75,13 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   };
 
   const createAttestation = async (pinataURL: string): Promise<string> => {
-    if (!user.fid || !eas || !currentAddress || !signer) {
-      throw new Error('Missing required data for attestation');
+    
+    if(!user.fid) {
+      throw alert('Please Connect to Farcaster to Continue');
+    }
+
+    if(!eas || !currentAddress || !signer) {
+      throw alert('Please Connect your Wallet to Continue');
     }
 
     const schema = "0xc9bc703e3c48be23c1c09e2f58b2b6657e42d8794d2008e3738b4ab0e2a3a8b6";
