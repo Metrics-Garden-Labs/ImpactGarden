@@ -31,6 +31,7 @@ const ProjectPageClient = ({ projects: initialProjects, query: initialQuery, fil
         projectMap.set(project.projectName, project);
       }
     });
+    console.log("uniqueProjects:", Array.from(projectMap.values()).slice(0, 5));
     return Array.from(projectMap.values());
   }, [projects]);
 

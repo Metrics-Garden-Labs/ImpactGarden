@@ -45,6 +45,10 @@ export interface ContributionWithAttestationCount extends Contribution {
   attestationCount?: number;
 }
 
+export interface ProjectWithAttestationCount extends Project {
+  attestationCount?: number;
+}
+
 export interface NewProject {
   userFid: string | null;
   ethAddress: string;

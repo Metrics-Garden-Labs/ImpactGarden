@@ -160,6 +160,8 @@ export const POST = async (request: Request) => {
               COUNT(${op_stack.id}),
               0
             ) DESC`);
+
+      console.log("most attested", query);
     } else if (sortOrder === "Recently Added") {
       console.log("Sorting by Recently Added");
       query = query.orderBy(sql`${projects.createdAt} DESC`);

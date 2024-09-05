@@ -1,5 +1,5 @@
 import { Project, SearchResult } from '../../src/types';
-import { getProjectsByCategoryAndSubcategory } from '../../src/lib/db/dbprojects';
+import { getProjectAttestationCount, getProjectsByCategoryAndSubcategory } from '../../src/lib/db/dbprojects';
 import ProjectPageClient from './ProjectPageClient';
 import { Metadata } from 'next';
 
@@ -28,6 +28,7 @@ const ProjectPage = async ({ searchParams }: Props) => {
     const projects: Project[] = await getProjectsByCategoryAndSubcategory(category || '', subcategory || '');
     // console.log('Projects retrieved successfully:', projects);
     // console.log('Received sortOrder in ProjectPage:', sortOrder);
+    
     console.log("filter:", filter);
     console.log("category:", category);
     console.log("subcategory:", subcategory);

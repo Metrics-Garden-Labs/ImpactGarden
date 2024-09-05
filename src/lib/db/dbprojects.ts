@@ -8,6 +8,12 @@ import {
   contributionattestations,
   user_addresses,
   op_delegates,
+  governance_infra_and_tooling,
+  governance_r_and_a,
+  governance_collab_and_onboarding,
+  governance_structures_op,
+  onchain_builders,
+  op_stack,
 } from "../schema";
 import * as schema from "../schema";
 import {
@@ -18,6 +24,7 @@ import {
   Contribution,
   NewProject,
   CategoryData,
+  ProjectWithAttestationCount,
 } from "@/src/types";
 import { inArray, eq, sql, and, SQL } from "drizzle-orm";
 import { PgSelect } from "drizzle-orm/pg-core";
@@ -361,6 +368,69 @@ export const getProjectsByEcosystem = async (
     return dbProjectsEcosystem;
   } catch (error) {
     console.error(`Error retrieving projects for ecosystem:`, error);
+    throw error;
+  }
+};
+
+export const getProjectAttestationCount = async (
+  projectName: string
+): Promise<number> => {
+  try {
+    const result = await db
+      .select({
+        totalCount: sql<number>`(
+          COALESCE(COUNT(${contributionattestations.id}), 0) +
+          COALESCE(COUNT(${governance_infra_and_tooling.id}), 0) +
+          COALESCE(COUNT(${governance_r_and_a.id}), 0) +
+          COALESCE(COUNT(${governance_collab_and_onboarding.id}), 0) +
+          COALESCE(COUNT(${governance_structures_op.id}), 0) +
+          COALESCE(COUNT(${onchain_builders.id}), 0) +
+          COALESCE(COUNT(${op_stack.id}), 0)
+        )`.as("totalCount"),
+      })
+      .from(projects)
+      .leftJoin(
+        contributionattestations,
+        sql`${projects.projectName} = ${contributionattestations.projectName}`
+      )
+      .leftJoin(
+        governance_infra_and_tooling,
+        sql`${projects.projectName} = ${governance_infra_and_tooling.projectName}`
+      )
+      .leftJoin(
+        governance_r_and_a,
+        sql`${projects.projectName} = ${governance_r_and_a.projectName}`
+      )
+      .leftJoin(
+        governance_collab_and_onboarding,
+        sql`${projects.projectName} = ${governance_collab_and_onboarding.projectName}`
+      )
+      .leftJoin(
+        governance_structures_op,
+        sql`${projects.projectName} = ${governance_structures_op.projectName}`
+      )
+      .leftJoin(
+        onchain_builders,
+        sql`${projects.projectName} = ${onchain_builders.projectName}`
+      )
+      .leftJoin(
+        op_stack,
+        sql`${projects.projectName} = ${op_stack.projectName}`
+      )
+      .where(eq(projects.projectName, projectName))
+      .groupBy(projects.id)
+      .execute();
+
+    const totalCount = result[0]?.totalCount || 0;
+
+    console.log(`Total attestation count for ${projectName}: ${totalCount}`);
+
+    return totalCount;
+  } catch (error) {
+    console.error(
+      `Error retrieving attestation count for project '${projectName}':`,
+      error
+    );
     throw error;
   }
 };

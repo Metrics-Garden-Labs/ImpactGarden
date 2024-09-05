@@ -58,17 +58,10 @@ export default function ProjectList({
   const sortedProjects = useMemo(() => {
     console.log("Sorting projects with sortOrder:", sortOrder);
     let sorted = [...filteredProjects];
+    console.log("filteredProjects:", filteredProjects.slice(0, 5));
     switch (sortOrder) {
       case 'Most Attested':
-        sorted.sort((a, b) => {
-          const aCount = 'attestationCount' in a ? Number(a.attestationCount) : 0;
-          const bCount = 'attestationCount' in b ? Number(b.attestationCount) : 0;
-          if (aCount === bCount) {
-            // If attestation counts are equal, sort alphabetically
-            return (a.projectName || '').localeCompare(b.projectName || '', undefined, { sensitivity: 'base' });
-          }
-          return bCount - aCount;
-        });
+        return sorted
         break;
       case 'Recently Added':
         sorted.sort((a, b) => {
