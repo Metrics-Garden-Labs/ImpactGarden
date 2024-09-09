@@ -113,35 +113,37 @@ const AttestationList = ({ user }: Props) => {
             attestations.map((attestation) => (
               <div 
                 key={attestation.id} 
-                className='p-4 bg-white border rounded-lg shadow-md cursor-pointer'
+                className='p-4 bg-white border rounded-lg shadow-md cursor-pointer overflow-hidden'
                 onClick={() => openModal(attestation)}
               >
-                <div className='flex items-start mb-2'>
-                  {attestation.logoUrl && (
-                    <Image
-                      src={attestation.logoUrl}
-                      alt={attestation.projectName || ""}
-                      width={40}
-                      height={40}
-                      className='mr-2 rounded-full'
-                    />
-                  )}
-                  <div>
-                    <h3 className='text-lg font-semibold'>{attestation.projectName}</h3>
-                    <p className='text-sm text-gray-500'>{attestation.contribution}</p>
-                    {attestation.subcategory && (
-                      <p className='text-sm text-gray-500'>{attestation.subcategory}</p>
+                <div className='flex flex-col'>
+                  <div className='flex items-start mb-2'>
+                    {attestation.logoUrl && (
+                      <Image
+                        src={attestation.logoUrl}
+                        alt={attestation.projectName || ""}
+                        width={40}
+                        height={40}
+                        className='mr-2 rounded-full flex-shrink-0'
+                      />
                     )}
-                    <p className='text-gray-700 mb-2'>
-                      {attestation.feedback} 
-                    </p>
-                    {attestation.rating && (
-                      <p className='text-sm text-gray-500'>Rating: {attestation.rating}</p>
-                    )}
-                    <p className='text-sm text-gray-500'>
-                      {format(new Date(attestation.createdAt || ''), 'MMMM dd, yyyy')}
-                    </p>
+                    <div className='min-w-0 flex-1'>
+                      <h3 className='text-lg font-semibold truncate'>{attestation.projectName}</h3>
+                      <p className='text-sm text-gray-500 truncate'>{attestation.contribution}</p>
+                      {attestation.subcategory && (
+                        <p className='text-sm text-gray-500 truncate'>{attestation.subcategory}</p>
+                      )}
+                    </div>
                   </div>
+                  <p className='text-gray-700 mb-2 line-clamp-5 overflow-hidden'>
+                    {attestation.feedback} 
+                  </p>
+                  {attestation.rating && (
+                    <p className='text-sm text-gray-500'>Rating: {attestation.rating}</p>
+                  )}
+                  <p className='text-sm text-gray-500'>
+                    {format(new Date(attestation.createdAt || ''), 'MMMM dd, yyyy')}
+                  </p>
                 </div>
               </div>
             ))
