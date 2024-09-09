@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import SmileyRatingScale from '@/app/components/ui/SmileyRatingScale';
 import RatingScale10 from '@/app/components/ui/RatingScale10';
+import { getSmileyRatingLabel } from '@/src/utils/helpers';
 
 interface OnchainBuildersProps {
   smileyRating: number;
@@ -38,9 +39,12 @@ const OnchainBuilders: React.FC<OnchainBuildersProps> = ({
 
 
   const handleSubmit = () => {
+    //convert smiley rating to label
+    const smileyRatingLabel = getSmileyRatingLabel(localSmileyRating);
+
     const formData = {
       recommend_contribution: localRating1.toString(),
-      feeling_if_didnt_exist: localSmileyRating.toString(),
+      feeling_if_didnt_exist: smileyRatingLabel,
       explanation: localFeedback,
       private_feedback: localExtraFeedback,
     };

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import SmileyRatingScale from '@/app/components/ui/SmileyRatingScale';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
-
+import { getSmileyRatingLabel } from '@/src/utils/helpers';
 
 interface OPStackAttestationFormProps {
     smileyRating: number;
@@ -30,8 +30,11 @@ const OPStackAttestationForm: React.FC<OPStackAttestationFormProps> = ({
       ];
 
     const handleSubmit= () => {
+        //convert smiley rating to label
+        const smileyRatingLabel = getSmileyRatingLabel(localSmileyRating);
+          
         const formData = {
-            feeling_if_didnt_exist: localSmileyRating.toString(),
+            feeling_if_didnt_exist: smileyRatingLabel,
             explanation: localFeedback,
         };
         onSubmit(formData);

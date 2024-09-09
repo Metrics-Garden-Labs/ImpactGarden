@@ -3,6 +3,7 @@ import { RxCross2 } from 'react-icons/rx';
 import { contributionRolesKey } from '@/src/types';
 import SmileyRatingScale from '@/app/components/ui/SmileyRatingScale';
 import RatingScale10 from '@/app/components/ui/RatingScale10';
+import { getSmileyRatingLabel } from '@/src/utils/helpers';
 
 interface GovernanceCollabAndOnboardingProps {
   smileyRating: number;
@@ -43,10 +44,14 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
   };
 
   const handleSubmit = () => {
+
+    //convert smiley rating to label
+    const smileyRatingLabel = getSmileyRatingLabel(localSmileyRating);
+
     const formData = {
       governance_knowledge: knowledgeLevel,
       recommend_contribution: localRating1.toString(),
-      feeling_if_didnt_exist: localSmileyRating.toString(),
+      feeling_if_didnt_exist: smileyRatingLabel,
       explanation: localFeedback,
       private_feedback: localExtraFeedback,
     };

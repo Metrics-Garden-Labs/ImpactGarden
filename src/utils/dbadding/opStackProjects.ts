@@ -41,8 +41,18 @@ const getOpStackProjects = async (): Promise<void> => {
   // );
 
   //for 2nd sept 11:45
+  // const dateFilter = Math.floor(
+  //   new Date("2024-09-02T11:45:00Z").getTime() / 1000
+  // );
+
+  //for 4th sept 22:30
+  // const dateFilter = Math.floor(
+  //   new Date("2024-09-04T22:30:00Z").getTime() / 1000
+  // );
+
+  //for 5th sept 12:30
   const dateFilter = Math.floor(
-    new Date("2024-09-02T11:45:00Z").getTime() / 1000
+    new Date("2024-09-05T12:30:00Z").getTime() / 1000
   );
 
   // Save the file in the same folder as `opStackProjects.ts`
@@ -335,3 +345,5 @@ getOpStackProjects()
 //last queried 26th august 21:32
 //last queried 2nd sept 11:45
 //last queried 4th sept 22:30
+//last queried 5th sept 12:30
+//last queried 6th sept 11:30

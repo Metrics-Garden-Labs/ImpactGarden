@@ -3,6 +3,7 @@ import { RxCross2 } from 'react-icons/rx';
 import SmileyRatingScale from '@/app/components/ui/SmileyRatingScale';
 import RatingScale10 from '@/app/components/ui/RatingScale10';
 import { contributionRolesKey } from '@/src/types';
+import { getSmileyRatingLabel } from '@/src/utils/helpers';
 
 interface GovernanceInfraToolingFormProps {
   rating1: number;
@@ -38,9 +39,12 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
 
 
   const handleSubmit = () => {
+    //convert smiley rating to label
+    const smileyRatingLabel = getSmileyRatingLabel(localSmileyRating);
+
     const formData = {
       likely_to_recommend: localRating1,
-      feeling_if_didnt_exist: localSmileyRating,
+      feeling_if_didnt_exist: smileyRatingLabel,
       explanation: localFeedback,
       private_feedback: localExtraFeedback,
     };

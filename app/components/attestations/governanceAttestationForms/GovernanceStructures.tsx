@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import { contributionRolesKey } from '@/src/types';
 import SmileyRatingScale from '../../ui/SmileyRatingScale';
+import { getSmileyRatingLabel } from '@/src/utils/helpers';
 
 interface GovernanceStructuresFormProps {
   smileyRating: number;
@@ -42,8 +43,11 @@ const GovernanceStructuresFrom: React.FC<GovernanceStructuresFormProps> = ({
 
 
   const handleSubmit = () => {
+    //convert smiley rating to label
+    const smileyRatingLabel = getSmileyRatingLabel(localSmileyRating);
+
     const formData = {
-      feeling_if_didnt_exist: localSmileyRating,
+      feeling_if_didnt_exist: smileyRatingLabel,
       why: localFeedback1,
       explanation: localFeedback2,
       private_feedback: localExtraFeedback,
