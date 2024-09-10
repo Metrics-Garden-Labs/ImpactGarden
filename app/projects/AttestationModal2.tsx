@@ -102,7 +102,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
         schema,
         encodedData,
         recipientAddress,
-        contribution.primarycontributionuid || contribution.easUid || ""
+        contribution.easUid || contribution.primarycontributionuid  || ""
       );
 
       return attestationUID;
