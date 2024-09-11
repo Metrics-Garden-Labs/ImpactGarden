@@ -218,6 +218,8 @@ export interface ProjectAttestations {
 export interface Attestation2 {
   id: number;
   userFid: string;
+  username: string;
+  pfp?: string;
   projectName: string | null;
   contribution: string | null;
   ecosystem: string;
