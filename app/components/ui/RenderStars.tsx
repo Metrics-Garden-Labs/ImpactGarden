@@ -31,7 +31,7 @@ export const renderStars5 = (rating: number) => {
   const emptyStarsCount = 5 - fullStarsCount - halfStarsCount;
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center text-orange-400">
       {Array.from({ length: fullStarsCount }, (_, index) => (
         <IoStarSharp key={`full-${index}`} />
       ))}
@@ -51,7 +51,7 @@ export const renderStars10 = (rating: number) => {
   const emptyStarsCount = 5 - fullStarsCount - halfStarsCount;
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center text-orange-400">
       {Array.from({ length: fullStarsCount }, (_, index) => (
         <IoStarSharp key={`full-${index}`} />
       ))}

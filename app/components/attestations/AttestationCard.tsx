@@ -3,6 +3,7 @@ import { AttestationDisplay, AttestationNetworkType, Contribution } from '@/src/
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { easScanEndpoints } from '../../../src/utils/easScan';
+import { renderStars10, renderStars5 } from '../ui/RenderStars';
 
 interface AttestationCardProps {
   contribution: Contribution;
@@ -32,7 +33,7 @@ const AttestationCard: React.FC<AttestationCardProps> = ({
       return (
         <>
           <p className='text-sm text-gray-500 mb-2'>Feedback: {attestation.feedback}</p>
-          <p className='text-sm text-gray-500 mb-2'>Rating: {attestation.rating}</p>
+          <p className='text-sm text-gray-500 mb-2'>Rating: {renderStars5(Number(attestation.rating))}</p>
         </>
       );
     }
@@ -42,7 +43,7 @@ const AttestationCard: React.FC<AttestationCardProps> = ({
         if ('likely_to_recommend' in attestation) {
           return (
             <>
-              <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.likely_to_recommend}</p>
+              <p className='text-sm text-gray-500 mb-2'>Recommendation: {renderStars10(Number(attestation.likely_to_recommend))}</p>
               {/* <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p> */}
             </>
           );
@@ -52,7 +53,7 @@ const AttestationCard: React.FC<AttestationCardProps> = ({
         if('feeling_if_didnt_exist' in attestation) {
           return (
             <>
-              <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
+              <p className='text-sm text-gray-500 mb-2'>Absence of Contribution: {attestation.feeling_if_didnt_exist}</p>
               {/* <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p> */}
             </>
           );
@@ -63,8 +64,8 @@ const AttestationCard: React.FC<AttestationCardProps> = ({
             if ('likely_to_recommend' in attestation) {
               return (
                 <>
-                  <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.likely_to_recommend}</p>
-                  <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
+                  <p className='text-sm text-gray-500 mb-2'>Recommendation: {renderStars10(Number(attestation.likely_to_recommend))}</p>
+                  <p className='text-sm text-gray-500 mb-2'>Absence of Contribution: {attestation.feeling_if_didnt_exist}</p>
                   {/* <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p> */}
                 </>
               );
@@ -74,9 +75,9 @@ const AttestationCard: React.FC<AttestationCardProps> = ({
             if ('useful_for_understanding' in attestation) {
               return (
                 <>
-                  <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.likely_to_recommend}</p>
-                  <p className='text-sm text-gray-500 mb-2'>Useful for Understanding: {attestation.useful_for_understanding}</p>
-                  <p className='text-sm text-gray-500 mb-2'>Effective for Improvements: {attestation.effective_for_improvements}</p>
+                  <p className='text-sm text-gray-500 mb-2 flex gap-2'>Recommendation: {renderStars10(Number(attestation.likely_to_recommend))}</p>
+                  <p className='text-sm text-gray-500 mb-2 flex gap-2'>Useful for Understanding: {renderStars5(Number(attestation.useful_for_understanding))}</p>
+                  <p className='text-sm text-gray-500 mb-2 flex gap-2'>Effective for Improvements: {renderStars5(Number(attestation.effective_for_improvements))}</p>
                   {/* <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p> */}
                 </>
               );
@@ -87,8 +88,8 @@ const AttestationCard: React.FC<AttestationCardProps> = ({
               return (
                 <>
                   <p className='text-sm text-gray-500 mb-2'>Governance Knowledge: {attestation.governance_knowledge}</p>
-                  <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.recommend_contribution}</p>
-                  <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
+                  <p className='text-sm text-gray-500 mb-2'>Recommendation: {renderStars10(Number(attestation.recommend_contribution))}</p>
+                  <p className='text-sm text-gray-500 mb-2'>Absence of Contribution: {attestation.feeling_if_didnt_exist}</p>
                   {/* <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p> */}
                 </>
               );
@@ -99,7 +100,7 @@ const AttestationCard: React.FC<AttestationCardProps> = ({
               return(
                 <>
                   <p className='text-md text-black mb-2'>{attestation.contribution}</p>
-                  <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
+                  <p className='text-sm text-gray-500 mb-2'>Absence of Contribution: {attestation.feeling_if_didnt_exist}</p>
                   <p className='text-sm text-gray-500 mb-2'>Examples of Usefulness: {attestation.examples_of_usefulness}</p>
                   {/* <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p> */}
                 </>

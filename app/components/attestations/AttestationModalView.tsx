@@ -210,7 +210,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
   return (
     <div className="fixed inset-0 bg-white bg-opacity-50 flex justify-center items-center">
       <div
-        className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
+        className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-2/3 lg:w-1/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="text-center pt-8 p-2">

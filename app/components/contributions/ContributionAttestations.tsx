@@ -3,6 +3,7 @@ import { AttestationDisplay, AttestationNetworkType, GovCollabAndOnboardingDispl
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { easScanEndpoints } from '@/src/utils/easScan';
+import { renderStars10, renderStars5 } from '../ui/RenderStars';
 
 interface ContributionAttestationsProps {
   recentAttestations: AttestationDisplay[];
@@ -48,9 +49,9 @@ const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
         <>
           <p className='text-md text-black mb-2'>{attestation.contribution}</p>
           {/* <p className='text-sm text-gray-500 mb-2'>Governance Research and Analytics</p> */}
-          <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.likely_to_recommend}</p>
-          <p className='text-sm text-gray-500 mb-2'>Effective for Improvements: {attestation.effective_for_improvements}</p>
-          <p className='text-sm text-gray-500 mb-2'>Useful for Understanding: {attestation.useful_for_understanding}</p>
+          <p className='text-sm text-gray-500 mb-2 flex gap-2'>Recommendation: {renderStars10(Number(attestation.likely_to_recommend))}</p>
+          <p className='text-sm text-gray-500 mb-2 flex gap-2'>Effective for Improvements: {renderStars5(Number(attestation.effective_for_improvements))}</p>
+          <p className='text-sm text-gray-500 mb-2 flex gap-2'>Useful for Understanding: {renderStars5(Number(attestation.useful_for_understanding))}</p>
           {/* <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p> */}
         </>
       );
@@ -62,7 +63,7 @@ const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
           <p className='text-md text-black mb-2'>{attestation.contribution}</p>
           {/* <p className='text-sm text-gray-500 mb-2'>Collaboration and Onboarding</p> */}
           <p className='text-sm text-gray-500 mb-2'>Governance Knowledge: {attestation.governance_knowledge}</p>
-          <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.recommend_contribution}</p>
+          <p className='text-sm text-gray-500 mb-2 flex gap-2'>Recommendation: {renderStars10(Number(attestation.recommend_contribution))}</p>
           <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
           {/* <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p> */}
         </>
@@ -74,7 +75,7 @@ const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
         <>
           <p className='text-md text-black mb-2'>{attestation.contribution}</p>
           {/* <p className='text-sm text-gray-500 mb-2'>Infrastructure and Tooling</p> */}
-          <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.likely_to_recommend}</p>
+          <p className='text-sm text-gray-500 mb-2 flex gap-2'>Recommendation: {renderStars10(Number(attestation.likely_to_recommend))}</p>
           <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
           {/* <p className='text-sm text-gray-500 mb-2'>Explanation: {attestation.explanation}</p> */}
         </>
@@ -96,7 +97,7 @@ const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
       return (
         <>
           <p className='text-md text-black mb-2'>{attestation.contribution}</p>
-          <p className='text-sm text-gray-500 mb-2'>Recommendation: {attestation.recommend_contribution}</p>
+          <p className='text-sm text-gray-500 mb-2 flex gap-2'>Recommendation: {renderStars10(Number(attestation.recommend_contribution))}</p>
           <p className='text-sm text-gray-500 mb-2'>Feeling if didn’t exist: {attestation.feeling_if_didnt_exist}</p>
         </>
       );
