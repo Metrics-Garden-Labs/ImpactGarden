@@ -17,7 +17,7 @@ export const getOptimismSeason4Participant = async (
                   query Attestations($opAddressS4: String!, $address: String!) {
                     attestations(where: {
                           schemaId: {equals: "0x401a80196f3805c57b00482ae2b575a9f270562b6b6de7711af9837f08fa0faf" },
-                         attester: { equals: $opAddresss$ },
+                         attester: { equals: $opAddresss },
                         recipient: { equals: $address } 
                     }) {
                       id

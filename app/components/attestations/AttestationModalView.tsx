@@ -207,7 +207,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
             <div className="mr-2 rounded-full border-2 border-gray-300 shadow-md p-1">
               <Image
                 src={attestation.pfp}
-                alt={attestation.username}
+                alt={attestation.username || ""}
                 width={40}
                 height={40}
                 className='rounded-full'

@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
         const isPowerBadgeholder = !!userData.power_badge;
         console.log("isPowerBadgeholder", isPowerBadgeholder);
 
-        //add one for the op delegate/season 4 participant
+        // add one for the op delegate/season 4 participant
         // const isOpDelegate = await (async () => {
         //   console.log(`starting Op Delegate Check for ${ethaddress}`);
         //   const isOpDelegate = await getOptimismDelegateBadge(
@@ -143,17 +143,17 @@ export async function POST(request: NextRequest) {
         console.log("isOpDelegate", isOpDelegate);
 
         //season 4 participant
-        const isSeason4Participant = await (async () => {
-          console.log(`starting Season 4 Participant Check for ${ethaddress}`);
-          const isSeason4Participant = await getOptimismSeason4Participant(
-            opAddressS4,
-            checkAddress,
-            endpoint1
-          );
-          console.log("isSeason4Participant", isSeason4Participant);
-          return isSeason4Participant && isSeason4Participant.length > 0;
-        })();
-        console.log("isSeason4Participant", isSeason4Participant);
+        // const isSeason4Participant = await (async () => {
+        //   console.log(`starting Season 4 Participant Check for ${ethaddress}`);
+        //   const isSeason4Participant = await getOptimismSeason4Participant(
+        //     opAddressS4,
+        //     checkAddress,
+        //     endpoint1
+        //   );
+        //   console.log("isSeason4Participant", isSeason4Participant);
+        //   return isSeason4Participant && isSeason4Participant.length > 0;
+        // })();
+        // console.log("isSeason4Participant", isSeason4Participant);
 
         // Return an object matching the `NewUserAddress` structure
         return {
@@ -164,7 +164,7 @@ export async function POST(request: NextRequest) {
           opbadgeholder: isOpBadgeholder,
           powerbadgeholder: isPowerBadgeholder,
           delegate: isOpDelegate,
-          s4participant: isSeason4Participant,
+          s4participant: false,
         };
       })
     );
