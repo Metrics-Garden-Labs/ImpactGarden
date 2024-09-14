@@ -175,8 +175,6 @@ export const getAttestationsByUserId = async (
     const normalizeAttestation = (att: any): Attestation2 => ({
       id: att.id,
       userFid: att.userFid || att.userfid,
-      username: att.username || "",
-      pfp: att.pfp || "",
       projectName: att.projectName,
       contribution: att.contribution,
       ecosystem: att.ecosystem,
@@ -353,8 +351,6 @@ export const fetchOnchainBuildersAttestationsWithLogos = async (
     .select({
       id: onchain_builders.id,
       userFid: onchain_builders.userfid,
-      username: users.username,
-      pfp: users.pfp_url,
       projectName: onchain_builders.projectName,
       contribution: onchain_builders.contribution,
       ecosystem: onchain_builders.ecosystem,
@@ -381,8 +377,6 @@ export const fetchOPStackAttestationsWithLogos = async (
     .select({
       id: op_stack.id,
       userFid: op_stack.userfid,
-      username: users.username,
-      pfp: users.pfp_url,
       projectName: op_stack.projectName,
       contribution: op_stack.contribution,
       ecosystem: op_stack.ecosystem,
@@ -424,8 +418,6 @@ export const fetchAllAttestationsWithLogos = async (
     const formattedContributionAttestations: Attestation2[] =
       contributionAttestations.map((att) => ({
         ...att,
-        pfp: undefined,
-        username: undefined,
         category: undefined,
         subcategory: undefined,
         likely_to_recommend: undefined,
