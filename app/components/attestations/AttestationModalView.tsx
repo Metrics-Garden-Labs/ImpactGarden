@@ -35,15 +35,29 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
         case "Onchain Builders":
           return (
             <>
-              <div className="mb-4">
-                <h3 className="font-semibold text-center">Likely to Recommend</h3>
-                <p className="text-center">{attestation.likely_to_recommend || 'N/A'}</p>
-              </div>
-              {/* <div className="mb-4">
-                <h3 className="font-semibold text-center">Explanation</h3>
-                <p className="text-center">{attestation.explanation || 'N/A'}</p>
-              </div> */}
-            </>
+                  <div className="mb-4 flex justify-between items-center">
+                  {/* Rating Section */}
+                  <div className="flex-grow mr-2">
+                    <RatingSection
+                      title="Would recommend"
+                      rating={Number(attestation.recommend_contribution) ?? 0}
+                      renderStars={renderStars10}
+                      scaleFactor={2}
+                    />
+                  </div>
+
+                  {/* Smiley Rating Section */}
+                  {attestation.feeling_if_didnt_exist && (
+                    <div className="flex-grow">
+                      <SmileyRatingSection
+                        title="Absence of Contribution"
+                        description={attestation.feeling_if_didnt_exist}
+                        inline={true}
+                      />
+                    </div>
+                  )}
+                </div>
+                </>
           );
         case "OP Stack":
           return (
@@ -77,6 +91,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
                       <SmileyRatingSection
                         title="Absence of Contribution"
                         description={attestation.feeling_if_didnt_exist}
+                        inline={true}
                       />
                     </div>
                   )}
@@ -183,8 +198,8 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
           )}
           {('improvementareas' in attestation) && attestation.improvementareas && (
             <div className="mb-4">
-              <h3 className="font-semibold text-center">Improvement Areas</h3>
-              <p className="text-center">{attestation.improvementareas}</p>
+              <h3 className="text-lg text-center mb-3">Improvement Areas</h3>
+              <p className="text-center text-sm text-gray-500">{attestation.improvementareas}</p>
             </div>
           )}
         </>
@@ -195,7 +210,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
   return (
     <div className="fixed inset-0 bg-white bg-opacity-50 flex justify-center items-center">
       <div
-        className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-2/3 lg:w-2/5 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
+        className="relative m-auto p-8 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="text-center pt-8 p-2">

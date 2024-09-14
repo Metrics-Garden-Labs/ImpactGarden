@@ -3,18 +3,23 @@
 interface SmileyRatingSectionProps {
   title: string;
   description: string;
+  inline?: boolean; // Optional flag for inline display
 }
 
-export const SmileyRatingSection: React.FC<SmileyRatingSectionProps> = ({ title,  description }) => {
+export const SmileyRatingSection: React.FC<SmileyRatingSectionProps> = ({ title, description, inline = false }) => {
   return (
-    <div className="flex flex-col items-center mx-4">
+    <div className="mx-4">
+      {/* Title */}
       <h3 className="text-sm font-semibold text-gray-500 text-center">
         {title}
       </h3>
-      <p className="text-center">{getSmileyRatingEmoji(description)}</p>
-      <p className="text-center text-xs text-gray-500">
-        {description || 'N/A'}
-      </p>
+      {/* Emoji and Description inline */}
+      <div className={`flex ${inline ? 'flex-row justify-center items-center space-x-2' : 'flex-col items-center'}`}>
+        <p className="text-center">{getSmileyRatingEmoji(description)}</p>
+        <p className="text-xs text-gray-500">
+          {description || 'N/A'}
+        </p>
+      </div>
     </div>
   );
 };
