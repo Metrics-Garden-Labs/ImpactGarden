@@ -2,9 +2,9 @@ import { ProjectCategories, getProjectByName } from '../../../src/lib/db/dbproje
 import { getContributionsByProjectName, getContributionsWithAttestationCounts } from '../../../src/lib/db/dbcontributions';
 import { getAttestationCountByProject } from '../../../src/lib/db/dbattestations';
 import { Contribution, Project } from '../../../src/types';
-import ProfilePage from '../profilepage1';
+import ProfilePage from '../../components/projects/profilepage1';
 import Footer from '../../components/ui/Footer';
-import Sidebar from '../Sidebar';
+import Sidebar from '@/app/components/projects/Sidebar';
 import React from 'react';
 import { Metadata } from 'next';
 

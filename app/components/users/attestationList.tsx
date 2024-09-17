@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { format } from 'date-fns';
-import AttestationModalView from '../components/attestations/AttestationModalView';
+import AttestationModalView from '@/app/components/attestations/AttestationModalView';
 import { Attestation2, User, Project } from '@/src/types';
 
 interface Props {

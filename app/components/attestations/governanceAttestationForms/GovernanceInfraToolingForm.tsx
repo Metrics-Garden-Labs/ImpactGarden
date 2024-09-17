@@ -4,6 +4,7 @@ import SmileyRatingScale from '@/app/components/ui/SmileyRatingScale';
 import RatingScale10 from '@/app/components/ui/RatingScale10';
 import { contributionRolesKey } from '@/src/types';
 import { getSmileyRatingLabel } from '@/src/utils/helpers';
+import { unknown } from 'zod';
 
 interface GovernanceInfraToolingFormProps {
   rating1: number;
@@ -40,6 +41,10 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
 
   const handleSubmit = () => {
     //convert smiley rating to label
+    if (localSmileyRating === 0 || undefined ) {
+      alert("Please fill out the smiley rating.");
+      return; // Prevent form submission
+    }
     const smileyRatingLabel = getSmileyRatingLabel(localSmileyRating);
 
     const formData = {

@@ -43,6 +43,10 @@ const GovernanceStructuresFrom: React.FC<GovernanceStructuresFormProps> = ({
 
 
   const handleSubmit = () => {
+    if (localSmileyRating === 0 || undefined ) {
+      alert("Please fill out the smiley rating.");
+      return; // Prevent form submission
+    }
     //convert smiley rating to label
     const smileyRatingLabel = getSmileyRatingLabel(localSmileyRating);
 

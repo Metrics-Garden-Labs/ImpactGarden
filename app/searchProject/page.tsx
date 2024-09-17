@@ -1,6 +1,6 @@
 import { Project, SearchResult } from '../../src/types';
 import { getProjectAttestationCount, getProjectsByCategoryAndSubcategory } from '../../src/lib/db/dbprojects';
-import ProjectPageClient from './ProjectPageClient';
+import ProjectPageClient from '../components/searchProjects/ProjectPageClient';
 import { Metadata } from 'next';
 
 interface Props {

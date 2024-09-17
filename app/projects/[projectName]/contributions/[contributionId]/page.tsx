@@ -3,9 +3,9 @@ import { getAttestationsByContribution } from '../../../../../src/lib/db/dbattes
 import { getContributionById } from '../../../../../src/lib/db/dbcontributions';
 import { Contribution, Project } from '../../../../../src/types';
 import Footer from '../../../../components/ui/Footer';
-import Sidebar from '../../../Sidebar';
+import Sidebar from '@/app/components/projects/Sidebar';
 import React from 'react';
-import ContributionPage from '../contributionPage';
+import ContributionPage from '../../../../components/contributionPage/contributionPage';
 import { Metadata } from 'next';
 
 interface ContributionPageProps {

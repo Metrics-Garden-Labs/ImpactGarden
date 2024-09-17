@@ -1,10 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
-import { User } from '../../src/types';
+import { User } from '@/src/types';
 import Image from 'next/image';
-import { getUserAddressesByFid } from '../../src/lib/db/dbusers';
-import { BadgeDisplay } from '../components/ui/BadgeDisplay';
-import { getUserBadgeStatus } from '../../src/utils/badges/badgeHelper';
+import { getUserAddressesByFid } from '@/src/lib/db/dbusers';
+import { BadgeDisplay } from '@/app/components/ui/BadgeDisplay';
+import { getUserBadgeStatus } from '@/src/utils/badges/badgeHelper';
 
 
 interface Props {

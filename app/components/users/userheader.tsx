@@ -1,11 +1,11 @@
 import React from 'react';
-import { getUserByUsername, getUserAddressesByFid, getUserProjectAttestations } from '../../src/lib/db/dbusers';
-import { getProjectsByUserId } from '../../src/lib/db/dbprojects';
-import { getAttestationsByUserId } from '../../src/lib/db/dbattestations';
-import { Attestation, Attestation2, Project, User } from '../../src/types';
+import { getUserByUsername, getUserAddressesByFid, getUserProjectAttestations } from '@/src/lib/db/dbusers';
+import { getProjectsByUserId } from '@/src/lib/db/dbprojects';
+import { getAttestationsByUserId } from '@/src/lib/db/dbattestations';
+import { Attestation, Attestation2, Project, User } from '@/src/types';
 import Image from 'next/image';
-import { getUserBadgeStatus } from '../../src/utils/badges/badgeHelper';
-import {BadgeDisplay} from '../components/ui/BadgeDisplay';
+import { getUserBadgeStatus } from '@/src/utils/badges/badgeHelper';
+import {BadgeDisplay} from '@/app/components/ui/BadgeDisplay';
 
 interface Props {
   user: User;

@@ -7,12 +7,12 @@ import AddContributionModal from './addContributionModal';
 import { useGlobalState } from '@/src/config/config';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
-import Sidebar from './smSidebar';
+import Sidebar from '@/app/components/projects/smSidebar';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { isMobile } from 'react-device-detect';
-import AttestationModalView from '../components/attestations/AttestationModalView';
-import DisplayContributions from '../components/contributions/DisplayContirbutions';
-import ContributionAttestations from '../components/contributions/ContributionAttestations';
+import AttestationModalView from '../attestations/AttestationModalView';
+import DisplayContributions from '../contributions/DisplayContirbutions';
+import ContributionAttestations from '../contributions/ContributionAttestations';
 import useContributionData from '@/src/hooks/useContributionData';
 import useChainSwitcher from '@/src/hooks/useChainSwitcher';
 

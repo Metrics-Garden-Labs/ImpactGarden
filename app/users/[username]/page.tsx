@@ -4,8 +4,8 @@ import React from 'react';
 import { getUserByUsername, getUserAddressesByFid } from '../../../src/lib/db/dbusers';
 import { User } from '../../../src/types';
 import Navbar from '../../components/ui/Navbar';
-import UserHeader from '../userheader';
-import AttestationList from '../attestationList';
+import UserHeader from '@/app/components/users/userheader';
+import AttestationList from '@/app/components/users/attestationList';
 import { Metadata } from 'next';
 
 interface Props {

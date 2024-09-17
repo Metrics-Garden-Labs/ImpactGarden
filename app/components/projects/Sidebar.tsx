@@ -5,7 +5,7 @@
 //otherwise its too much hassle to make it a client component and have it update in real time.
 //TODO: make this a server component
 'use client';
-import { Project } from '../../src/types';
+import { Project } from '@/src/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BsGlobe2 } from 'react-icons/bs';

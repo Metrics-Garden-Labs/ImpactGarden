@@ -8,13 +8,10 @@
 // userProfile.tsx
 
 import React from "react";
-import { useGlobalState } from "../../src/config/config";
-import SearchUsers from "./searchUsers";
-import UserList from "./userList";
-import Navbar from "../components/ui/Navbar";
-import { User } from '../../src/types';
-import { getUsers } from '../../src/lib/db/dbusers';
-import Footer from "../components/ui/Footer";
+import SearchUsers from "@/app/components/searchUsers/search";
+import UserList from "@/app/components/searchUsers/userList";
+import { User } from '@/src/types';
+import { getUsers } from '@/src/lib/db/dbusers';
 import { Metadata } from "next";
 
 interface Props {

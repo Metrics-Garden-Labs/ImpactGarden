@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Contribution, AttestationDisplay, Project } from '@/src/types'; 
 import { usePathname, useRouter } from 'next/navigation';
 import { IoIosArrowBack } from "react-icons/io";
-import AttestationModal2 from '../../AttestationModal2';
+import AttestationModal2 from '../projects/AttestationModal2';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
 import AttestationModalView from '@/app/components/attestations/AttestationModalView';
 import AttestationCard from '@/app/components/attestations/AttestationCard';

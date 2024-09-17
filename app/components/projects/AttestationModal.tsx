@@ -10,11 +10,11 @@ import { NEXT_PUBLIC_URL, WHITELISTED_USERS } from '@/src/config/config';
 import { useGlobalState } from '@/src/config/config'; 
 import { RxCross2 } from 'react-icons/rx';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
-import { easScanEndpoints } from '../../src/utils/easScan';
-import AttestationCreationModal from '../components/ui/AttestationCreationModal';
+import { easScanEndpoints } from '@/src/utils/easScan';
+import AttestationCreationModal from '@/app/components/ui/AttestationCreationModal';
 import { useRouter, usePathname} from 'next/navigation'; // Import hooks from next/navigation
-import AttestationConfirmationModal from '../components/ui/AttestationConfirmationModal';
-import { useSigner, useEAS   } from '../../src/hooks/useEAS';
+import AttestationConfirmationModal from '@/app/components/ui/AttestationConfirmationModal';
+import { useSigner, useEAS   } from '@/src/hooks/useEAS';
 
 
 interface AttestationModalProps {

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useGlobalState } from '../../src/config/config';
-import { Project, ProjectCount, SearchResult } from '../../src/types';
+import { useGlobalState } from '@/src/config/config';
+import { Project, ProjectCount, SearchResult } from '@/src/types';
 import Image from 'next/image';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
-import ProjectModal from '../components/searchProjects/ProjectModal';
-
+import ProjectModal from '@/app/components/searchProjects/ProjectModal';
+  
 interface Props {
   projects: (Project | ProjectCount)[];
   query: string;

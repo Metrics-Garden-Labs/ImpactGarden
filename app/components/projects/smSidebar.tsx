@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Project } from '../../src/types';
+import { Project } from '@/src/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BsGlobe2 } from 'react-icons/bs';

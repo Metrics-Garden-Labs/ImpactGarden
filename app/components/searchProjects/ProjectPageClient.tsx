@@ -2,8 +2,8 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import SearchProjects from './searchProjects';
 import ProjectList from './projectList1';
-import { Project, ProjectCount, SearchResult } from '../../src/types';
-import { NEXT_PUBLIC_URL } from "../../src/config/config";
+import { Project, ProjectCount, SearchResult } from '../../../src/types';
+import { NEXT_PUBLIC_URL } from "../../../src/config/config";
 
 interface Props {
   projects: (Project | ProjectCount)[];
