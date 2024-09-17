@@ -527,6 +527,7 @@ export type NewContributionAttestationGov =
 
 interface BaseAttestationDisplay {
   id: number; // Add this line
+  userFid: string;
   username: string;
   pfp: string | null;
   createdAt: string | null;

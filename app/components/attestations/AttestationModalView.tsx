@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { RxCross2 } from 'react-icons/rx';
@@ -7,6 +7,9 @@ import { easScanEndpoints } from '../../../src/utils/easScan';
 import Image from 'next/image';
 import { getSmileyRatingEmoji, SmileyRatingSection } from '@/src/utils/helpers';
 import { RatingSection, renderStars10, renderStars5 } from '../ui/RenderStars';
+import { BadgeDisplay } from '../ui/BadgeDisplay';
+import { getUserBadgeStatus } from '../../../src/utils/badges/badgeHelper';
+import { NEXT_PUBLIC_URL } from '@/src/config/config';
 
 interface AttestationModalProps {
   attestation: Attestation2 | AttestationDisplay | null;
@@ -15,15 +18,46 @@ interface AttestationModalProps {
 }
 
 const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, isOpen, onClose }) => {
-  useEffect(() => {
-    if (attestation) {
-      console.log('Attestation in modal:', attestation);
+  const [badgeStatus, setBadgeStatus] = useState({
+    isCoinbaseVerified: false,
+    isOpBadgeholder: false,
+    isPowerBadgeholder: false,
+    isDelegate: false,
+    s4Participant: false,
+  });
+
+  // Fetch badge status when the modal opens
+ useEffect(() => {
+  const fetchBadgeStatus = async () => {
+    if (attestation && attestation.userFid) {
+      try {
+        const response = await fetch(`${NEXT_PUBLIC_URL}/api/getBadgeStatus`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fid: attestation.userFid })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch badge status');
+        }
+
+        const status = await response.json();
+        setBadgeStatus(status);
+      } catch (error) {
+        console.error('Error fetching badge status:', error);
+      }
     }
-  }, [attestation]);
+  };
+
+  if (isOpen) {
+    fetchBadgeStatus();
+  }
+}, [isOpen, attestation]);
 
   if (!isOpen || !attestation) return null;
 
   const attestationLink = `${easScanEndpoints[attestation.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`;
+
 
   const renderAttestationDetails = () => {
     console.log('Rendering attestation details:', attestation);
@@ -229,9 +263,18 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
               />
             </div>
           )}
+          <div className="flex items-center justify-center">
           <Link href={`/users/${attestation.username}`}>
           <p className="text-center font-semibold text-lg">{attestation.username}</p>
           </Link>
+          <BadgeDisplay
+            isCoinbaseVerified={badgeStatus.isCoinbaseVerified}
+            isOpBadgeholder={badgeStatus.isOpBadgeholder}
+            isPowerBadgeholder={badgeStatus.isPowerBadgeholder}
+            isDelegate={badgeStatus.isDelegate}
+            s4Participant={badgeStatus.s4Participant}
+          />
+          </div>
         </div>
         <hr className="border-1 border-gray-300 my-2 mx-auto w-1/4 mt-3" />
         {renderAttestationDetails()}

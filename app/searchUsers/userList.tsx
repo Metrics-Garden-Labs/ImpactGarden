@@ -3,6 +3,9 @@ import Link from 'next/link';
 import { User } from '../../src/types';
 import Image from 'next/image';
 import { getUserAddressesByFid } from '../../src/lib/db/dbusers';
+import { BadgeDisplay } from '../components/ui/BadgeDisplay';
+import { getUserBadgeStatus } from '../../src/utils/badges/badgeHelper';
+
 
 interface Props {
   users: User[];
@@ -19,14 +22,7 @@ export default async function UserList({ users, query, filter, verificationFilte
       continue; // this should skip and not display the example user
     }
 
-    const user_addresses = await getUserAddressesByFid(user.fid);
-
-    const isCoinbaseVerified = user_addresses.some(address => address.coinbaseverified);
-    const isOpBadgeholder = user_addresses.some(address => address.opbadgeholder);
-    const isPowerBadgeholder = user_addresses.some(address => address.powerbadgeholder);
-    const isDelegate = user_addresses.some(address => address.delegate);
-    const s4Participant = user_addresses.some(address => address.s4participant);
-
+    const { isCoinbaseVerified, isOpBadgeholder, isPowerBadgeholder, isDelegate, s4Participant } = await getUserBadgeStatus(user.fid);
 
     let matchesFilter = true;
 
@@ -78,35 +74,15 @@ export default async function UserList({ users, query, filter, verificationFilte
                   </div>
                 )}
               </div>
-              <h3 className="mb-2 text-xl font-semibold flex items-center">
+              <h3 className="mb-2 text-xl font-semibold flex items-center ">
                 {user.username}
-                <span className="flex items-center space-x-2 ml-2"> {/* Added ml-2 for margin */}
-                  {user.isCoinbaseVerified && (
-                    <span className="tooltip" data-tip="Coinbase Verified Wallet">
-                      <Image src="/coinbaseWallet.png" alt="Coinbase Wallet Badge" width={25} height={25} style={{ height: "auto" }} />
-                    </span>
-                  )}
-                  {user.isOpBadgeholder && (
-                    <span className="tooltip" data-tip="OP Badgeholder">
-                      <Image src="/opLogo.png" alt="OP Badge" width={20} height={20} />
-                    </span>
-                  )}
-                  {user.isPowerBadgeholder && (
-                    <span className="tooltip" data-tip="Warpcast Power User">
-                      <Image src="/powerBadge.png" alt="Warpcast Power Badge" width={20} height={20} style={{  height: "auto" }} />
-                    </span>
-                  )}
-                  {user.isDelegate && (
-                    <span className="tooltip" data-tip="Optimism Delegate">
-                      <Image src="/opDelegate.png" alt="Optimism Delegate Badge" width={20} height={20} style={{  height: "auto" }} />
-                    </span>
-                  )}
-                  {user.s4Participant && (
-                    <span className="tooltip" data-tip="Season 4 Participant">
-                      <Image src="/s-4grantparticipants.png" alt="Season 4 Participant Badge" width={20} height={20} style={{  height: "auto" }}/>
-                    </span>
-                  )}
-                </span>
+                <BadgeDisplay
+                  isCoinbaseVerified={user.isCoinbaseVerified}
+                  isOpBadgeholder={user.isOpBadgeholder}
+                  isPowerBadgeholder={user.isPowerBadgeholder}
+                  isDelegate={user.isDelegate}
+                  s4Participant={user.s4Participant}
+                />
               </h3>
             </div>
           </Link>

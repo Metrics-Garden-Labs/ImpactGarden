@@ -3,16 +3,9 @@ import { getUserByUsername, getUserAddressesByFid, getUserProjectAttestations } 
 import { getProjectsByUserId } from '../../src/lib/db/dbprojects';
 import { getAttestationsByUserId } from '../../src/lib/db/dbattestations';
 import { Attestation, Attestation2, Project, User } from '../../src/types';
-import Navbar from '../components/ui/Navbar';
-import AttestationList from './attestationList';
-import { getAttestationsByCoinbaseVerified } from '../../src/utils/badges/coinbaseVerified';
-import { checkOpBadgeholder } from '../../src/utils/badges/opBadgeholder';
-import { NetworkType, networkEndpoints } from '../../src/utils/graphqlEndpoints';
-import { getAddress } from 'viem';
-import { NeynarAPIClient } from "@neynar/nodejs-sdk";
 import Image from 'next/image';
-import { totalmem } from 'os';
-import Link from 'next/link';
+import { getUserBadgeStatus } from '../../src/utils/badges/badgeHelper';
+import {BadgeDisplay} from '../components/ui/BadgeDisplay';
 
 interface Props {
   user: User;
@@ -44,20 +37,16 @@ const UserHeader = async ({ user }: Props) => {
   // Combine ecosystems from attestations and created projects for ecosystems of interest
   const ecosystemsOfInterest = [...new Set([...attestedEcosystems, ...userEcosystems])];
 
-  // Fetch the user addresses and verification statuses from the database
-  const user_addresses = await getUserAddressesByFid(user.fid);
+  // Fetch the user badge statuses using the helper function
+  const { 
+    isCoinbaseVerified, 
+    isOpBadgeholder, 
+    isPowerBadgeholder, 
+    isDelegate, 
+    s4Participant 
+  } = await getUserBadgeStatus(user.fid);
 
-  // Extract individual verification statuses
-  const isCoinbaseVerified = user_addresses.some(address => address.coinbaseverified);
-  console.log('isCoinbaseVerified', isCoinbaseVerified);
-  const isOpBadgeholder = user_addresses.some(address => address.opbadgeholder);
-  console.log('isOpBadgeholder', isOpBadgeholder);
-  const isPowerBadgeholder = user_addresses.some(address => address.powerbadgeholder);
-  console.log('isPowerBadgeholder', isPowerBadgeholder);
-  const isdelegate = user_addresses.some(address => address.delegate);
-  console.log('isdelegate', isdelegate);
-  const s4participant = user_addresses.some(address => address.s4participant);
-  console.log('s4participant', s4participant);
+
 
   return (
     <div className='bg-gray-50 pb-8'>
@@ -75,58 +64,15 @@ const UserHeader = async ({ user }: Props) => {
           <div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 flex items-center">
               {user.username}
-              <span className="ml-2 flex items-center">
-                {isCoinbaseVerified && (
-                  <span className="tooltip text-black mr-1" data-tip="Coinbase Wallet Verified">
-                    <Image
-                      src="/coinbaseWallet.png"
-                      alt="Coinbase Wallet Verified"
-                      width={25}
-                      height={25}
-                    />
-                  </span>
-                )}
-                {isOpBadgeholder && (
-                  <span className="tooltip text-black mr-1" data-tip="Optimism Badgeholder">
-                    <Image
-                      src="/opLogo.png"
-                      alt="OP Badge"
-                      width={20}
-                      height={20}
-                    />
-                  </span>
-                )}
-                {isPowerBadgeholder && (
-                  <span className="tooltip text-black" data-tip="Power User Badge">
-                    <Image
-                      src="/powerBadge.png"
-                      alt="Power User Badge"
-                      width={20}
-                      height={20}
-                    />
-                  </span>
-                )}
-                {isdelegate && (
-                  <span className="tooltip text-black ml-1" data-tip="Optimism Delegate">
-                    <Image
-                      src="/opDelegate.png"
-                      alt="Optimism Delegate"
-                      width={20}
-                      height={20}
-                    />
-                  </span>
-                )}
-                {s4participant && (
-                  <span className="tooltip text-black ml-1" data-tip="Season 4 Participant">
-                    <Image
-                      src="/s-4grantparticipants.png"
-                      alt="Season 4 Participant"
-                      width={20}
-                      height={20}
-                    />
-                  </span>
-                )}
-              </span>
+              <div className="mt-2">
+                <BadgeDisplay
+                  isCoinbaseVerified={isCoinbaseVerified}
+                isOpBadgeholder={isOpBadgeholder}
+                  isPowerBadgeholder={isPowerBadgeholder}
+                  isDelegate={isDelegate}
+                  s4Participant={s4Participant}
+                />
+              </div>
             </h1>
           </div>
         </div>
