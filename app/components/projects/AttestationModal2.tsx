@@ -20,6 +20,7 @@ import { usePinataUpload } from '@/src/hooks/usePinataUpload';
 import { useDelegatedAttestation } from '@/src/hooks/useDelegatedAttestation';
 import { SchemaEncoder, ZERO_ADDRESS } from "@ethereum-attestation-service/eas-sdk";
 import { isAddress } from 'viem';
+import { useNormalAttestation } from '@/src/hooks/useNormalAttestation';
 
 interface AttestationModalProps {
   isOpen: boolean;
@@ -44,6 +45,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [attestationUID, setAttestationUID] = useState<string | null>(null);
 
+
   const signer = useSigner();
   const { eas, currentAddress } = useEAS();
   const [user] = useLocalStorage("user", {
@@ -54,6 +56,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
 
   const { uploadToPinata, isUploading } = usePinataUpload();
   const { createDelegatedAttestation, isCreating: isCreatingDelegated } = useDelegatedAttestation();
+  const { createNormalAttestation, isCreating: isCreatingNormal } = useNormalAttestation();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -98,7 +101,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
 
     try {
       const recipientAddress = project.ethAddress && isValidEthereumAddress(project.ethAddress) ? project.ethAddress : ZERO_ADDRESS;
-      const attestationUID = await createDelegatedAttestation(
+      const attestationUID = await createNormalAttestation(
         schema,
         encodedData,
         recipientAddress,

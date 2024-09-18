@@ -4,14 +4,11 @@ import { NEXT_PUBLIC_URL, useGlobalState } from '@/src/config/config';
 import { AttestationNetworkType, CategoryKey, Contribution, ContributionWithAttestationCount, Project, higherCategoryKey } from '@/src/types';
 import { useEAS, useSigner } from '@/src/hooks/useEAS';
 import { AttestationRequestData, EAS, EIP712AttestationParams, SchemaEncoder, ZERO_BYTES32 } from '@ethereum-attestation-service/eas-sdk';
-import { RxCross2 } from 'react-icons/rx';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import AttestationCreationModal from '@/app/components/ui/AttestationCreationModal';
 import AttestationConfirmationModal from '@/app/components/ui/AttestationConfirmationModal';
 import { useSwitchChain } from 'wagmi';
 import { getChainId, networkContractAddresses } from '@/src/utils/networkContractAddresses';
-import pinataSDK from '@pinata/sdk';
-import { FaInfoCircle } from 'react-icons/fa';
 import { networks, checkNetwork } from '@/src/utils/projectSignUpUtils';
 import { easScanEndpoints } from '@/src/utils/easScan';
 import { Category, Subcategory, higherCategories, getSubcategories } from '@/src/utils/addContributionModalUtils';
@@ -19,7 +16,6 @@ import AddContributionForm from '@/app/components/contributions/AddContributionF
 import { useNormalAttestation } from '@/src/hooks/useNormalAttestation';
 import { useDelegatedAttestation } from '@/src/hooks/useDelegatedAttestation';
 import { usePinataUpload } from '@/src/hooks/usePinataUpload';
-import { set } from 'zod';
 
 interface Props {
   isOpen: boolean;
@@ -54,7 +50,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
 
   const { uploadToPinata, isUploading } = usePinataUpload();
   const { createNormalAttestation, isCreating: isCreatingNormal } = useNormalAttestation();
-  const { createDelegatedAttestation, isCreating: isCreatingDelegated } = useDelegatedAttestation();
+  // const { createDelegatedAttestation, isCreating: isCreatingDelegated } = useDelegatedAttestation();
 
   useEffect(() => {
     checkNetwork(selectedNetwork, switchChain);
@@ -200,12 +196,19 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
         { name: 'metadataurl', value: pinataURL2, type: 'string' },
       ]);
 
-      const attestationUID2 = await createDelegatedAttestation(
+      const attestationUID2 = await createNormalAttestation(
         '0x4921fe519ace82fb51a7318b9f79904c77800ca1db4ce8cc4d7c18293ae92f5a',
         encodedData2,
         selectedProject?.ethAddress || '',
         selectedProject?.primaryprojectuid || ''
       );
+
+      // const attestationUID2 = await createDelegatedAttestation(
+      //   '0x4921fe519ace82fb51a7318b9f79904c77800ca1db4ce8cc4d7c18293ae92f5a',
+      //   encodedData2,
+      //   selectedProject?.ethAddress || '',
+      //   selectedProject?.primaryprojectuid || ''
+      // );
 
       const updatedContribution = {
         ...formData,

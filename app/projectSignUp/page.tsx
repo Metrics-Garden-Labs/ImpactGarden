@@ -169,7 +169,7 @@ export default function ProjectSignUp() {
         { name: 'metadataurl', value: pinataURL, type: 'string' },
       ]);
 
-      const attestationUID2 = await createDelegatedAttestation(
+      const attestationUID2 = await createNormalAttestation(
         schema2,
         encodedData2,
         currentAddress,
