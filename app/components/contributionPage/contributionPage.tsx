@@ -3,13 +3,17 @@
 
 import React, { useEffect, useState } from 'react';
 import { Contribution, AttestationDisplay, Project } from '@/src/types'; 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { IoIosArrowBack } from "react-icons/io";
 import AttestationModal2 from '../projects/AttestationModal2';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
 import AttestationModalView from '@/app/components/attestations/AttestationModalView';
 import AttestationCard from '@/app/components/attestations/AttestationCard';
 import ContributionDetails from '@/app/components/contributions/ContributionDetails';
+
+
+
+
 
 interface ContributionPageProps {
   contribution: Contribution;
@@ -22,7 +26,11 @@ export default function ContributionPage({
   project,
   attestationCount
 }: ContributionPageProps) {
-  const [activeTab, setActiveTab] = useState('details');
+  const searchParams = useSearchParams();
+  const [activeTab, setActiveTab] = useState(() => {
+    const tabParam = searchParams.get('tab');
+    return tabParam === 'attestations' ? tabParam : 'details';
+  });
   const [isAttestationModalOpen, setIsAttestationModalOpen] = useState(false);
   const [recentAttestations, setRecentAttestations] = useState<AttestationDisplay[]>([]);
   const [recentAttestationsLoading, setRecentAttestationsLoading] = useState(true);
@@ -30,6 +38,7 @@ export default function ContributionPage({
   const [isAttestationViewModalOpen, setIsAttestationViewModalOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
 
   const fetchRecentAttestations = async () => {
     try {
@@ -62,10 +71,24 @@ export default function ContributionPage({
     }
   }, [activeTab]);
 
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam === 'details' || tabParam === 'attestations') {
+      setActiveTab(tabParam);
+    }
+  }, [searchParams]);
+
   const tabClasses = (tabName: string) =>
     `cursor-pointer px-4 py-2 text-sm font-semibold mr-2 ${
       activeTab === tabName ? 'border-b-2 border-black' : 'text-gray-600 hover:text-black'
     }`;
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    const params = new URLSearchParams(searchParams);
+    params.set('tab', tab);
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   const handleBackClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -141,10 +164,10 @@ export default function ContributionPage({
           >
             <IoIosArrowBack className="h-6 w-6" />
           </button>
-          <button onClick={() => setActiveTab('details')} className={tabClasses('details')}>
+          <button onClick={() => handleTabChange('details')} className={tabClasses('details')}>
             Contribution Details
           </button>
-          <button onClick={() => setActiveTab('attestations')} className={tabClasses('attestations')}>
+          <button onClick={() => handleTabChange('attestations')} className={tabClasses('attestations')}>
             Insights
           </button>
         </nav>

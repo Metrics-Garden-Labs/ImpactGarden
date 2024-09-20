@@ -32,7 +32,7 @@ const OPStackAttestationForm: React.FC<OPStackAttestationFormProps> = ({
     const handleSubmit= () => {
 
         if (localSmileyRating === 0 || undefined ) {
-            alert("Please fill out the smiley rating.");
+            alert("Please leave rating, Neutral, Slighly Upset or Extremely Upset.");
             return; // Prevent form submission
           }
         //convert smiley rating to label

@@ -1,9 +1,4 @@
 
-
-//thinking about making this a server component that gets the attestation count when you visit and
-//doenst update until you refresh the page when you make a contribution.
-//otherwise its too much hassle to make it a client component and have it update in real time.
-//TODO: make this a server component
 'use client';
 import { Project } from '@/src/types';
 import Image from 'next/image';
