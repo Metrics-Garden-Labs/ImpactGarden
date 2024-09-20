@@ -17,7 +17,8 @@ import {
 } from "../schema";
 import * as schema from "../schema";
 import { ContributionWithAttestationCount } from "@/src/types";
-import { eq, sql, and } from "drizzle-orm";
+import { eq, sql, and, isNull, SQL } from "drizzle-orm";
+import { alias, PgSelect } from "drizzle-orm/pg-core";
 
 export const db = drizzle(vercelsql, { schema });
 
@@ -41,6 +42,101 @@ export const insertContribution = async (contribution: NewContribution) => {
     return db.insert(contributions).values(contribution).returning();
   } catch (error) {
     console.error("Error inserting contribution:", error);
+    throw error;
+  }
+};
+
+export const getContributionsByCategory = async (category: string) => {
+  try {
+    // Query for paginated contributions
+    const dbcontributions = await db
+      .select({
+        id: contributions.id,
+        userFid: contributions.userFid,
+        projectName: contributions.projectName,
+        ecosystem: contributions.ecosystem,
+        governancetype: contributions.governancetype,
+        category: contributions.category,
+        subcategory: contributions.subcategory,
+        secondaryecosystem: contributions.secondaryecosystem,
+        contribution: contributions.contribution,
+        desc: contributions.desc,
+        link: contributions.link,
+        ethAddress: contributions.ethAddress,
+        primarycontributionuid: contributions.primarycontributionuid,
+        easUid: contributions.easUid,
+        createdAt: contributions.createdAt,
+        logoUrl: projects.logoUrl,
+      })
+      .from(contributions)
+      .leftJoin(projects, eq(contributions.projectName, projects.projectName))
+      .where(eq(contributions.category, category));
+
+    // Query for total count
+    const totalCountResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(contributions)
+      .where(eq(contributions.category, category));
+
+    const totalCount = totalCountResult[0].count;
+
+    return {
+      contributions: dbcontributions,
+      total: totalCount,
+    };
+  } catch (error) {
+    console.error("Error retrieving contributions:", error);
+    throw error;
+  }
+};
+
+export const getUserReviews = async (userFid: string, category: string) => {
+  try {
+    let reviews;
+    if (category === "Governance") {
+      reviews = await db
+        .select({ projectName: governance_infra_and_tooling.projectName })
+        .from(governance_infra_and_tooling)
+        .where(eq(governance_infra_and_tooling.userfid, userFid))
+        .union(
+          db
+            .select({ projectName: governance_r_and_a.projectName })
+            .from(governance_r_and_a)
+            .where(eq(governance_r_and_a.userfid, userFid))
+        )
+        .union(
+          db
+            .select({
+              projectName: governance_collab_and_onboarding.projectName,
+            })
+            .from(governance_collab_and_onboarding)
+            .where(eq(governance_collab_and_onboarding.userfid, userFid))
+        )
+        .union(
+          db
+            .select({ projectName: governance_structures_op.projectName })
+            .from(governance_structures_op)
+            .where(eq(governance_structures_op.userfid, userFid))
+        );
+    } else if (category === "Onchain Builders") {
+      reviews = await db
+        .select({ projectName: onchain_builders.projectName })
+        .from(onchain_builders)
+        .where(eq(onchain_builders.userfid, userFid));
+    } else if (category === "OP Stack") {
+      reviews = await db
+        .select({ projectName: op_stack.projectName })
+        .from(op_stack)
+        .where(eq(op_stack.userfid, userFid));
+    } else {
+      reviews = await db
+        .select({ projectName: contributionattestations.projectName })
+        .from(contributionattestations)
+        .where(eq(contributionattestations.userFid, userFid));
+    }
+    return reviews;
+  } catch (error) {
+    console.error("Error fetching user reviews:", error);
     throw error;
   }
 };

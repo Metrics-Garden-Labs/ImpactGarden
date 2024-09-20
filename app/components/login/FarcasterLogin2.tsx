@@ -7,6 +7,7 @@ import { NEXT_PUBLIC_URL, useGlobalState } from '../../../src/config/config';
 import dotenv from 'dotenv';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import UserDropdown from './userSignoutDropdown';
+import { zeroAddress } from 'viem';
 
 dotenv.config();
 
@@ -28,7 +29,18 @@ interface SignInSuccessData {
   signer_permissions: string[];
 }
 
-const FarcasterLogin = () => {
+interface UserLogin {
+  fid: string;
+  username: string;
+  ethAddress: string;
+  isAuthenticated: boolean;
+}
+
+interface FarcasterLoginProps {
+  onLoginSuccess: (userData: UserLogin) => void;
+}
+
+const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
   const [user, setUser, removeUser] = useLocalStorage("user", {
     fid: '',
     username: '',
@@ -77,6 +89,7 @@ const FarcasterLogin = () => {
           ethAddress: data.user.ethAddress,
           isAuthenticated: true,
         });
+        onLoginSuccess(user);
         console.log("User verified successfully", user);
       } else {
         console.error("User verification failed");
@@ -115,12 +128,12 @@ const FarcasterLogin = () => {
         setUsername(data.username);
         setFirstVerifiedEthAddress(data.ethAddress);
 
-        setUser(current => ({ ...current, username: data.username, ethAddress: data.ethAddress }));
+        setUser(current => ({ ...current, username: data.username, ethAddress: data.ethAddress || zeroAddress }));
 
         const newUser = {
           fid: fid.toString(),
           username: data.username,
-          ethaddress: data.ethAddress || '',
+          ethaddress: data.ethAddress || zeroAddress,
         };
         console.log("New User, ", newUser);
         setIsSignedIn(true);
@@ -135,13 +148,13 @@ const FarcasterLogin = () => {
       {isSignedIn ? (
         <>
           <UserDropdown onSignout={handleSignout} />
-          <div className="inline-block ml-4">
+          {/* <div className="inline-block ml-4">
             <ConnectButton
               accountStatus="address"
               chainStatus="icon"
               showBalance={false}
             />
-          </div>
+          </div> */}
         </>
       ) : (
         <div

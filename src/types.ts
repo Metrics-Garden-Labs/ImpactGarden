@@ -39,6 +39,7 @@ export interface Contribution {
   ethAddress: string | null;
   attestationCount?: number;
   createdAt?: Date | null;
+  logoUrl?: string | null;
 }
 
 export interface ContributionWithAttestationCount extends Contribution {

@@ -20,8 +20,8 @@ import { useSigner, useEAS   } from '@/src/hooks/useEAS';
 interface AttestationModalProps {
     isOpen: boolean;
     onClose: () => void;
-    contribution: Contribution;
-    project: Project;
+    contribution: Contribution | null;
+    project: Project | null;
 }
 
 type ImprovementAreaKey = 'participation' | 'understanding' | 'collaboration' | 'information' | 'models';
@@ -104,11 +104,11 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
 
     useEffect(() => {
         if (isOpen) {
-            router.push(`${pathname}?contribution=${contribution.id}`);
+            router.push(`${pathname}?contribution=${contribution?.id}`);
         } else {
             router.push(pathname);
         }
-    }, [isOpen, contribution.id, router, pathname]);
+    }, [isOpen, contribution?.id, router, pathname]);
 
     const handleRating = (rate: number) => {
         setRating(rate); // Update the rating state
@@ -120,7 +120,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             const newAttestation = {
                 userFid: user.fid,
                 projectName: contribution?.projectName,
-                contribution: contribution.contribution,
+                contribution: contribution?.contribution,
                 ecosystem: contribution?.ecosystem,
                 attestationUID: attestationUID,
                 attesterAddy: walletAddress,
@@ -167,13 +167,13 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
 
         
         console.log('contribution:', contribution);
-        console.log('projectethAddress:', project.ethAddress);  
+        console.log('projectethAddress:', project?.ethAddress);  
 
         try {
             setIsLoading(true);
 
             console.log('Faracaster:', user.fid);
-            console.log('Contribution:', contribution.contribution);
+            console.log('Contribution:', contribution?.contribution);
             console.log('Rating:', rating);
             console.log('HowItHelped:', improvementareasstring);
             console.log('IsDelegate:', isdelegate);
@@ -184,7 +184,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             const schemaEncoder = new SchemaEncoder('string Farcaster, string Contribution, uint8 Rating, string HowItHelped, bool IsDelegate, string Feedback');
             const encodedData = schemaEncoder.encodeData([
                 { name: 'Farcaster', type: 'string', value: user.fid },
-                { name: 'Contribution', type: 'string', value: contribution.contribution },
+                { name: 'Contribution', type: 'string', value: contribution?.contribution || '' },
                 { name: 'Rating', type: 'uint8', value: rating },
                 { name: 'HowItHelped', type: 'string', value: improvementareasstring },
                 { name: 'IsDelegate', type: 'bool', value: isdelegate },
@@ -200,16 +200,16 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             
             const attestation: EIP712AttestationParams = {
                 schema: attestationSchema,
-                recipient: project.ethAddress || ZERO_ADDRESS,
+                recipient: project?.ethAddress || ZERO_ADDRESS,
                 expirationTime: NO_EXPIRATION,
                 revocable: true,
-                refUID: project.primaryprojectuid || contribution.easUid || zero_uid,
+                refUID: project?.primaryprojectuid || contribution?.easUid || zero_uid,
                 data: encodedData,
                 value: 0n,
                 deadline: NO_EXPIRATION,
                 nonce: easnonce,
             };
-            console.log('Attestationuid reference:', project.primaryprojectuid || contribution.easUid || zero_uid);
+            console.log('Attestationuid reference:', project?.primaryprojectuid || contribution?.easUid || zero_uid);
             console.log('Attestation:', attestation);
 
             const signDelegated = await delegatedSigner.signDelegatedAttestation(attestation, signer);
@@ -262,7 +262,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
             return (
                 <AttestationConfirmationModal
                     attestationUID={attestationUID}
-                    attestationType={contribution}
+                    attestationType={contribution }
                     setAttestationUID={setAttestationUID}
                     easScanEndpoints={easScanEndpoints}
                 />

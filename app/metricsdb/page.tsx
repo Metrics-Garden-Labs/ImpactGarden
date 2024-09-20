@@ -1,7 +1,9 @@
-
+'use client'
 import AIChatButton from '../components/ai/aichatbutton'
 import React from 'react'
 import Footer from '@/app/components/ui/Footer'
+import ReviewCarousel from '../components/attestations/ReviewCarousel'
+
 
 
 export default function page() {

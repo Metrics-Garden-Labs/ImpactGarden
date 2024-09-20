@@ -19,14 +19,14 @@ import AttestationModal from './AttestationModal';
 import { usePinataUpload } from '@/src/hooks/usePinataUpload';
 import { useDelegatedAttestation } from '@/src/hooks/useDelegatedAttestation';
 import { SchemaEncoder, ZERO_ADDRESS } from "@ethereum-attestation-service/eas-sdk";
-import { isAddress } from 'viem';
+import { isAddress, zeroAddress } from 'viem';
 import { useNormalAttestation } from '@/src/hooks/useNormalAttestation';
 
 interface AttestationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  contribution: Contribution;
-  project: Project;
+  contribution: Contribution | null;
+  project: Project | null;
 }
 
 const AttestationModal2: React.FC<AttestationModalProps> = ({
@@ -46,7 +46,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   const [attestationUID, setAttestationUID] = useState<string | null>(null);
 
 
-  const signer = useSigner();
+  // const signer = useSigner();
   const { eas, currentAddress } = useEAS();
   const [user] = useLocalStorage("user", {
     fid: '',
@@ -63,14 +63,14 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      router.push(`${pathname}?contribution=${contribution.id}`);
+      router.push(`${pathname}?contribution=${contribution?.id}`);
       console.log('Contribution:', contribution);
-      console.log('Contribution Category:', contribution.category);
-      console.log('Contribution Subcategory:', contribution.subcategory);
+      console.log('Contribution Category:', contribution?.category);
+      console.log('Contribution Subcategory:', contribution?.subcategory);
     } else {
       router.push(pathname);
     }
-  }, [isOpen, contribution.id, router, pathname]);
+  }, [isOpen, contribution?.id, router, pathname]);
 
   const isValidEthereumAddress = (address: string | undefined): boolean => {
     if (!address) return false;
@@ -83,29 +83,29 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
       throw alert('Please Connect to Farcaster to Continue');
     }
 
-    if(!eas || !currentAddress || !signer) {
-      throw alert('Please Connect your Wallet to Continue');
-    }
+    // if(!eas || !currentAddress || !signer) {
+    //   throw alert('Please Connect your Wallet to Continue');
+    // }
 
     const schema = "0xc9bc703e3c48be23c1c09e2f58b2b6657e42d8794d2008e3738b4ab0e2a3a8b6";
     const schemaEncoder = new SchemaEncoder(
       'bytes32 contributionRegUID, bytes32 projectRegUID, uint256 farcasterID, string issuer, string metadataurl'
     );
     const encodedData = schemaEncoder.encodeData([
-      { name: 'contributionRegUID', type: 'bytes32', value: contribution.primarycontributionuid || "" },
-      { name: 'projectRegUID', type: 'bytes32', value: project.primaryprojectuid || "" },
+      { name: 'contributionRegUID', type: 'bytes32', value: contribution?.primarycontributionuid || "" },
+      { name: 'projectRegUID', type: 'bytes32', value: project?.primaryprojectuid || "" },
       { name: 'farcasterID', type: 'uint256', value: user.fid },
       { name: 'issuer', type: 'string', value: "MGL" },
       { name: 'metadataurl', type: 'string', value: pinataURL },
     ]);
 
     try {
-      const recipientAddress = project.ethAddress && isValidEthereumAddress(project.ethAddress) ? project.ethAddress : ZERO_ADDRESS;
+      const recipientAddress = project?.ethAddress && isValidEthereumAddress(project.ethAddress) ? project.ethAddress : ZERO_ADDRESS;
       const attestationUID = await createNormalAttestation(
         schema,
         encodedData,
         recipientAddress,
-        contribution.easUid || contribution.primarycontributionuid  || ""
+        contribution?.easUid || contribution?.primarycontributionuid  || ""
       );
 
       return attestationUID;
@@ -132,7 +132,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
       console.log('Form Data:', formData);
 
       let specificData;
-      switch (contribution.category) {
+      switch (contribution?.category) {
         case 'Onchain Builders':
           specificData = {
             likely_to_recommend: formData.likely_to_recommend,
@@ -146,7 +146,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
           }
           break;
         case 'Governance':
-          switch (contribution.subcategory) {
+          switch (contribution?.subcategory) {
             case 'Collaboration & Onboarding':
               specificData = {
                 governance_knowledge: formData.governance_knowledge,
@@ -198,7 +198,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
 
       const attestationData = {
         userfid: user.fid,
-        ethaddress: currentAddress,
+        ethaddress: user.ethAddress || zeroAddress,
         projectName: contribution.projectName,
         contribution: contribution.contribution,
         category: contribution.category,
@@ -237,9 +237,9 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   if (!isOpen) return null;
 
   const renderForm = () => {
-    switch (contribution.category) {
+    switch (contribution?.category) {
       case 'Governance':
-        switch (contribution.subcategory) {
+        switch (contribution?.subcategory) {
           case 'Infra & Tooling':
             return (
               <GovernanceInfraToolingForm

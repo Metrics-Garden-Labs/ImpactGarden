@@ -5,21 +5,50 @@ import Image from "next/image";
 import { FaBars, FaTimes } from "react-icons/fa";
 import FarcasterLogin from '../login/FarcasterLogin2';
 import { isMobile } from 'react-device-detect';
+import  ReviewCarousel  from '../attestations/ReviewCarousel';
+import  useLocalStorage from '@/src/hooks/use-local-storage-state';
+
+interface UserLogin {
+  fid: string;
+  username: string;
+  ethAddress: string;
+  isAuthenticated: boolean;
+}
 
 export default function Navbar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [isReviewCarouselOpen, setIsReviewCarouselOpen] = useState(false);
+  const [user] = useLocalStorage('user', { fid: '', username: '', ethAddress: '', isAuthenticated: false });
+  const [hasJustSignedIn, setHasJustSignedIn] = useState(false);
+  const [username, setUsername] = useState('');
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  useEffect(() => {
+    if (user.isAuthenticated && hasJustSignedIn) {
+      setIsReviewCarouselOpen(true);
+      setHasJustSignedIn(false); // Reset the flag
+    }
+  }, [user.isAuthenticated, hasJustSignedIn]);
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const handleLoginSuccess = (userData: UserLogin) => {
+    setUsername(userData.username);
+    setHasJustSignedIn(true);
+  };
+
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+
+  const closeModal = () => {
+    setIsReviewCarouselOpen(false);
   };
 
   if (!isClient) {
@@ -44,7 +73,7 @@ export default function Navbar() {
           <Link href='/searchUsers' className='text-white text-md md:text-sm hover:text-opacity-75'>SEARCH USERS</Link>
         </div>
         <div className="flex items-center">
-          <FarcasterLogin />
+          <FarcasterLogin onLoginSuccess={handleLoginSuccess} />
           <div className="md:hidden ml-4">
             <button className="text-white focus:outline-none" onClick={toggleSidebar}>
               {isSidebarOpen ? (
@@ -84,6 +113,7 @@ export default function Navbar() {
           </li>
         </ul>
       </div>
+      <ReviewCarousel isOpen={isReviewCarouselOpen} onClose={closeModal} userFid={user.fid} />
     </>
   );
 }

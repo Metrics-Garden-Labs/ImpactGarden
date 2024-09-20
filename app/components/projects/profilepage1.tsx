@@ -14,7 +14,8 @@ import AttestationModalView from '../attestations/AttestationModalView';
 import DisplayContributions from '../contributions/DisplayContirbutions';
 import ContributionAttestations from '../contributions/ContributionAttestations';
 import useContributionData from '@/src/hooks/useContributionData';
-import useChainSwitcher from '@/src/hooks/useChainSwitcher';
+import { zeroAddress } from 'viem';
+// import useChainSwitcher from '@/src/hooks/useChainSwitcher';
 
 interface ProfilePageProps {
   contributions: Contribution[];
@@ -31,7 +32,11 @@ export default function ProfilePage({
   categories,
   subcategories,
 }: ProfilePageProps) {
-  const [activeTab, setActiveTab] = useState('contributions');
+  const searchParams = useSearchParams();
+  const [activeTab, setActiveTab] = useState(() => {
+    const tabParam = searchParams.get('tab');
+    return tabParam === 'insights' || tabParam === 'charts' ? tabParam : 'contributions';
+  });
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedContribution, setSelectedContribution] = useState<ContributionWithAttestationCount | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -47,11 +52,10 @@ export default function ProfilePage({
     ethAddress: '',
   });
 
-  const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
 
-  useChainSwitcher(project);
+  // useChainSwitcher(project);
 
   useEffect(() => {
     const contributionId = searchParams.get('contribution');
@@ -63,8 +67,22 @@ export default function ProfilePage({
     }
   }, [searchParams, contributions]);
 
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam === 'insights' || tabParam === 'charts' || tabParam === 'contributions') {
+      setActiveTab(tabParam);
+    }
+  }, [searchParams]);
+
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
+  };
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    const params = new URLSearchParams(searchParams);
+    params.set('tab', tab);
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   const handleContributionAdded = (newContribution: string) => {
@@ -81,7 +99,7 @@ export default function ProfilePage({
       link: '',
       primarycontributionuid: '',
       easUid: '',
-      ethAddress: walletAddress,
+      ethAddress: user.ethAddress || zeroAddress,
       attestationCount: 0,
     };
 
@@ -195,19 +213,19 @@ export default function ProfilePage({
           </button>
 
           <button
-            onClick={() => setActiveTab('contributions')}
+            onClick={() => handleTabChange('contributions')}
             className={tabClasses('contributions')}
           >
             Contributions
           </button>
           <button
-            onClick={() => setActiveTab('insights')}
+            onClick={() => handleTabChange('insights')}
             className={tabClasses('insights')}
           >
             Insights
           </button>
           <button
-            onClick={() => setActiveTab('charts')}
+            onClick={() => handleTabChange('charts')}
             className={tabClasses('charts')}
           >
             Charts

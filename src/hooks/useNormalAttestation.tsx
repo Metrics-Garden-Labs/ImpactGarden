@@ -1,12 +1,12 @@
 // hooks/useNormalAttestation.ts
 import { useState } from 'react';
 import { EAS, SchemaEncoder, AttestationRequestData } from '@ethereum-attestation-service/eas-sdk';
-import { useSigner } from './useEAS';
+// import { useSigner } from './useEAS';
 import { NEXT_PUBLIC_URL } from '../config/config';
 
 export const useNormalAttestation = () => {
   const [isCreating, setIsCreating] = useState(false);
-  const signer = useSigner();
+  // const signer = useSigner();
 
   const createNormalAttestation = async (
     schema: string,
@@ -18,12 +18,12 @@ export const useNormalAttestation = () => {
   ) => {
     setIsCreating(true);
     try {
-      if (!signer) {
-        throw new Error('Signer is not available');
-      }
+      // if (!signer) {
+      //   throw new Error('Signer is not available');
+      // }
 
       const eas = new EAS('0x4200000000000000000000000000000000000021');
-      eas.connect(signer);
+      // eas.connect(signer);
       
       const attestationData: AttestationRequestData = {
         data,

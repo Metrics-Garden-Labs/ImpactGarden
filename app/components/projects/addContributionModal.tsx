@@ -33,7 +33,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   const [attestationUID, setAttestationUID] = useState<string>('');
   const [attestationUID2, setAttestationUID2] = useState<string>('');
   const [ecosystem, setEcosystem] = useState<AttestationNetworkType>('Optimism');
-  const { switchChain } = useSwitchChain();
+  // const { switchChain } = useSwitchChain();
   const [selectedHigherCategory, setSelectedHigherCategory] = useState<higherCategoryKey | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<{ [key in CategoryKey]?: boolean }>({});
   const NO_EXPIRATION = 0n;
@@ -52,9 +52,9 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   const { createNormalAttestation, isCreating: isCreatingNormal } = useNormalAttestation();
   // const { createDelegatedAttestation, isCreating: isCreatingDelegated } = useDelegatedAttestation();
 
-  useEffect(() => {
-    checkNetwork(selectedNetwork, switchChain);
-  }, [selectedNetwork, switchChain]);
+  // useEffect(() => {
+  //   checkNetwork(selectedNetwork, switchChain);
+  // }, [selectedNetwork, switchChain]);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -123,14 +123,14 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     handleNetworkChange(selectedValue);
     console.log('Selected Network', selectedValue);
 
-    const chainId = getChainId(selectedValue);
-    if (chainId) {
-      try {
-        await switchChain({ chainId });
-      } catch (error) {
-        console.error('Failed to switch network:', error);
-      }
-    }
+    // const chainId = getChainId(selectedValue);
+    // if (chainId) {
+    //   try {
+    //     await switchChain({ chainId });
+    //   } catch (error) {
+    //     console.error('Failed to switch network:', error);
+    //   }
+    // }
   };
 
   console.log('Project Ecosystem:', selectedProject?.ecosystem);
@@ -138,10 +138,10 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!address) {
-      alert('Please connect your wallet to proceed.');
-      return;
-    }
+    // if (!address) {
+    //   alert('Please connect your wallet to proceed.');
+    //   return;
+    // }
 
     setIsLoading(true);
 

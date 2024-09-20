@@ -5,7 +5,7 @@ import { AttestationNetworkType, Contribution, Project } from '@/src/types';
 
 interface AttestationConfirmationModalProps {
     attestationUID: string;
-    attestationType: Project | Contribution;
+    attestationType: Project | Contribution | null;
     setAttestationUID: (uid: string) => void;
     easScanEndpoints: { [key: string]: string };
   }

@@ -3,15 +3,15 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { WHITELISTED_USERS, useGlobalState, NEXT_PUBLIC_URL } from '../../src/config/config';
 import { Project, AttestationNetworkType, AttestationData, higherCategoryKey, CategoryKey } from '@/src/types';
-import { useSwitchChain } from 'wagmi';
-import { useEAS, useSigner } from '../../src/hooks/useEAS';
+// import { useSwitchChain } from 'wagmi';
+import { useEAS,  } from '../../src/hooks/useEAS';
 import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import { usePinataUpload } from '@/src/hooks/usePinataUpload';
 import { useNormalAttestation } from '@/src/hooks/useNormalAttestation';
 import { useDelegatedAttestation } from '@/src/hooks/useDelegatedAttestation';
-import { getChainId, networkContractAddresses } from '../../src/utils/networkContractAddresses';
-import { networks, checkNetwork } from '@/src/utils/projectSignUpUtils';
+// import { getChainId, networkContractAddresses } from '../../src/utils/networkContractAddresses';
+// import { networks, checkNetwork } from '@/src/utils/projectSignUpUtils';
 import AttestationCreationModal from '../components/ui/AttestationCreationModal';
 import ConfirmationSection from '../components/projectSignUp/confirmationPage';
 import Footer from '../components/ui/Footer';
@@ -19,6 +19,7 @@ import CenterColumn from '../components/projectSignUp/CenterColumn';
 import LeftColumn from '../components/projectSignUp/LeftColumn';
 import { ZERO_BYTES32 } from '@ethereum-attestation-service/eas-sdk';
 import { Metadata } from 'next';
+import { zeroAddress } from 'viem';
 
 
 export default function ProjectSignUp() {
@@ -45,17 +46,17 @@ export default function ProjectSignUp() {
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { switchChain } = useSwitchChain();
+  // const { switchChain } = useSwitchChain();
   const { eas, currentAddress, selectedNetwork, address, handleNetworkChange } = useEAS();
-  const signer = useSigner();
+  // const signer = useSigner();
   const { uploadToPinata, isUploading } = usePinataUpload();
   const { createNormalAttestation, isCreating: isCreatingNormal } = useNormalAttestation();
   const { createDelegatedAttestation, isCreating: isCreatingDelegated } = useDelegatedAttestation();
 
   // Effects
-  useEffect(() => {
-    checkNetwork(selectedNetwork, switchChain);
-  }, [selectedNetwork, switchChain]);
+  // useEffect(() => {
+  //   checkNetwork(selectedNetwork, switchChain);
+  // }, [selectedNetwork, switchChain]);
 
   useEffect(() => {
     if (attestationUID1) {
@@ -84,14 +85,14 @@ export default function ProjectSignUp() {
       alert('Mainnet is not supported at the moment, switching to Optimism.');
     }
     handleNetworkChange(selectedValue);
-    const chainId = getChainId(selectedValue);
-    if (chainId) {
-      try {
-        await switchChain({ chainId });
-      } catch (error) {
-        console.error('Failed to switch network:', error);
-      }
-    }
+    // const chainId = getChainId(selectedValue);
+    // if (chainId) {
+    //   try {
+    //     await switchChain({ chainId });
+    //   } catch (error) {
+    //     console.error('Failed to switch network:', error);
+    //   }
+    // }
   };
 
   const handleSecondaryEcosystemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -114,10 +115,16 @@ export default function ProjectSignUp() {
   const handleBackToEdit = () => setIsPreview(false);
 
   const createAttestation1 = async () => {
-    if (!user.fid || !eas || !currentAddress || !signer) {
-      setError('Please ensure you are logged in and your wallet is connected.');
+    // if (!user.fid || !eas || !currentAddress || !signer) {
+    //   setError('Please ensure you are logged in and your wallet is connected.');
+    //   return;
+    // }
+    if(!user.fid) {
+      setError('Please ensure you are logged in.');
       return;
     }
+
+    //api call to fetch the user's farcaster custody address
 
     try {
       const schema1 = '0x7ae9f4adabd9214049df72f58eceffc48c4a69e920882f5b06a6c69a3157e5bd';
@@ -130,7 +137,8 @@ export default function ProjectSignUp() {
       const attestationUID = await createNormalAttestation(
         schema1,
         encodedData1,
-        currentAddress,
+        // currentAddress,
+        user.ethAddress || zeroAddress,
         ZERO_BYTES32,
       );
 
@@ -143,8 +151,12 @@ export default function ProjectSignUp() {
   };
 
   const createAttestation2 = async (attestationUID: string) => {
-    if (!user.fid || !eas || !currentAddress || !signer) {
-      setError('Please ensure you are logged in and your wallet is connected.');
+    // if (!user.fid || !eas || !currentAddress || !signer) {
+    //   setError('Please ensure you are logged in and your wallet is connected.');
+    //   return;
+    // }
+    if(!user.fid) {
+      setError('Please ensure you are logged in.');
       return;
     }
 
@@ -172,7 +184,8 @@ export default function ProjectSignUp() {
       const attestationUID2 = await createNormalAttestation(
         schema2,
         encodedData2,
-        currentAddress,
+        // currentAddress,
+        user.ethAddress || zeroAddress,
         attestationUID
       );
 
@@ -181,7 +194,7 @@ export default function ProjectSignUp() {
       // Add project to database
       const newProject = {
         userFid: user.fid,
-        ethAddress: currentAddress,
+        ethAddress: user.ethAddress || zeroAddress,
         projectName: attestationData.projectName,
         websiteUrl: attestationData.websiteUrl,
         oneliner: attestationData.oneliner,
@@ -221,10 +234,10 @@ export default function ProjectSignUp() {
       return;
     }
 
-    if (!address || address.trim() === "") {
-      setError("Please connect your wallet to proceed.");
-      return;
-    }
+    // if (!address || address.trim() === "") {
+    //   setError("Please connect your wallet to proceed.");
+    //   return;
+    // }
 
     try {
       const response = await fetch(`${NEXT_PUBLIC_URL}/api/verifyCaptcha`, {
@@ -269,7 +282,7 @@ export default function ProjectSignUp() {
   return (
     <div className="min-h-screen flex flex-col bg-white text-black">
 
-      {!address && (
+      {/* {!address && (
         <div
         role="alert"
         className="alert bg-[#E67529] text-white flex items-center rounded-none justify-center h-16 w-full "
@@ -287,7 +300,7 @@ export default function ProjectSignUp() {
           </svg>
           <span>Alert: Wallet not connected! Please connect your waller to continue.</span>
         </div>
-      )}
+      )} */}
 
       <div className="flex flex-col md:flex-row lg:flex-row justify-center items-start w-full mt-10 px-8 md:px-8">
       <LeftColumn 
