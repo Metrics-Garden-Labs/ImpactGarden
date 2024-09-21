@@ -6,14 +6,18 @@
 import React, { useEffect, useState } from 'react';
 import { FaTimes, FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import Image from 'next/image';
-import { Contribution, Project } from '@/src/types';
+import { AttestationNetworkType, Contribution, Project } from '@/src/types';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
 import AttestationModal2 from '../projects/AttestationModal2';
+import { easScanEndpoints } from '@/src/utils/easScan';
 
 interface ReviewCarouselProps {
   isOpen: boolean;
   onClose: () => void;
   userFid: string;
+  attestationUID?: string;
+  attestationType?: Contribution | Project | null;
+  easScanEndpoints?: { [key: string]: string };
 }
 
 interface ApiResponse {
@@ -25,7 +29,14 @@ interface ApiResponse {
 
 const ITEMS_PER_PAGE = 5;
 
-const ReviewCarousel: React.FC<ReviewCarouselProps> = ({ isOpen, onClose, userFid }) => {
+const ReviewCarousel: React.FC<ReviewCarouselProps> = ({ 
+  isOpen,
+  onClose,
+  userFid,
+  attestationUID,
+  attestationType,
+  easScanEndpoints
+}) => {
     const [currentPage, setCurrentPage] = useState(1);
   const [contributions, setContributions] = useState<Contribution[]>([]);
   const [totalContributions, setTotalContributions] = useState(0);
@@ -122,24 +133,58 @@ const ReviewCarousel: React.FC<ReviewCarouselProps> = ({ isOpen, onClose, userFi
     setIsModalOpen(false);
   };
 
-  if (!isOpen) return null;
+  const renderAttestationConfirmation = () => {
+    if(!attestationUID || !attestationType || !easScanEndpoints) return null;
+
+    const attestationLink = `${easScanEndpoints[attestationType.ecosystem as AttestationNetworkType]}${attestationUID}`;
+
+    return(
+      <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4">
+      <p className="font-bold">Attestation Created Successfully!</p>
+      <p>Your attestation for {attestationType.projectName} has been recorded.</p>
+      <a
+        href={attestationLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-500 hover:underline"
+      >
+        View Attestation
+      </a>
+    </div>
+  );
+};
+
+  console.log('ReviewCarousel props:', { isOpen, userFid, attestationUID, attestationType });
+
+  if (!isOpen) {
+    console.log('ReviewCarousel not open, returning null');
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-2xl shadow-xl w-4/5 h-3/4">
-        <div className="flex justify-between items-center pl-16 pt-10 pb-4">
-          <div className="flex items-center space-x-4">
-            <Image src="/MGLLogoGreen.png" alt="Logo" width={90} height={90} />
+    <div className="bg-white rounded-2xl shadow-xl w-4/5 h-3/4 overflow-y-auto">
+      <div className="flex justify-between items-center pl-16 pt-10 pb-4">
+        <div className="flex items-center space-x-4">
+          <Image src="/MGLLogoGreen.png" alt="Logo" width={90} height={90} />
+          {attestationUID ? (
+            <div>
+              <h2 className="text-2xl pl-6">Thank you for your attestation!</h2>
+              <p className="text-gray-600 pt-2 pl-6">Here are some contributions to review</p>
+            </div>
+          ) : (
             <div>
               <h2 className="text-2xl pl-6">Welcome to Metrics Garden!</h2>
-              <p className="text-gray-600 pt-2 pl-6">Select a project to review</p>
+              <p className="text-gray-600 pt-2 pl-6">Select a contribution to review</p>
             </div>
-          </div>
-          <button onClick={onClose} className="text-black hover:text-gray-600 pr-6 transform -translate-y-10">
-            <FaTimes size={16} />
-          </button>
+          )}
         </div>
-        <div className="p-12 relative">
+        <button onClick={onClose} className="text-black hover:text-gray-600 pr-6 transform -translate-y-10">
+          <FaTimes size={16} />
+        </button>
+      </div>
+      <div className={attestationUID ? "pl-12 pr-12 pt-4 relative" : "p-12 relative"}>
+          {renderAttestationConfirmation()}
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <p>Loading contributions...</p>
@@ -177,7 +222,7 @@ const ReviewCarousel: React.FC<ReviewCarouselProps> = ({ isOpen, onClose, userFi
                     className="btn btn-primary bg-black text-xs text-white items-center hover:bg-gray-800 px-2 py-1 rounded"
                     onClick={() => openModal(contribution)}
                   >
-                    Review Project
+                    Review Contribution
                   </button>
                 </div>
               </div>

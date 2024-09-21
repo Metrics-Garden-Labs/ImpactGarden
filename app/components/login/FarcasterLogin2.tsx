@@ -83,13 +83,15 @@ const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
         await fetchData(data.fid);
         setIsSignedIn(true);
         removeSearchParams();
-        setUser({
+        const updatedUser = {
           fid: data.fid,
           username: data.user.username,
           ethAddress: data.user.ethAddress,
           isAuthenticated: true,
-        });
-        onLoginSuccess(user);
+        };
+        setUser(updatedUser);
+        onLoginSuccess(updatedUser);
+        onLoginSuccess(updatedUser);
         console.log("User verified successfully", user);
       } else {
         console.error("User verification failed");
@@ -121,22 +123,22 @@ const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
         },
         body: JSON.stringify({ fid }),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         console.log("Data", data);
-        setUsername(data.username);
-        setFirstVerifiedEthAddress(data.ethAddress);
-
-        setUser(current => ({ ...current, username: data.username, ethAddress: data.ethAddress || zeroAddress }));
-
-        const newUser = {
+        const updatedUser = {
           fid: fid.toString(),
           username: data.username,
-          ethaddress: data.ethAddress || zeroAddress,
+          ethAddress: data.ethAddress || zeroAddress,
+          isAuthenticated: true,
         };
-        console.log("New User, ", newUser);
+        setUser(updatedUser);
+        setUsername(data.username);
+        setFirstVerifiedEthAddress(data.ethAddress || zeroAddress);
         setIsSignedIn(true);
+        onLoginSuccess(updatedUser); // Call onLoginSuccess here
+        console.log("New User, ", updatedUser);
       }
     } catch (error) {
       console.error('Error fetching data', error);

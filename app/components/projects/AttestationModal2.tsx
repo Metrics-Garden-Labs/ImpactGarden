@@ -13,7 +13,7 @@ import GovernanceCollabAndOnboarding from '../attestations/governanceAttestation
 import GovernanceStructuresFrom from '../attestations/governanceAttestationForms/GovernanceStructures';
 import OnchainBuildersForm from '@/app/components/attestations/onchainBuildersAttstationForms/attestationForm';
 import OPStackForm from '@/app/components/attestations/opStack/opstackattestationform';
-import { useSigner, useEAS } from '../../../src/hooks/useEAS';
+import { useEAS } from '../../../src/hooks/useEAS';
 import { easScanEndpoints } from '@/src/utils/easScan';
 import AttestationModal from './AttestationModal';
 import { usePinataUpload } from '@/src/hooks/usePinataUpload';
@@ -21,6 +21,9 @@ import { useDelegatedAttestation } from '@/src/hooks/useDelegatedAttestation';
 import { SchemaEncoder, ZERO_ADDRESS } from "@ethereum-attestation-service/eas-sdk";
 import { isAddress, zeroAddress } from 'viem';
 import { useNormalAttestation } from '@/src/hooks/useNormalAttestation';
+import ReviewConfirmationPage from '../attestations/ReviewConfirmationPage';
+import Navbar from '../ui/Navbar';
+import Footer from '../ui/Footer';
 
 interface AttestationModalProps {
   isOpen: boolean;
@@ -44,9 +47,8 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   const [smileyRating, setSmileyRating] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [attestationUID, setAttestationUID] = useState<string | null>(null);
+  const [showReviewCarousel, setShowReviewCarousel] = useState(false);
 
-
-  // const signer = useSigner();
   const { eas, currentAddress } = useEAS();
   const [user] = useLocalStorage("user", {
     fid: '',
@@ -72,20 +74,27 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     }
   }, [isOpen, contribution?.id, router, pathname]);
 
+  useEffect(() => {
+    if (showReviewCarousel) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showReviewCarousel]);
+
   const isValidEthereumAddress = (address: string | undefined): boolean => {
     if (!address) return false;
     return isAddress(address);
   };
 
   const createAttestation = async (pinataURL: string): Promise<string> => {
-    
     if(!user.fid) {
       throw alert('Please Connect to Farcaster to Continue');
     }
-
-    // if(!eas || !currentAddress || !signer) {
-    //   throw alert('Please Connect your Wallet to Continue');
-    // }
 
     const schema = "0xc9bc703e3c48be23c1c09e2f58b2b6657e42d8794d2008e3738b4ab0e2a3a8b6";
     const schemaEncoder = new SchemaEncoder(
@@ -116,10 +125,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   };
 
   const compileFormData = (commonData: any, specificData: any) => {
-    //destructre to remove the governancetype from being uploaded
-    
     const { governancetype, ...restOfCommonData } = commonData;
-
     return {
       ...restOfCommonData,
       data: specificData,
@@ -129,7 +135,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   const handleFormSubmit = async (formData: any) => {
     try {
       setIsLoading(true);
-      console.log('Form Data:', formData);
+      console.log('Form submitted, creating attestation...');
 
       let specificData;
       switch (contribution?.category) {
@@ -194,7 +200,12 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
       const attestationUID = await createAttestation(pinataURL);
       if (!attestationUID) throw new Error('Failed to create attestation');
 
+      console.log('Attestation created with UID:', attestationUID);
       setAttestationUID(attestationUID);
+
+      console.log('Setting showReviewCarousel to true...');
+      setShowReviewCarousel(true);
+      setIsLoading(false);
 
       const attestationData = {
         userfid: user.fid,
@@ -225,14 +236,20 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
       const result = await response.json();
       console.log('Submission result:', result);
 
-      // Close the modal after submission
-      onClose();
     } catch (error) {
       console.error('Error submitting form:', error);
-    } finally {
       setIsLoading(false);
     }
   };
+
+  const handleReviewCarouselClose = () => {
+    console.log('ReviewCarousel onClose called');
+    setShowReviewCarousel(false);
+    setAttestationUID(null);
+    onClose();
+  };
+
+  console.log('Current state:', { isOpen, showReviewCarousel, attestationUID, isLoading });
 
   if (!isOpen) return null;
 
@@ -333,17 +350,23 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   };
 
   return (
-    <div>
-      {renderForm()}
-      {(isLoading || isUploading || isCreatingDelegated) && <AttestationCreationModal />}
-      {attestationUID && (
-        <AttestationConfirmationModal
-          attestationUID={attestationUID}
-          attestationType={contribution}
-          setAttestationUID={setAttestationUID}
-          easScanEndpoints={easScanEndpoints}
-        />
-      )}
+    <div className="fixed inset-0 z-50 flex flex-col bg-white">
+      <Navbar />
+      <div className="flex-grow overflow-y-auto">
+        {!showReviewCarousel && renderForm()}
+        {isLoading && <AttestationCreationModal />}
+        {showReviewCarousel && attestationUID && (
+          <ReviewConfirmationPage
+            reviewedProject={project}
+            userFid={user.fid}
+            attestationUID={attestationUID}
+            attestationType={contribution}
+            easScanEndpoints={easScanEndpoints}
+            reviewedContribution={contribution}
+            onClose={handleReviewCarouselClose}
+          />
+        )}
+      </div>
     </div>
   );
 };

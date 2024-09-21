@@ -41,6 +41,8 @@ export default function Navbar() {
   const handleLoginSuccess = (userData: UserLogin) => {
     setUsername(userData.username);
     setHasJustSignedIn(true);
+    setIsReviewCarouselOpen(true);
+    console.log("User logged in successfully,, opening carousel");
   };
 
   const closeSidebar = () => {
@@ -113,7 +115,11 @@ export default function Navbar() {
           </li>
         </ul>
       </div>
-      <ReviewCarousel isOpen={isReviewCarouselOpen} onClose={closeModal} userFid={user.fid} />
+      <ReviewCarousel 
+        isOpen={isReviewCarouselOpen} 
+        onClose={closeModal} 
+        userFid={user.fid} 
+      />
     </>
   );
 }

@@ -69,6 +69,14 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
         onClick={(e) => e.stopPropagation()}
       >
         <>
+          {/* Close Button */}
+          <button 
+            className="absolute top-4 right-4 text-gray-600 hover:text-gray-800" 
+            onClick={onClose}
+          >
+            <RxCross2 className="h-6 w-6" />
+          </button>
+
           <h2 className="text-xl font-bold mb-4 text-center">Attest to Contribution</h2>
 
           {/* Q1 */}

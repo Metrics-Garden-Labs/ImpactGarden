@@ -145,7 +145,6 @@ export const useEAS = () => {
 
                 const address = await signer.getAddress();
                 setAddress(address);
-                console.log("Address obtained: ", address);
 
                 //Connects an ethers style provider/signingProvider to perform read/write functions.
                 //had to comment out line 39 -41 of eas.js to get this to work

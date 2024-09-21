@@ -63,6 +63,7 @@ export default function ProfilePage({
       const contribution = contributions.find(c => c.id === Number(contributionId));
       if (contribution) {
         setSelectedContribution(contribution);
+        console.log('Selected Contribution:', contribution);
       }
     }
   }, [searchParams, contributions]);

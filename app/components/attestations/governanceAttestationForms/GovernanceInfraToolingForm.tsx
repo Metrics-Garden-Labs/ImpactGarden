@@ -63,6 +63,14 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <>
+          {/* Close Button */}
+          <button 
+            className="absolute top-4 right-4 text-gray-600 hover:text-gray-800" 
+            onClick={onClose}
+          >
+            <RxCross2 className="h-6 w-6" />
+          </button>
+
           <h2 className="text-xl font-bold mb-4 text-center">Attest to Contribution</h2>
           {/* <div className="mb-4">
             <h3 className="font-semibold text-center">Please select the roles you perform within Optimism's Governance for which this contribution has been impactful. Select all that apply.</h3>
