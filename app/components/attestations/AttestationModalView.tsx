@@ -69,7 +69,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
         case "Onchain Builders":
           return (
             <>
-                  <div className="mb-4 flex justify-between items-center">
+                  <div className="mb-4 flex justify-between text-black items-center">
                   {/* Rating Section */}
                   <div className="flex-grow mr-2">
                     <RatingSection
@@ -82,7 +82,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
 
                   {/* Smiley Rating Section */}
                   {attestation.feeling_if_didnt_exist && (
-                    <div className="flex-grow">
+                    <div className="flex-grow text-black">
                       <SmileyRatingSection
                         title="Absence of Contribution"
                         description={attestation.feeling_if_didnt_exist}

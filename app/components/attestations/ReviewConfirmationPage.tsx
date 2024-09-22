@@ -179,22 +179,22 @@ useEffect(() => {
               <div className="flex items-center justify-center space-x-7 overflow-x-auto p-6">
                 {contributions.map((contribution, index) => (
                   <div key={index} className="flex-shrink-0 w-56 h-88 bg-white rounded-md p-4 flex flex-col items-center shadow-md">
-                    <div className="flex flex-col items-center p-1">
+                    <div className="flex flex-col items-center p-1 w-full">
                       <div className="w-48 h-28 mb-4 overflow-hidden rounded-lg">
                         <Image 
                           src={contribution.logoUrl || "/placeholder-logo.png"} 
                           alt={contribution.projectName} 
                           width={100} 
                           height={100} 
-                          className="w-full h-full object-contain"  // Make sure the image stays within the container
+                          className="w-full h-full object-contain"
                         />
                       </div>
-                      <h3 className="text-center text-sm font-semibold w-full truncate">{contribution.projectName}</h3>
+                      <h3 className="text-center text-sm font-semibold w-full truncate px-1">{contribution.projectName}</h3>
                       {contribution.projectName !== contribution.contribution && (
-                        <h4 className="text-center text-xs mt-1 w-full truncate">{contribution.contribution}</h4>
+                        <h4 className="text-center text-xs mt-1 w-full truncate px-1">{contribution.contribution}</h4>
                       )}
-                      <p className="text-xs text-gray-600 mt-2 mb-3 text-center w-48 truncate">{contribution.subcategory}</p>
-                      <p className="text-xs mb-4 text-center w-48 line-clamp-2 truncate">{contribution.desc}</p>
+                      <p className="text-xs text-gray-600 mt-2 mb-3 text-center w-full truncate px-1">{contribution.subcategory}</p>
+                      <p className="text-xs mb-4 text-center w-full line-clamp-2 px-1">{contribution.desc}</p>
                       <button 
                         className="btn btn-primary bg-black text-xs text-white items-center hover:bg-gray-800 px-2 py-1 rounded"
                         onClick={() => openModal(contribution)}

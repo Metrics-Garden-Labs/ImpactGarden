@@ -90,14 +90,14 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
 
           {/* Q1 */}
           <div className="mb-6">
-            <h3 className='font-semibold text-center'>How likely are you to recommend this contribution to someone in your role or position?</h3>
+            <h3 className='font-semibold text-center text-black'>How likely are you to recommend this contribution to someone in your role or position?</h3>
             <RatingScale10 rating={localRating1} handleRating={setLocalRating1} />
           </div>
           <hr className="my-4" />
 
           {/* Q2 */}
           <div className="mb-6">
-            <h3 className='font-semibold text-center'>How would you feel if this tool/contribution ceased to exist?</h3>
+            <h3 className='font-semibold text-center text-black'>How would you feel if this tool/contribution ceased to exist?</h3>
             <SmileyRatingScale 
               rating={localSmileyRating} 
               handleRating={setLocalSmileyRating} 
@@ -119,7 +119,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
 
           {/* Q3 */}
           <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2">Please provide a brief explanation for your rating. For example, what aspects of this tool make it stand out from others, or what challenges do you face without it?</label>
+            <label className="block text-gray-700 font-bold mb-2 ">Please provide a brief explanation for your rating. For example, what aspects of this tool make it stand out from others, or what challenges do you face without it?</label>
             <textarea
               value={localFeedback}
               onChange={(e) => setLocalFeedback(e.target.value)}
@@ -133,7 +133,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
 
           {/* Q4 */}
           <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2">Any additional feedback or suggestions on this contribution? This response will be confidential and only shared with the contributor.</label>
+            <label className="block text-gray-700 font-bold mb-2 text-black">Any additional feedback or suggestions on this contribution? This response will be confidential and only shared with the contributor.</label>
             <textarea
               value={localExtraFeedback}
               onChange={(e) => setLocalExtraFeedback(e.target.value)}

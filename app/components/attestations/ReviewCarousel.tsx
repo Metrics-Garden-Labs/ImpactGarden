@@ -10,6 +10,7 @@ import { AttestationNetworkType, Contribution, Project } from '@/src/types';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
 import AttestationModal2 from '../projects/AttestationModal2';
 import { easScanEndpoints } from '@/src/utils/easScan';
+import { RxCross2 } from 'react-icons/rx';
 
 interface ReviewCarouselProps {
   isOpen: boolean;
@@ -163,115 +164,121 @@ const ReviewCarousel: React.FC<ReviewCarouselProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-white rounded-2xl shadow-xl w-4/5 h-3/4 overflow-y-auto">
-      <div className="flex justify-between items-center pl-16 pt-10 pb-4">
-        <div className="flex items-center space-x-4">
-          <Image src="/MGLLogoGreen.png" alt="Logo" width={90} height={90} />
-          {attestationUID ? (
-            <div>
-              <h2 className="text-2xl pl-6">Thank you for your attestation!</h2>
-              <p className="text-gray-600 pt-2 pl-6">Here are some contributions to review</p>
-            </div>
-          ) : (
-            <div>
-              <h2 className="text-2xl pl-6">Welcome to Metrics Garden!</h2>
-              <p className="text-gray-600 pt-2 pl-6">Select a contribution to review</p>
-            </div>
-          )}
-        </div>
-        <button onClick={onClose} className="text-black hover:text-gray-600 pr-6 transform -translate-y-10">
-          <FaTimes size={16} />
+      <div className="bg-white rounded-2xl shadow-xl w-4/5 h-3/4 overflow-y-auto relative">
+        <button 
+          className="absolute top-4 right-4 text-black hover:text-gray-800" 
+          onClick={onClose}
+        >
+          <RxCross2 className="h-6 w-6" />
         </button>
-      </div>
-      <div className={attestationUID ? "pl-12 pr-12 pt-4 relative" : "p-12 relative"}>
-          {renderAttestationConfirmation()}
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <p>Loading contributions...</p>
-            </div>
-          ) : error ? (
-            <div className="flex justify-center items-center h-64">
-              <p className="text-red-500">{error}</p>
-            </div>
-          ) : contributions.length === 0 ? (
-            <div className="flex justify-center items-center h-64">
-              <p>No contributions found for this category.</p>
-            </div>
-          ) : (
-            <div className="flex space-x-8 overflow-x-auto p-4">
-
-              {contributions.map((contribution, index) => (
-                <div key={index} className="flex-shrink-0 w-56 h-88 bg-white rounded-md p-4 flex flex-col items-center shadow-md">
-                <div className="flex flex-col items-center p-1">
-                  <div className="w-48 h-28 mb-4 overflow-hidden rounded-lg">
-                    <Image 
-                      src={contribution.logoUrl || "/placeholder-logo.png"} 
-                      alt={contribution.projectName} 
-                      width={100} 
-                      height={100} 
-                      className="w-full h-full object-contain"  // Make sure the image stays within the container
-                    />
-                  </div>
-                  <h3 className="text-center text-sm font-semibold w-full truncate">{contribution.projectName}</h3>
-                  {contribution.projectName !== contribution.contribution && (
-                    <h4 className="text-center text-xs mt-1 w-full truncate">{contribution.contribution}</h4>
-                  )}
-                  <p className="text-xs text-gray-600 mt-2 mb-3 text-center w-48 truncate">{contribution.subcategory}</p>
-                  <p className="text-xs mb-4 text-center w-48 line-clamp-2 truncate">{contribution.desc}</p>
-                  <button 
-                    className="btn btn-primary bg-black text-xs text-white items-center hover:bg-gray-800 px-2 py-1 rounded"
-                    onClick={() => openModal(contribution)}
-                  >
-                    Review Contribution
-                  </button>
-                </div>
+        <div className="flexjustify-between items-center pl-16 pt-10 pb-4">
+        
+          <div className="flex items-center space-x-4">
+            <Image src="/MGLLogoGreen.png" alt="Logo" width={90} height={90} />
+            {attestationUID ? (
+              <div>
+                <h2 className="text-2xl pl-6 text-black">Thank you for your attestation!</h2>
+                <p className="text-gray-600 pt-2 pl-6 text-black">Here are some contributions to review</p>
               </div>
-              
+            ) : (
+              <div>
+                <h2 className="text-2xl pl-6 text-black">Welcome to Metrics Garden!</h2>
+                <p className="text-gray-600 pt-2 pl-6 text-black">Select a contribution to review</p>
+              </div>
+            )}
+          </div>
+          <button onClick={onClose} className="text-black hover:text-gray-600 pr-6 transform -translate-y-10">
+            <FaTimes size={16} />
+          </button>
+        </div>
+        <div className={attestationUID ? "pl-12 pr-12 pt-4 relative" : "p-12 relative"}>
+            {renderAttestationConfirmation()}
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <p className="text-black">Loading contributions...</p>
+              </div>
+            ) : error ? (
+              <div className="flex justify-center items-center h-64">
+                <p className="text-red-500">{error}</p>
+              </div>
+            ) : contributions.length === 0 ? (
+              <div className="flex justify-center items-center h-64">
+                <p className="text-black">No contributions found for this category.</p>
+              </div>
+            ) : (
+              <div className="flex space-x-8 overflow-x-auto p-4">
+
+                {contributions.map((contribution, index) => (
+                  <div key={index} className="flex-shrink-0 w-56 h-88 bg-white rounded-md p-4 flex flex-col items-center shadow-md">
+                    <div className="flex flex-col items-center p-1 w-full">
+                      <div className="w-48 h-28 mb-4 overflow-hidden rounded-lg">
+                        <Image 
+                          src={contribution.logoUrl || "/placeholder-logo.png"} 
+                          alt={contribution.projectName} 
+                          width={100} 
+                          height={100} 
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <h3 className="text-center text-sm font-semibold w-full truncate text-black px-1">{contribution.projectName}</h3>
+                      {contribution.projectName !== contribution.contribution && (
+                        <h4 className="text-center text-xs mt-1 w-full truncate text-black px-1">{contribution.contribution}</h4>
+                      )}
+                      <p className="text-xs text-gray-600 mt-2 mb-3 text-center w-full truncate text-black px-1">{contribution.subcategory}</p>
+                      <p className="text-xs mb-4 text-center w-full line-clamp-2 text-black px-1">{contribution.desc}</p>
+                      <button 
+                        className="btn btn-primary bg-black text-xs text-white items-center hover:bg-gray-800 px-2 py-1 rounded"
+                        onClick={() => openModal(contribution)}
+                      >
+                        Review Contribution
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {totalPages > 1 && (
+              <>
+                <button 
+                  onClick={prevPage} 
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md text-black"
+                  disabled={currentPage === 1}
+                >
+                  <FaChevronLeft size={20} />
+                </button>
+                <button 
+                  onClick={nextPage} 
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md text-black"
+                  disabled={currentPage === totalPages}
+                >
+                  <FaChevronRight size={20} />
+                </button>
+              </>
+            )}
+          </div>
+          {totalPages > 0 && (
+            <div className="flex justify-center pb-2 space-x-2 h-1/10 text-black">
+              {[...Array(totalPages)].map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-2 h-2 rounded-full ${index === currentPage - 1 ? 'bg-gray-800' : 'bg-gray-300'}`}
+                  onClick={() => setCurrentPage(index + 1)}
+                />
               ))}
             </div>
           )}
           
-          {totalPages > 1 && (
-            <>
-              <button 
-                onClick={prevPage} 
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md"
-                disabled={currentPage === 1}
-              >
-                <FaChevronLeft size={20} />
-              </button>
-              <button 
-                onClick={nextPage} 
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md"
-                disabled={currentPage === totalPages}
-              >
-                <FaChevronRight size={20} />
-              </button>
-            </>
+          {isModalOpen &&  selectedContribution && selectedProject && (
+          <AttestationModal2 
+              isOpen={isModalOpen} 
+              onClose={closeModal} 
+              contribution={selectedContribution}
+              project={selectedProject}
+            />
           )}
         </div>
-        {totalPages > 0 && (
-          <div className="flex justify-center pb-2 space-x-2 h-1/10">
-            {[...Array(totalPages)].map((_, index) => (
-              <button
-                key={index}
-                className={`w-2 h-2 rounded-full ${index === currentPage - 1 ? 'bg-gray-800' : 'bg-gray-300'}`}
-                onClick={() => setCurrentPage(index + 1)}
-              />
-            ))}
-          </div>
-        )}
-        
-        {isModalOpen &&  selectedContribution && selectedProject && (
-        <AttestationModal2 
-            isOpen={isModalOpen} 
-            onClose={closeModal} 
-            contribution={selectedContribution}
-            project={selectedProject}
-          />
-        )}
-    </div>
-    </div>
+      </div>
   );
 };
 

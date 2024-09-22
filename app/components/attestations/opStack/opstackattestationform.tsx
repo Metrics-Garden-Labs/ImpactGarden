@@ -46,7 +46,7 @@ const OPStackAttestationForm: React.FC<OPStackAttestationFormProps> = ({
     };
 
     return(
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center" onClick={onClose}>
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center text-black" onClick={onClose}>
             <div
                 className="relative m-auto p-6 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-2/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
                 onClick={(e) => e.stopPropagation()}
