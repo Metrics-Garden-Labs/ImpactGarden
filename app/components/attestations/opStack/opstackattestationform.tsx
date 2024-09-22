@@ -73,7 +73,7 @@ const OPStackAttestationForm: React.FC<OPStackAttestationFormProps> = ({
 
                     {/* Q2 */}
                     <div className="mb-8">
-                        <h3 className='font-semibold text-center'>Tell me more about why you chose this answer.</h3>
+                        <h3 className='font-semibold text-center'>Tell us more about why you chose this answer.</h3>
                         <textarea
                             className="w-full p-2 border border-gray-300 rounded-md"
                             rows={4}
