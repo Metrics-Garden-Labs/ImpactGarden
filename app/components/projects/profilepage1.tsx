@@ -17,6 +17,8 @@ import useContributionData from '@/src/hooks/useContributionData';
 import { zeroAddress } from 'viem';
 // import useChainSwitcher from '@/src/hooks/useChainSwitcher';
 
+import { useParams } from 'next/navigation';
+
 interface ProfilePageProps {
   contributions: Contribution[];
   project: Project;
@@ -54,19 +56,26 @@ export default function ProfilePage({
 
   const pathname = usePathname();
   const router = useRouter();
+  const params = useParams();
+  const projectName = params.projectName as string;
+  const contributioneasUid = params.contributioneasUid as string;
 
   // useChainSwitcher(project);
 
   useEffect(() => {
-    const contributionId = searchParams.get('contribution');
-    if (contributionId) {
-      const contribution = contributions.find(c => c.id === Number(contributionId));
+    console.log('Contribution UID from URL path:', contributioneasUid);
+    if (contributioneasUid && contributions.length > 0) {
+      const contribution = contributions.find(c => c.easUid === contributioneasUid);
       if (contribution) {
         setSelectedContribution(contribution);
         console.log('Selected Contribution:', contribution);
+      } else {
+        console.error('Contribution not found');
       }
     }
-  }, [searchParams, contributions]);
+  }, [params, contributions]);
+  
+  
 
   useEffect(() => {
     const tabParam = searchParams.get('tab');

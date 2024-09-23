@@ -111,8 +111,8 @@ const DisplayContributions: React.FC<DisplayContributionsProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-3 lg:gap-8 max-w-6xl overflow-y-auto">
         {filteredContributions.map((contribution) => (
              <Link
-             href={`/projects/${project.projectName}/contributions/${contribution.id}`}
-             key={contribution.id}
+             href={`/projects/${project.projectName}/contributions/${contribution.easUid}`}
+             key={contribution.easUid}
            >
                <div
                className="flex flex-col p-4 border bg-white text-black border-gray-300 rounded-lg w-full h-56 shadow-lg overflow-hidden"

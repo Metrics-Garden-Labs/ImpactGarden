@@ -1,7 +1,7 @@
 import { Contribution, Project } from '../../../src/types';
 import FrameCustomization from '../../components/frames/FrameCustomization';
 
-async function getContributionData(id: string) {
+async function getContributionData(easUid: string) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
     const url = `${baseUrl}/api/getContribution`;
@@ -12,7 +12,7 @@ async function getContributionData(id: string) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id }),
+      body: JSON.stringify({ easUid: easUid }),
     });
 
     console.log('Fetch response status:', res.status);
@@ -31,10 +31,10 @@ async function getContributionData(id: string) {
   }
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: { params: { easUid: string } }) {
   try {
     console.log('Page params:', params);
-    const { contribution, project } = await getContributionData(params.id);
+    const { contribution, project } = await getContributionData(params.easUid);
     console.log('Fetched contribution and project:', { contribution, project });
 
     return <FrameCustomization contribution={contribution} project={project} />;
