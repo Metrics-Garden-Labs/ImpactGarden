@@ -163,7 +163,7 @@ const ReviewCarousel: React.FC<ReviewCarouselProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-50 flex items-center text-black justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-2xl shadow-xl w-4/5 h-3/4 overflow-y-auto relative">
         <button 
           className="absolute top-4 right-4 text-black hover:text-gray-800" 
@@ -171,7 +171,7 @@ const ReviewCarousel: React.FC<ReviewCarouselProps> = ({
         >
           <RxCross2 className="h-6 w-6" />
         </button>
-        <div className="flexjustify-between items-center pl-16 pt-10 pb-4">
+        <div className="flex justify-between items-center pl-16 pt-10 pb-4">
         
           <div className="flex items-center space-x-4">
             <Image src="/MGLLogoGreen.png" alt="Logo" width={90} height={90} />

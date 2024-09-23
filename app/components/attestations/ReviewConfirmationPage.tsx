@@ -147,7 +147,7 @@ useEffect(() => {
 
   return (
     <div className="w-full flex flex-col">
-      <div className="flex flex-col justify-center items-center p-8 w-full">
+      <div className="flex flex-col justify-center items-center p-8 w-full text-black">
         <Image src="/star.png" alt="Smiley" width={60} height={60} className="mb-4" />
         <h1 className="text-xl font-bold text-center mb-4">
           Review completed!
@@ -167,14 +167,14 @@ useEffect(() => {
         </div>
       </div>
       
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center text-black">
         {loading ? (
           <p>Loading contributions...</p>
         ) : error ? (
           <p className="text-red-500">{error}</p>
         ) : (
           <>
-            <div className="relative w-full items-center justify-center max-w-6xl flex flex-col">
+            <div className="relative w-full items-center justify-center max-w-6xl flex flex-col text-black">
               <h3 className="text-lg font-semibold mb-6 text-left w-full">Other projects for you to review</h3>
               <div className="flex items-center justify-center space-x-7 overflow-x-auto p-6">
                 {contributions.map((contribution, index) => (
@@ -227,7 +227,7 @@ useEffect(() => {
       </div>
       
       {/* Pagination dots */}
-      <div className="flex justify-center space-x-2 pb-8">
+      <div className="flex justify-center space-x-2 pb-8 text-black">
         {[...Array(totalPages)].map((_, index) => (
           <button
             key={index}
