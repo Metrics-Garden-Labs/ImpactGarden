@@ -187,9 +187,7 @@ const ReviewCarousel: React.FC<ReviewCarouselProps> = ({
               </div>
             )}
           </div>
-          <button onClick={onClose} className="text-black hover:text-gray-600 pr-6 transform -translate-y-10">
-            <FaTimes size={16} />
-          </button>
+      
         </div>
         <div className={attestationUID ? "pl-12 pr-12 pt-4 relative" : "p-12 relative"}>
             {renderAttestationConfirmation()}
