@@ -47,8 +47,10 @@ const ContributionDetails: React.FC<ContributionDetailsProps> = ({
             {splitLinks(contribution.link).map((link, index) => (
               <Link
                 key={index}
-                href={contribution.link || ""}
+                href={link}
                 className="text-gray-500 underline hover:text-[#2C3F2D] transition-colors duration-200"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <p className='text-left'>{link}</p>
               </Link>
