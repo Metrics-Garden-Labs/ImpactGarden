@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useGlobalState } from '@/src/config/config';
 import { Project, ProjectCount, SearchResult } from '@/src/types';
 import Image from 'next/image';
@@ -24,6 +24,8 @@ export default function ProjectList({
   const [selectedProjectName, setSelectedProjectName] = useGlobalState('selectedProjectName');
   const [modalOpen, setModalOpen] = useState(false);
   const [visibleProjects, setVisibleProjects] = useState(12);
+  const [isLoading, setIsLoading] = useState(false);
+  const observerTarget = useRef(null);
 
   // console.log("Received projects:", projects);
   console.log("Current sortOrder:", sortOrder);
@@ -81,6 +83,38 @@ export default function ProjectList({
     return sorted;
   }, [filteredProjects, sortOrder]);
 
+  const loadMoreProjects = useCallback(() => {
+    if (!isLoading && visibleProjects < sortedProjects.length) {
+      setIsLoading(true);
+      setTimeout(() => {
+        setVisibleProjects((prev) => prev + 12);
+        setIsLoading(false);
+      }, 500); // Simulating a delay, remove if not needed
+    }
+  }, [isLoading, visibleProjects, sortedProjects.length]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMoreProjects();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => {
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current);
+      }
+    };
+  }, [loadMoreProjects]);
+
+
   const openModal = (project: Project | ProjectCount) => {
     console.log('Opening modal for project:', project);
     setSelectedProject(project);
@@ -92,9 +126,6 @@ export default function ProjectList({
     setModalOpen(false);
   };
 
-  const loadMoreProjects = () => {
-    setVisibleProjects((prev) => prev + 12);
-  };
 
   const urlHelper = (url: string) => {
     if (!url.match(/^https?:\/\//)) {
@@ -139,10 +170,12 @@ export default function ProjectList({
         ))}
       </div>
       {visibleProjects < sortedProjects.length && (
-        <div className="flex justify-center my-8">
-          <button onClick={loadMoreProjects} className="btn bg-[#353436] text-white hover:text-black">
-            Load More
-          </button>
+        <div ref={observerTarget} className="flex justify-center my-8">
+          {isLoading ? (
+            <p>Loading more projects...</p>
+          ) : (
+            <p>Scroll for more</p>
+          )}
         </div>
       )}
       <ProjectModal
