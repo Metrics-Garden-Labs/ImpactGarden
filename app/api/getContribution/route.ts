@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getContributionByEasUid } from "../../../src/lib/db/dbcontributions";
+import { getContributionByPrimaryContributionUid } from "../../../src/lib/db/dbcontributions";
 import { getProjectByName } from "../../../src/lib/db/dbprojects";
 
 export async function POST(request: Request) {
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     }
 
     console.log("Fetching contribution with ID:", id);
-    const contribution = await getContributionByEasUid(id);
+    const contribution = await getContributionByPrimaryContributionUid(id);
 
     if (!contribution) {
       console.error("Contribution not found for ID:", id);
