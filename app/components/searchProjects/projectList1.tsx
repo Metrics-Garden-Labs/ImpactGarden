@@ -4,7 +4,7 @@ import { Project, ProjectCount, SearchResult } from '@/src/types';
 import Image from 'next/image';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import ProjectModal from '@/app/components/searchProjects/ProjectModal';
-  
+
 interface Props {
   projects: (Project | ProjectCount)[];
   query: string;
@@ -13,7 +13,7 @@ interface Props {
   searchResults: SearchResult[];
 }
 
-export default function ProjectList({ 
+export default function ProjectList({
   projects,
   query,
   filter,
@@ -25,28 +25,15 @@ export default function ProjectList({
   const [modalOpen, setModalOpen] = useState(false);
   const [visibleProjects, setVisibleProjects] = useState(12);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFiltering, setIsFiltering] = useState(false);  // New state to manage filtering/loading
   const observerTarget = useRef(null);
 
-  // console.log("Received projects:", projects);
-  console.log("Current sortOrder:", sortOrder);
-
-  // const uniqueProjects = useMemo(() => {
-  //   const uniqueMap = new Map<string, Project | ProjectCount>();
-  //   projects.forEach(project => {
-  //     if (!uniqueMap.has(project.projectName)) {
-  //       uniqueMap.set(project.projectName, project);
-  //     } else if ('attestationCount' in project) {
-  //       // If the project already exists, update it if the new one has an attestationCount
-  //       const existingProject = uniqueMap.get(project.projectName);
-  //       if(existingProject) {
-  //       if (!('attestationCount' in existingProject) || project.attestationCount > existingProject.attestationCount) {
-  //         uniqueMap.set(project.projectName, project);
-  //       }
-  //     }
-  //   }
-  //   });
-  //   return Array.from(uniqueMap.values());
-  // }, [projects]);
+  // Set isFiltering to true when sortOrder or filter changes
+  useEffect(() => {
+    setIsFiltering(true);
+    const timer = setTimeout(() => setIsFiltering(false), 300); // Simulating a delay for filtering
+    return () => clearTimeout(timer);
+  }, [sortOrder, filter]);
 
   const filteredProjects = useMemo(() => {
     return projects.filter((project) => {
@@ -60,11 +47,9 @@ export default function ProjectList({
   const sortedProjects = useMemo(() => {
     console.log("Sorting projects with sortOrder:", sortOrder);
     let sorted = [...filteredProjects];
-    console.log("filteredProjects:", filteredProjects.slice(0, 5));
     switch (sortOrder) {
       case 'Most Attested':
-        return sorted
-        break;
+        return sorted; // Implement the attestation count logic here if needed
       case 'Recently Added':
         sorted.sort((a, b) => {
           const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
@@ -79,7 +64,6 @@ export default function ProjectList({
       default:
         sorted.sort((a, b) => (a.projectName || '').localeCompare(b.projectName || '', undefined, { sensitivity: 'base' }));
     }
-    // console.log("Sorted projects:", sorted);
     return sorted;
   }, [filteredProjects, sortOrder]);
 
@@ -89,7 +73,7 @@ export default function ProjectList({
       setTimeout(() => {
         setVisibleProjects((prev) => prev + 12);
         setIsLoading(false);
-      }, 500); // Simulating a delay, remove if not needed
+      }, 100); // Simulating a delay, remove if not needed
     }
   }, [isLoading, visibleProjects, sortedProjects.length]);
 
@@ -114,9 +98,7 @@ export default function ProjectList({
     };
   }, [loadMoreProjects]);
 
-
   const openModal = (project: Project | ProjectCount) => {
-    console.log('Opening modal for project:', project);
     setSelectedProject(project);
     setSelectedProjectName(project.projectName);
     setModalOpen(true);
@@ -125,7 +107,6 @@ export default function ProjectList({
   const closeModal = () => {
     setModalOpen(false);
   };
-
 
   const urlHelper = (url: string) => {
     if (!url.match(/^https?:\/\//)) {
@@ -136,40 +117,52 @@ export default function ProjectList({
 
   return (
     <div className="bg-white mx-auto gap-12 max-w-6xl">
-      <div className="grid grid-cols-1 gap-4 mx-3 md:grid-cols-3 md:mx-8 md:mx-8 lg:grid-cols-4 lg:gap-12 max-w-6xl overflow-y-auto">
-        {sortedProjects.slice(0, visibleProjects).map((project) => (
-          <div
-            key={project.id}
-            className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-md w-full h-66 shadow-xl"
-            onClick={() => openModal(project)}
-          >
-            <div className="rounded-md bg-gray-300 w-24 h-24 flex items-center justify-center overflow-hidden mb-4">
-              {project.logoUrl ? (
-                <Image
-                  src={project.logoUrl}
-                  alt="Project Logo"
-                  width={64}
-                  height={64}
-                  style={{ height: "auto" }}
-                  className="object-cover w-full h-full"
-                />
-              ) : (
-                <div className="flex items-center justify-center text-gray-500">
-                  {/* Add optional placeholder content if needed */}
-                </div>
+      <div className="grid grid-cols-1 gap-4 mx-3 md:grid-cols-3 md:mx-8 lg:grid-cols-4 lg:gap-12 max-w-6xl overflow-y-auto">
+        {isFiltering ? (
+          // Display loading skeleton when filtering or sorting
+          Array.from({ length: 12 }).map((_, index) => (
+            <div
+              key={index}
+              className="flex flex-col p-6 border justify-center items-center bg-gray-100 animate-pulse rounded-md w-full h-66 shadow-xl"
+            >
+              <div className="rounded-md bg-gray-300 w-24 h-24 mb-4"></div>
+              <div className="w-36 h-4 bg-gray-300 mb-2"></div>
+              <div className="w-24 h-4 bg-gray-300"></div>
+            </div>
+          ))
+        ) : (
+          sortedProjects.slice(0, visibleProjects).map((project) => (
+            <div
+              key={project.id}
+              className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-md w-full h-66 shadow-xl"
+              onClick={() => openModal(project)}
+            >
+              <div className="rounded-md bg-gray-300 w-24 h-24 flex items-center justify-center overflow-hidden mb-4">
+                {project.logoUrl ? (
+                  <Image
+                    src={project.logoUrl}
+                    alt="Project Logo"
+                    width={64}
+                    height={64}
+                    style={{ height: "auto" }}
+                    className="object-cover w-full h-full"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center text-gray-500"></div>
+                )}
+              </div>
+              <h3 className="mb-2 text-xl font-semibold truncate max-w-full">{project.projectName}</h3>
+              <p className="mb-2 text-md text-gray-500 text-center truncate max-w-full">{project.oneliner}</p>
+              {sortOrder === 'Most Attested' && 'attestationCount' in project && Number(project.attestationCount) > 0 && (
+                <p className="mb-2 text-md text-gray-500 text-center truncate max-w-full">
+                  Attestations: {project.attestationCount}
+                </p>
               )}
             </div>
-            <h3 className="mb-2 text-xl font-semibold truncate max-w-full">{project.projectName}</h3>
-            <p className="mb-2 text-md text-gray-500 text-center truncate max-w-full">{project.oneliner}</p>
-            {sortOrder === 'Most Attested' && 'attestationCount' in project && Number(project.attestationCount) > 0 && (
-              <p className="mb-2 text-md text-gray-500 text-center truncate max-w-full">
-                Attestations: {project.attestationCount}
-              </p>
-            )}
-          </div>
-        ))}
+          ))
+        )}
       </div>
-      {visibleProjects < sortedProjects.length && (
+      {visibleProjects < sortedProjects.length && !isFiltering && (
         <div ref={observerTarget} className="flex justify-center my-8">
           {isLoading ? (
             <p>Loading more projects...</p>
