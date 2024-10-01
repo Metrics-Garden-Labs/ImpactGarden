@@ -27,8 +27,8 @@ export default function ProjectList({
   const [modalOpen, setModalOpen] = useState(false);
   const [visibleProjects, setVisibleProjects] = useState(12);
   const [isLoading, setIsLoading] = useState(false);
-  const [isFiltering, setIsFiltering] = useState(false); 
-  const observerTarget = useRef(null);
+  const [isFiltering, setIsFiltering] = useState(false);
+  const observerTarget = useRef<HTMLDivElement | null>(null);
 
   // Set isFiltering to true when sortOrder or filter changes
   useEffect(() => {
@@ -47,11 +47,10 @@ export default function ProjectList({
   }, [projects, query]);
 
   const sortedProjects = useMemo(() => {
-    console.log("Sorting projects with sortOrder:", sortOrder);
     let sorted = [...filteredProjects];
     switch (sortOrder) {
       case 'Most Attested':
-        return sorted; // Implement the attestation count logic here if needed
+        return sorted;
       case 'Recently Added':
         sorted.sort((a, b) => {
           const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
@@ -69,26 +68,25 @@ export default function ProjectList({
     return sorted;
   }, [filteredProjects, sortOrder]);
 
-
   const loadMoreProjects = useCallback(() => {
     if (!isLoading && visibleProjects < sortedProjects.length) {
       setIsLoading(true);
       setTimeout(() => {
         setVisibleProjects((prev) => prev + 12);
         setIsLoading(false);
-      }, 200); // Simulating a delay, otherwise it loads to fast and is jerky
+      }, 200); // Simulating a delay for smoother loading
     }
   }, [isLoading, visibleProjects, sortedProjects.length]);
 
-  //auto load when the user scrolls to the bottom
+  // Auto-load when the user scrolls to the bottom
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          loadMoreProjects();
+          loadMoreProjects(); // Load more when the target is intersecting
         }
       },
-      { threshold: 1.0 }
+      { threshold: 0.75 } // Ensure the whole target is visible
     );
 
     if (observerTarget.current) {
@@ -100,11 +98,10 @@ export default function ProjectList({
         observer.unobserve(observerTarget.current);
       }
     };
-  }, [loadMoreProjects]);
+  }, [loadMoreProjects]); // Dependencies include only the callback
 
   const openModal = (project: Project | ProjectCount) => {
     setSelectedProject(project);
-    console.log("project", project);
     setSelectedProjectName(project.projectName);
     setModalOpen(true);
   };
@@ -124,7 +121,6 @@ export default function ProjectList({
     <div className="bg-white mx-auto gap-12 max-w-6xl">
       <div className="grid grid-cols-1 gap-4 mx-3 md:grid-cols-3 md:mx-8 lg:grid-cols-4 lg:gap-12 max-w-6xl overflow-y-auto">
         {isFiltering ? (
-          // Display loading skeleton when filtering or sorting
           Array.from({ length: 12 }).map((_, index) => (
             <div
               key={index}
@@ -171,11 +167,11 @@ export default function ProjectList({
         <div ref={observerTarget} className="flex justify-center my-8">
           {isLoading ? (
             <div className="flex justify-center items-center mb-6 mt-6">
-            <SpinnerIcon className="spinner w-16 h-16" />
-            <Mgltree className="absolute w-12 h-12" />
-          </div>
+              <SpinnerIcon className="spinner w-16 h-16" />
+              <Mgltree className="absolute w-12 h-12" />
+            </div>
           ) : (
-            <p className="text-xl font-bold">Scroll for more</p>
+            <p>Scroll for more</p>
           )}
         </div>
       )}
