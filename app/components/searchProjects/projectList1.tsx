@@ -163,18 +163,32 @@ export default function ProjectList({
           ))
         )}
       </div>
+      
+      {/* Only show the load more button if there are more projects to load */}
+      <div className="flex justify-center my-8">
+        {isLoading ? (
+          <div className="flex justify-center items-center mb-6 mt-6">
+            <SpinnerIcon className="spinner w-16 h-16" />
+            <Mgltree className="absolute w-12 h-12" />
+          </div>
+        ) : (
+          visibleProjects < sortedProjects.length && (
+            <button
+              onClick={loadMoreProjects}
+              className="btn btn-primary px-6 py-2 bg-black text-white font-bold rounded-md hover:bg-white hover:text-black"
+            >
+              Load More
+            </button>
+          )
+        )}
+      </div>
+      
       {visibleProjects < sortedProjects.length && !isFiltering && (
         <div ref={observerTarget} className="flex justify-center my-8">
-          {isLoading ? (
-            <div className="flex justify-center items-center mb-6 mt-6">
-              <SpinnerIcon className="spinner w-16 h-16" />
-              <Mgltree className="absolute w-12 h-12" />
-            </div>
-          ) : (
-            <p>Scroll for more</p>
-          )}
+          <p>Scroll for more</p>
         </div>
       )}
+
       <ProjectModal
         isOpen={modalOpen}
         onClose={closeModal}
