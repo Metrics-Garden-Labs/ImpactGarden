@@ -126,60 +126,45 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     }
   };
 
-  // const compileFormData = (commonData: any, specificData: any) => {
-  //   const { governancetype, ...restOfCommonData } = commonData;
-  //   return {
-  //     ...restOfCommonData,
-  //     data: specificData,
-  //   };
-  // };
+  const compileFormData = (commonData: any, specificData: any) => {
+    const { governancetype, ...restOfCommonData } = commonData;
+    return {
+      ...restOfCommonData,
+      data: specificData,
+    };
+  };
 
   const handleFormSubmit = async (formData: any) => {
     try {
       setIsLoading(true);
       console.log('Form submitted, creating attestation...');
-
+      console.log('formData', formData);
+  
       let specificData;
+      let compiledData;
+  
       switch (contribution?.category) {
-        case 'Onchain Builders':
-          specificData = {
-            name: "Feeling if didnt exist",
-            likely_to_recommend: formData.likely_to_recommend,
-            feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
-            round: "RF4"
-          }
-          break;
-        case 'OP Stack':
-          specificData = {
-            name: "Feeling if didnt exist",
-            feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
-            feeling_if_didnt_exist_number: formData.feeling_if_didnt_exist_number,
-            explanation: formData.explanation,
-            round: 'RF5'
-          }
-          break;
         case 'Governance':
           switch (contribution?.subcategory) {
             case 'Collaboration & Onboarding':
               specificData = {
                 governance_knowledge: formData.governance_knowledge,
+                governance_knowledge_number: formData.governance_knowledge_number,
                 recommend_contribution: formData.recommend_contribution,
-                name: "Feeling if didnt exist",
                 feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
                 feeling_if_didnt_exist_number: formData.feeling_if_didnt_exist_number,
                 explanation: formData.explanation,
                 round: 'RF6'
-              }
+              };
               break;
             case 'Infra & Tooling':
               specificData = {
                 likely_to_recommend: formData.likely_to_recommend,
-                name: "Feeling if didnt exist",
                 feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
                 feeling_if_didnt_exist_number: formData.feeling_if_didnt_exist_number || "",
                 explanation: formData.explanation,
                 round: 'RF6'
-              }
+              };
               break;
             case 'Governance Research & Analytics':
               specificData = {
@@ -188,7 +173,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 effective_for_improvements: formData.effective_for_improvements,
                 explanation: formData.explanation,
                 round: 'RF6'
-              }
+              };
               break;
             case 'Governance Structures':
               specificData = {
@@ -197,79 +182,117 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 why: formData.why,
                 explanation: formData.explanation,
                 round: 'RF6'
-              }
+              };
               break;
             default:
               throw new Error('Unknown subcategory');
           }
+          //TODO::likely to recommend and recommend contribution are the same thing, can change them to be the same
+          compiledData = {
+            id: contribution?.id,
+            project: {
+              name: project?.projectName,
+              description: project?.oneliner,
+              website: project?.websiteUrl,
+            },
+            reviewer: {
+              userFID: user.fid,
+              ethAddress: user.ethAddress || zeroAddress,
+            },
+            context: {
+              ecosystems: [
+                {
+                  name: contribution?.ecosystem,
+                  tags: [
+                    {
+                      category: contribution?.category,
+                      subcategory: contribution?.subcategory,
+                      round: specificData.round,
+                    }
+                  ]
+                }
+              ],
+              userInterface: "Metrics Garden"
+            },
+            contributions: [
+              {
+                name: contribution?.projectName,
+                description: contribution?.contribution,
+                website: project?.websiteUrl,
+              }
+            ],
+            impactAttestations: [
+              {
+                name: "Likely to Recommend",
+                type: "numeric",
+                value: specificData?.likely_to_recommend || specificData?.recommend_contribution || "",
+              },
+              {
+                name: "Feeling if didnt exist",
+                type: "numeric",
+                value: specificData?.feeling_if_didnt_exist_number || "",
+              },
+              {
+                name: "Governance Knowledge", 
+                type: "numeric",
+                value: specificData?.governance_knowledge_number || "",
+              },
+              {
+                name: "Useful for Understanding",
+                type: "numeric",
+                value: specificData?.useful_for_understanding || "",
+              },
+              {
+                name: "Effective for Improvements",
+                type: "numeric",
+                value: specificData?.effective_for_improvements || "",
+              },
+              {
+                name: "Why Effective for Improvements",
+                type: "string",
+                value: specificData?.why || "",
+              },
+              {
+                name: "Text Review",
+                type: "string",
+                value: specificData?.explanation || "",
+              }
+            ]
+          };
+          break;
+  
+        // For non-Governance categories, use the default specificData
+        case 'Onchain Builders':
+          specificData = {
+            likely_to_recommend: formData.likely_to_recommend,
+            feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
+          };
+          break;
+        case 'OP Stack':
+          specificData = {
+            feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
+            explanation: formData.explanation,
+          };
           break;
         default:
           throw new Error('Unknown category');
       }
-
-      //the speciifc data without the round
-      const destructuredSpecificData = Object.fromEntries(
-        Object.entries(specificData).filter(([key]) => key !== 'round')
-      );
-
-      //for the older categories, use the old pinata information
-
-      const newCompiledData = {
-        id: contribution?.id,
-        project : {
-          name: project?.projectName,
-          description: project?.oneliner,
-          website: project?.websiteUrl,
-        },
-        reviewer: {
-          userFID: user.fid,
-          ethAddress: user.ethAddress || zeroAddress,
-        },
-        context: {
-          ecosystems: [
-            {
-              name: contribution?.ecosystem,
-              tags: [
-                {
-                  category: contribution?.category,
-                  subcategory: contribution?.subcategory,
-                  round: specificData.round, 
-                }
-              ]
-            }
-          ],
-          userInterface: "Metrics Garden"
-        },
-        contributions: [
-          {
-            name: contribution?.projectName,
-            description: contribution?.contribution,
-            website: project?.websiteUrl,
-          }
-        ],
-        impactAttestations: [
-          {
-            ...destructuredSpecificData
-          }
-        ]
-      }
-
-      // const compiledData = compileFormData(newCompiledData);
-      // console.log('Compiled Data:',newCompiledData);
-
-      const pinataURL = await uploadToPinata(newCompiledData);
+  
+      console.log('Specific Data:', specificData);
+  
+      const pinataURL = await uploadToPinata(compiledData || specificData); // Upload compiledData for Governance, specificData for others
       if (!pinataURL) throw new Error('Failed to upload data to IPFS');
-
+  
       const attestationUID = await createAttestation(pinataURL);
       if (!attestationUID) throw new Error('Failed to create attestation');
-
+  
       console.log('Attestation created with UID:', attestationUID);
       setAttestationUID(attestationUID);
-
+  
       console.log('Setting showReviewCarousel to true...');
       setShowReviewCarousel(true);
       setIsLoading(false);
-
+  
       const attestationData = {
         userfid: user.fid,
         ethaddress: user.ethAddress || zeroAddress,
@@ -281,9 +304,9 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
         attestationUID: attestationUID,
         ...formData,
       };
-
+  
       console.log('Attestation Data:', attestationData);
-
+  
       const response = await fetch(`${NEXT_PUBLIC_URL}/api/addAttestation`, {
         method: 'POST',
         headers: {
@@ -291,19 +314,20 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
         },
         body: JSON.stringify(attestationData),
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to submit attestation');
       }
-
+  
       const result = await response.json();
       console.log('Submission result:', result);
-
+  
     } catch (error) {
       console.error('Error submitting form:', error);
       setIsLoading(false);
     }
   };
+  
 
   const handleReviewCarouselClose = () => {
     console.log('ReviewCarousel onClose called');

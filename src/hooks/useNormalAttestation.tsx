@@ -4,6 +4,9 @@ import { EAS, SchemaEncoder, AttestationRequestData } from '@ethereum-attestatio
 // import { useSigner } from './useEAS';
 import { NEXT_PUBLIC_URL } from '../config/config';
 
+//commented out code is for when the user had their wallet connected, this is now deprecated, but may be needed again in the future
+//creates the attestation data in a format for the backend to create the attestation onchain
+
 export const useNormalAttestation = () => {
   const [isCreating, setIsCreating] = useState(false);
   // const signer = useSigner();

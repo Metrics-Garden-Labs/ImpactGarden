@@ -1,5 +1,7 @@
 import OpenAI from "openai";
 
+//was building a chat bot at one point, ive removed it.
+
 const apiKey = process.env.OPENAI_API_KEY;
 
 if (!apiKey) {

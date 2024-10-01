@@ -3,6 +3,8 @@ import { useSwitchChain } from 'wagmi';
 import { getChainId } from '../../src/utils/networkContractAddresses';
 import { Project, AttestationNetworkType } from '@/src/types';
 
+//deprecated, may need if we reintroduce attestating on other chains
+
 function useChainSwitcher(project: Project) {
   const { switchChain } = useSwitchChain();
 

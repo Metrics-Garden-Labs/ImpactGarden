@@ -20,6 +20,8 @@ import { ContributionWithAttestationCount } from "@/src/types";
 import { eq, sql, and, isNull, SQL } from "drizzle-orm";
 import { alias, PgSelect } from "drizzle-orm/pg-core";
 
+//this stores all the db queries related to contributions
+
 export const db = drizzle(vercelsql, { schema });
 
 export type NewContribution = typeof contributions.$inferInsert;

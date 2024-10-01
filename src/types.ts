@@ -213,6 +213,7 @@ export interface ProjectAttestations {
   useful_for_understanding?: string;
   effective_for_improvements?: string;
   governance_knowledge?: string;
+  governance_knowledge_number?: string;
   recommend_contribution?: string;
 }
 
@@ -238,10 +239,12 @@ export interface Attestation2 {
   explanation?: string | null;
   likely_to_recommend?: string | null;
   feeling_if_didnt_exist?: string | null;
+  feeling_if_didnt_exist_number?: string | null;
   useful_for_understanding?: string;
   examples_of_usefulness?: string;
   effective_for_improvements?: string;
   governance_knowledge?: string;
+  governance_knowledge_number?: string;
   recommend_contribution?: string;
 }
 export type Attestation3 = {
@@ -258,9 +261,11 @@ export type Attestation3 = {
   logoUrl: string | null;
   likely_to_recommend: string | null | undefined;
   feeling_if_didnt_exist: string | null | undefined;
+  feeling_if_didnt_exist_number?: string | null | undefined;
   useful_for_understanding: string | null | undefined;
   effective_for_improvements: string | null | undefined;
   governance_knowledge: string | null | undefined;
+  governance_knowledge_number?: string | null | undefined;
   recommend_contribution: string | null | undefined;
   attesterAddy: string | null | undefined;
   isdelegate: boolean | null | undefined;
@@ -473,6 +478,7 @@ export interface GovernanceCollabAndOnboardingAttestation {
   ecosystem: string;
   attestationUID: string;
   governance_knowledge: string;
+  governance_knowledge_number: string;
   recommend_contribution: string;
   feeling_if_didnt_exist: string;
   feeling_if_didnt_exist_number: string;
@@ -550,6 +556,7 @@ export interface OnchainBuildersDisplay extends BaseAttestationDisplay {
   feeling_if_didnt_exist: string;
   likely_to_recommend?: string | null;
   governance_knowledge?: string | null;
+  governance_knowledge_number?: string | null;
   useful_for_understanding?: string | null;
   effective_for_improvements?: string | null;
   feeling_if_didnt_exist_number?: string | null;
@@ -563,6 +570,7 @@ export interface OPStackDisplay extends BaseAttestationDisplay {
   feeling_if_didnt_exist_number?: string | null;
   explanation: string;
   governance_knowledge?: string | null;
+  governance_knowledge_number?: string | null;
   useful_for_understanding?: string | null;
   effective_for_improvements?: string | null;
   recommend_contribution?: string | null;
@@ -582,6 +590,7 @@ export interface GovStructuresDisplay extends BaseAttestationDisplay {
   useful_for_understanding?: string | null;
   effective_for_improvements?: string | null;
   governance_knowledge?: string | null;
+  governance_knowledge_number?: string | null;
 }
 
 export interface GovRandADisplay extends BaseAttestationDisplay {
@@ -593,12 +602,14 @@ export interface GovRandADisplay extends BaseAttestationDisplay {
   feeling_if_didnt_exist?: string | null;
   examples_of_usefulness?: string | null;
   governance_knowledge?: string | null;
+  governance_knowledge_number?: string | null;
   likely_to_recommend?: string | null;
   recommend_contribution?: string | null;
 }
 
 export interface GovCollabAndOnboardingDisplay extends BaseAttestationDisplay {
   governance_knowledge: string;
+  governance_knowledge_number: string;
   recommend_contribution: string;
   feeling_if_didnt_exist: string;
   feeling_if_didnt_exist_number?: string | null;
@@ -618,6 +629,7 @@ export interface GovInfraAndToolingDisplay extends BaseAttestationDisplay {
   feeling_if_didnt_exist_number?: string | null;
   examples_of_usefulness?: string | null;
   governance_knowledge?: string | null;
+  governance_knowledge_number?: string | null;
   useful_for_understanding?: string | null;
   recommend_contribution?: string | null;
   effective_for_improvements?: string | null;
@@ -632,6 +644,7 @@ export interface GeneralAttestationDisplay extends BaseAttestationDisplay {
   useful_for_understanding?: string | null;
   recommend_contribution?: string | null;
   governance_knowledge?: string | null;
+  governance_knowledge_number?: string | null;
   effective_for_improvements?: string | null;
   feeling_if_didnt_exist?: string | null;
 }

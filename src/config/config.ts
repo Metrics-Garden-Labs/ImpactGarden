@@ -1,6 +1,8 @@
 import { createGlobalState } from "react-hooks-global-state";
 import { Project } from "../../src/types";
 
+//includes the initial state for the global state, have been using this less in favour of local storage
+
 const initialState = {
   walletAddress: "",
   signerUuid: "",

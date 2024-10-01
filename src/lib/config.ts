@@ -1,11 +1,4 @@
-// //config for the vercel Postgres with drizzle Orm
-
-// import { loadEnvConfig } from "@next/env";
-
-// const projectDir = process.cwd();
-// loadEnvConfig(projectDir);
-
-// src/lib/config.ts
+//config for using vercel postgres with drizzle orm
 
 import { config } from "dotenv";
 

@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
 import { Contribution, AttestationDisplay, Project } from '@/src/types';
 
+//this is used to fetch the contributions and recent attestations for a project
+//series of api calls to get the data
+
 function useContributionData(project: Project, activeTab: string) {
   const [contributions, setContributions] = useState<Contribution[]>([]);
   const [recentAttestations, setRecentAttestations] = useState<AttestationDisplay[]>([]);

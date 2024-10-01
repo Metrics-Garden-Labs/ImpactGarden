@@ -2,6 +2,8 @@
 //mgl  value in the schemas
 //can change the specific values that we are searching for depending on the usecase.
 
+//this is deprecated
+
 export const getAttestationsByAttester = async (
   attesterAddress: string,
   endpoint: string

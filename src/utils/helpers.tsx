@@ -43,3 +43,22 @@ export const getSmileyRatingEmoji = (rating: string): string => {
 
   return ratingEmojiMap[rating] || "Unknown"; // Fallback if rating is out of range
 };
+
+
+//mapping the governance knowledge to a numeric value
+export const mapKnowledgeLevelToNumber = (level: string): number => {
+  switch (level) {
+    case "No Knowledge":
+      return 1;
+    case "Basic Knowledge":
+      return 2;
+    case "Intermediate Knowledge":
+      return 3;
+    case "Advanced Knowledge":
+      return 4;
+    case "Expert Knowledge":
+      return 5;
+    default:
+      return 0; // Return 0 if nothing is selected
+  }
+};

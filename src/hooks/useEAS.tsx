@@ -7,8 +7,9 @@ import { JsonRpcProvider, JsonRpcSigner } from "ethers";
 import { usePublicClient, useWalletClient } from "wagmi";
 
 
-//i've gone a bit over board with the number of chain, will make it easier later
-//not sure how useful this hook is now
+//this hook is used to connect to the EAS sdk
+//also to get the signer and provider of the users wallet connected which is now deprecated
+//still here incase we need it again
 
 // Define network names as a type
 export type AttestationNetworkType =

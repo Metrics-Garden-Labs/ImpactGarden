@@ -10,8 +10,6 @@ import {
   op_delegates,
 } from "../schema";
 import * as schema from "../schema";
-import { getAttestationsByAttester } from "../eas";
-import { Waterfall } from "next/font/google";
 import {
   Project,
   newUserAddresses,
@@ -22,6 +20,8 @@ import {
 import { count } from "console";
 import { desc, sql as drizzlesql } from "drizzle-orm";
 import { inArray, eq, sql } from "drizzle-orm";
+
+//this stores all the db queries related to users
 
 export const db = drizzle(vercelsql, { schema });
 

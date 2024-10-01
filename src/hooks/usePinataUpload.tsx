@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import pinataSDK from '@pinata/sdk';
 
+//this hook is used to upload the metadata to pinata
+
 export const usePinataUpload = () => {
   const [isUploading, setIsUploading] = useState(false);
 

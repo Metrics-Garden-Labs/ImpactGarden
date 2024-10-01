@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+//this was for api calls but is not used anymore
+
 // List of allowed origins
 const allowedOrigins = [
   "https://metricsgarden.xyz",

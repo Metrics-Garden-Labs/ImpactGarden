@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
+//local storage that is used for users to keep data between sessions
+
 type DeserializeFunction<T> = (value: string) => T;
 type SerializeFunction<T> = (value: T) => string;
 

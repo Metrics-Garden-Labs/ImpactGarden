@@ -35,7 +35,7 @@ export const db = drizzle(vercelsql, { schema });
 
 export type NewAttestation = typeof contributionattestations.$inferInsert;
 
-//going to use this one to get the count of the attestations for a contribution
+//this stores all the db queries related to attestations
 
 export const getAttestationsByContribution = async (contribution: string) => {
   try {

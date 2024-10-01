@@ -4,6 +4,8 @@ import { EAS, SchemaEncoder, EIP712AttestationParams } from '@ethereum-attestati
 import { useSigner } from '../../src/hooks/useEAS';
 import { NEXT_PUBLIC_URL } from '../../src/config/config';
 
+//this hook was used to create delegated attestations, this is not used anymore, but may be needed again in the future
+
 export const useDelegatedAttestation = () => {
   const [isCreating, setIsCreating] = useState(false);
   const signer = useSigner();
@@ -22,12 +24,17 @@ export const useDelegatedAttestation = () => {
         throw new Error('Signer is not available');
       }
 
+      //connect to eas
+
       const eas = new EAS('0x4200000000000000000000000000000000000021');
       eas.connect(signer);
 
+  
       const delegatedSigner = await eas.getDelegated();
       const currentAddress = await signer.getAddress();
       const nonce = await eas.getNonce(currentAddress);
+
+      //data needed for signing the attestation
 
       const eip712Data: EIP712AttestationParams = {
         schema,
@@ -48,6 +55,8 @@ export const useDelegatedAttestation = () => {
         signature: signDelegated.signature,
         attester: currentAddress,
       };
+
+      //info is sent to the backend where the transaction takes place. 
 
       const response = await fetch(`${NEXT_PUBLIC_URL}/api/delegateAttestation`, {
         method: 'POST',
