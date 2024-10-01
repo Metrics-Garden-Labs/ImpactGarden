@@ -156,7 +156,7 @@ useEffect(() => {
         
         <div className="bg-white rounded-lg shadow-md p-6 mb-12 w-1/5 max-w-md">
           <Image 
-            src={reviewedProject?.logoUrl || "/placeholder.png"}
+            src={reviewedProject?.logoUrl || ""}
             alt={reviewedProject?.projectName || "Project"}
             width={80}
             height={80}
@@ -189,12 +189,13 @@ useEffect(() => {
                           className="w-full h-full object-contain"
                         />
                       </div>
-                      <h3 className="text-center text-sm font-semibold w-full truncate px-1">{contribution.projectName}</h3>
+                      <h3 className="text-center text-sm font-semibold w-full truncate px-1 break-words">{contribution.projectName}</h3>
                       {contribution.projectName !== contribution.contribution && (
-                        <h4 className="text-center text-xs mt-1 w-full truncate px-1">{contribution.contribution}</h4>
+                        <h4 className="text-center text-xs mt-1 w-full truncate px-1 break-words">{contribution.contribution}</h4>
                       )}
-                      <p className="text-xs text-gray-600 mt-2 mb-3 text-center w-full truncate px-1">{contribution.subcategory}</p>
-                      <p className="text-xs mb-4 text-center w-full line-clamp-2 px-1">{contribution.desc}</p>
+                      <p className="text-xs text-gray-600 mt-2 mb-3 text-center w-full truncate px-1 break-words">{contribution.subcategory}</p>
+                      <p className="text-xs mb-4 text-center w-full line-clamp-2 px-1 break-words">{contribution.desc}</p>
+
                       <button 
                         className="btn btn-primary bg-black text-xs text-white items-center hover:bg-gray-800 px-2 py-1 rounded"
                         onClick={() => openModal(contribution)}

@@ -63,7 +63,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, project, c
           </div>
         )}
         <div className="mb-4 text-center">
-          <Link href={`/projects/${encodeURIComponent(project.projectName)}`}>
+          <Link href={`/projects/${encodeURIComponent(project?.primaryprojectuid || '')}`}>
             <button className='btn bg-[#353436] text-white hover:text-black'>
               View Project Profile
             </button>

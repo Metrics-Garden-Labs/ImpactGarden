@@ -4,6 +4,8 @@ import { Project, ProjectCount, SearchResult } from '@/src/types';
 import Image from 'next/image';
 import useLocalStorage from '@/src/hooks/use-local-storage-state';
 import ProjectModal from '@/app/components/searchProjects/ProjectModal';
+import SpinnerIcon from '../ui/spinnermgl/mglspinner';
+import Mgltree from '../ui/spinnermgl/mgltree';
 
 interface Props {
   projects: (Project | ProjectCount)[];
@@ -25,7 +27,7 @@ export default function ProjectList({
   const [modalOpen, setModalOpen] = useState(false);
   const [visibleProjects, setVisibleProjects] = useState(12);
   const [isLoading, setIsLoading] = useState(false);
-  const [isFiltering, setIsFiltering] = useState(false);  // New state to manage filtering/loading
+  const [isFiltering, setIsFiltering] = useState(false); 
   const observerTarget = useRef(null);
 
   // Set isFiltering to true when sortOrder or filter changes
@@ -73,10 +75,11 @@ export default function ProjectList({
       setTimeout(() => {
         setVisibleProjects((prev) => prev + 12);
         setIsLoading(false);
-      }, 100); // Simulating a delay, remove if not needed
+      }, 200); // Simulating a delay, otherwise it loads to fast and is jerky
     }
   }, [isLoading, visibleProjects, sortedProjects.length]);
 
+  //auto load when the user scrolls to the bottom
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -165,9 +168,12 @@ export default function ProjectList({
       {visibleProjects < sortedProjects.length && !isFiltering && (
         <div ref={observerTarget} className="flex justify-center my-8">
           {isLoading ? (
-            <p>Loading more projects...</p>
+            <div className="flex justify-center items-center mb-6 mt-6">
+            <SpinnerIcon className="spinner w-16 h-16" />
+            <Mgltree className="absolute w-12 h-12" />
+          </div>
           ) : (
-            <p>Scroll for more</p>
+            <p className="text-xl font-bold">Scroll for more</p>
           )}
         </div>
       )}

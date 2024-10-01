@@ -1,4 +1,9 @@
 'use client';
+
+//commented out sections of the code are related to the wallet connection/delegated attestation, this may be reintroduced at a later date
+//DONT DELETE
+
+
 import React, { useEffect, useState } from 'react';
 import { NEXT_PUBLIC_URL, useGlobalState } from '@/src/config/config';
 import { AttestationNetworkType, CategoryKey, Contribution, ContributionWithAttestationCount, Project, higherCategoryKey } from '@/src/types';

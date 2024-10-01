@@ -434,3 +434,24 @@ export const getProjectAttestationCount = async (
     throw error;
   }
 };
+
+export const getProjectByPrimaryProjectUid = async (
+  primaryProjectUid: string
+) => {
+  try {
+    const project = await db
+      .select()
+      .from(projects)
+      .where(eq(projects.primaryprojectuid, primaryProjectUid))
+      .limit(1);
+
+    if (project.length === 0) {
+      throw new Error(`Project not found: ${primaryProjectUid}`);
+    }
+
+    return project[0].projectName;
+  } catch (error) {
+    console.error(`Error retrieving project by primary project uid:`, error);
+    throw error;
+  }
+};

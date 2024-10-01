@@ -1,4 +1,4 @@
-import { ProjectCategories, getProjectByName } from '../../../../../src/lib/db/dbprojects';
+import { ProjectCategories, getProjectByName, getProjectByPrimaryProjectUid } from '../../../../../src/lib/db/dbprojects';
 import { getAttestationsByContribution } from '../../../../../src/lib/db/dbattestations';
 import { getContributionByEasUid } from '../../../../../src/lib/db/dbcontributions';
 import { Contribution, Project } from '../../../../../src/types';
@@ -10,13 +10,14 @@ import { Metadata } from 'next';
 
 interface ContributionPageProps {
   params: {
-    projectName: string;
+    primaryprojectuid: string;
     contributioneasUid: string;
   };
 }
 
 export async function generateMetadata({ params }: ContributionPageProps): Promise<Metadata> {
-  const { projectName, contributioneasUid } = params;
+  const { primaryprojectuid, contributioneasUid } = params;
+  const projectName = await getProjectByPrimaryProjectUid(primaryprojectuid);
   const decodedProjectName = decodeURIComponent(projectName);
   return {
     title: `Impact Garden - ${decodedProjectName}`,
@@ -24,7 +25,8 @@ export async function generateMetadata({ params }: ContributionPageProps): Promi
 }
 
 const ContributionDetailsPage = async ({ params }: ContributionPageProps) => {
-  const { projectName, contributioneasUid } = params;
+  const { primaryprojectuid, contributioneasUid } = params;
+  const projectName = await getProjectByPrimaryProjectUid(primaryprojectuid);
   const decodedProjectName = decodeURIComponent(projectName);
 
   try {

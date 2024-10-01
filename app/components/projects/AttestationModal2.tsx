@@ -1,5 +1,7 @@
 'use client';
 
+//TODO: test the new compiled data
+
 import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
@@ -57,7 +59,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   });
 
   const { uploadToPinata, isUploading } = usePinataUpload();
-  const { createDelegatedAttestation, isCreating: isCreatingDelegated } = useDelegatedAttestation();
+  // const { createDelegatedAttestation, isCreating: isCreatingDelegated } = useDelegatedAttestation();
   const { createNormalAttestation, isCreating: isCreatingNormal } = useNormalAttestation();
 
   const router = useRouter();
@@ -124,13 +126,13 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     }
   };
 
-  const compileFormData = (commonData: any, specificData: any) => {
-    const { governancetype, ...restOfCommonData } = commonData;
-    return {
-      ...restOfCommonData,
-      data: specificData,
-    };
-  };
+  // const compileFormData = (commonData: any, specificData: any) => {
+  //   const { governancetype, ...restOfCommonData } = commonData;
+  //   return {
+  //     ...restOfCommonData,
+  //     data: specificData,
+  //   };
+  // };
 
   const handleFormSubmit = async (formData: any) => {
     try {
@@ -141,14 +143,19 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
       switch (contribution?.category) {
         case 'Onchain Builders':
           specificData = {
+            name: "Feeling if didnt exist",
             likely_to_recommend: formData.likely_to_recommend,
             feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
+            round: "RF4"
           }
           break;
         case 'OP Stack':
           specificData = {
+            name: "Feeling if didnt exist",
             feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
+            feeling_if_didnt_exist_number: formData.feeling_if_didnt_exist_number,
             explanation: formData.explanation,
+            round: 'RF5'
           }
           break;
         case 'Governance':
@@ -157,15 +164,21 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
               specificData = {
                 governance_knowledge: formData.governance_knowledge,
                 recommend_contribution: formData.recommend_contribution,
+                name: "Feeling if didnt exist",
                 feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
+                feeling_if_didnt_exist_number: formData.feeling_if_didnt_exist_number,
                 explanation: formData.explanation,
+                round: 'RF6'
               }
               break;
             case 'Infra & Tooling':
               specificData = {
                 likely_to_recommend: formData.likely_to_recommend,
+                name: "Feeling if didnt exist",
                 feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
+                feeling_if_didnt_exist_number: formData.feeling_if_didnt_exist_number || "",
                 explanation: formData.explanation,
+                round: 'RF6'
               }
               break;
             case 'Governance Research & Analytics':
@@ -174,13 +187,16 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 useful_for_understanding: formData.useful_for_understanding,
                 effective_for_improvements: formData.effective_for_improvements,
                 explanation: formData.explanation,
+                round: 'RF6'
               }
               break;
             case 'Governance Structures':
               specificData = {
+                name: "Feeling if didnt exist",
                 feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
                 why: formData.why,
                 explanation: formData.explanation,
+                round: 'RF6'
               }
               break;
             default:
@@ -191,10 +207,55 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
           throw new Error('Unknown category');
       }
 
-      const compiledData = compileFormData(contribution, specificData);
-      console.log('Compiled Data:', compiledData);
+      //the speciifc data without the round
+      const destructuredSpecificData = Object.fromEntries(
+        Object.entries(specificData).filter(([key]) => key !== 'round')
+      );
 
-      const pinataURL = await uploadToPinata(compiledData);
+      const newCompiledData = {
+        id: contribution?.id,
+        project : {
+          name: project?.projectName,
+          description: project?.oneliner,
+          website: project?.websiteUrl,
+        },
+        reviewer: {
+          userFID: user.fid,
+          ethAddress: user.ethAddress || zeroAddress,
+        },
+        context: {
+          ecosystems: [
+            {
+              name: contribution?.ecosystem,
+              tags: [
+                {
+                  category: contribution?.category,
+                  subcategory: contribution?.subcategory,
+                  round: specificData.round, 
+                }
+              ]
+            }
+          ],
+          userInterface: "Metrics Garden"
+        },
+        contributions: [
+          {
+            name: contribution?.projectName,
+            description: contribution?.contribution,
+            website: project?.websiteUrl,
+          }
+        ],
+        impactAttestations: [
+          {
+            ...destructuredSpecificData
+          }
+        ]
+      }
+
+      // const compiledData = compileFormData(newCompiledData);
+      // console.log('Compiled Data:',newCompiledData);
+
+      const pinataURL = await uploadToPinata(newCompiledData);
       if (!pinataURL) throw new Error('Failed to upload data to IPFS');
 
       const attestationUID = await createAttestation(pinataURL);

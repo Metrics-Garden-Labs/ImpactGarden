@@ -56,8 +56,10 @@ export default function ProfilePage({
 
   const pathname = usePathname();
   const router = useRouter();
+  console.log('router', router);
   const params = useParams();
-  const projectName = params.projectName as string;
+  console.log('params', params);
+  const primaryprojectuid = params.primaryprojectuid as string;
   const contributioneasUid = params.contributioneasUid as string;
 
   // useChainSwitcher(project);

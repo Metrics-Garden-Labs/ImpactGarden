@@ -410,6 +410,7 @@ export interface OnchainBuildersAttestation {
   attestationUID: string;
   recommend_contribution: string;
   feeling_if_didnt_exist: string;
+  feeling_if_didnt_exist_number: string;
   createdAt?: Date;
 }
 
@@ -423,6 +424,7 @@ export interface OPStackAttestation {
   ecosystem: string;
   attestationUID: string;
   feeling_if_didnt_exist: string;
+  feeling_if_didnt_exist_number: string;
   explanation: string;
   createdAt?: Date;
 }
@@ -438,6 +440,7 @@ export interface GovernanceInfraAndToolingAttestation {
   attestationUID: string;
   likely_to_recommend: string;
   feeling_if_didnt_exist: string;
+  feeling_if_didnt_exist_number: string;
   explanation: string;
   private_feedback: string;
   createdAt?: Date;
@@ -472,6 +475,7 @@ export interface GovernanceCollabAndOnboardingAttestation {
   governance_knowledge: string;
   recommend_contribution: string;
   feeling_if_didnt_exist: string;
+  feeling_if_didnt_exist_number: string;
   explanation: string;
   private_feedback: string;
   createdAt?: Date;
@@ -487,6 +491,7 @@ export interface GovernanceStrucutresAttestation {
   ecosystem: string;
   attestationUID: string;
   feeling_if_didnt_exist: string;
+  feeling_if_didnt_exist_number: string;
   explanation: string;
   examples_of_usefulness: string;
   private_feedback: string;
@@ -547,6 +552,7 @@ export interface OnchainBuildersDisplay extends BaseAttestationDisplay {
   governance_knowledge?: string | null;
   useful_for_understanding?: string | null;
   effective_for_improvements?: string | null;
+  feeling_if_didnt_exist_number?: string | null;
   explanation?: string;
   rating?: string;
   examples_of_usefulness?: string | null;
@@ -554,6 +560,7 @@ export interface OnchainBuildersDisplay extends BaseAttestationDisplay {
 
 export interface OPStackDisplay extends BaseAttestationDisplay {
   feeling_if_didnt_exist: string;
+  feeling_if_didnt_exist_number?: string | null;
   explanation: string;
   governance_knowledge?: string | null;
   useful_for_understanding?: string | null;
@@ -567,6 +574,7 @@ export interface OPStackDisplay extends BaseAttestationDisplay {
 export interface GovStructuresDisplay extends BaseAttestationDisplay {
   explanation: string;
   examples_of_usefulness: string;
+  feeling_if_didnt_exist_number?: string | null;
   recommend_contribution?: string | null;
   rating?: string;
   feeling_if_didnt_exist: string;
@@ -579,6 +587,7 @@ export interface GovStructuresDisplay extends BaseAttestationDisplay {
 export interface GovRandADisplay extends BaseAttestationDisplay {
   useful_for_understanding: string;
   effective_for_improvements: string;
+  feeling_if_didnt_exist_number?: string | null;
   explanation: string;
   rating?: string;
   feeling_if_didnt_exist?: string | null;
@@ -592,6 +601,7 @@ export interface GovCollabAndOnboardingDisplay extends BaseAttestationDisplay {
   governance_knowledge: string;
   recommend_contribution: string;
   feeling_if_didnt_exist: string;
+  feeling_if_didnt_exist_number?: string | null;
   explanation: string;
   rating?: string;
   useful_for_understanding?: string | null;
@@ -605,6 +615,7 @@ export interface GovInfraAndToolingDisplay extends BaseAttestationDisplay {
   explanation: string;
   rating?: string;
   feeling_if_didnt_exist?: string | null;
+  feeling_if_didnt_exist_number?: string | null;
   examples_of_usefulness?: string | null;
   governance_knowledge?: string | null;
   useful_for_understanding?: string | null;

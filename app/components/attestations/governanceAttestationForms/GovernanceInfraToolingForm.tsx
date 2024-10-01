@@ -29,6 +29,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
 }) => {
   const [localRating1, setLocalRating1] = useState(rating1);
   const [localSmileyRating, setLocalSmileyRating] = useState(smileyRating);
+  const [localSmileyRatingNumber, setLocalSmileyRatingNumber] = useState(smileyRating);
   const [localFeedback, setLocalFeedback] = useState(feedback);
   const [localExtraFeedback, setLocalExtraFeedback] = useState(extrafeedback);
 
@@ -50,6 +51,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
     const formData = {
       likely_to_recommend: localRating1,
       feeling_if_didnt_exist: smileyRatingLabel,
+      feeling_if_didnt_exist_number: localSmileyRatingNumber,
       explanation: localFeedback,
       private_feedback: localExtraFeedback,
     };

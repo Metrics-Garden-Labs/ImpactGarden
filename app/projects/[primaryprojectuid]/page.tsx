@@ -1,4 +1,4 @@
-import { ProjectCategories, getProjectByName } from '../../../src/lib/db/dbprojects';
+import { ProjectCategories, getProjectByName, getProjectByPrimaryProjectUid } from '../../../src/lib/db/dbprojects';
 import { getContributionsByProjectName, getContributionsWithAttestationCounts } from '../../../src/lib/db/dbcontributions';
 import { getAttestationCountByProject } from '../../../src/lib/db/dbattestations';
 import { Contribution, Project } from '../../../src/types';
@@ -10,21 +10,22 @@ import { Metadata } from 'next';
 
 interface Props {
   params?: {
-    projectName?: string;
+    primaryprojectuid?: string;
   };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const encodedProjectName = params?.projectName || '';
-  const decodedProjectName = decodeURIComponent(encodedProjectName);
+  const projectName = await getProjectByPrimaryProjectUid(params?.primaryprojectuid || '');
+  const decodedProjectName = decodeURIComponent(projectName);
   return {
     title: `Impact Garden - ${decodedProjectName}`,
   };
 }
 
 const ProjectPage = async ({ params }: Props) => {
-  const encodedProjectName = params?.projectName || '';
-  const decodedProjectName = decodeURIComponent(encodedProjectName);
+  const primaryProjectUid = params?.primaryprojectuid || '';
+  const projectName = await getProjectByPrimaryProjectUid(primaryProjectUid);
+  const decodedProjectName = decodeURIComponent(projectName);
   
   try {
     const [categoryData, contributions, project, projectAttestations] = await Promise.all([

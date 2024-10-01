@@ -9,6 +9,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import UserDropdown from './userSignoutDropdown';
 import { zeroAddress } from 'viem';
 
+
 dotenv.config();
 
 declare global {
@@ -21,13 +22,32 @@ interface SignInSuccessData {
   signer_uuid: string;
   fid: string;
   is_authenticated: boolean;
-  user: {
-    username: string;
-    ethAddress: string;
-    pfp_url: string;
-  };
   signer_permissions: string[];
+  user: {
+    active_status: string;
+    custody_address: string;
+    display_name: string;
+    fid: string;
+    follower_count: number;
+    following_count: number;
+    object: string;
+    pfp_url: string;
+    power_badge: boolean;
+    profile: {
+      bio: {
+        text: string;
+      } 
+    };
+    username: string;
+    verifications: string[];  
+    verified_addresses: {
+      eth_addresses: string[];  
+      sol_addresses?: string[]; 
+    };
+  };
 }
+
+
 
 interface UserLogin {
   fid: string;
@@ -53,6 +73,7 @@ const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
   const [firstVerifiedEthAddress, setFirstVerifiedEthAddress] = useGlobalState("ethAddress");
   const [isSignedIn, setIsSignedIn] = useState(Boolean(user.fid));
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
 
   const client_id = process.env.NEXT_PUBLIC_NEYNAR_CLIENT_ID;
 
@@ -80,23 +101,24 @@ const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
       const isVerifiedUser = await verifyUser(data.signer_uuid, data.fid);
       if (isVerifiedUser && data.is_authenticated) {
         setIsAuthenticated(true);
-        await fetchData(data.fid);
-        setIsSignedIn(true);
-        removeSearchParams();
         const updatedUser = {
           fid: data.fid,
           username: data.user.username,
-          ethAddress: data.user.ethAddress,
+          ethAddress: data.user.verified_addresses.eth_addresses[0],
           isAuthenticated: true,
         };
+        await fetchData(data.fid, updatedUser);
+        setIsSignedIn(true);
+        removeSearchParams();
+        
         setUser(updatedUser);
         onLoginSuccess(updatedUser);
-        onLoginSuccess(updatedUser);
-        console.log("User verified successfully", user);
       } else {
         console.error("User verification failed");
       }
     };
+
+    console.log("User", user);
 
     return () => {
       window.onSignInSuccess = undefined;
@@ -114,7 +136,7 @@ const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
     setIsAuthenticated(false);
   };
 
-  async function fetchData(fid: string) {
+  async function fetchData(fid: string, updatedUser: UserLogin) {
     try {
       const response = await fetch(`${NEXT_PUBLIC_URL}/api/login`, {
         method: 'POST',
@@ -127,18 +149,6 @@ const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
       if (response.ok) {
         const data = await response.json();
         console.log("Data", data);
-        const updatedUser = {
-          fid: fid.toString(),
-          username: data.username,
-          ethAddress: data.ethAddress || zeroAddress,
-          isAuthenticated: true,
-        };
-        setUser(updatedUser);
-        setUsername(data.username);
-        setFirstVerifiedEthAddress(data.ethAddress || zeroAddress);
-        setIsSignedIn(true);
-        onLoginSuccess(updatedUser); // Call onLoginSuccess here
-        console.log("New User, ", updatedUser);
       }
     } catch (error) {
       console.error('Error fetching data', error);

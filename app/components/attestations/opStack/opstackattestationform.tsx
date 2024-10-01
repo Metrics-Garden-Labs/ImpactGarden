@@ -22,6 +22,7 @@ const OPStackAttestationForm: React.FC<OPStackAttestationFormProps> = ({
 }) => {
     const [localSmileyRating, setLocalSmileyRating] = useState(smileyRating);
     const [localFeedback, setLocalFeedback] = useState(feedback);
+    const [localSmileyRatingNumber, setLocalSmileyRatingNumber] = useState(smileyRating);
 
     const additionalInfo = [
         "The absence of this tool would have little to no impact on my work.",
@@ -40,6 +41,7 @@ const OPStackAttestationForm: React.FC<OPStackAttestationFormProps> = ({
           
         const formData = {
             feeling_if_didnt_exist: smileyRatingLabel,
+            feeling_if_didnt_exist_number: localSmileyRatingNumber,
             explanation: localFeedback,
         };
         onSubmit(formData);
