@@ -29,7 +29,6 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
   const [knowledgeLevel, setKnowledgeLevel] = useState('');
   const [localRating1, setLocalRating1] = useState(rating1);
   const [localSmileyRating, setLocalSmileyRating] = useState(smileyRating);
-  const [localSmileyRatingNumber, setLocalSmileyRatingNumber] = useState(smileyRating);
   const [localFeedback, setLocalFeedback] = useState(feedback);
   const [localExtraFeedback, setLocalExtraFeedback] = useState(extrafeedback);
 
@@ -57,7 +56,7 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
       governance_knowledge: knowledgeLevel,
       recommend_contribution: localRating1.toString(),
       feeling_if_didnt_exist: smileyRatingLabel,
-      feeling_if_didnt_exist_number: localSmileyRatingNumber,
+      feeling_if_didnt_exist_number: localSmileyRating,
       explanation: localFeedback,
       private_feedback: localExtraFeedback,
     };

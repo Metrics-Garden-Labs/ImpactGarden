@@ -44,6 +44,7 @@ export const POST = async (request: Request) => {
           githubUrl: projects.githubUrl,
           logoUrl: projects.logoUrl,
           projectUid: projects.projectUid,
+          primaryprojectuid: projects.primaryprojectuid,
           createdAt: projects.createdAt,
         })
         .from(projects)
@@ -73,6 +74,7 @@ export const POST = async (request: Request) => {
           githubUrl: projects.githubUrl,
           logoUrl: projects.logoUrl,
           projectUid: projects.projectUid,
+          primaryprojectuid: projects.primaryprojectuid,
           createdAt: projects.createdAt,
         })
         .from(projects)

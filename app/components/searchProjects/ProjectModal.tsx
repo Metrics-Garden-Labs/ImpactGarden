@@ -14,6 +14,8 @@ interface ProjectModalProps {
 const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, project, checkwebsiteUrl }) => {
   if (!isOpen || !project) return null;
 
+  console.log("project", project);
+
   return (
     <div className="fixed inset-0 bg-white bg-opacity-50 flex justify-center items-center">
       <div
@@ -63,7 +65,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, project, c
           </div>
         )}
         <div className="mb-4 text-center">
-          <Link href={`/projects/${encodeURIComponent(project?.primaryprojectuid || '')}`}>
+          <Link href={`/projects/${encodeURIComponent(project?.primaryprojectuid ||"")}`}>
             <button className='btn bg-[#353436] text-white hover:text-black'>
               View Project Profile
             </button>

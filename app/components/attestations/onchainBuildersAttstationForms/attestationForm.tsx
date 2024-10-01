@@ -29,7 +29,6 @@ const OnchainBuilders: React.FC<OnchainBuildersProps> = ({
   const [localSmileyRating, setLocalSmileyRating] = useState(smileyRating);
   const [localFeedback, setLocalFeedback] = useState(feedback);
   const [localExtraFeedback, setLocalExtraFeedback] = useState(extrafeedback);
-  const [localSmileyRatingNumber, setLocalSmileyRatingNumber] = useState(smileyRating);
 
   const additionalInfo = [
     "The absence of this project would have little to no impact on my life.",
@@ -51,7 +50,7 @@ const OnchainBuilders: React.FC<OnchainBuildersProps> = ({
     const formData = {
       recommend_contribution: localRating1.toString(),
       feeling_if_didnt_exist: smileyRatingLabel,
-      feeling_if_didnt_exist_number: localSmileyRatingNumber,
+      feeling_if_didnt_exist_number: localSmileyRating,
       explanation: localFeedback,
       private_feedback: localExtraFeedback,
     };

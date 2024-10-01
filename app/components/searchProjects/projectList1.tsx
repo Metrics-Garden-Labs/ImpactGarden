@@ -69,6 +69,7 @@ export default function ProjectList({
     return sorted;
   }, [filteredProjects, sortOrder]);
 
+
   const loadMoreProjects = useCallback(() => {
     if (!isLoading && visibleProjects < sortedProjects.length) {
       setIsLoading(true);
@@ -103,6 +104,7 @@ export default function ProjectList({
 
   const openModal = (project: Project | ProjectCount) => {
     setSelectedProject(project);
+    console.log("project", project);
     setSelectedProjectName(project.projectName);
     setModalOpen(true);
   };

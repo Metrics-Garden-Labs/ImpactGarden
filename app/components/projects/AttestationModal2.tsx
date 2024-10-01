@@ -212,6 +212,8 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
         Object.entries(specificData).filter(([key]) => key !== 'round')
       );
 
+      //for the older categories, use the old pinata information
+
       const newCompiledData = {
         id: contribution?.id,
         project : {

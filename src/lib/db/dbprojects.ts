@@ -60,7 +60,21 @@ export const getProjectsByCategoryAndSubcategory = async (
         .groupBy(contributions.projectName);
 
       query = db
-        .select()
+        .select({
+          id: projects.id,
+          userFid: projects.userFid,
+          ethAddress: projects.ethAddress,
+          ecosystem: projects.ecosystem,
+          projectName: projects.projectName,
+          oneliner: projects.oneliner,
+          websiteUrl: projects.websiteUrl,
+          twitterUrl: projects.twitterUrl,
+          githubUrl: projects.githubUrl,
+          logoUrl: projects.logoUrl,
+          primaryprojectuid: projects.primaryprojectuid, // Explicitly select this field
+          projectUid: projects.projectUid,
+          createdAt: projects.createdAt,
+        })
         .from(projects)
         .where(inArray(projects.projectName, subquery));
     } else if (category) {
@@ -72,12 +86,42 @@ export const getProjectsByCategoryAndSubcategory = async (
         .groupBy(contributions.projectName);
 
       query = db
-        .select()
+        .select({
+          id: projects.id,
+          userFid: projects.userFid,
+          ethAddress: projects.ethAddress,
+          ecosystem: projects.ecosystem,
+          projectName: projects.projectName,
+          oneliner: projects.oneliner,
+          websiteUrl: projects.websiteUrl,
+          twitterUrl: projects.twitterUrl,
+          githubUrl: projects.githubUrl,
+          logoUrl: projects.logoUrl,
+          primaryprojectuid: projects.primaryprojectuid, // Explicitly select this field
+          projectUid: projects.projectUid,
+          createdAt: projects.createdAt,
+        })
         .from(projects)
         .where(inArray(projects.projectName, subquery));
     } else {
       // Fallback if no category or subcategory is provided
-      query = db.select().from(projects);
+      query = db
+        .select({
+          id: projects.id,
+          userFid: projects.userFid,
+          ethAddress: projects.ethAddress,
+          ecosystem: projects.ecosystem,
+          projectName: projects.projectName,
+          oneliner: projects.oneliner,
+          websiteUrl: projects.websiteUrl,
+          twitterUrl: projects.twitterUrl,
+          githubUrl: projects.githubUrl,
+          logoUrl: projects.logoUrl,
+          primaryprojectuid: projects.primaryprojectuid, // Explicitly select this field
+          projectUid: projects.projectUid,
+          createdAt: projects.createdAt,
+        })
+        .from(projects);
     }
 
     const dbProjects = await query.execute();
@@ -92,6 +136,7 @@ export const getProjectsByCategoryAndSubcategory = async (
     throw error;
   }
 };
+
 // export const getProjects = async (filter: string = "") => {
 //   try {
 //     console.log("Filter db", filter);

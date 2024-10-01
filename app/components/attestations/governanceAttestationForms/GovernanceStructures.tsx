@@ -34,7 +34,6 @@ const GovernanceStructuresFrom: React.FC<GovernanceStructuresFormProps> = ({
   const [localFeedback2, setLocalFeedback2] = useState(feedback2);
   const [localExtraFeedback, setLocalExtraFeedback] = useState(extrafeedback);
   const [localSmileyRating, setLocalSmileyRating] = useState(smileyRating);
-  const [localSmileyRatingNumber, setLocalSmileyRatingNumber] = useState(smileyRating);
   const additionalInfo = [
     "The absence of this tool would have little to no impact on my work.",
     "The absence of this tool would cause considerable inconvenience.",
@@ -54,7 +53,7 @@ const GovernanceStructuresFrom: React.FC<GovernanceStructuresFormProps> = ({
       feeling_if_didnt_exist: smileyRatingLabel,
       why: localFeedback1,
       explanation: localFeedback2,
-      feeling_if_didnt_exist_number: localSmileyRatingNumber,
+      feeling_if_didnt_exist_number: localSmileyRating,
       private_feedback: localExtraFeedback,
     };
     onSubmit(formData);
