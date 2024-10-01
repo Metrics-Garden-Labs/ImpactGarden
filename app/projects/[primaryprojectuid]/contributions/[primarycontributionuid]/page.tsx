@@ -1,6 +1,6 @@
 import { ProjectCategories, getProjectByName, getProjectByPrimaryProjectUid } from '../../../../../src/lib/db/dbprojects';
 import { getAttestationsByContribution } from '../../../../../src/lib/db/dbattestations';
-import { getContributionByEasUid } from '../../../../../src/lib/db/dbcontributions';
+import { getContributionByPrimaryContributionUid } from '../../../../../src/lib/db/dbcontributions';
 import { Contribution, Project } from '../../../../../src/types';
 import Footer from '../../../../components/ui/Footer';
 import Sidebar from '@/app/components/projects/Sidebar';
@@ -11,12 +11,12 @@ import { Metadata } from 'next';
 interface ContributionPageProps {
   params: {
     primaryprojectuid: string;
-    contributioneasUid: string;
+    primarycontributionuid: string;
   };
 }
 
 export async function generateMetadata({ params }: ContributionPageProps): Promise<Metadata> {
-  const { primaryprojectuid, contributioneasUid } = params;
+  const { primaryprojectuid, primarycontributionuid } = params;
   const projectName = await getProjectByPrimaryProjectUid(primaryprojectuid);
   const decodedProjectName = decodeURIComponent(projectName);
   return {
@@ -25,15 +25,15 @@ export async function generateMetadata({ params }: ContributionPageProps): Promi
 }
 
 const ContributionDetailsPage = async ({ params }: ContributionPageProps) => {
-  const { primaryprojectuid, contributioneasUid } = params;
+  const { primaryprojectuid, primarycontributionuid } = params;
   const projectName = await getProjectByPrimaryProjectUid(primaryprojectuid);
   const decodedProjectName = decodeURIComponent(projectName);
 
   try {
     const [contribution, project, contributionAttestations, categoryData] = await Promise.all([
-      getContributionByEasUid(contributioneasUid),
+      getContributionByPrimaryContributionUid(primarycontributionuid),
       getProjectByName(decodedProjectName),
-      getAttestationsByContribution(contributioneasUid),
+      getAttestationsByContribution(primarycontributionuid),
       ProjectCategories(decodedProjectName)
     ]);
 

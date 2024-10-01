@@ -142,16 +142,18 @@ export const getUserReviews = async (userFid: string, category: string) => {
 };
 
 //get the contribution by the id
-export const getContributionByEasUid = async (contributioneasUid: string) => {
+export const getContributionByPrimaryContributionUid = async (
+  primarycontributionuid: string
+) => {
   try {
     const contribution = await db
       .select()
       .from(contributions)
-      .where(eq(contributions.easUid, contributioneasUid))
+      .where(eq(contributions.primarycontributionuid, primarycontributionuid))
       .limit(1);
 
     if (contribution.length === 0) {
-      throw new Error(`Contribution not found: ${contributioneasUid}`);
+      throw new Error(`Contribution not found: ${primarycontributionuid}`);
     }
     console.log("Contribution:", contribution[0]);
 
