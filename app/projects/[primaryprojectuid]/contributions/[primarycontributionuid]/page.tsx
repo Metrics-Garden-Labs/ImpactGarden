@@ -1,5 +1,5 @@
 import { ProjectCategories, getProjectByName, getProjectByPrimaryProjectUid } from '../../../../../src/lib/db/dbprojects';
-import { getAttestationsByContribution } from '../../../../../src/lib/db/dbattestations';
+import { getAttestationsByContribution, getAttestationsByContributionAndSubcategory } from '../../../../../src/lib/db/dbattestations';
 import { getContributionByPrimaryContributionUid } from '../../../../../src/lib/db/dbcontributions';
 import { Contribution, Project } from '../../../../../src/types';
 import Footer from '../../../../components/ui/Footer';
@@ -34,10 +34,11 @@ const ContributionDetailsPage = async ({ params }: ContributionPageProps) => {
       getContributionByPrimaryContributionUid(primarycontributionuid),
       getProjectByName(decodedProjectName),
       getAttestationsByContribution(primarycontributionuid),
-      ProjectCategories(decodedProjectName)
+      ProjectCategories(decodedProjectName),
     ]);
 
-    const attestationCount = contributionAttestations.length;
+    const contributionAttestationsBeforeCount = await getAttestationsByContributionAndSubcategory(contribution.contribution, contribution?.category ?? '', contribution?.subcategory ?? '')
+    const attestationCount = contributionAttestationsBeforeCount.length;
     const { categories, subcategories } = categoryData;
 
     return (

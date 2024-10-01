@@ -51,6 +51,14 @@ export const getAttestationsByContribution = async (contribution: string) => {
   }
 };
 
+export const getAttestationsByContibutionCount = async (
+  contribution: string,
+  category: string,
+  subcategory: string
+) => {
+  //this will get the attestations depending on the category and subcategory, will have to go through the correct table for the contribution
+};
+
 export const getContributionAttestationList = async (contribution: string) => {
   try {
     const contributionAttestationsList = await db

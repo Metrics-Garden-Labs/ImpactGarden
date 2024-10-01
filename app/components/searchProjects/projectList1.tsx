@@ -33,7 +33,7 @@ export default function ProjectList({
   // Set isFiltering to true when sortOrder or filter changes
   useEffect(() => {
     setIsFiltering(true);
-    const timer = setTimeout(() => setIsFiltering(false), 300); // Simulating a delay for filtering
+    const timer = setTimeout(() => setIsFiltering(false), 600); // Simulating a delay for filtering
     return () => clearTimeout(timer);
   }, [sortOrder, filter]);
 
