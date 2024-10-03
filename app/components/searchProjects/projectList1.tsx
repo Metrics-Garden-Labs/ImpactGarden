@@ -135,7 +135,7 @@ export default function ProjectList({
           sortedProjects.slice(0, visibleProjects).map((project) => (
             <div
               key={project.id}
-              className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-md w-full h-66 shadow-xl"
+              className="flex flex-col p-6 border cursor-pointer justify-center items-center bg-white text-black border-gray-300 rounded-md w-full h-66 shadow-xl"
               onClick={() => openModal(project)}
             >
               <div className="rounded-md bg-gray-300 w-24 h-24 flex items-center justify-center overflow-hidden mb-4">
