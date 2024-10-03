@@ -2,7 +2,7 @@ import React from 'react';
 import { getUserByUsername, getUserAddressesByFid, getUserProjectAttestations } from '@/src/lib/db/dbusers';
 import { getProjectsByUserId } from '@/src/lib/db/dbprojects';
 import { getAttestationsByUserId } from '@/src/lib/db/dbattestations';
-import { Attestation, Attestation2, Project, User } from '@/src/types';
+import { Attestation, Attestation2, Attestation4, Project, User } from '@/src/types';
 import Image from 'next/image';
 import { getUserBadgeStatus } from '@/src/utils/badges/badgeHelper';
 import {BadgeDisplay} from '@/app/components/ui/BadgeDisplay';
@@ -13,7 +13,7 @@ interface Props {
 
 const UserHeader = async ({ user }: Props) => {
   // The number of attestations they have given to other projects
-  let attestations: Attestation2[] = await getAttestationsByUserId(user.fid);
+  let attestations: Attestation4[] = await getAttestationsByUserId(user.fid);
   // The names of these projects
   const attestedProjectNames = [...new Set(attestations.map((attestation) => attestation.projectName))];
   // Their ecosystems

@@ -27,6 +27,7 @@ import {
   Attestation2,
   Attestation3,
   ProjectAttestations,
+  Attestation4,
 } from "@/src/types";
 import { desc, sql as drizzlesql } from "drizzle-orm";
 import { inArray, eq, sql } from "drizzle-orm";
@@ -135,7 +136,7 @@ export const getAttestationCountByProject = async (projectName: string) => {
 // src/lib/db.ts
 export const getAttestationsByUserId = async (
   userFid: string
-): Promise<Attestation2[]> => {
+): Promise<Attestation4[]> => {
   try {
     const contributionAttestations = await db
       .select()
@@ -180,7 +181,7 @@ export const getAttestationsByUserId = async (
       .execute();
 
     // Normalize the data to fit Attestation2 interface
-    const normalizeAttestation = (att: any): Attestation2 => ({
+    const normalizeAttestation = (att: any): Attestation4 => ({
       id: att.id,
       userFid: att.userFid || att.userfid,
       projectName: att.projectName,
@@ -206,7 +207,7 @@ export const getAttestationsByUserId = async (
     });
 
     // Combine and normalize all attestations
-    const allAttestations: Attestation2[] = [
+    const allAttestations: Attestation4[] = [
       ...contributionAttestations.map(normalizeAttestation),
       ...infraToolingAttestations.map(normalizeAttestation),
       ...rAndAAttestations.map(normalizeAttestation),
@@ -258,7 +259,7 @@ export const fetchAttestationsWithLogos = async (
 
 export const fetchGovernanceAttestationsWithLogos = async (
   userFid: string
-): Promise<Attestation2[]> => {
+): Promise<Attestation4[]> => {
   const infraToolingAttestations = await db
     .select({
       id: governance_infra_and_tooling.id,
@@ -334,7 +335,7 @@ export const fetchGovernanceAttestationsWithLogos = async (
     )
     .where(eq(governance_collab_and_onboarding.userfid, userFid));
 
-  const transformAttestations = (attestations: any[]): Attestation2[] =>
+  const transformAttestations = (attestations: any[]): Attestation4[] =>
     attestations.map((att) => ({
       ...att,
       likely_to_recommend: att.likely_to_recommend ?? undefined,
@@ -354,7 +355,7 @@ export const fetchGovernanceAttestationsWithLogos = async (
 
 export const fetchOnchainBuildersAttestationsWithLogos = async (
   userFid: string
-): Promise<Attestation2[]> => {
+): Promise<Attestation4[]> => {
   const onchainBuildersAttestations = await db
     .select({
       id: onchain_builders.id,
@@ -380,7 +381,7 @@ export const fetchOnchainBuildersAttestationsWithLogos = async (
 
 export const fetchOPStackAttestationsWithLogos = async (
   userFid: string
-): Promise<Attestation2[]> => {
+): Promise<Attestation4[]> => {
   const opStackAttestations = await db
     .select({
       id: op_stack.id,
@@ -405,7 +406,7 @@ export const fetchOPStackAttestationsWithLogos = async (
 
 export const fetchAllAttestationsWithLogos = async (
   userFid: string
-): Promise<Attestation2[]> => {
+): Promise<Attestation4[]> => {
   try {
     // Fetch attestations from the contributionattestations table
     const contributionAttestations = await fetchAttestationsWithLogos(userFid);
@@ -423,7 +424,7 @@ export const fetchAllAttestationsWithLogos = async (
     );
 
     // Ensure that the contributionAttestations match the Attestation2 type
-    const formattedContributionAttestations: Attestation2[] =
+    const formattedContributionAttestations: Attestation4[] =
       contributionAttestations.map((att) => ({
         ...att,
         category: undefined,

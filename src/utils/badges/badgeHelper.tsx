@@ -1,6 +1,6 @@
 import { getUserAddressesByFid } from '../../lib/db/dbusers';
 
-interface BadgeStatus {
+export interface BadgeStatus {
   isCoinbaseVerified: boolean;
   isOpBadgeholder: boolean;
   isPowerBadgeholder: boolean;

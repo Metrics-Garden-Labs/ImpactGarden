@@ -19,4 +19,3 @@ export const networkEndpoints: Record<NetworkType, string> = {
   'Optimism-Goerli': 'https://optimism-goerli-bedrock.easscan.org/graphql',
   'Base-Goerli': 'https://base-goerli.easscan.org/graphql',
 };
-
