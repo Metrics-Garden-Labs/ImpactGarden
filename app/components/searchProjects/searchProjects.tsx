@@ -76,15 +76,23 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
   };
 
   const handleSubcategoryChange = (subcategory: string) => {
-    if (selectedSubcategory === subcategory) {
-      setSelectedSubcategory("");
-      onFilterChange(selectedCategory);
-    } else {
-      setSelectedSubcategory(subcategory);
-      onFilterChange(`${selectedCategory}:${subcategory}`);
-    }
-    setIsFilterOpen(false); // Close the filter after subcategory selection
+	const associatedCategory = Object.keys(subcategories).find((category) =>
+	  subcategories[category as higherCategoryKey].includes(subcategory)
+	);
+	if (selectedSubcategory === subcategory) {
+	  setSelectedSubcategory("");
+	  onFilterChange(selectedCategory);  
+	} else {
+	  if (associatedCategory && !selectedCategory) {
+		setSelectedCategory(associatedCategory as higherCategoryKey);
+	  }
+	  setSelectedSubcategory(subcategory);
+	  onFilterChange(`${associatedCategory || selectedCategory}:${subcategory}`);
+	}
+
+	setIsFilterOpen(false); // Close the filter menu after selection
   };
+  
 
   const handleSortOrderChange = (newSortOrder: string) => {
     onSortOrderChange(newSortOrder);
@@ -107,12 +115,12 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
               />
               <FaSearch className="absolute left-3 top-1/2 h-[20px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
-            <div className="relative w-full sm:w-48" ref={filterRef}>
+            <div className="relative w-full sm:w-56" ref={filterRef}>
               <button
                 onClick={() => setIsFilterOpen(!isFilterOpen)}
                 className="w-full px-4 py-2 text-left bg-white border border-gray-300 rounded-md focus:outline-none flex justify-between items-center truncate"
               >
-                <span>{selectedCategory || selectedSubcategory ? `${selectedCategory}${selectedSubcategory ? `: ${selectedSubcategory}` : ''}` : 'Filter'}</span>
+                <span>{selectedCategory || selectedSubcategory ? `${selectedCategory}${selectedSubcategory ? `` : ''}` : 'Select Category'}</span>
                 <FaChevronDown className={`transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
               </button>
               {isFilterOpen && (
@@ -171,7 +179,7 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
         </div>
         {(selectedCategory || selectedSubcategory) && (
           <div className="mb-10">
-            <div className="inline-block bg-white text-gray-800 text-sm font-medium py-2 px-4 rounded-md border">
+            <div className="inline-block  text-gray-800 text-sm font-medium py-2 px-4 rounded-md border">
               {`${selectedCategory}${selectedSubcategory ? `: ${selectedSubcategory}` : ''}`}
               <button
                 className="ml-2 text-gray-600 hover:text-gray-800"
