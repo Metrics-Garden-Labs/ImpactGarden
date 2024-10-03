@@ -24,16 +24,13 @@ import { usePinataUpload } from '@/src/hooks/usePinataUpload';
 
 interface Props {
   isOpen: boolean;
+  project: Project;
   onClose: () => void;
   addContribution: (contribution: ContributionWithAttestationCount) => Promise<void>;
   addContributionCallback: (contribution: string) => void;
 }
 
-export default function AddContributionModal({ isOpen, onClose, addContributionCallback }: Props) {
-  const [fid] = useGlobalState('fid');
-  const [walletAddress] = useGlobalState('walletAddress');
-  const [storedProject, setStoredProject] = useLocalStorage<Project>('selectedProject');
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+export default function AddContributionModal({ isOpen, onClose, addContributionCallback, project }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [attestationUID, setAttestationUID] = useState<string>('');
   const [attestationUID2, setAttestationUID2] = useState<string>('');
@@ -60,49 +57,11 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   // useEffect(() => {
   //   checkNetwork(selectedNetwork, switchChain);
   // }, [selectedNetwork, switchChain]);
-
-  useEffect(() => {
-    const fetchProject = async () => {
-      if (storedProject?.projectName) {
-        try {
-          const response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjectByName`, {
-            method: 'POST',
-            body: JSON.stringify({ projectName: storedProject.projectName }),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to fetch project data');
-          }
-
-          const { project } = await response.json();
-          setSelectedProject(project);
-        } catch (error) {
-          console.error('Error fetching project data:', error);
-        }
-      }
-    };
-
-    fetchProject();
-  }, [storedProject?.projectName]);
-
   
-  useEffect(() => {
-    if (selectedProject) {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        projectName: selectedProject.projectName,
-        // category: selectedProject.category || '',
-        ethAddress: currentAddress || '',
-      }));
-    }
-  }, [selectedProject, currentAddress]);
 
   const [formData, setFormData] = useState<Contribution>({
     userFid: user.fid || '',
-    projectName: storedProject?.projectName || '',
+    projectName: project?.projectName || '',
     governancetype: '',
     ecosystem: selectedNetwork,
     secondaryecosystem: '',
@@ -138,7 +97,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
     // }
   };
 
-  console.log('Project Ecosystem:', selectedProject?.ecosystem);
+  console.log('Project Ecosystem:', project?.ecosystem);
   console.log('Selected Project:', formData);
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -152,7 +111,7 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
 
     try {
       const pinataURL1 = await uploadToPinata({
-        name: selectedProject?.projectName,
+        name: project?.projectName,
         farcaster: user.fid,
         category: formData.category,
         subcategory: formData.subcategory,
@@ -170,11 +129,11 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       );
 
       const encodedData1 = schemaEncoder.encodeData([
-        { name: 'projectRefUID', value: selectedProject?.projectUid || '', type: 'bytes32' },
+        { name: 'projectRefUID', value: project?.projectUid || '', type: 'bytes32' },
         { name: 'farcasterID', value: user.fid, type: 'uint256' },
         { name: 'name', value: formData.contribution || '', type: 'string' },
         { name: 'category', value: formData.category || '', type: 'string' },
-        { name: 'parentProjectRefUID', value: selectedProject?.primaryprojectuid || '', type: 'bytes32' },
+        { name: 'parentProjectRefUID', value: project?.primaryprojectuid || '', type: 'bytes32' },
         { name: 'metadataType', value: '0', type: 'uint8' },
         { name: 'metadataURL', value: pinataURL1, type: 'string' },
       ]);
@@ -182,8 +141,8 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       const attestationUID1 = await createNormalAttestation(
         '0xe035e3fe27a64c8d7291ae54c6e85676addcbc2d179224fe7fc1f7f05a8c6eac',
         encodedData1,
-        selectedProject?.ethAddress || '',
-        selectedProject?.primaryprojectuid || ''
+        project?.ethAddress || '',
+        project?.primaryprojectuid || ''
       );
 
       const pinataURL2 = await uploadToPinata({
@@ -204,8 +163,8 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
       const attestationUID2 = await createNormalAttestation(
         '0x4921fe519ace82fb51a7318b9f79904c77800ca1db4ce8cc4d7c18293ae92f5a',
         encodedData2,
-        selectedProject?.ethAddress || '',
-        selectedProject?.primaryprojectuid || ''
+        project?.ethAddress || '',
+        project?.primaryprojectuid || ''
       );
 
       // const attestationUID2 = await createDelegatedAttestation(
@@ -263,11 +222,11 @@ export default function AddContributionModal({ isOpen, onClose, addContributionC
   const renderModal = () => {
     if (isLoading) {
       return <AttestationCreationModal />;
-    } else if (attestationUID2 && selectedProject) {
+    } else if (attestationUID2 && project) {
       return (
         <AttestationConfirmationModal
           attestationUID={attestationUID}
-          attestationType={selectedProject}
+          attestationType={project}
           setAttestationUID={setAttestationUID}
           easScanEndpoints={easScanEndpoints}
         />

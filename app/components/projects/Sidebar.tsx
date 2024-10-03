@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { BsGlobe2 } from 'react-icons/bs';
 import { FaGithub, FaXTwitter } from 'react-icons/fa6';
+import React from 'react';
 
 interface Props {
   project: Project;

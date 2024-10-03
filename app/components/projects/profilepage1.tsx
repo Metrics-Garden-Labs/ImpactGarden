@@ -199,6 +199,7 @@ export default function ProfilePage({
           </button>
           <AddContributionModal
             isOpen={modalOpen}
+            project={project}
             onClose={() => setModalOpen(false)}
             addContribution={addContribution}
             addContributionCallback={handleContributionAdded}
