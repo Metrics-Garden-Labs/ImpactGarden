@@ -35,7 +35,7 @@ const subcategoriesInfo = {
       description: "Contributions that facilitate governance participants to collaborate with each other and enable the onboarding of newcomers."
     },
     {
-      title: "Governance Structures",
+      title: "Governance Leadership",
       description: "Elected or Appointed contributor structures to the Optimism Collective."
     }
   ],

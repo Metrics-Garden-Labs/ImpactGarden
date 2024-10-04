@@ -455,16 +455,16 @@ export const insertGovernanceStructuresAttestation = async (
 ) => {
   try {
     console.log(
-      "Inserting Governance Structures attestation into the database"
+      "Inserting Governance Leadership attestation into the database"
     );
     const result = await db
       .insert(governance_structures_op)
       .values(attestation)
       .returning();
-    console.log("Governance Structures attestation inserted successfully");
+    console.log("Governance Leadership attestation inserted successfully");
     return result;
   } catch (error) {
-    console.error("Error inserting Governance Structures attestation:", error);
+    console.error("Error inserting Governance Leadership attestation:", error);
     throw error;
   }
 };
@@ -787,7 +787,7 @@ const getGovernanceStructuresAttestationsByContribution = async (
     return attestations;
   } catch (error) {
     console.error(
-      "Error retrieving governance structures attestations:",
+      "Error retrieving governance leadership attestations:",
       error
     );
     throw error;
@@ -826,7 +826,7 @@ export const getAttestationsByContributionAndSubcategory = async (
             return await getCollabAndOnboardingAttestationsByContribution(
               contribution
             );
-          case "Governance Structures":
+          case "Governance Leadership":
             return await getGovernanceStructuresAttestationsByContribution(
               contribution
             );

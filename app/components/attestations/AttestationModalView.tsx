@@ -191,7 +191,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
                   </div> */}
                 </>
               );
-            case "Governance Structures":
+            case "Governance Leadership":
               return (
                 <>
                   <div className="mb-4">

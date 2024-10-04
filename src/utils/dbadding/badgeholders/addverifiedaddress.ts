@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { sql } from "@vercel/postgres";
-import { contributions } from "../../lib/schema.js";
+import { projects } from "../../../lib/schema";
 import dotenv from "dotenv";
 import { eq } from "drizzle-orm";
 import { NeynarAPIClient } from "@neynar/nodejs-sdk";
@@ -33,9 +33,9 @@ const __dirname = path.dirname(__filename);
 const db = drizzle(sql);
 const client = new NeynarAPIClient(NEYNAR_API_KEY);
 
-const updateContributionsInDB = async () => {
+export const updateProjectsInDB = async () => {
   try {
-    const filePath = path.join(__dirname, "EASprojectsOpstack.json");
+    const filePath = path.join(__dirname, "Round6Projects.json");
     const jsonData = fs.readFileSync(filePath, "utf-8");
 
     // Ensure jsonData is parsed correctly
@@ -57,10 +57,10 @@ const updateContributionsInDB = async () => {
 
     console.log(`Number of projects parsed: ${projectsData.length}`);
 
-    // Fetch existing contributions from the database
-    const existingContributions = await db.select().from(contributions);
+    // Fetch existing projects from the database
+    const existingProjects = await db.select().from(projects);
     console.log(
-      `Number of existing contributions in DB: ${existingContributions.length}`
+      `Number of existing projects in DB: ${existingProjects.length}`
     );
 
     // Create a map of project names to userFid
@@ -73,11 +73,9 @@ const updateContributionsInDB = async () => {
       }
     }
 
-    // Update the userFid and ethAddress for existing contributions that match by project name
-    for (const existingContribution of existingContributions) {
-      const userFid = projectNameToUserFid.get(
-        existingContribution.projectName
-      );
+    // Update the userFid and ethAddress for existing projects that match by name
+    for (const existingProject of existingProjects) {
+      const userFid = projectNameToUserFid.get(existingProject.projectName);
       if (userFid) {
         console.log(`Fetching data for userFid: ${userFid}`);
         const fidData = await client.fetchBulkUsers([parseInt(userFid)]);
@@ -88,24 +86,22 @@ const updateContributionsInDB = async () => {
           "0x0000000000000000000000000000000000000000";
 
         console.log(
-          `Updating contribution: ${existingContribution.projectName} with userFid: ${userFid} and ethAddress: ${ethAddress}`
+          `Updating project: ${existingProject.projectName} with userFid: ${userFid} and ethAddress: ${ethAddress}`
         );
 
         await db
-          .update(contributions)
+          .update(projects)
           .set({ userFid, ethAddress })
-          .where(
-            eq(contributions.projectName, existingContribution.projectName)
-          );
+          .where(eq(projects.projectName, existingProject.projectName));
       }
     }
 
-    console.log("Contributions updated in the database successfully.");
+    console.log("Projects updated in the database successfully.");
   } catch (error) {
-    console.error("Error updating contributions in the database:", error);
+    console.error("Error updating projects in the database:", error);
   }
 };
 
-updateContributionsInDB().catch((error) => {
+updateProjectsInDB().catch((error) => {
   console.error("Unexpected error:", error);
 });

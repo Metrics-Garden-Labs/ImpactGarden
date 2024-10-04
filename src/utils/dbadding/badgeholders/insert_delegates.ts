@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { sql } from "@vercel/postgres";
-import { op_delegates } from "../../lib/schema.js";
+import { op_delegates } from "../../../lib/schema";
 import dotenv from "dotenv";
 
 // Load environment variables from .env file

@@ -59,7 +59,7 @@ export const POST = async (request: Request) => {
                 newAttestation as GovernanceCollabAndOnboardingAttestation
               );
             break;
-          case "Governance Structures":
+          case "Governance Leadership":
             insertedAttestation = await insertGovernanceStructuresAttestation(
               newAttestation as GovernanceStrucutresAttestation
             );
