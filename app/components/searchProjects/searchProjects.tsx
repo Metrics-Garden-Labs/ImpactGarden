@@ -14,7 +14,7 @@ interface Props {
 const categories: higherCategoryKey[] = ["Governance", "OP Stack", "Onchain Builders"];
 
 const subcategories = {
-  Governance: ["Infra & Tooling", "Research & Analytics", "Collaboration and Onboarding", "Governance Structures"],
+  Governance: ["Infra & Tooling", "Research & Analytics", "Collaboration and Onboarding", "Governance Leadership"],
   "OP Stack": ["Ethereum Core Contributions", "OP Stack Research and Development", "OP Stack Tooling"],
   "Onchain Builders": ["CeFi", "Crosschain", "DeFi", "Governance", "NFT", "Social", "Utilities"],
 };

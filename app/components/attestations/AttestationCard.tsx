@@ -95,7 +95,7 @@ const AttestationCard: React.FC<AttestationCardProps> = ({
               );
             }
             break;
-            case 'Governance Structures':
+            case 'Governance Leadership':
               if ('examples_of_usefulness' in attestation) {
               return(
                 <>

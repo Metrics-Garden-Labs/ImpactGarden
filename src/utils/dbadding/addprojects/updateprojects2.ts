@@ -6,7 +6,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { sql } from "@vercel/postgres";
-import { projects } from "../../lib/schema.js";
+import { projects } from "../../../lib/schema.js";
 import dotenv from "dotenv";
 import { eq, and, isNotNull } from "drizzle-orm";
 

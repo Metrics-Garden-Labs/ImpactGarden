@@ -14,7 +14,7 @@ interface Attestation {
   refUID: string;
   revocable: boolean;
   data: string;
-  timeCreated: string; // Assuming timeCreated is returned as a string
+  timeCreated: string;
 }
 
 // Custom BigInt serializer
