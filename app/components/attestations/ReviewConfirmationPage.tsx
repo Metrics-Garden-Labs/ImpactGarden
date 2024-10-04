@@ -154,7 +154,7 @@ useEffect(() => {
         </h1>
         <p className="text-center mb-8 text-sm">Thank you for reviewing this project!</p>
         
-        <div className="bg-white rounded-lg shadow-md p-6 mb-12 w-1/5 max-w-md">
+        <div className=" rounded-lg shadow-md p-6 mb-12 w-full max-w-sm">
           <Image 
             src={reviewedProject?.logoUrl || ""}
             alt={reviewedProject?.projectName || "Project"}
@@ -163,7 +163,7 @@ useEffect(() => {
             className="mx-auto rounded-lg"
           />
           <h2 className="text-lg font-semibold text-center mt-4">{reviewedContribution?.projectName || "Project"}</h2>
-          <p className="text-center text-gray-600 mt-2">{reviewedContribution?.desc || "Description"}</p>
+          <p className="text-center  text-gray-600 overflow-hidden mt-2">{reviewedContribution?.desc || "Description"}</p>
         </div>
       </div>
       
