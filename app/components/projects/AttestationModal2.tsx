@@ -212,7 +212,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                   ]
                 }
               ],
-              userInterface: "Metrics Garden"
+              userInterface: "Impact Garden"
             },
             contributions: [
               {
