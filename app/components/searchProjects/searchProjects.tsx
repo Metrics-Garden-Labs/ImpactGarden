@@ -11,8 +11,8 @@ interface Props {
   currentSortOrder: string;
 }
 
-const categories: higherCategoryKey[] = ["Governance"];
-// "OP Stack", "Onchain Builders"
+const categories: higherCategoryKey[] = ["Governance", "OP Stack", "Onchain Builders"];
+
 
 const subcategories = {
 	Governance: ["Infra & Tooling", "Research & Analytics", "Collaboration and Onboarding", "Governance Leadership"],
