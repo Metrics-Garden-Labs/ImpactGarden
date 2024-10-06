@@ -11,12 +11,10 @@ interface Props {
   currentSortOrder: string;
 }
 
-const categories: higherCategoryKey[] = ["Governance"];
-// "OP Stack", "Onchain Builders"
+const categories: higherCategoryKey[] = ["Governance", "OP Stack", "Onchain Builders"];
 
 const subcategories = {
-  Governance: ["Infra & Tooling"],
-  //  "Research & Analytics", "Collaboration and Onboarding", "Governance Structures"
+	Governance: ["Infra & Tooling", "Research & Analytics", "Collaboration and Onboarding", "Governance Leadership"],
   "OP Stack": ["Ethereum Core Contributions", "OP Stack Research and Development", "OP Stack Tooling"],
   "Onchain Builders": ["CeFi", "Crosschain", "DeFi", "Governance", "NFT", "Social", "Utilities"],
 };
@@ -145,7 +143,7 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
 							disabled
                               key={subcategory}
                               onClick={() => handleSubcategoryChange(subcategory)}
-                              className={`w-full text-left p-2  cursor-not-allowed rounded-md ${selectedSubcategory === subcategory ? 'no-class' : 'no-class'}`}
+                              className={`w-full text-left p-2  cursor-not-allowed rounded-md ${selectedSubcategory === subcategory ? 'bg-[#B0B0B0]' : 'hover:bg-[#B0B0B0]'}`}
                             >
                               {subcategory}
                             </button>
@@ -185,8 +183,7 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
             <div className="inline-block  text-gray-800 text-sm font-medium py-2 px-4 rounded-md border">
               {`${selectedCategory}${selectedSubcategory ? `: ${selectedSubcategory}` : ''}`}
               <button
-                className="ml-2 text-gray-600 cursor-not-allowed hover:text-gray-800"
-				disabled
+                className="ml-2 text-gray-600  hover:text-gray-800"
                 onClick={() => {
                   setSelectedCategory("");
                   setSelectedSubcategory("");
