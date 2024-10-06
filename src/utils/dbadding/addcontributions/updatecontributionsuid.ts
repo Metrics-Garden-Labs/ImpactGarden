@@ -2,7 +2,7 @@ import { drizzle } from "drizzle-orm/vercel-postgres";
 import { sql } from "@vercel/postgres";
 import { createPool } from "@vercel/postgres";
 import dotenv from "dotenv";
-import { projects, contributions } from "../../lib/schema.js";
+import { projects, contributions } from "../../../lib/schema.js";
 import { eq, and, isNull } from "drizzle-orm";
 
 // Load environment variables from .env file

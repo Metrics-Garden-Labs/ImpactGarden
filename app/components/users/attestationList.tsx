@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import AttestationModalView from '@/app/components/attestations/AttestationModalView';
 import { Attestation2, User, Project } from '@/src/types';
+import { NEXT_PUBLIC_URL } from '@/src/config/config';
 
 interface Props {
   user: User;
@@ -14,15 +15,17 @@ interface Props {
 const AttestationList = ({ user }: Props) => {
   const [attestations, setAttestations] = useState<Attestation2[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [projectUidMap, setProjectUidMap] = useState<Record<string, string>>({});
   const [selectedAttestation, setSelectedAttestation] = useState<Attestation2 | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Fetch user data (attestations and projects)
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('/api/getUserData', {
+        const response = await fetch(`${NEXT_PUBLIC_URL}/api/getUserData`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -48,6 +51,37 @@ const AttestationList = ({ user }: Props) => {
     fetchUserData();
   }, [user.fid]);
 
+  // Fetch project UIDs after attestations are loaded
+  useEffect(() => {
+    if (attestations.length > 0) {
+      const fetchProjectUids = async () => {
+        try {
+          const projectNames = [...new Set(attestations.map((att) => att.projectName))];
+
+          const response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjectsByUid`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ projectNames }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to fetch project UIDs');
+          }
+
+          const data = await response.json();
+          setProjectUidMap(data.projectUidMap);
+        } catch (err) {
+          setError('Failed to load project UIDs. Please try again later.');
+          console.error('Error fetching project UIDs:', err);
+        }
+      };
+
+      fetchProjectUids();
+    }
+  }, [attestations]);
+
   const openModal = (attestation: Attestation2) => {
     setSelectedAttestation(attestation);
     setModalOpen(true);
@@ -61,15 +95,15 @@ const AttestationList = ({ user }: Props) => {
   if (error) return <p>{error}</p>;
 
   // Sort attestations by createdAt timestamp in descending order
-  attestations.sort((a, b) => new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime());
+  attestations.sort(
+    (a, b) =>
+      new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime()
+  );
 
   // Extract unique project names and ecosystems
-  const userProjects = [...new Set(projects.map((project) => project.projectName))];
-  const userEcosystems = [...new Set(projects.map((project) => project.ecosystem))];
-
   const attestedProjectNames = [...new Set(attestations.map((attestation) => attestation.projectName))];
   const attestedEcosystems = [...new Set(attestations.map((attestation) => attestation.ecosystem))];
-
+  const userEcosystems = [...new Set(projects.map((project) => project.ecosystem))];
   const ecosystemsOfInterest = [...new Set([...attestedEcosystems, ...userEcosystems])];
 
   return (
@@ -81,9 +115,13 @@ const AttestationList = ({ user }: Props) => {
             <ul>
               {attestedProjectNames.map((projectName) => (
                 <li key={projectName} className='mb-2'>
-                  <Link href={`/projects/${projectName}`}>
-                    <p className='text-black hover:underline'>{projectName}</p>
-                  </Link>
+                  {projectUidMap[projectName] ? (
+                    <Link href={`/projects/${projectUidMap[projectName]}`}>
+                      <p className='text-black hover:underline'>{projectName}</p>
+                    </Link>
+                  ) : (
+                    <p className='text-black'>{projectName}</p>
+                  )}
                 </li>
               ))}
             </ul>
@@ -111,8 +149,8 @@ const AttestationList = ({ user }: Props) => {
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-3 lg:gap-8 max-w-6xl overflow-y-auto'>
           {attestations.length > 0 ? (
             attestations.map((attestation) => (
-              <div 
-                key={attestation.id} 
+              <div
+                key={attestation.id}
                 className='p-4 bg-white border rounded-lg shadow-md cursor-pointer overflow-hidden'
                 onClick={() => openModal(attestation)}
               >
@@ -121,7 +159,7 @@ const AttestationList = ({ user }: Props) => {
                     {attestation.logoUrl && (
                       <Image
                         src={attestation.logoUrl}
-                        alt={attestation.projectName || ""}
+                        alt={attestation.projectName || ''}
                         width={40}
                         height={40}
                         className='mr-2 rounded-full flex-shrink-0'
@@ -136,7 +174,7 @@ const AttestationList = ({ user }: Props) => {
                     </div>
                   </div>
                   <p className='text-gray-700 mb-2 line-clamp-5 overflow-hidden'>
-                    {attestation.feedback} 
+                    {attestation.feedback}
                   </p>
                   {attestation.rating && (
                     <p className='text-sm text-gray-500'>Rating: {attestation.rating}</p>

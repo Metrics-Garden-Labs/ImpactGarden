@@ -9,6 +9,15 @@ import { fileURLToPath } from "url";
 
 // Initialize the database connection
 
+const POSTGRES_URL = process.env.POSTGRES_URL;
+
+if (!POSTGRES_URL) {
+  console.error("POSTGRES_URL environment variable is not set.");
+  process.exit(1); // Exit with failure
+}
+
+process.env.POSTGRES_URL = POSTGRES_URL;
+
 const db = drizzle(vsql);
 
 // Get the current directory of the module

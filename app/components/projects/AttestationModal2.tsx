@@ -175,7 +175,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 round: 'RF6'
               };
               break;
-            case 'Governance Structures':
+            case 'Governance Leadership':
               specificData = {
                 name: "Feeling if didnt exist",
                 feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
@@ -212,7 +212,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                   ]
                 }
               ],
-              userInterface: "Metrics Garden"
+              userInterface: "Impact Garden"
             },
             contributions: [
               {
@@ -384,7 +384,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 onClose={onClose}
               />
             );
-          case 'Governance Structures':
+          case 'Governance Leadership':
             return (
               <GovernanceStructuresFrom
                 smileyRating={smileyRating}

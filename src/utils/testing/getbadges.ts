@@ -14,7 +14,8 @@ import { sql as vsql } from "@vercel/postgres";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 
 // Neynar API Client
-const client = new NeynarAPIClient(process.env.NEYNAR_API_KEY as string);
+const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY;
+const client = new NeynarAPIClient(NEYNAR_API_KEY as string);
 
 const POSTGRES_URL = process.env.POSTGRES_URL;
 
@@ -60,7 +61,7 @@ export async function processAllUsersBadges() {
       );
 
       try {
-        // Normalize the address for checking
+        // Normalize the address for checkingx
         const checkAddress = getAddress(ethaddress);
 
         // Check if the user is an Optimism Delegate

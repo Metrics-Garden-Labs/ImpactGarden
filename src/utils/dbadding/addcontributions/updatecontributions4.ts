@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { sql } from "@vercel/postgres";
-import { contributions } from "../../lib/schema.js";
+import { contributions } from "../../../lib/schema.js";
 import dotenv from "dotenv";
 import { eq } from "drizzle-orm";
 import { NeynarAPIClient } from "@neynar/nodejs-sdk";

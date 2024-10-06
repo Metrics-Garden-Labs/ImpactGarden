@@ -270,7 +270,8 @@ export default function ProjectSignUp() {
     return (
       <div className="min-h-screen flex flex-col bg-white text-black">
         <ConfirmationSection
-          attestationUID={attestationUID1}
+          attestationUID={attestationUID}
+          attestationUID1={attestationUID1}
           attestationData={attestationData}
           imageUrl={imageUrl}
           ecosystem={ecosystem}

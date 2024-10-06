@@ -354,3 +354,24 @@ export const getProjectByPrimaryProjectUid = async (
     throw error;
   }
 };
+
+export const getPrimaryProjectUidByProjectName = async (
+  projectName: string
+) => {
+  try {
+    const project = await db
+      .select()
+      .from(projects)
+      .where(eq(projects.projectName, projectName))
+      .limit(1);
+
+    if (project.length === 0) {
+      throw new Error(`Project not found: ${projectName}`);
+    }
+
+    return project[0].primaryprojectuid;
+  } catch (error) {
+    console.error(`Error retrieving primary project uid for project:`, error);
+    throw error;
+  }
+};

@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { sql } from "@vercel/postgres";
 import dotenv from "dotenv";
-import { contributions } from "../../lib/schema.js";
+import { contributions } from "../../../lib/schema.js";
 import { eq } from "drizzle-orm";
 
 // Load environment variables from .env file

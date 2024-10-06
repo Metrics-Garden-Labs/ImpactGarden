@@ -9,6 +9,7 @@ import { easScanEndpoints } from '../../../src/utils/easScan';
 //Logic for conditionally rendering the confirmation page
 interface ConfirmationSectionProps {
     attestationUID: string;
+    attestationUID1: string;
     attestationData: AttestationData;
     imageUrl: string;
     ecosystem: string;
@@ -19,6 +20,7 @@ interface ConfirmationSectionProps {
   // ConfirmationSection Component Implementation
   const ConfirmationSection: React.FC<ConfirmationSectionProps> = ({
     attestationUID,
+    attestationUID1,
     attestationData,
     imageUrl,
     ecosystem,
@@ -30,7 +32,7 @@ interface ConfirmationSectionProps {
       username: '',
       ethAddress: '',
     };
-    if (!attestationUID) {
+    if (!attestationUID1) {
       return null; // If no attestationUID, don't show this section
     }
   
@@ -76,15 +78,15 @@ interface ConfirmationSectionProps {
         </div>
       </div>
   
-        <Link href={`/projects/${attestationData.projectName}`} passHref className="pt-6">
+        <Link href={`/projects/${attestationUID}`} passHref className="pt-6">
           <button className="mt-4 px-6 py-3 bg-black text-white rounded-md text-lg">
             Visit Your Project to Create Your First Contribution!
           </button>
         </Link>
   
         <p className="text-lg mt-8">Attestation UID:</p>
-        <Link href={`${easScanEndpoints[selectedNetwork]}${attestationUID}`} passHref>
-          <p className="text-lg p-2 underline">{attestationUID}</p>
+        <Link href={`${easScanEndpoints[selectedNetwork]}${attestationUID1}`} passHref>
+          <p className="text-lg p-2 underline">{attestationUID1}</p>
         </Link> 
         
   

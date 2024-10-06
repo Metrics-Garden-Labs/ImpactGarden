@@ -222,7 +222,7 @@ export interface Attestation2 {
   userFid: string;
   username?: string;
   pfp?: string;
-  projectName: string | null;
+  projectName: string;
   contribution: string | null;
   ecosystem: string;
   attestationUID: string;
@@ -273,6 +273,37 @@ export type Attestation3 = {
   extrafeedback: string | null | undefined;
   rating: string | null | undefined;
 };
+
+export interface Attestation4 {
+  id: number;
+  userFid: string;
+  username?: string;
+  pfp?: string;
+  projectName: string | null;
+  contribution: string | null;
+  ecosystem: string;
+  attestationUID: string;
+  attesterAddy?: string;
+  feedback: string | null;
+  isdelegate?: boolean | null;
+  rating?: string | null;
+  improvementareas?: string | null;
+  extrafeedback?: string | null;
+  category?: string;
+  subcategory?: string;
+  createdAt: Date | null;
+  logoUrl?: string | null;
+  explanation?: string | null;
+  likely_to_recommend?: string | null;
+  feeling_if_didnt_exist?: string | null;
+  feeling_if_didnt_exist_number?: string | null;
+  useful_for_understanding?: string;
+  examples_of_usefulness?: string;
+  effective_for_improvements?: string;
+  governance_knowledge?: string;
+  governance_knowledge_number?: string;
+  recommend_contribution?: string;
+}
 export interface userAddresses {
   id: number;
   userfid: string;
