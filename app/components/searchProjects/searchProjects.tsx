@@ -11,8 +11,8 @@ interface Props {
   currentSortOrder: string;
 }
 
-const categories: higherCategoryKey[] = ["Governance"];
-// "OP Stack", "Onchain Builders"
+const categories: higherCategoryKey[] = ["Governance", "OP Stack", "Onchain Builders"];
+
 
 const subcategories = {
 	Governance: ["Infra & Tooling", "Research & Analytics", "Collaboration and Onboarding", "Governance Leadership"],
@@ -141,10 +141,9 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
                         <div className="ml-4">
                           {subcategories[category].map((subcategory) => (
                             <button
-							disabled
                               key={subcategory}
                               onClick={() => handleSubcategoryChange(subcategory)}
-                              className={`w-full text-left p-2  cursor-not-allowed rounded-md ${selectedSubcategory === subcategory ? 'bg-[#B0B0B0]' : 'hover:bg-[#B0B0B0]'}`}
+                              className={`w-full text-left p-2  rounded-md ${selectedSubcategory === subcategory ? 'bg-[#B0B0B0]' : 'hover:bg-[#B0B0B0]'}`}
                             >
                               {subcategory}
                             </button>
