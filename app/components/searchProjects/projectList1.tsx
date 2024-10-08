@@ -30,7 +30,12 @@ export default function ProjectList({
   sortOrder,
   searchResults,
 }: Props) {
-  const [fid, setFid] = useGlobalState("fid");
+  const [user, setUser, removeUser] = useLocalStorage("user", {
+    fid: "",
+    username: "",
+    ethAddress: [],
+  });
+  const { fid } = user;
   const [selectedProject, setSelectedProject] = useLocalStorage<Project | null>(
     "selectedProject",
     null
@@ -52,7 +57,7 @@ export default function ProjectList({
     }
   );
 
-  console.log({fid});
+  console.log({ fid });
   console.debug({ userAttestations });
 
   // Set isFiltering to true when sortOrder or filter changes
