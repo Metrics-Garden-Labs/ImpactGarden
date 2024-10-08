@@ -57,7 +57,7 @@ export default function ProjectList({
     }
   );
 
-  console.log({ fid });
+  console.debug({ fid });
   console.debug({ userAttestations });
 
   // Set isFiltering to true when sortOrder or filter changes
