@@ -32,13 +32,16 @@ const getOpStackProjects = async (): Promise<void> => {
   const round6SchemaId =
     "0x2169b74bfcb5d10a6616bbc8931dc1c56f8d1c305319a9eeca77623a991d4b80";
 
-  // Date filter: projects created on or after 1st October 2024
   const dateFilter = Math.floor(
-    new Date("2024-10-01T00:00:00Z").getTime() / 1000
+    new Date("2024-10-04T00:00:00Z").getTime() / 1000
   );
+  // Date filter: projects created on or after 1st October 2024
+  // const dateFilter = Math.floor(
+  //   new Date("2024-10-01T00:00:00Z").getTime() / 1000
+  // );
 
   // Output file path
-  const outputFile = path.join(__dirname, "Round6Projects.json");
+  const outputFile = path.join(__dirname, "Round6Projects2.json");
 
   const allMetadata = [];
 
@@ -382,3 +385,6 @@ const getOpStackProjects = async (): Promise<void> => {
 getOpStackProjects()
   .then(() => console.log("Attestations fetched successfully"))
   .catch((error) => console.error("Caught error:", error));
+
+//last time ran 4/10/2024 11:00am
+//new run 08/10/2024 08:00am
