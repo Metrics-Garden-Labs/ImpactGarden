@@ -5,6 +5,7 @@ import RatingScale10 from "@/app/components/ui/RatingScale10";
 import { contributionRolesKey } from "@/src/types";
 import { getSmileyRatingLabel } from "@/src/utils/helpers";
 import { unknown } from "zod";
+import { cn } from "@/src/lib/helpers";
 
 interface GovernanceInfraToolingFormProps {
   rating1: number;
@@ -15,6 +16,7 @@ interface GovernanceInfraToolingFormProps {
   setExtraFeedback: (extraFeedback: string) => void;
   onSubmit: (formData: any) => void;
   onClose: () => void;
+  className?: string;
 }
 
 const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
@@ -26,6 +28,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
   setExtraFeedback,
   onSubmit,
   onClose,
+  className,
 }) => {
   const [localRating1, setLocalRating1] = useState(rating1);
   const [localSmileyRating, setLocalSmileyRating] = useState(smileyRating);
@@ -59,11 +62,14 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center"
+      className={cn(
+        "fixed inset-0 bg-gray-600/60 flex justify-center items-center",
+        className
+      )}
       onClick={onClose}
     >
       <div
-        className="relative m-auto p-6 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-2/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
+        className="relative Content m-auto p-6 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-2/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
         onClick={(e) => e.stopPropagation()}
       >
         <>
@@ -75,7 +81,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
             <RxCross2 className="h-6 w-6" />
           </button>
           <h2 className="text-xl font-bold mb-4 text-center">
-            Attest to Contribution
+            ✨🔴 Complete your Review 🔴✨
           </h2>
           {/* <div className="mb-4">
             <h3 className="font-semibold text-center">Please select the roles you perform within Optimism's Governance for which this contribution has been impactful. Select all that apply.</h3>
