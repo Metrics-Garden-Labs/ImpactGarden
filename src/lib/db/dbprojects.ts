@@ -25,6 +25,7 @@ import {
   NewProject,
   CategoryData,
   ProjectWithAttestationCount,
+  ContributionWithProjectsAndAttestationCount,
 } from "@/src/types";
 import { inArray, eq, sql, and, SQL } from "drizzle-orm";
 import { PgSelect } from "drizzle-orm/pg-core";
@@ -73,7 +74,7 @@ export const getProjectsByCategoryAndSubcategory = async (
           twitterUrl: projects.twitterUrl,
           githubUrl: projects.githubUrl,
           logoUrl: projects.logoUrl,
-          primaryprojectuid: projects.primaryprojectuid, // Explicitly select this field
+          primaryprojectuid: projects.primaryprojectuid,
           projectUid: projects.projectUid,
           createdAt: projects.createdAt,
         })
@@ -99,7 +100,7 @@ export const getProjectsByCategoryAndSubcategory = async (
           twitterUrl: projects.twitterUrl,
           githubUrl: projects.githubUrl,
           logoUrl: projects.logoUrl,
-          primaryprojectuid: projects.primaryprojectuid, // Explicitly select this field
+          primaryprojectuid: projects.primaryprojectuid,
           projectUid: projects.projectUid,
           createdAt: projects.createdAt,
         })
@@ -119,7 +120,7 @@ export const getProjectsByCategoryAndSubcategory = async (
           twitterUrl: projects.twitterUrl,
           githubUrl: projects.githubUrl,
           logoUrl: projects.logoUrl,
-          primaryprojectuid: projects.primaryprojectuid, // Explicitly select this field
+          primaryprojectuid: projects.primaryprojectuid,
           projectUid: projects.projectUid,
           createdAt: projects.createdAt,
         })
@@ -136,6 +137,188 @@ export const getProjectsByCategoryAndSubcategory = async (
       error
     );
     throw error;
+  }
+};
+
+export const getContributionsByCategoryAndSubcategory = async (
+  category: string,
+  subcategory: string,
+  sortOrder: string
+): Promise<ContributionWithProjectsAndAttestationCount[]> => {
+  try {
+    let query;
+    if (category && subcategory) {
+      console.log(
+        `Filtering by category: ${category} and subcategory: ${subcategory}`
+      );
+      query = db
+        .select({
+          id: contributions.id,
+          userFid: contributions.userFid,
+          ethAddress: contributions.ethAddress,
+          ecosystem: contributions.ecosystem,
+          projectName: contributions.projectName,
+          contribution: contributions.contribution,
+          description: contributions.desc,
+          category: contributions.category,
+          subcategory: contributions.subcategory,
+          governancetype: contributions.governancetype,
+          secondaryecosystem: contributions.secondaryecosystem,
+          link: contributions.link,
+          primarycontributionuid: contributions.primarycontributionuid,
+          easUid: contributions.easUid,
+          createdAt: contributions.createdAt,
+          projectUid: projects.projectUid,
+          primaryprojectuid: projects.primaryprojectuid,
+          projectLogoUrl: projects.logoUrl,
+        })
+        .from(contributions)
+        .leftJoin(projects, eq(contributions.projectName, projects.projectName))
+        .where(
+          and(
+            eq(contributions.category, category),
+            eq(contributions.subcategory, subcategory)
+          )
+        );
+    } else if (category) {
+      console.log(`Filtering by category: ${category}`);
+      query = db
+        .select({
+          id: contributions.id,
+          userFid: contributions.userFid,
+          ethAddress: contributions.ethAddress,
+          ecosystem: contributions.ecosystem,
+          projectName: contributions.projectName,
+          description: contributions.desc,
+          contribution: contributions.contribution,
+          category: contributions.category,
+          subcategory: contributions.subcategory,
+          governancetype: contributions.governancetype,
+          secondaryecosystem: contributions.secondaryecosystem,
+          link: contributions.link,
+          primarycontributionuid: contributions.primarycontributionuid,
+          easUid: contributions.easUid,
+          createdAt: contributions.createdAt,
+          projectUid: projects.projectUid,
+          primaryprojectuid: projects.primaryprojectuid,
+          projectLogoUrl: projects.logoUrl,
+        })
+        .from(contributions)
+        .leftJoin(projects, eq(projects.projectName, contributions.projectName))
+        .where(eq(contributions.category, category));
+    } else {
+      console.log(
+        "No category or subcategory provided. Fetching all projects."
+      );
+      query = db
+        .select({
+          id: contributions.id,
+          userFid: contributions.userFid,
+          ethAddress: contributions.ethAddress,
+          ecosystem: contributions.ecosystem,
+          projectName: contributions.projectName,
+          description: contributions.desc,
+          contribution: contributions.contribution,
+          category: contributions.category,
+          subcategory: contributions.subcategory,
+          governancetype: contributions.governancetype,
+          secondaryecosystem: contributions.secondaryecosystem,
+          link: contributions.link,
+          primarycontributionuid: contributions.primarycontributionuid,
+          easUid: contributions.easUid,
+          createdAt: contributions.createdAt,
+          projectUid: projects.projectUid,
+          primaryprojectuid: projects.primaryprojectuid,
+          projectLogoUrl: projects.logoUrl,
+        })
+        .from(contributions);
+    }
+
+    // Step 2: Apply Sorting (if requested)
+    if (sortOrder === "Most Attested") {
+      console.log("Sorting by Most Attested");
+      query = query
+        .leftJoin(
+          contributionattestations,
+          sql`${contributions.projectName} = ${contributionattestations.projectName}`
+        )
+        .leftJoin(
+          governance_infra_and_tooling,
+          sql`${contributions.projectName} = ${governance_infra_and_tooling.projectName}`
+        )
+        .leftJoin(
+          governance_r_and_a,
+          sql`${contributions.projectName} = ${governance_r_and_a.projectName}`
+        )
+        .leftJoin(
+          governance_collab_and_onboarding,
+          sql`${contributions.projectName} = ${governance_collab_and_onboarding.projectName}`
+        )
+        .leftJoin(
+          governance_structures_op,
+          sql`${contributions.projectName} = ${governance_structures_op.projectName}`
+        )
+        .leftJoin(
+          onchain_builders,
+          sql`${contributions.projectName} = ${onchain_builders.projectName}`
+        )
+        .leftJoin(
+          op_stack,
+          sql`${contributions.projectName} = ${op_stack.projectName}`
+        )
+        .groupBy(
+          contributions.id,
+          contributions.userFid,
+          contributions.ethAddress,
+          contributions.ecosystem,
+          contributions.projectName,
+          contributions.contribution,
+          contributions.desc,
+          contributions.category,
+          contributions.subcategory,
+          contributions.governancetype,
+          contributions.secondaryecosystem,
+          contributions.link,
+          contributions.primarycontributionuid,
+          contributions.easUid,
+          contributions.createdAt,
+          projects.logoUrl,
+          projects.projectUid,
+          projects.primaryprojectuid
+        ).orderBy(sql`COALESCE(
+              COUNT(${contributionattestations.id}) +
+              COUNT(${governance_infra_and_tooling.id}) +
+              COUNT(${governance_r_and_a.id}) +
+              COUNT(${governance_collab_and_onboarding.id}) +
+              COUNT(${governance_structures_op.id}) +
+              COUNT(${onchain_builders.id}) +
+              COUNT(${op_stack.id}),
+              0
+            ) DESC`);
+
+      console.log("most attested", query);
+    } else if (sortOrder === "Recently Added") {
+      console.log("Sorting by Recently Added");
+      query = query.orderBy(sql`${projects.createdAt} DESC`);
+    } else if (sortOrder === "A-Z" || sortOrder === "Z-A") {
+      console.log(`Sorting by ${sortOrder}`);
+      query = query.orderBy(
+        sortOrder === "Z-A"
+          ? sql`${projects.projectName} DESC`
+          : sql`${projects.projectName} ASC`
+      );
+    } else {
+      console.log("No sorting applied. Returning unsorted results.");
+    }
+
+    console.log("Executing query:", query.toSQL());
+    const result = await query.execute();
+    console.log("Query result (first 5 items):", result.slice(0, 5));
+
+    return result as unknown as ContributionWithProjectsAndAttestationCount[];
+  } catch (error: any) {
+    console.error("Error fetching projects:", error);
+    return [];
   }
 };
 

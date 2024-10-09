@@ -157,9 +157,6 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
             <button className="btn bg-headerblack text-white hover:bg-blue-500" onClick={handleSubmit}>Send Review</button>
           </div>
         </>
-        <button onClick={onClose} className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4">
-          <RxCross2 className="w-5 h-5" />
-        </button>
       </div>
     </div>
   );
