@@ -52,7 +52,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   const [rating2, setRating2] = useState(0);
   const [rating3, setRating3] = useState(0);
   const [smileyRating, setSmileyRating] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [attestationUID, setAttestationUID] = useState<string | null>(null);
   // const [showReviewCarousel, setShowReviewCarousel] = useState(false);
 
@@ -311,7 +311,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
       if (!attestationUID) throw new Error("Failed to create attestation");
 
       console.log("Attestation created with UID:", attestationUID);
-      setAttestationUID(attestationUID);
+      setAttestationUID("0x403f147aed3378843454fb7e6ecd3471e95c53acf2e906a945adaaae1e13124d");
   
 
       // setShowReviewCarousel(true);
@@ -462,10 +462,9 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   return (
     <div>
       {renderForm()}
-      {isLoading && <AttestationCreationModal />}
       {attestationUID && 
         <AttestationConfirmationModal 
-          attestationUID={attestationUID} 
+          attestationUID={"attestationUID"} 
           attestationType={contribution} 
           setAttestationUID={setAttestationUID} 
           easScanEndpoints={easScanEndpoints} 
