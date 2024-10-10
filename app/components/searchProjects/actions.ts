@@ -1,11 +1,31 @@
 "use server";
 
 import { getAttestationsByUserId } from "@/src/lib/db/dbattestations";
-import { getContributionsByCategoryAndSubcategory } from "@/src/lib/db/dbprojects";
-import { Contribution } from "@/src/types";
+import { getContributionsByProjectName } from "@/src/lib/db/dbcontributions";
+import {
+  getProjectsByCategoryAndSubcategory,
+  getContributionsByCategoryAndSubcategory,
+} from "@/src/lib/db/dbprojects";
+import type { Contribution } from "@/src/types";
 
 export const getUserAttestations = async (fid: string) => {
   const attestations = await getAttestationsByUserId(fid);
+  return attestations;
+};
+
+export const getProjectByForCategories = async (
+  category: string,
+  subcategory: string
+) => {
+  const projects = await getProjectsByCategoryAndSubcategory(
+    category,
+    subcategory
+  );
+  return projects;
+};
+
+export const getContributionsForProjectName = async (projectName: string) => {
+  const attestations = await getContributionsByProjectName(projectName);
   return attestations;
 };
 

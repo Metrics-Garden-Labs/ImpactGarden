@@ -33,8 +33,11 @@ const getOpStackProjects = async (): Promise<void> => {
     "0x2169b74bfcb5d10a6616bbc8931dc1c56f8d1c305319a9eeca77623a991d4b80";
 
   const dateFilter = Math.floor(
-    new Date("2024-10-08T08:00:00Z").getTime() / 1000
+    new Date("2024-10-09T10:00:00Z").getTime() / 1000
   );
+  // const dateFilter = Math.floor(
+  //   new Date("2024-10-08T08:00:00Z").getTime() / 1000
+  // );
   // const dateFilter = Math.floor(
   //   new Date("2024-10-04T00:00:00Z").getTime() / 1000
   // );
@@ -44,7 +47,7 @@ const getOpStackProjects = async (): Promise<void> => {
   // );
 
   // Output file path
-  const outputFile = path.join(__dirname, "Round6Projects3.json");
+  const outputFile = path.join(__dirname, "Round6Projects4.json");
 
   const allMetadata = [];
 
@@ -392,3 +395,4 @@ getOpStackProjects()
 //last time ran 4/10/2024 11:00am
 //new run 08/10/2024 08:00am
 //09/10/24
+//10/10/24 10:00am

@@ -34,7 +34,7 @@ const client = new NeynarAPIClient(NEYNAR_API_KEY);
 
 const addContributionsToDB = async () => {
   try {
-    const filePath = path.join(__dirname, "Round6Projects3.json");
+    const filePath = path.join(__dirname, "Round6Projects4.json");
     const jsonData = fs.readFileSync(filePath, "utf-8");
     const projectsData = JSON.parse(jsonData);
 
