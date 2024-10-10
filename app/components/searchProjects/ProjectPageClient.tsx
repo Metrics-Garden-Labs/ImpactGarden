@@ -1,9 +1,14 @@
-'use client';
-import React, { useState, useCallback, useMemo } from 'react';
-import SearchProjects from './searchProjects';
-import ProjectList from './projectList1';
-import { Project, ProjectCount, SearchResult } from '../../../src/types';
-import { NEXT_PUBLIC_URL } from "../../../src/config/config";
+"use client";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
+import SearchProjects from "./searchProjects";
+import {
+  ContributionWithProjectsAndAttestationCount,
+  Project,
+  ProjectCount,
+  SearchResult,
+} from "../../../src/types";
+import { getContributions, getProjectByForCategories } from "./actions";
+import ContributionList from "./ContributionList";
 
 interface Props {
   projects: (Project | ProjectCount)[];
@@ -14,71 +19,89 @@ interface Props {
   error?: string;
 }
 
-const ProjectPageClient = ({ projects: initialProjects, query: initialQuery, filter: initialFilter, sortOrder: initialSortOrder, searchResults: initialSearchResults, error }: Props) => {
-  const [projects, setProjects] = useState<(Project | ProjectCount)[]>(initialProjects);
-  const [searchResults, setSearchResults] = useState<SearchResult[]>(initialSearchResults);
+const ProjectPageClient = ({
+  projects: initialProjects,
+  query: initialQuery,
+  filter: initialFilter,
+  sortOrder: initialSortOrder,
+  searchResults: initialSearchResults,
+  error,
+}: Props) => {
+  const [projects, setProjects] =
+    useState<(Project | ProjectCount)[]>(initialProjects);
+  const [searchResults, setSearchResults] =
+    useState<SearchResult[]>(initialSearchResults);
   const [filter, setFilter] = useState(initialFilter || "");
   const [sortOrder, setSortOrder] = useState(initialSortOrder || "A-Z");
   const [query, setQuery] = useState(initialQuery);
+  const [contributions, setContributions] = useState<
+    ContributionWithProjectsAndAttestationCount[]
+  >([]);
 
-  const uniqueProjects = useMemo(() => {
-    const projectMap = new Map<string, Project | ProjectCount>();
-    projects.forEach(project => {
-      if (!projectMap.has(project.projectName) || 
-          ('attestationCount' in project && 
-           (!('attestationCount' in projectMap.get(project.projectName)!) || 
-            project.attestationCount > (projectMap.get(project.projectName) as ProjectCount).attestationCount))) {
-        projectMap.set(project.projectName, project);
-      }
-    });
-    console.log("uniqueProjects:", Array.from(projectMap.values()).slice(0, 5));
-    return Array.from(projectMap.values());
-  }, [projects]);
+  useEffect(() => {
+    fetchContributions(query, filter, sortOrder);
+  }, [query, filter, sortOrder]);
 
-  const fetchProjects = useCallback(async (newQuery: string, newFilter: string, newSortOrder: string) => {
-    try {
-      const [category, subcategory] = newFilter.split(':');
-      const response = await fetch(`${NEXT_PUBLIC_URL}/api/getProjects`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+  const fetchContributions = useCallback(
+    async (newQuery: string, newFilter: string, newSortOrder: string) => {
+      try {
+        const [category, subcategory] = newFilter.split(":");
+        console.log("Fetching contributions with:", {
+          newQuery,
           category,
           subcategory,
-          sortOrder: newSortOrder,
-        }),
-      });
+          newSortOrder,
+        });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("API response for projects:", data.projects.slice(0, 5));
-        setProjects(data.projects);
-        setSearchResults(data.searchResults || []);
-      } else {
-        console.error('Error fetching data');
+        const contributions = await getContributions(
+          category,
+          subcategory,
+          newSortOrder
+        );
+
+        const projects: Project[] = await getProjectByForCategories(
+          category,
+          subcategory
+        );
+
+        console.log(
+          "Server action response for contributions:",
+          contributions.slice(0, 5)
+        );
+
+        setProjects(projects);
+
+        setContributions(
+          contributions as unknown as ContributionWithProjectsAndAttestationCount[]
+        );
+      } catch (error) {
+        console.error("Error fetching contributions:", error);
       }
-    } catch (error) {
-      console.error('Error during fetch operation:', error);
-    }
-  }, []);
+    },
+    [getContributions]
+  );
 
   const handleSearchChange = (newQuery: string) => {
     setQuery(newQuery);
-    fetchProjects(newQuery, filter, sortOrder);
+    // fetchProjects(newQuery, filter, sortOrder);
+    fetchContributions(newQuery, filter, sortOrder);
   };
 
   const handleFilterChange = (newFilter: string) => {
     setFilter(newFilter);
-    fetchProjects(query, newFilter, sortOrder);
+    // fetchProjects(query, newFilter, sortOrder);
+    fetchContributions(query, newFilter, sortOrder);
   };
 
   const handleSortOrderChange = (newSortOrder: string) => {
     setSortOrder(newSortOrder);
-    fetchProjects(query, filter, newSortOrder);
+    // fetchProjects(query, filter, newSortOrder);
+    fetchContributions(query, filter, newSortOrder);
   };
 
   return (
     <div className="bg-white text-black">
-      <SearchProjects 
+      <SearchProjects
         onSearchChange={handleSearchChange}
         onFilterChange={handleFilterChange}
         onSortOrderChange={handleSortOrderChange}
@@ -90,12 +113,16 @@ const ProjectPageClient = ({ projects: initialProjects, query: initialQuery, fil
           <p>{error}</p>
         </div>
       ) : (
-        <ProjectList
-          projects={uniqueProjects}
+        <ContributionList
+          contributions={contributions}
           query={query}
+          project={
+            projects.find((project) =>
+              contributions.some((c) => c.projectUid === project.projectUid)
+            ) as any
+          }
           filter={filter}
           sortOrder={sortOrder}
-          searchResults={searchResults}
         />
       )}
     </div>

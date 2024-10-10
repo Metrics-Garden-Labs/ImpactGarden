@@ -128,6 +128,7 @@ export default function ProjectSignUp() {
     }
 
     //api call to fetch the user's farcaster custody address
+    console.log("creating attestation 1")
 
     try {
       const schema1 = '0x7ae9f4adabd9214049df72f58eceffc48c4a69e920882f5b06a6c69a3157e5bd';

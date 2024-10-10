@@ -54,7 +54,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   const [smileyRating, setSmileyRating] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [attestationUID, setAttestationUID] = useState<string | null>(null);
-  const [showReviewCarousel, setShowReviewCarousel] = useState(false);
+  // const [showReviewCarousel, setShowReviewCarousel] = useState(false);
 
   const { eas, currentAddress } = useEAS();
   const [user] = useLocalStorage("user", {
@@ -82,17 +82,17 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     }
   }, [isOpen, contribution?.id, router, pathname]);
 
-  useEffect(() => {
-    if (showReviewCarousel) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+  // useEffect(() => {
+  //   if (showReviewCarousel) {
+  //     document.body.style.overflow = 'hidden';
+  //   } else {
+  //     document.body.style.overflow = 'unset';
+  //   }
 
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [showReviewCarousel]);
+  //   return () => {
+  //     document.body.style.overflow = 'unset';
+  //   };
+  // }, [showReviewCarousel]);
 
   const isValidEthereumAddress = (address: string | undefined): boolean => {
     if (!address) return false;
@@ -312,9 +312,9 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
 
       console.log("Attestation created with UID:", attestationUID);
       setAttestationUID(attestationUID);
+  
 
-      console.log("Setting showReviewCarousel to true...");
-      setShowReviewCarousel(true);
+      // setShowReviewCarousel(true);
       setIsLoading(false);
 
       const attestationData = {
@@ -351,19 +351,14 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     }
   };
 
-  const handleReviewCarouselClose = () => {
-    console.log("ReviewCarousel onClose called");
-    setShowReviewCarousel(false);
-    setAttestationUID(null);
-    onClose();
-  };
+  // const handleReviewCarouselClose = () => {
+  //   console.log('ReviewCarousel onClose called');
+  //   setShowReviewCarousel(false);
+  //   setAttestationUID(null);
+  //   onClose();
+  // };
 
-  console.log("Current state:", {
-    isOpen,
-    showReviewCarousel,
-    attestationUID,
-    isLoading,
-  });
+  // console.log('Current state:', { isOpen, showReviewCarousel, attestationUID, isLoading });
 
   if (!isOpen) return null;
 
@@ -468,15 +463,39 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     <div>
       {renderForm()}
       {isLoading && <AttestationCreationModal />}
-      {attestationUID && (
-        <AttestationConfirmationModal
-          attestationUID={attestationUID}
-          attestationType={contribution}
-          setAttestationUID={setAttestationUID}
-          easScanEndpoints={easScanEndpoints}
+      {attestationUID && 
+        <AttestationConfirmationModal 
+          attestationUID={attestationUID} 
+          attestationType={contribution} 
+          setAttestationUID={setAttestationUID} 
+          easScanEndpoints={easScanEndpoints} 
         />
-      )}
+      }
     </div>
+    // <div className="fixed inset-0 z-50 flex flex-col bg-white">
+    //   <Navbar />
+    //   <div className="flex-grow overflow-y-auto">
+    //     {!showReviewCarousel && renderForm()}
+    //     {isLoading && <AttestationCreationModal />}
+    //     {showReviewCarousel && attestationUID && (
+    //       // <ReviewConfirmationPage
+    //       //   reviewedProject={project}
+    //       //   userFid={user.fid}
+    //       //   attestationUID={attestationUID}
+    //       //   attestationType={contribution}
+    //       //   easScanEndpoints={easScanEndpoints}
+    //       //   reviewedContribution={contribution}
+    //       //   onClose={handleReviewCarouselClose}
+    //       // />
+    //       <AttestationConfirmationModal
+    //         attestationUID={attestationUID}
+    //         attestationType={contribution}
+    //         setAttestationUID={setAttestationUID}
+    //         easScanEndpoints={easScanEndpoints}
+    //       />
+    //     )}
+    //   </div>
+    // </div>
   );
 };
 

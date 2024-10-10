@@ -74,12 +74,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
       >
         <>
           {/* Close Button */}
-          <button
-            className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
-            onClick={onClose}
-          >
-            <RxCross2 className="h-6 w-6" />
-          </button>
+          
           <h2 className="text-xl font-bold mb-4 text-center">
             ✨🔴 Complete your Review 🔴✨
           </h2>
@@ -168,12 +163,6 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
             </button>
           </div>
         </>
-        <button
-          onClick={onClose}
-          className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4"
-        >
-          <RxCross2 className="w-5 h-5" />
-        </button>
       </div>
     </div>
   );

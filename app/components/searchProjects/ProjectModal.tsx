@@ -1,36 +1,25 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { RxCross2 } from "react-icons/rx";
-import { Project } from "../../../src/types";
+import { Contribution, Project } from "../../../src/types";
 import { formatOneliner } from "../../../src/utils/fomatOneliner";
-import GovernanceInfraToolingForm from "../attestations/governanceAttestationForms/GovernanceInfraToolingForm";
 import AttestationModal2 from "../projects/AttestationModal2";
-import useSWR from "swr";
-import { getContributionsForProjectName } from "./actions";
 
 interface ProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
   project: Project | null;
   checkwebsiteUrl: (url: string) => string;
-  
+  contribution: Contribution | null;
 }
 
 const ProjectModal: React.FC<ProjectModalProps> = ({
   isOpen,
   onClose,
   project,
+  contribution,
   checkwebsiteUrl,
 }) => {
-  const { data: contributions = [] } = useSWR(
-    `contributions.for.${project?.primaryprojectuid}`,
-    async () => {
-      return await getContributionsForProjectName(project?.projectName || "");
-    }
-  );
-
-  console.debug({ contributions });
-
   const [activeTab, setActiveTab] = useState<"description" | "review">(
     "description"
   );
@@ -89,8 +78,8 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
               isOpen={activeTab === "review"}
               onClose={() => setActiveTab("description")}
               project={project}
-              contribution={[...contributions].pop() || null}
-			  className="relative w-full block [&_.Content]:overflow-visible bg-white [&_.Content]:shadow-none [&_.Content]:max-h-none [&_.Content]:!w-full [&_.Content]:!m-0"
+              contribution={contribution}
+              className="relative w-full block [&_.Content]:overflow-visible bg-white [&_.Content]:shadow-none [&_.Content]:max-h-none [&_.Content]:!w-full [&_.Content]:!m-0"
             />
           </>
         )}
