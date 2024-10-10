@@ -4,12 +4,16 @@ import { RxCross2 } from "react-icons/rx";
 import { Project } from "../../../src/types";
 import { formatOneliner } from "../../../src/utils/fomatOneliner";
 import GovernanceInfraToolingForm from "../attestations/governanceAttestationForms/GovernanceInfraToolingForm";
+import AttestationModal2 from "../projects/AttestationModal2";
+import useSWR from "swr";
+import { getContributionsForProjectName } from "./actions";
 
 interface ProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
   project: Project | null;
   checkwebsiteUrl: (url: string) => string;
+  
 }
 
 const ProjectModal: React.FC<ProjectModalProps> = ({
@@ -18,24 +22,25 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   project,
   checkwebsiteUrl,
 }) => {
+  const { data: contributions = [] } = useSWR(
+    `contributions.for.${project?.primaryprojectuid}`,
+    async () => {
+      return await getContributionsForProjectName(project?.projectName || "");
+    }
+  );
+
+  console.debug({ contributions });
+
   const [activeTab, setActiveTab] = useState<"description" | "review">(
     "description"
   );
-  const [rating1, setRating1] = useState(0);
-  const [smileyRating, setSmileyRating] = useState(0);
-  const [feedback, setFeedback] = useState("");
-  const [extraFeedback, setExtraFeedback] = useState("");
-
-  const handleSubmitReview = (formData: any) => {
-    console.log("Review data submitted:", formData);
-    onClose();
-  };
 
   useEffect(() => {
     if (isOpen) {
       setActiveTab("description");
     }
   }, [isOpen, project]);
+
   if (!isOpen || !project) return null;
 
   return (
@@ -80,16 +85,12 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           </div>
         ) : (
           <>
-            <GovernanceInfraToolingForm
-              rating1={rating1}
-              smileyRating={smileyRating}
-              feedback={feedback}
-              setFeedback={setFeedback}
-              extrafeedback={extraFeedback}
-              setExtraFeedback={setExtraFeedback}
-              onSubmit={handleSubmitReview}
-              onClose={onClose}
-              className="relative w-full block [&_.Content]:overflow-visible bg-white [&_.Content]:shadow-none [&_.Content]:max-h-none [&_.Content]:!w-full [&_.Content]:!m-0"
+            <AttestationModal2
+              isOpen={activeTab === "review"}
+              onClose={() => setActiveTab("description")}
+              project={project}
+              contribution={[...contributions].pop() || null}
+			  className="relative w-full block [&_.Content]:overflow-visible bg-white [&_.Content]:shadow-none [&_.Content]:max-h-none [&_.Content]:!w-full [&_.Content]:!m-0"
             />
           </>
         )}

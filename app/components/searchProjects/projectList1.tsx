@@ -57,9 +57,6 @@ export default function ProjectList({
     }
   );
 
-  console.debug({ fid });
-  console.debug({ userAttestations });
-
   // Set isFiltering to true when sortOrder or filter changes
   useEffect(() => {
     setIsFiltering(true);

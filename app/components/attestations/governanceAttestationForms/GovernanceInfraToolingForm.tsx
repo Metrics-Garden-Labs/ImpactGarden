@@ -152,24 +152,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
           </div>
           <hr className="my-4" />
           {/* Q4 */}
-          <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2">
-              Any additional feedback or suggestions on this contribution? This
-              response will be confidential and only shared with the
-              contributor.
-            </label>
-            <textarea
-              value={localExtraFeedback}
-              onChange={(e) => setLocalExtraFeedback(e.target.value)}
-              className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
-              rows={4}
-              maxLength={200}
-            />
-            <div className="text-right text-xs text-gray-500 mt-1">
-              {localExtraFeedback.length}/200
-            </div>
-          </div>
-          <hr className="my-4" />
+     
           <div className="text-center py-3">
             <button
               className="btn bg-headerblack text-white hover:bg-blue-500 mr-2"
