@@ -312,7 +312,6 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
 
       console.log("Attestation created with UID:", attestationUID);
       setAttestationUID(attestationUID);
-  
 
       // setShowReviewCarousel(true);
       setIsLoading(false);
@@ -377,7 +376,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 setExtraFeedback={setExtraFeedback}
                 onSubmit={handleFormSubmit}
                 onClose={onClose}
-				className={className}
+                className={className}
               />
             );
           case "Governance Research & Analytics":
@@ -463,14 +462,14 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     <div>
       {renderForm()}
       {isLoading && <AttestationCreationModal />}
-      {attestationUID && 
-        <AttestationConfirmationModal 
-          attestationUID={attestationUID} 
-          attestationType={contribution} 
-          setAttestationUID={setAttestationUID} 
-          easScanEndpoints={easScanEndpoints} 
+      {attestationUID && (
+        <AttestationConfirmationModal
+          attestationUID={attestationUID}
+          attestationType={contribution}
+          setAttestationUID={setAttestationUID}
+          easScanEndpoints={easScanEndpoints}
         />
-      }
+      )}
     </div>
     // <div className="fixed inset-0 z-50 flex flex-col bg-white">
     //   <Navbar />

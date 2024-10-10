@@ -7,6 +7,7 @@ import FarcasterLogin from '../login/FarcasterLogin2';
 import { isMobile } from 'react-device-detect';
 import  ReviewCarousel  from '../attestations/ReviewCarousel';
 import  useLocalStorage from '@/src/hooks/use-local-storage-state';
+import OnboardingCarousel from '../OnboardingCarousel';
 
 interface UserLogin {
   fid: string;
@@ -18,7 +19,7 @@ interface UserLogin {
 export default function Navbar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const [isReviewCarouselOpen, setIsReviewCarouselOpen] = useState(false);
+  const [isOnboardingCarouselOpen, setisOnboardingCarouselOpen] = useState(false);
   const [user] = useLocalStorage('user', { fid: '', username: '', ethAddress: '', isAuthenticated: false });
   const [hasJustSignedIn, setHasJustSignedIn] = useState(false);
   const [username, setUsername] = useState('');
@@ -29,7 +30,7 @@ export default function Navbar() {
 
   useEffect(() => {
     if (user.isAuthenticated && hasJustSignedIn) {
-      setIsReviewCarouselOpen(true);
+      setisOnboardingCarouselOpen(true);
       setHasJustSignedIn(false); // Reset the flag
     }
   }, [user.isAuthenticated, hasJustSignedIn]);
@@ -41,7 +42,7 @@ export default function Navbar() {
   const handleLoginSuccess = (userData: UserLogin) => {
     setUsername(userData.username);
     setHasJustSignedIn(true);
-    setIsReviewCarouselOpen(true);
+    setisOnboardingCarouselOpen(true);
     console.log("User logged in successfully,, opening carousel");
   };
 
@@ -50,7 +51,7 @@ export default function Navbar() {
   };
 
   const closeModal = () => {
-    setIsReviewCarouselOpen(false);
+    setisOnboardingCarouselOpen(false);
   };
 
   if (!isClient) {
@@ -70,7 +71,7 @@ export default function Navbar() {
           </button>
         </Link>
         <div className="hidden md:flex justify-end items-center lg:gap-x-8 md:gap-x-2">
-          <Link href='/projectSignUp' className='text-white lg:text-md md:text-sm hover:text-opacity-75'>REGISTER PROJECT</Link>
+			{/* <Link href='/projectSignUp' className='text-white lg:text-md md:text-sm hover:text-opacity-75'>REGISTER PROJECT</Link>*/}
           <Link href='/searchProject' className='text-white lg:text-md md:text-sm hover:text-opacity-75'>REVIEW PROJECTS</Link>
           <Link href='/searchUsers' className='text-white text-md md:text-sm hover:text-opacity-75'>SEARCH USERS</Link>
         </div>
@@ -115,11 +116,11 @@ export default function Navbar() {
           </li>
         </ul>
       </div>
-      <ReviewCarousel 
-        isOpen={isReviewCarouselOpen} 
+      <OnboardingCarousel 
+        isOpen={isOnboardingCarouselOpen} 
         onClose={closeModal} 
         userFid={user.fid} 
-      />
+      />	
     </>
   );
 }

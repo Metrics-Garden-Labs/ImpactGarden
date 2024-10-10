@@ -212,7 +212,7 @@ const ContributionList: React.FC<Props> = ({
                 return (
                   <div
                     key={contribution.id}
-                    className="flex flex-col relative px-6 py-8 border cursor-pointer justify-center items-center bg-white text-black border-gray-300 rounded-md w-full h-66 shadow-xl"
+                    className="flex flex-col relative px-6 py-8 border justify-center items-center bg-white text-black border-gray-300 rounded-md w-full h-66 shadow-xl"
                   >
                     <div className="rounded-md bg-gray-300 w-24 h-24 flex items-center justify-center overflow-hidden mb-4">
                       {contribution.projectLogoUrl ? (
@@ -254,7 +254,7 @@ const ContributionList: React.FC<Props> = ({
                       )}
                     <button
                       onClick={() => openModal(contribution)}
-                      className="btn btn-primary px-6 py-1 mt-2 bg-[#424242] text-white font-thin rounded-md hover:bg-black"
+                      className="btn btn-primary px-6 py-1 mt-2 bg-[#424242] cursor-pointer text-white font-thin rounded-md hover:bg-black"
                     >
                       {isReviewed ? "View" : "Review"}
                     </button>
