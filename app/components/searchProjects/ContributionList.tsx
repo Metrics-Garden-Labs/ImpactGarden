@@ -27,7 +27,7 @@ interface Props {
   query: string;
   filter: string;
   sortOrder: string;
-  project: Project | null;
+  projects?: Project[];
 }
 
 const ContributionList: React.FC<Props> = ({
@@ -35,7 +35,7 @@ const ContributionList: React.FC<Props> = ({
   query,
   filter,
   sortOrder,
-  project,
+  projects = [],
 }) => {
   const [user, setUser, removeUser] = useLocalStorage("user", {
     fid: "",
@@ -51,7 +51,11 @@ const ContributionList: React.FC<Props> = ({
   const [isFiltering, setIsFiltering] = useState(false);
   const observerTarget = useRef<HTMLDivElement | null>(null);
 
-  console.debug({ selectedContribution, project })
+  const project = projects.find(
+    (project) => project.projectUid === selectedContribution?.projectUid
+  );
+
+  console.debug({ selectedContribution, project });
   const { data: userAttestations = [] } = useSWR(
     fid ? `user-data-${fid}` : null,
     async () => {
@@ -286,7 +290,7 @@ const ContributionList: React.FC<Props> = ({
       <ProjectModal
         isOpen={modalOpen}
         onClose={closeModal}
-        project={project}
+        project={project || null}
         contribution={selectedContribution}
         checkwebsiteUrl={urlHelper}
       />

@@ -116,11 +116,7 @@ const ProjectPageClient = ({
         <ContributionList
           contributions={contributions}
           query={query}
-          project={
-            projects.find((project) =>
-              contributions.some((c) => c.projectUid === project.projectUid)
-            ) as any
-          }
+          projects={projects}
           filter={filter}
           sortOrder={sortOrder}
         />
