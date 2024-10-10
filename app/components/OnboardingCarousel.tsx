@@ -16,7 +16,7 @@ const steps = [
     title: "Welcome to this experiment",
     description: (
       <>
-        We're interested in understanding which tools have been useful and
+        We{"'"}re interested in understanding which tools have been useful and
         enabled your participation in Optimisms governance.{" "}
         <strong>
           To start, make sure your Badgeholder or Delegate wallet is linked to
@@ -45,10 +45,10 @@ const steps = [
     description: (
       <>
         <strong>
-          Read through the description of the project and then click on “Review”
+          Read through the description of the project and then click on {"“"}Review{"”"}
           to start your review.
         </strong>{" "}
-        The review is made up of 3 questions. That's it!
+        The review is made up of 3 questions. That{"'"}s it!
       </>
     ),
   },
