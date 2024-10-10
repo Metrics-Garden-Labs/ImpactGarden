@@ -11,11 +11,12 @@ interface Props {
   currentSortOrder: string;
 }
 
-const categories: higherCategoryKey[] = ["Governance", "OP Stack", "Onchain Builders"];
-
+const categories: higherCategoryKey[] = ["Governance"];
+// "OP Stack", "Onchain Builders"
 
 const subcategories = {
-	Governance: ["Infra & Tooling", "Research & Analytics", "Collaboration and Onboarding", "Governance Leadership"],
+	Governance: ["Infra & Tooling"],
+	//  "Research & Analytics", "Collaboration and Onboarding", "Governance Structures"
   "OP Stack": ["Ethereum Core Contributions", "OP Stack Research and Development", "OP Stack Tooling"],
   "Onchain Builders": ["CeFi", "Crosschain", "DeFi", "Governance", "NFT", "Social", "Utilities"],
 };
@@ -103,7 +104,7 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
   return (
     <div className="bg-white">
       <div className='container mx-auto px-4 max-w-6xl bg-white'>
-        <h1 className="text-2xl font-semibold mt-10 mb-10">Explore Projects</h1>
+        <h1 className="text-2xl font-semibold mt-10 mb-10">Review Projects</h1>
         <hr className="border-t border-gray-300 my-4" />
         <div className='flex flex-col sm:flex-row justify-between bg-white items-center mt-6 mb-5 px-0 space-y-4 sm:space-y-0'>
           <div className="flex flex-col sm:flex-row flex-grow space-y-4 sm:space-y-0 sm:space-x-4 bg-white w-full sm:w-auto">
@@ -142,8 +143,9 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
                           {subcategories[category].map((subcategory) => (
                             <button
                               key={subcategory}
+							  disabled 
                               onClick={() => handleSubcategoryChange(subcategory)}
-                              className={`w-full text-left p-2  rounded-md ${selectedSubcategory === subcategory ? 'bg-[#B0B0B0]' : 'hover:bg-[#B0B0B0]'}`}
+                              className={`w-full text-left p-2 cursor-not-allowed rounded-md ${selectedSubcategory === subcategory ? 'no-class' : 'no-class'}`}
                             >
                               {subcategory}
                             </button>
@@ -183,7 +185,8 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
             <div className="inline-block  text-gray-800 text-sm font-medium py-2 px-4 rounded-md border">
               {`${selectedCategory}${selectedSubcategory ? `: ${selectedSubcategory}` : ''}`}
               <button
-                className="ml-2 text-gray-600  hover:text-gray-800"
+                className="ml-2 text-gray-600 cursor-not-allowed hover:text-gray-800"
+				disabled
                 onClick={() => {
                   setSelectedCategory("");
                   setSelectedSubcategory("");

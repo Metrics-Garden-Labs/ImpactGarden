@@ -71,7 +71,7 @@ export default function Navbar() {
           </button>
         </Link>
         <div className="hidden md:flex justify-end items-center lg:gap-x-8 md:gap-x-2">
-          <Link href='/projectSignUp' className='text-white lg:text-md md:text-sm hover:text-opacity-75'>REGISTER PROJECT</Link>
+			{/* <Link href='/projectSignUp' className='text-white lg:text-md md:text-sm hover:text-opacity-75'>REGISTER PROJECT</Link>*/}
           <Link href='/searchProject' className='text-white lg:text-md md:text-sm hover:text-opacity-75'>REVIEW PROJECTS</Link>
           <Link href='/searchUsers' className='text-white text-md md:text-sm hover:text-opacity-75'>SEARCH USERS</Link>
         </div>
