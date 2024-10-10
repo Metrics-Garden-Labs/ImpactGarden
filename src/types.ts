@@ -46,6 +46,15 @@ export interface ContributionWithAttestationCount extends Contribution {
   attestationCount?: number;
 }
 
+export interface ContributionWithProjectsAndAttestationCount
+  extends Contribution {
+  description?: string | null;
+  projectLogoUrl: string | null;
+  projectUid: string | null;
+  primaryprojectuid: string | null;
+  attestationCount?: number;
+}
+
 export interface ProjectWithAttestationCount extends Project {
   attestationCount?: number;
 }

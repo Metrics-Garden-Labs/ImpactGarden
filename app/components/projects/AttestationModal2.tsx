@@ -1,37 +1,41 @@
-'use client';
+"use client";
 
 //TODO: test the new compiled data
 
-import React, { useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import { NEXT_PUBLIC_URL } from '@/src/config/config';
-import useLocalStorage from '@/src/hooks/use-local-storage-state';
-import AttestationCreationModal from '../ui/AttestationCreationModal';
-import AttestationConfirmationModal from '../ui/AttestationConfirmationModal';
-import { Contribution, Project } from '@/src/types';
-import GovernanceInfraToolingForm from '../attestations/governanceAttestationForms/GovernanceInfraToolingForm';
-import GovernanceRAndAForm from '../attestations/governanceAttestationForms/GovernanceR&A';
-import GovernanceCollabAndOnboarding from '../attestations/governanceAttestationForms/GovernanceCollabAndOnboarding';
-import GovernanceStructuresFrom from '../attestations/governanceAttestationForms/GovernanceStructures';
-import OnchainBuildersForm from '@/app/components/attestations/onchainBuildersAttstationForms/attestationForm';
-import OPStackForm from '@/app/components/attestations/opStack/opstackattestationform';
-import { useEAS } from '../../../src/hooks/useEAS';
-import { easScanEndpoints } from '@/src/utils/easScan';
-import AttestationModal from './AttestationModal';
-import { usePinataUpload } from '@/src/hooks/usePinataUpload';
-import { useDelegatedAttestation } from '@/src/hooks/useDelegatedAttestation';
-import { SchemaEncoder, ZERO_ADDRESS } from "@ethereum-attestation-service/eas-sdk";
-import { isAddress, zeroAddress } from 'viem';
-import { useNormalAttestation } from '@/src/hooks/useNormalAttestation';
-import ReviewConfirmationPage from '../attestations/ReviewConfirmationPage';
-import Navbar from '../ui/Navbar';
-import Footer from '../ui/Footer';
+import React, { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { NEXT_PUBLIC_URL } from "@/src/config/config";
+import useLocalStorage from "@/src/hooks/use-local-storage-state";
+import AttestationCreationModal from "../ui/AttestationCreationModal";
+import AttestationConfirmationModal from "../ui/AttestationConfirmationModal";
+import { Contribution, Project } from "@/src/types";
+import GovernanceInfraToolingForm from "../attestations/governanceAttestationForms/GovernanceInfraToolingForm";
+import GovernanceRAndAForm from "../attestations/governanceAttestationForms/GovernanceR&A";
+import GovernanceCollabAndOnboarding from "../attestations/governanceAttestationForms/GovernanceCollabAndOnboarding";
+import GovernanceStructuresFrom from "../attestations/governanceAttestationForms/GovernanceStructures";
+import OnchainBuildersForm from "@/app/components/attestations/onchainBuildersAttstationForms/attestationForm";
+import OPStackForm from "@/app/components/attestations/opStack/opstackattestationform";
+import { useEAS } from "../../../src/hooks/useEAS";
+import { easScanEndpoints } from "@/src/utils/easScan";
+import AttestationModal from "./AttestationModal";
+import { usePinataUpload } from "@/src/hooks/usePinataUpload";
+import { useDelegatedAttestation } from "@/src/hooks/useDelegatedAttestation";
+import {
+  SchemaEncoder,
+  ZERO_ADDRESS,
+} from "@ethereum-attestation-service/eas-sdk";
+import { isAddress, zeroAddress } from "viem";
+import { useNormalAttestation } from "@/src/hooks/useNormalAttestation";
+import ReviewConfirmationPage from "../attestations/ReviewConfirmationPage";
+import Navbar from "../ui/Navbar";
+import Footer from "../ui/Footer";
 
 interface AttestationModalProps {
   isOpen: boolean;
   onClose: () => void;
   contribution: Contribution | null;
   project: Project | null;
+  className?: string;
 }
 
 const AttestationModal2: React.FC<AttestationModalProps> = ({
@@ -39,28 +43,30 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   onClose,
   contribution,
   project,
+  className,
 }) => {
-  const [feedback, setFeedback] = useState('');
-  const [feedback2, setFeedback2] = useState('');
-  const [extrafeedback, setExtraFeedback] = useState('');
+  const [feedback, setFeedback] = useState("");
+  const [feedback2, setFeedback2] = useState("");
+  const [extrafeedback, setExtraFeedback] = useState("");
   const [rating1, setRating1] = useState(0);
   const [rating2, setRating2] = useState(0);
   const [rating3, setRating3] = useState(0);
   const [smileyRating, setSmileyRating] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [attestationUID, setAttestationUID] = useState<string | null>(null);
-  const [showReviewCarousel, setShowReviewCarousel] = useState(false);
+  // const [showReviewCarousel, setShowReviewCarousel] = useState(false);
 
   const { eas, currentAddress } = useEAS();
   const [user] = useLocalStorage("user", {
-    fid: '',
-    username: '',
-    ethAddress: '',
+    fid: "",
+    username: "",
+    ethAddress: "",
   });
 
   const { uploadToPinata, isUploading } = usePinataUpload();
   // const { createDelegatedAttestation, isCreating: isCreatingDelegated } = useDelegatedAttestation();
-  const { createNormalAttestation, isCreating: isCreatingNormal } = useNormalAttestation();
+  const { createNormalAttestation, isCreating: isCreatingNormal } =
+    useNormalAttestation();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -68,25 +74,25 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       router.push(`${pathname}?contribution=${contribution?.id}`);
-      console.log('Contribution:', contribution);
-      console.log('Contribution Category:', contribution?.category);
-      console.log('Contribution Subcategory:', contribution?.subcategory);
+      console.log("Contribution:", contribution);
+      console.log("Contribution Category:", contribution?.category);
+      console.log("Contribution Subcategory:", contribution?.subcategory);
     } else {
       router.push(pathname);
     }
   }, [isOpen, contribution?.id, router, pathname]);
 
-  useEffect(() => {
-    if (showReviewCarousel) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+  // useEffect(() => {
+  //   if (showReviewCarousel) {
+  //     document.body.style.overflow = 'hidden';
+  //   } else {
+  //     document.body.style.overflow = 'unset';
+  //   }
 
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [showReviewCarousel]);
+  //   return () => {
+  //     document.body.style.overflow = 'unset';
+  //   };
+  // }, [showReviewCarousel]);
 
   const isValidEthereumAddress = (address: string | undefined): boolean => {
     if (!address) return false;
@@ -94,34 +100,46 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   };
 
   const createAttestation = async (pinataURL: string): Promise<string> => {
-    if(!user.fid) {
-      throw alert('Please Connect to Farcaster to Continue');
+    if (!user.fid) {
+      throw alert("Please Connect to Farcaster to Continue");
     }
 
-    const schema = "0xc9bc703e3c48be23c1c09e2f58b2b6657e42d8794d2008e3738b4ab0e2a3a8b6";
+    const schema =
+      "0xc9bc703e3c48be23c1c09e2f58b2b6657e42d8794d2008e3738b4ab0e2a3a8b6";
     const schemaEncoder = new SchemaEncoder(
-      'bytes32 contributionRegUID, bytes32 projectRegUID, uint256 farcasterID, string issuer, string metadataurl'
+      "bytes32 contributionRegUID, bytes32 projectRegUID, uint256 farcasterID, string issuer, string metadataurl"
     );
     const encodedData = schemaEncoder.encodeData([
-      { name: 'contributionRegUID', type: 'bytes32', value: contribution?.primarycontributionuid || "" },
-      { name: 'projectRegUID', type: 'bytes32', value: project?.primaryprojectuid || "" },
-      { name: 'farcasterID', type: 'uint256', value: user.fid },
-      { name: 'issuer', type: 'string', value: "MGL" },
-      { name: 'metadataurl', type: 'string', value: pinataURL },
+      {
+        name: "contributionRegUID",
+        type: "bytes32",
+        value: contribution?.primarycontributionuid || "",
+      },
+      {
+        name: "projectRegUID",
+        type: "bytes32",
+        value: project?.primaryprojectuid || "",
+      },
+      { name: "farcasterID", type: "uint256", value: user.fid },
+      { name: "issuer", type: "string", value: "MGL" },
+      { name: "metadataurl", type: "string", value: pinataURL },
     ]);
 
     try {
-      const recipientAddress = project?.ethAddress && isValidEthereumAddress(project.ethAddress) ? project.ethAddress : ZERO_ADDRESS;
+      const recipientAddress =
+        project?.ethAddress && isValidEthereumAddress(project.ethAddress)
+          ? project.ethAddress
+          : ZERO_ADDRESS;
       const attestationUID = await createNormalAttestation(
         schema,
         encodedData,
         recipientAddress,
-        contribution?.easUid || contribution?.primarycontributionuid  || ""
+        contribution?.easUid || contribution?.primarycontributionuid || ""
       );
 
       return attestationUID;
     } catch (error) {
-      console.error('Error in createAttestation:', error);
+      console.error("Error in createAttestation:", error);
       throw error;
     }
   };
@@ -137,55 +155,58 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   const handleFormSubmit = async (formData: any) => {
     try {
       setIsLoading(true);
-      console.log('Form submitted, creating attestation...');
-      console.log('formData', formData);
-  
+      console.log("Form submitted, creating attestation...");
+      console.log("formData", formData);
+
       let specificData;
       let compiledData;
-  
+
       switch (contribution?.category) {
-        case 'Governance':
+        case "Governance":
           switch (contribution?.subcategory) {
-            case 'Collaboration & Onboarding':
+            case "Collaboration & Onboarding":
               specificData = {
                 governance_knowledge: formData.governance_knowledge,
-                governance_knowledge_number: formData.governance_knowledge_number,
+                governance_knowledge_number:
+                  formData.governance_knowledge_number,
                 recommend_contribution: formData.recommend_contribution,
                 feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
-                feeling_if_didnt_exist_number: formData.feeling_if_didnt_exist_number,
+                feeling_if_didnt_exist_number:
+                  formData.feeling_if_didnt_exist_number,
                 explanation: formData.explanation,
-                round: 'RF6'
+                round: "RF6",
               };
               break;
-            case 'Infra & Tooling':
+            case "Infra & Tooling":
               specificData = {
                 likely_to_recommend: formData.likely_to_recommend,
                 feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
-                feeling_if_didnt_exist_number: formData.feeling_if_didnt_exist_number || "",
+                feeling_if_didnt_exist_number:
+                  formData.feeling_if_didnt_exist_number || "",
                 explanation: formData.explanation,
-                round: 'RF6'
+                round: "RF6",
               };
               break;
-            case 'Governance Research & Analytics':
+            case "Governance Research & Analytics":
               specificData = {
                 likely_to_recommend: formData.likely_to_recommend,
                 useful_for_understanding: formData.useful_for_understanding,
                 effective_for_improvements: formData.effective_for_improvements,
                 explanation: formData.explanation,
-                round: 'RF6'
+                round: "RF6",
               };
               break;
-            case 'Governance Leadership':
+            case "Governance Leadership":
               specificData = {
                 name: "Feeling if didnt exist",
                 feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
                 why: formData.why,
                 explanation: formData.explanation,
-                round: 'RF6'
+                round: "RF6",
               };
               break;
             default:
-              throw new Error('Unknown subcategory');
+              throw new Error("Unknown subcategory");
           }
           //TODO::likely to recommend and recommend contribution are the same thing, can change them to be the same
           compiledData = {
@@ -208,24 +229,27 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                       category: contribution?.category,
                       subcategory: contribution?.subcategory,
                       round: specificData.round,
-                    }
-                  ]
-                }
+                    },
+                  ],
+                },
               ],
-              userInterface: "Impact Garden"
+              userInterface: "Impact Garden",
             },
             contributions: [
               {
                 name: contribution?.projectName,
                 description: contribution?.contribution,
                 website: project?.websiteUrl,
-              }
+              },
             ],
             impactAttestations: [
               {
                 name: "Likely to Recommend",
                 type: "numeric",
-                value: specificData?.likely_to_recommend || specificData?.recommend_contribution || "",
+                value:
+                  specificData?.likely_to_recommend ||
+                  specificData?.recommend_contribution ||
+                  "",
               },
               {
                 name: "Feeling if didnt exist",
@@ -233,7 +257,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 value: specificData?.feeling_if_didnt_exist_number || "",
               },
               {
-                name: "Governance Knowledge", 
+                name: "Governance Knowledge",
                 type: "numeric",
                 value: specificData?.governance_knowledge_number || "",
               },
@@ -256,43 +280,43 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 name: "Text Review",
                 type: "string",
                 value: specificData?.explanation || "",
-              }
-            ]
+              },
+            ],
           };
           break;
-  
+
         // For non-Governance categories, use the default specificData
-        case 'Onchain Builders':
+        case "Onchain Builders":
           specificData = {
             likely_to_recommend: formData.likely_to_recommend,
             feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
           };
           break;
-        case 'OP Stack':
+        case "OP Stack":
           specificData = {
             feeling_if_didnt_exist: formData.feeling_if_didnt_exist,
             explanation: formData.explanation,
           };
           break;
         default:
-          throw new Error('Unknown category');
+          throw new Error("Unknown category");
       }
-  
-      console.log('Specific Data:', specificData);
-  
+
+      console.log("Specific Data:", specificData);
+
       const pinataURL = await uploadToPinata(compiledData || specificData); // Upload compiledData for Governance, specificData for others
-      if (!pinataURL) throw new Error('Failed to upload data to IPFS');
-  
+      if (!pinataURL) throw new Error("Failed to upload data to IPFS");
+
       const attestationUID = await createAttestation(pinataURL);
-      if (!attestationUID) throw new Error('Failed to create attestation');
-  
-      console.log('Attestation created with UID:', attestationUID);
+      if (!attestationUID) throw new Error("Failed to create attestation");
+
+      console.log("Attestation created with UID:", attestationUID);
       setAttestationUID(attestationUID);
   
-      console.log('Setting showReviewCarousel to true...');
-      setShowReviewCarousel(true);
+
+      // setShowReviewCarousel(true);
       setIsLoading(false);
-  
+
       const attestationData = {
         userfid: user.fid,
         ethaddress: user.ethAddress || zeroAddress,
@@ -304,47 +328,45 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
         attestationUID: attestationUID,
         ...formData,
       };
-  
-      console.log('Attestation Data:', attestationData);
-  
+
+      console.log("Attestation Data:", attestationData);
+
       const response = await fetch(`${NEXT_PUBLIC_URL}/api/addAttestation`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(attestationData),
       });
-  
+
       if (!response.ok) {
-        throw new Error('Failed to submit attestation');
+        throw new Error("Failed to submit attestation");
       }
-  
+
       const result = await response.json();
-      console.log('Submission result:', result);
-  
+      console.log("Submission result:", result);
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
       setIsLoading(false);
     }
   };
-  
 
-  const handleReviewCarouselClose = () => {
-    console.log('ReviewCarousel onClose called');
-    setShowReviewCarousel(false);
-    setAttestationUID(null);
-    onClose();
-  };
+  // const handleReviewCarouselClose = () => {
+  //   console.log('ReviewCarousel onClose called');
+  //   setShowReviewCarousel(false);
+  //   setAttestationUID(null);
+  //   onClose();
+  // };
 
-  console.log('Current state:', { isOpen, showReviewCarousel, attestationUID, isLoading });
+  // console.log('Current state:', { isOpen, showReviewCarousel, attestationUID, isLoading });
 
   if (!isOpen) return null;
 
   const renderForm = () => {
     switch (contribution?.category) {
-      case 'Governance':
+      case "Governance":
         switch (contribution?.subcategory) {
-          case 'Infra & Tooling':
+          case "Infra & Tooling":
             return (
               <GovernanceInfraToolingForm
                 smileyRating={smileyRating}
@@ -355,9 +377,10 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 setExtraFeedback={setExtraFeedback}
                 onSubmit={handleFormSubmit}
                 onClose={onClose}
+				className={className}
               />
             );
-          case 'Governance Research & Analytics':
+          case "Governance Research & Analytics":
             return (
               <GovernanceRAndAForm
                 rating1={rating1}
@@ -371,7 +394,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 onClose={onClose}
               />
             );
-          case 'Collaboration & Onboarding':
+          case "Collaboration & Onboarding":
             return (
               <GovernanceCollabAndOnboarding
                 smileyRating={smileyRating}
@@ -384,7 +407,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
                 onClose={onClose}
               />
             );
-          case 'Governance Leadership':
+          case "Governance Leadership":
             return (
               <GovernanceStructuresFrom
                 smileyRating={smileyRating}
@@ -400,7 +423,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
             );
         }
         break;
-      case 'Onchain Builders':
+      case "Onchain Builders":
         return (
           <OnchainBuildersForm
             smileyRating={smileyRating}
@@ -413,7 +436,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
             onClose={onClose}
           />
         );
-      case 'OP Stack':
+      case "OP Stack":
         return (
           <OPStackForm
             smileyRating={smileyRating}
@@ -425,7 +448,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
         );
       default:
         return (
-          <AttestationModal 
+          <AttestationModal
             contribution={contribution}
             project={project}
             onClose={onClose}
@@ -437,24 +460,42 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-white">
-      <Navbar />
-      <div className="flex-grow overflow-y-auto">
-        {!showReviewCarousel && renderForm()}
-        {isLoading && <AttestationCreationModal />}
-        {showReviewCarousel && attestationUID && (
-          <ReviewConfirmationPage
-            reviewedProject={project}
-            userFid={user.fid}
-            attestationUID={attestationUID}
-            attestationType={contribution}
-            easScanEndpoints={easScanEndpoints}
-            reviewedContribution={contribution}
-            onClose={handleReviewCarouselClose}
-          />
-        )}
-      </div>
+    <div>
+      {renderForm()}
+      {isLoading && <AttestationCreationModal />}
+      {attestationUID && 
+        <AttestationConfirmationModal 
+          attestationUID={attestationUID} 
+          attestationType={contribution} 
+          setAttestationUID={setAttestationUID} 
+          easScanEndpoints={easScanEndpoints} 
+        />
+      }
     </div>
+    // <div className="fixed inset-0 z-50 flex flex-col bg-white">
+    //   <Navbar />
+    //   <div className="flex-grow overflow-y-auto">
+    //     {!showReviewCarousel && renderForm()}
+    //     {isLoading && <AttestationCreationModal />}
+    //     {showReviewCarousel && attestationUID && (
+    //       // <ReviewConfirmationPage
+    //       //   reviewedProject={project}
+    //       //   userFid={user.fid}
+    //       //   attestationUID={attestationUID}
+    //       //   attestationType={contribution}
+    //       //   easScanEndpoints={easScanEndpoints}
+    //       //   reviewedContribution={contribution}
+    //       //   onClose={handleReviewCarouselClose}
+    //       // />
+    //       <AttestationConfirmationModal
+    //         attestationUID={attestationUID}
+    //         attestationType={contribution}
+    //         setAttestationUID={setAttestationUID}
+    //         easScanEndpoints={easScanEndpoints}
+    //       />
+    //     )}
+    //   </div>
+    // </div>
   );
 };
 

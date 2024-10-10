@@ -5,6 +5,7 @@ import RatingScale10 from "@/app/components/ui/RatingScale10";
 import { contributionRolesKey } from "@/src/types";
 import { getSmileyRatingLabel } from "@/src/utils/helpers";
 import { unknown } from "zod";
+import { cn } from "@/src/lib/helpers";
 
 interface GovernanceInfraToolingFormProps {
   rating1: number;
@@ -15,6 +16,7 @@ interface GovernanceInfraToolingFormProps {
   setExtraFeedback: (extraFeedback: string) => void;
   onSubmit: (formData: any) => void;
   onClose: () => void;
+  className?: string;
 }
 
 const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
@@ -26,6 +28,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
   setExtraFeedback,
   onSubmit,
   onClose,
+  className,
 }) => {
   const [localRating1, setLocalRating1] = useState(rating1);
   const [localSmileyRating, setLocalSmileyRating] = useState(smileyRating);
@@ -59,23 +62,21 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center"
+      className={cn(
+        "fixed inset-0 bg-gray-600/60 flex justify-center items-center",
+        className
+      )}
       onClick={onClose}
     >
       <div
-        className="relative m-auto p-6 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-2/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
+        className="relative Content m-auto p-6 bg-white rounded-lg shadow-lg max-w-4xl w-3/4 md:w-1/2 lg:w-2/3 max-h-[90vh] overflow-y-auto mx-4 md:mx-20"
         onClick={(e) => e.stopPropagation()}
       >
         <>
           {/* Close Button */}
-          <button
-            className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
-            onClick={onClose}
-          >
-            <RxCross2 className="h-6 w-6" />
-          </button>
+          
           <h2 className="text-xl font-bold mb-4 text-center">
-            Attest to Contribution
+            ✨🔴 Complete your Review 🔴✨
           </h2>
           {/* <div className="mb-4">
             <h3 className="font-semibold text-center">Please select the roles you perform within Optimism's Governance for which this contribution has been impactful. Select all that apply.</h3>
@@ -146,24 +147,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
           </div>
           <hr className="my-4" />
           {/* Q4 */}
-          <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2">
-              Any additional feedback or suggestions on this contribution? This
-              response will be confidential and only shared with the
-              contributor.
-            </label>
-            <textarea
-              value={localExtraFeedback}
-              onChange={(e) => setLocalExtraFeedback(e.target.value)}
-              className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
-              rows={4}
-              maxLength={200}
-            />
-            <div className="text-right text-xs text-gray-500 mt-1">
-              {localExtraFeedback.length}/200
-            </div>
-          </div>
-          <hr className="my-4" />
+     
           <div className="text-center py-3">
             <button
               className="btn bg-headerblack text-white hover:bg-blue-500 mr-2"
@@ -179,12 +163,6 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
             </button>
           </div>
         </>
-        <button
-          onClick={onClose}
-          className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4"
-        >
-          <RxCross2 className="w-5 h-5" />
-        </button>
       </div>
     </div>
   );
