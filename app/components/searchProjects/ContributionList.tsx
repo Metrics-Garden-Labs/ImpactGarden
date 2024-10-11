@@ -6,7 +6,6 @@ import React, {
   useRef,
   useCallback,
 } from "react";
-import { useGlobalState } from "@/src/config/config";
 import {
   ContributionWithProjectsAndAttestationCount,
   Project,
@@ -17,7 +16,6 @@ import SpinnerIcon from "../ui/spinnermgl/mglspinner";
 import Mgltree from "../ui/spinnermgl/mgltree";
 import useSWR from "swr";
 import { getUserAttestations } from "./actions";
-import ContributionReviewModal from "./ContributionReviewModal";
 import ProjectModal from "./ProjectModal";
 
 interface Props {
@@ -54,7 +52,9 @@ const ContributionList: React.FC<Props> = ({
     (project) => project.projectUid === selectedContribution?.projectUid
   );
 
-  console.debug({ selectedContribution, project });
+  //console.debug({ selectedContribution, project });
+  console.debug({ visibleContributions, contributions });
+
   const { data: userAttestations = [] } = useSWR(
     fid ? `user-data-${fid}` : null,
     async () => {
@@ -78,30 +78,30 @@ const ContributionList: React.FC<Props> = ({
 
   // Disable scroll when modal is open
   useEffect(() => {
-	const handleScrollLock = () => {
-	  if (modalOpen) {
-		const scrollY = window.scrollY;
-		document.body.style.position = 'fixed';
-		document.body.style.top = `-${scrollY}px`;
-		document.body.style.width = '100%';
-	  } else {
-		const scrollY = scrollPositionRef.current;
-		document.body.style.position = '';  
-		document.body.style.top = '';
-		document.body.style.width = '';
-		window.scrollTo(0, scrollY); 
-	  }
-	};
-  
-	handleScrollLock(); 
-  
-	return () => {
-	  document.body.style.position = '';
-	  document.body.style.top = '';
-	  document.body.style.width = '';
-	};
+    const handleScrollLock = () => {
+      if (modalOpen) {
+        const scrollY = window.scrollY;
+        document.body.style.position = "fixed";
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.width = "100%";
+      } else {
+        const scrollY = scrollPositionRef.current;
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.width = "";
+        window.scrollTo(0, scrollY);
+      }
+    };
+
+    handleScrollLock();
+
+    return () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+    };
   }, [modalOpen]);
-  
+
   // Set isFiltering to true when sortOrder or filter changes
   useEffect(() => {
     setIsFiltering(true);
@@ -110,7 +110,7 @@ const ContributionList: React.FC<Props> = ({
   }, [sortOrder, filter]);
 
   // Filter contributions based on query
-  const filteredContributions = useMemo(() => {
+  const filteredContributions = (() => {
     return contributions.filter((contribution) => {
       if (
         query &&
@@ -123,7 +123,7 @@ const ContributionList: React.FC<Props> = ({
       }
       return true;
     });
-  }, [contributions, query]);
+  })();
 
   // Sort contributions
   const sortedContributions = useMemo(() => {
@@ -168,39 +168,45 @@ const ContributionList: React.FC<Props> = ({
   }, [filteredContributions, sortOrder]);
 
   // Load more contributions when scrolling
-  const loadMoreContributions = useCallback(() => {
-    if (!isLoading && visibleContributions < sortedContributions.length) {
+  const loadMoreContributions = () => {
+    if (
+      !isLoading &&
+      visibleContributions < sortedContributions.length &&
+      !isFiltering
+    ) {
       setIsLoading(true);
       setTimeout(() => {
         setVisibleContributions((prev) => prev + 12);
         setIsLoading(false);
-      }, 200); // Simulating a delay for smoother loading
+      }, 350); // Simulating a delay for smoother loading
     }
-  }, [isLoading, visibleContributions, sortedContributions.length]);
+  };
 
-  // Auto-load when the user scrolls to the bottom
   useEffect(() => {
+    const currentTarget = observerTarget.current; // Get the current target
+
+    if (!currentTarget) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          loadMoreContributions(); // Load more when the target is intersecting
+          console.debug("Intersecting", entries[0]);
+          loadMoreContributions();
         }
       },
-      { threshold: 0.75 } // Ensure the whole target is visible
+      { threshold: 0.5 }
     );
 
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
+    if (currentTarget) {
+      observer.observe(currentTarget); // Observe only if currentTarget is defined
     }
 
     return () => {
-      if (observerTarget.current) {
-        observer.unobserve(observerTarget.current);
+      if (currentTarget) {
+        observer.unobserve(currentTarget); // Cleanup unobserving
       }
     };
-  }, [loadMoreContributions]); // Dependencies include only the callback
-
-
+  });
 
   const urlHelper = (url: string) => {
     if (!url.match(/^https?:\/\//)) {
@@ -310,11 +316,10 @@ const ContributionList: React.FC<Props> = ({
           )
         )}
       </div>
-
-      {visibleContributions < sortedContributions.length && !isFiltering && (
-        <div ref={observerTarget} className="flex justify-center my-8"></div>
-      )}
-
+      <div
+        ref={observerTarget}
+        className="flex h-px w-full justify-center py-10"
+      />
       {/* Render the modal if you have one */}
       <ProjectModal
         isOpen={modalOpen}
