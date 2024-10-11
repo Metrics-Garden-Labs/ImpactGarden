@@ -144,14 +144,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     }
   };
 
-  const compileFormData = (commonData: any, specificData: any) => {
-    const { governancetype, ...restOfCommonData } = commonData;
-    return {
-      ...restOfCommonData,
-      data: specificData,
-    };
-  };
-
+ 
   const handleFormSubmit = async (formData: any) => {
     try {
       setIsLoading(true);
@@ -368,12 +361,6 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
           case "Infra & Tooling":
             return (
               <GovernanceInfraToolingForm
-                smileyRating={smileyRating}
-                rating1={rating1}
-                feedback={feedback}
-                setFeedback={setFeedback}
-                extrafeedback={extrafeedback}
-                setExtraFeedback={setExtraFeedback}
                 onSubmit={handleFormSubmit}
                 onClose={onClose}
                 className={className}
