@@ -8,32 +8,20 @@ import { unknown } from "zod";
 import { cn } from "@/src/lib/helpers";
 
 interface GovernanceInfraToolingFormProps {
-  rating1: number;
-  smileyRating: number;
-  feedback: string;
-  setFeedback: (feedback: string) => void;
-  extrafeedback: string;
-  setExtraFeedback: (extraFeedback: string) => void;
   onSubmit: (formData: any) => void;
   onClose: () => void;
   className?: string;
 }
 
 const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
-  rating1,
-  smileyRating,
-  feedback,
-  setFeedback,
-  extrafeedback,
-  setExtraFeedback,
   onSubmit,
   onClose,
   className,
 }) => {
-  const [localRating1, setLocalRating1] = useState(rating1);
-  const [localSmileyRating, setLocalSmileyRating] = useState(smileyRating);
-  const [localFeedback, setLocalFeedback] = useState(feedback);
-  const [localExtraFeedback, setLocalExtraFeedback] = useState(extrafeedback);
+  const [localRating1, setLocalRating1] = useState<number>();
+  const [localSmileyRating, setLocalSmileyRating] = useState(0);
+  const [localFeedback, setLocalFeedback] = useState("");
+  const [localExtraFeedback, setLocalExtraFeedback] = useState("");
 
   const additionalInfo = [
     "The absence of this tool would have little to no impact on my work.",
@@ -43,10 +31,16 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
 
   const handleSubmit = () => {
     //convert smiley rating to label
-    if (localSmileyRating === 0 || undefined) {
+    if (localSmileyRating === 0) {
       alert("Please leave rating, Neutral, Slighly Upset or Extremely Upset.");
       return; // Prevent form submission
     }
+
+	if (localRating1 === undefined) {
+		alert("Please rate the project.");
+		return; // Prevent form submission
+	  }
+
     console.log("localSmileyRating", localSmileyRating);
     const smileyRatingLabel = getSmileyRatingLabel(localSmileyRating);
 
@@ -74,7 +68,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
       >
         <>
           {/* Close Button */}
-          
+
           <h2 className="text-xl font-bold mb-4 text-center">
             ✨🔴 Complete your Review 🔴✨
           </h2>
@@ -128,8 +122,10 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
           </div> */}
           {/* Q3 */}
           <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2 ">
-              Please provide a brief explanation for your rating.
+            <label className="block text-gray-700  mb-2 ">
+              <strong>
+                Please provide a brief explanation for your rating.
+              </strong>
               <br />
               For example, what aspects of this tool make it stand out from
               others, or what challenges do you face without it?
@@ -147,16 +143,10 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
           </div>
           <hr className="my-4" />
           {/* Q4 */}
-     
+
           <div className="text-center py-3">
             <button
-              className="btn bg-headerblack text-white hover:bg-blue-500 mr-2"
-              onClick={onClose}
-            >
-              Back
-            </button>
-            <button
-              className="btn bg-headerblack text-white hover:bg-blue-500"
+              className="btn bg-headerblack text-white hover:bg-black"
               onClick={handleSubmit}
             >
               Send Review
