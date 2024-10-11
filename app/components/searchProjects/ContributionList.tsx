@@ -6,7 +6,6 @@ import React, {
   useRef,
   useCallback,
 } from "react";
-import { useGlobalState } from "@/src/config/config";
 import {
   ContributionWithProjectsAndAttestationCount,
   Project,
@@ -17,7 +16,6 @@ import SpinnerIcon from "../ui/spinnermgl/mglspinner";
 import Mgltree from "../ui/spinnermgl/mgltree";
 import useSWR from "swr";
 import { getUserAttestations } from "./actions";
-import ContributionReviewModal from "./ContributionReviewModal";
 import ProjectModal from "./ProjectModal";
 
 interface Props {
@@ -54,7 +52,9 @@ const ContributionList: React.FC<Props> = ({
     (project) => project.projectUid === selectedContribution?.projectUid
   );
 
-  console.debug({ selectedContribution, project });
+  //console.debug({ selectedContribution, project });
+  console.debug({ visibleContributions, contributions });
+
   const { data: userAttestations = [] } = useSWR(
     fid ? `user-data-${fid}` : null,
     async () => {
@@ -110,7 +110,7 @@ const ContributionList: React.FC<Props> = ({
   }, [sortOrder, filter]);
 
   // Filter contributions based on query
-  const filteredContributions = useMemo(() => {
+  const filteredContributions = (() => {
     return contributions.filter((contribution) => {
       if (
         query &&
@@ -123,7 +123,7 @@ const ContributionList: React.FC<Props> = ({
       }
       return true;
     });
-  }, [contributions, query]);
+  })();
 
   // Sort contributions
   const sortedContributions = useMemo(() => {
@@ -168,7 +168,7 @@ const ContributionList: React.FC<Props> = ({
   }, [filteredContributions, sortOrder]);
 
   // Load more contributions when scrolling
-  const loadMoreContributions = useCallback(() => {
+  const loadMoreContributions = () => {
     if (
       !isLoading &&
       visibleContributions < sortedContributions.length &&
@@ -178,9 +178,9 @@ const ContributionList: React.FC<Props> = ({
       setTimeout(() => {
         setVisibleContributions((prev) => prev + 12);
         setIsLoading(false);
-      }, 200); // Simulating a delay for smoother loading
+      }, 350); // Simulating a delay for smoother loading
     }
-  }, [isLoading, visibleContributions, sortedContributions.length]);
+  };
 
   useEffect(() => {
     const currentTarget = observerTarget.current; // Get the current target
@@ -190,6 +190,7 @@ const ContributionList: React.FC<Props> = ({
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
+          console.debug("Intersecting", entries[0]);
           loadMoreContributions();
         }
       },
