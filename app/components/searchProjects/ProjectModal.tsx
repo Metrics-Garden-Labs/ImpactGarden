@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { RxCross2 } from "react-icons/rx";
-import { Contribution, Project } from "../../../src/types";
+import { Contribution, ContributionWithProjectsAndAttestationCount, Project } from "../../../src/types";
 import { formatOneliner } from "../../../src/utils/fomatOneliner";
 import AttestationModal2 from "../projects/AttestationModal2";
 
@@ -10,7 +10,7 @@ interface ProjectModalProps {
   onClose: () => void;
   project: Project | null;
   checkwebsiteUrl: (url: string) => string;
-  contribution: Contribution | null;
+  contribution: ContributionWithProjectsAndAttestationCount | null;
 }
 
 const ProjectModal: React.FC<ProjectModalProps> = ({
@@ -23,6 +23,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   const [activeTab, setActiveTab] = useState<"description" | "review">(
     "description"
   );
+  console.log("contribution", contribution);
 
   useEffect(() => {
     if (isOpen) {
@@ -69,7 +70,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           <div className="mb-4 items-center py-3">
             <h3 className="font-semibold text-center">Description</h3>
             <p className="text-left font-sm text-[#A6A6A6] leading-relaxed">
-              {formatOneliner(project.oneliner || "")}
+              {contribution?.description}
             </p>
           </div>
         ) : (
