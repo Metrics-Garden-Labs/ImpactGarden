@@ -78,30 +78,30 @@ const ContributionList: React.FC<Props> = ({
 
   // Disable scroll when modal is open
   useEffect(() => {
-	const handleScrollLock = () => {
-	  if (modalOpen) {
-		const scrollY = window.scrollY;
-		document.body.style.position = 'fixed';
-		document.body.style.top = `-${scrollY}px`;
-		document.body.style.width = '100%';
-	  } else {
-		const scrollY = scrollPositionRef.current;
-		document.body.style.position = '';  
-		document.body.style.top = '';
-		document.body.style.width = '';
-		window.scrollTo(0, scrollY); 
-	  }
-	};
-  
-	handleScrollLock(); 
-  
-	return () => {
-	  document.body.style.position = '';
-	  document.body.style.top = '';
-	  document.body.style.width = '';
-	};
+    const handleScrollLock = () => {
+      if (modalOpen) {
+        const scrollY = window.scrollY;
+        document.body.style.position = "fixed";
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.width = "100%";
+      } else {
+        const scrollY = scrollPositionRef.current;
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.width = "";
+        window.scrollTo(0, scrollY);
+      }
+    };
+
+    handleScrollLock();
+
+    return () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+    };
   }, [modalOpen]);
-  
+
   // Set isFiltering to true when sortOrder or filter changes
   useEffect(() => {
     setIsFiltering(true);
@@ -169,7 +169,11 @@ const ContributionList: React.FC<Props> = ({
 
   // Load more contributions when scrolling
   const loadMoreContributions = useCallback(() => {
-    if (!isLoading && visibleContributions < sortedContributions.length) {
+    if (
+      !isLoading &&
+      visibleContributions < sortedContributions.length &&
+      !isFiltering
+    ) {
       setIsLoading(true);
       setTimeout(() => {
         setVisibleContributions((prev) => prev + 12);
@@ -199,8 +203,6 @@ const ContributionList: React.FC<Props> = ({
       }
     };
   }, [loadMoreContributions]); // Dependencies include only the callback
-
-
 
   const urlHelper = (url: string) => {
     if (!url.match(/^https?:\/\//)) {
@@ -310,11 +312,10 @@ const ContributionList: React.FC<Props> = ({
           )
         )}
       </div>
-
-      {visibleContributions < sortedContributions.length && !isFiltering && (
-        <div ref={observerTarget} className="flex justify-center my-8"></div>
-      )}
-
+      <div
+        ref={observerTarget}
+        className="flex h-px w-full justify-center my-8"
+      />
       {/* Render the modal if you have one */}
       <ProjectModal
         isOpen={modalOpen}
