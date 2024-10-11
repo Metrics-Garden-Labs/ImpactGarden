@@ -13,8 +13,6 @@ import {
 } from "@/src/types";
 import Image from "next/image";
 import useLocalStorage from "@/src/hooks/use-local-storage-state";
-// If you have a modal for contributions, import it
-// import ContributionModal from "./ContributionModal"; // Adjust the import path
 import SpinnerIcon from "../ui/spinnermgl/mglspinner";
 import Mgltree from "../ui/spinnermgl/mgltree";
 import useSWR from "swr";
@@ -50,6 +48,7 @@ const ContributionList: React.FC<Props> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isFiltering, setIsFiltering] = useState(false);
   const observerTarget = useRef<HTMLDivElement | null>(null);
+  const scrollPositionRef = useRef(0);
 
   const project = projects.find(
     (project) => project.projectUid === selectedContribution?.projectUid
@@ -64,6 +63,45 @@ const ContributionList: React.FC<Props> = ({
     }
   );
 
+  const openModal = (
+    contribution: ContributionWithProjectsAndAttestationCount
+  ) => {
+    scrollPositionRef.current = window.scrollY; // Save the scroll position
+    setSelectedContribution(contribution);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    window.scrollTo(0, scrollPositionRef.current); // Restore the scroll position
+  };
+
+  // Disable scroll when modal is open
+  useEffect(() => {
+	const handleScrollLock = () => {
+	  if (modalOpen) {
+		const scrollY = window.scrollY;
+		document.body.style.position = 'fixed';
+		document.body.style.top = `-${scrollY}px`;
+		document.body.style.width = '100%';
+	  } else {
+		const scrollY = scrollPositionRef.current;
+		document.body.style.position = '';  
+		document.body.style.top = '';
+		document.body.style.width = '';
+		window.scrollTo(0, scrollY); 
+	  }
+	};
+  
+	handleScrollLock(); 
+  
+	return () => {
+	  document.body.style.position = '';
+	  document.body.style.top = '';
+	  document.body.style.width = '';
+	};
+  }, [modalOpen]);
+  
   // Set isFiltering to true when sortOrder or filter changes
   useEffect(() => {
     setIsFiltering(true);
@@ -162,16 +200,7 @@ const ContributionList: React.FC<Props> = ({
     };
   }, [loadMoreContributions]); // Dependencies include only the callback
 
-  const openModal = (
-    contribution: ContributionWithProjectsAndAttestationCount
-  ) => {
-    setSelectedContribution(contribution);
-    setModalOpen(true);
-  };
 
-  const closeModal = () => {
-    setModalOpen(false);
-  };
 
   const urlHelper = (url: string) => {
     if (!url.match(/^https?:\/\//)) {
