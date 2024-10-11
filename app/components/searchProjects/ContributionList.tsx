@@ -182,27 +182,30 @@ const ContributionList: React.FC<Props> = ({
     }
   }, [isLoading, visibleContributions, sortedContributions.length]);
 
-  // Auto-load when the user scrolls to the bottom
   useEffect(() => {
+    const currentTarget = observerTarget.current; // Get the current target
+
+    if (!currentTarget) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          loadMoreContributions(); // Load more when the target is intersecting
+          loadMoreContributions();
         }
       },
-      { threshold: 0.75 } // Ensure the whole target is visible
+      { threshold: 0.5 }
     );
 
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
+    if (currentTarget) {
+      observer.observe(currentTarget); // Observe only if currentTarget is defined
     }
 
     return () => {
-      if (observerTarget.current) {
-        observer.unobserve(observerTarget.current);
+      if (currentTarget) {
+        observer.unobserve(currentTarget); // Cleanup unobserving
       }
     };
-  }, [loadMoreContributions]); // Dependencies include only the callback
+  });
 
   const urlHelper = (url: string) => {
     if (!url.match(/^https?:\/\//)) {
