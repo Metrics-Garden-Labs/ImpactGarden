@@ -88,6 +88,28 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* Alert always visible */}
+      {/* {!user.fid && ( */}
+        <div
+          role="alert"
+          className="alert bg-[#F4D3C3] text-[#424242] flex items-center rounded-none justify-center h-16 w-full border-none"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            className="h-6 w-6 shrink-0 stroke-current">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Connect your delegate or badgeholder wallet to your Farcaster account.</span>
+        </div>
+      {/* )} */}
+
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black opacity-50 z-40"
