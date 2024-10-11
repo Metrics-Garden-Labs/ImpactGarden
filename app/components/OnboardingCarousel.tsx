@@ -86,23 +86,23 @@ const OnboargingCarousel: React.FC<OnboargingCarouselProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center text-black justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-2xl shadow-xl w-1/3 h-3/4 overflow-hidden relative">
+      <div className="bg-white rounded-2xl shadow-xl w-2/5 h-4/5 overflow-hidden relative">
         <button
           className="absolute top-4 right-4 text-black hover:text-gray-800"
           onClick={onClose} // Cierra el modal al hacer clic en la cruz
         >
           <RxCross2 className="h-6 w-6" />
         </button>
-        <div className="flex flex-col items-center justify-center h-full">
-          <div className="flex flex-col items-center justify-center h-[500px]">  
+        <div className="flex flex-col items-center pt-3 justify-center h-full">
+          <div className="flex flex-col items-center pt-4 h-[500px]">  
             <Image
               src={steps[currentStep].image}
               alt={steps[currentStep].title}
-              width={500}
+              width={550}
               height={250}
               className="object-cover"
             />
-            <h2 className="text-5xl text-left leading-11 px-10 mt-4">
+            <h2 className="text-5xl leading-11  px-10 mt-4 w-full">
               {steps[currentStep].title}
             </h2>
             <p className="px-10 mt-4 text-base">
@@ -118,7 +118,7 @@ const OnboargingCarousel: React.FC<OnboargingCarouselProps> = ({
             </button>
           )}
           <div className="flex items-center justify-center mt-6 w-full px-4">
-            <div className="flex items-center justify-center space-x-2">
+            <div className="flex items-center p-4 justify-center space-x-2">
               {steps.map((_, index) => (
                 <div
                   key={index}
