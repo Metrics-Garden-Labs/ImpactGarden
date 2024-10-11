@@ -318,7 +318,7 @@ const ContributionList: React.FC<Props> = ({
       </div>
       <div
         ref={observerTarget}
-        className="flex h-px w-full justify-center my-8"
+        className="flex h-px w-full justify-center py-10"
       />
       {/* Render the modal if you have one */}
       <ProjectModal
