@@ -4,6 +4,7 @@ import { RxCross2 } from "react-icons/rx";
 import { Contribution, ContributionWithProjectsAndAttestationCount, Project } from "../../../src/types";
 import { formatOneliner } from "../../../src/utils/fomatOneliner";
 import AttestationModal2 from "../projects/AttestationModal2";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 interface ProjectModalProps {
   isOpen: boolean;
@@ -23,7 +24,15 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   const [activeTab, setActiveTab] = useState<"description" | "review">(
     "description"
   );
-  console.log("contribution", contribution);
+  const [isLongDescription, setIsLongDescription] = useState(false);
+
+  const DESCRIPTION_PREVIEW_LENGTH = 300;
+
+  const description = contribution?.description || '';
+
+  const toggleLongDescription = () => {
+    setIsLongDescription(!isLongDescription);
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -69,9 +78,29 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         {activeTab === "description" ? (
           <div className="mb-4 items-center py-3">
             <h3 className="font-semibold text-center">Description</h3>
-            <p className="text-left font-sm text-[#A6A6A6] leading-relaxed">
-              {contribution?.description}
+            <p className={`text-left font-sm text-[#A6A6A6] leading-relaxed 
+              ${isLongDescription ? '' : 'line-clamp-6'}`}
+            >
+              {formatOneliner(description)}
             </p>
+            {description.length > DESCRIPTION_PREVIEW_LENGTH && (
+              <div className='flex justify-center'>
+              <button
+                onClick={toggleLongDescription}
+                className="mt-2 text-gray-600 text-center hover:text-black text-sm flex items-center gap-1"
+              >
+                {isLongDescription ? (
+                  <>
+                    Show less <IoIosArrowUp />
+                  </>
+                ) : (
+                  <>
+                    Show more <IoIosArrowDown />
+                  </>
+                )}
+              </button>
+              </div>
+            )}
           </div>
         ) : (
           <>
