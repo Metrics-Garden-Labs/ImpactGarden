@@ -103,7 +103,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
           {/* Q2 */}
           <div className="mb-6">
             <h3 className="font-semibold text-center text-black">
-              How would you feel if this tool/contribution ceased to exist?
+              How would you feel if this tool ceased to exist?
             </h3>
             <SmileyRatingScale
               rating={localSmileyRating}
