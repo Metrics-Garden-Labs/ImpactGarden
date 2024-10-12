@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import Image from "next/image";
 import { RxCross2 } from "react-icons/rx";
@@ -45,7 +43,7 @@ const steps = [
     description: (
       <>
         <strong>
-          Read through the description of the project and then click on {"“"}Review{"”"}
+          Read through the description of the project and then click on {"“"}Review{"”"}{" "}
           to start your review.
         </strong>{" "}
         The review is made up of 3 questions. That{"'"}s it!
@@ -82,6 +80,16 @@ const OnboargingCarousel: React.FC<OnboargingCarouselProps> = ({
     onClose(); // Cierra el modal al hacer clic en "Start Reviewing"
   };
 
+  const handleNext = () => {
+    setCurrentStep((prevStep) => (prevStep + 1) % steps.length);
+  };
+
+  const handlePrevious = () => {
+    setCurrentStep((prevStep) =>
+      prevStep === 0 ? steps.length - 1 : prevStep - 1
+    );
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -102,7 +110,7 @@ const OnboargingCarousel: React.FC<OnboargingCarouselProps> = ({
               height={250}
               className="object-cover"
             />
-            <h2 className="text-5xl leading-11  px-10 mt-4 w-full">
+            <h2 className="text-5xl leading-11  px-10  w-full">
               {steps[currentStep].title}
             </h2>
             <p className="px-10 mt-4 text-base">
@@ -117,8 +125,11 @@ const OnboargingCarousel: React.FC<OnboargingCarouselProps> = ({
               Start Reviewing
             </button>
           )}
-          <div className="flex items-center justify-center mt-6 w-full px-4">
-            <div className="flex items-center p-4 justify-center space-x-2">
+          <div className="flex items-center justify-center mt-6 mb-4 w-full px-4">
+            <button onClick={handlePrevious} className="text-2xl pb-[3px]">
+              {"<"}
+            </button>
+            <div className="flex items-center p-2 justify-center space-x-2">
               {steps.map((_, index) => (
                 <div
                   key={index}
@@ -129,6 +140,9 @@ const OnboargingCarousel: React.FC<OnboargingCarouselProps> = ({
                 />
               ))}
             </div>
+            <button onClick={handleNext} className="text-2xl pb-[3px]">
+              {">"}
+            </button>
           </div>
         </div>
       </div>
