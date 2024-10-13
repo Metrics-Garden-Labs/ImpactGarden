@@ -32,8 +32,9 @@ const steps = [
           You will be reviewing projects only in the tooling & infra
           sub-category.
         </strong>{" "}
-        Please start by reviewing the projects you use frequently, try to review
-        as many projects that you have used as you can.
+        Please only review projects you have used.{" "}
+        <strong>Do NOT review any projects you have COIs with.{""}</strong>
+        Try to review as many projects as you can.
       </>
     ),
   },
@@ -43,8 +44,8 @@ const steps = [
     description: (
       <>
         <strong>
-          Read through the description of the project and then click on {"“"}Review{"”"}{" "}
-          to start your review.
+          Read through the description of the project and then click on {"“"}
+          Review{"”"} to start your review.
         </strong>{" "}
         The review is made up of 3 questions. That{"'"}s it!
       </>
@@ -102,7 +103,7 @@ const OnboargingCarousel: React.FC<OnboargingCarouselProps> = ({
           <RxCross2 className="h-6 w-6" />
         </button>
         <div className="flex flex-col items-center pt-3 justify-center h-full">
-          <div className="flex flex-col items-center pt-4 h-[500px]">  
+          <div className="flex flex-col items-center pt-4 h-[500px]">
             <Image
               src={steps[currentStep].image}
               alt={steps[currentStep].title}
