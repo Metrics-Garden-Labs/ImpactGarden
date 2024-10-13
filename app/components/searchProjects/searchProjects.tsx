@@ -1,7 +1,8 @@
-import { higherCategoryKey } from '@/src/types';
-import React, { useState, useEffect, useRef } from 'react';
+import { higherCategoryKey } from "@/src/types";
+import React, { useState, useEffect, useRef } from "react";
 import { FaChevronDown, FaChevronUp, FaSearch } from "react-icons/fa";
-import { useDebouncedCallback } from 'use-debounce';
+import { useDebouncedCallback } from "use-debounce";
+import { PiSealWarningFill } from "react-icons/pi";
 
 interface Props {
   onSearchChange: (query: string) => void;
@@ -15,15 +16,33 @@ const categories: higherCategoryKey[] = ["Governance"];
 // "OP Stack", "Onchain Builders"
 
 const subcategories = {
-	Governance: ["Infra & Tooling"],
-	//  "Research & Analytics", "Collaboration and Onboarding", "Governance Structures"
-  "OP Stack": ["Ethereum Core Contributions", "OP Stack Research and Development", "OP Stack Tooling"],
-  "Onchain Builders": ["CeFi", "Crosschain", "DeFi", "Governance", "NFT", "Social", "Utilities"],
+  Governance: ["Infra & Tooling"],
+  //  "Research & Analytics", "Collaboration and Onboarding", "Governance Structures"
+  "OP Stack": [
+    "Ethereum Core Contributions",
+    "OP Stack Research and Development",
+    "OP Stack Tooling",
+  ],
+  "Onchain Builders": [
+    "CeFi",
+    "Crosschain",
+    "DeFi",
+    "Governance",
+    "NFT",
+    "Social",
+    "Utilities",
+  ],
 };
 
 const sortOptions = ["A-Z", "Recently Added", "Most Attested", "Z-A"];
 
-const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, currentFilter, currentSortOrder }: Props) => {
+const SearchProjects = ({
+  onSearchChange,
+  onFilterChange,
+  onSortOrderChange,
+  currentFilter,
+  currentSortOrder,
+}: Props) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState<string | null>(null);
@@ -34,8 +53,8 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
 
   useEffect(() => {
     if (currentFilter) {
-      const [category, subcategory] = currentFilter.split(':');
-      setSelectedCategory(category as higherCategoryKey || "");
+      const [category, subcategory] = currentFilter.split(":");
+      setSelectedCategory((category as higherCategoryKey) || "");
       setSelectedSubcategory(subcategory || "");
     } else {
       setSelectedCategory("");
@@ -46,7 +65,10 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+      if (
+        filterRef.current &&
+        !filterRef.current.contains(event.target as Node)
+      ) {
         setIsFilterOpen(false);
       }
       if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
@@ -54,9 +76,9 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -78,23 +100,24 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
   };
 
   const handleSubcategoryChange = (subcategory: string) => {
-	const associatedCategory = Object.keys(subcategories).find((category) =>
-	  subcategories[category as higherCategoryKey].includes(subcategory)
-	);
-	if (selectedSubcategory === subcategory) {
-	  setSelectedSubcategory("");
-	  onFilterChange(selectedCategory);  
-	} else {
-	  if (associatedCategory && !selectedCategory) {
-		setSelectedCategory(associatedCategory as higherCategoryKey);
-	  }
-	  setSelectedSubcategory(subcategory);
-	  onFilterChange(`${associatedCategory || selectedCategory}:${subcategory}`);
-	}
+    const associatedCategory = Object.keys(subcategories).find((category) =>
+      subcategories[category as higherCategoryKey].includes(subcategory)
+    );
+    if (selectedSubcategory === subcategory) {
+      setSelectedSubcategory("");
+      onFilterChange(selectedCategory);
+    } else {
+      if (associatedCategory && !selectedCategory) {
+        setSelectedCategory(associatedCategory as higherCategoryKey);
+      }
+      setSelectedSubcategory(subcategory);
+      onFilterChange(
+        `${associatedCategory || selectedCategory}:${subcategory}`
+      );
+    }
 
-	setIsFilterOpen(false); // Close the filter menu after selection
+    setIsFilterOpen(false); // Close the filter menu after selection
   };
-  
 
   const handleSortOrderChange = (newSortOrder: string) => {
     onSortOrderChange(newSortOrder);
@@ -103,13 +126,28 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
 
   return (
     <div className="bg-white">
-      <div className='container mx-auto px-4 max-w-6xl bg-white'>
-        <h1 className="text-2xl font-semibold mt-10 mb-10">Review Projects</h1>
+      <div className="container mx-auto px-4 max-w-6xl bg-white">
+        <h1 className="text-2xl font-semibold mt-10 mb-2">Review Projects</h1>
+        <div className="items-center flex gap-1 justify-center">
+          <PiSealWarningFill className="text-red-500 size-4 inline-block" />
+          <p className="text-gray-500 text-left w-full text-sm">
+            Do NOT review any projects you have COIs with.
+          </p>
+        </div>
+        <div className="items-center flex gap-2 justify-center">
+          <p className="text-gray-500 text-left w-full text-sm">
+            <PiSealWarningFill className="text-red-500 size-4 inline-block" />
+           {" "} Please report to the Impact Garden team any reviews where there is a
+            COI.
+          </p>
+        </div>
         <hr className="border-t border-gray-300 my-4" />
-        <div className='flex flex-col sm:flex-row justify-between bg-white items-center mt-6 mb-5 px-0 space-y-4 sm:space-y-0'>
+        <div className="flex flex-col sm:flex-row justify-between bg-white items-center mt-6 mb-5 px-0 space-y-4 sm:space-y-0">
           <div className="flex flex-col sm:flex-row flex-grow space-y-4 sm:space-y-0 sm:space-x-4 bg-white w-full sm:w-auto">
             <div className="relative w-full sm:w-5/12">
-              <label htmlFor="search" className="sr-only">Search</label>
+              <label htmlFor="search" className="sr-only">
+                Search
+              </label>
               <input
                 className="w-full rounded-md border-gray-200 py-3 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 placeholder="Search projects"
@@ -122,8 +160,16 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
                 onClick={() => setIsFilterOpen(!isFilterOpen)}
                 className="w-full px-4 py-2 text-left bg-white border border-gray-300 rounded-md focus:outline-none flex justify-between items-center truncate"
               >
-                <span>{selectedCategory || selectedSubcategory ? `${selectedCategory}${selectedSubcategory ? `` : ''}` : 'Select Category'}</span>
-                <FaChevronDown className={`transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
+                <span>
+                  {selectedCategory || selectedSubcategory
+                    ? `${selectedCategory}${selectedSubcategory ? `` : ""}`
+                    : "Select Category"}
+                </span>
+                <FaChevronDown
+                  className={`transition-transform ${
+                    isFilterOpen ? "rotate-180" : ""
+                  }`}
+                />
               </button>
               {isFilterOpen && (
                 <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
@@ -131,27 +177,41 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
                     <div key={category} className="p-2">
                       <button
                         onClick={() => handleCategoryChange(category)}
-                        className={`w-full text-left p-2 flex justify-between items-center rounded-md ${selectedCategory === category ? 'bg-[#B0B0B0]' : 'hover:bg-[#B0B0B0]'}`}
+                        className={`w-full text-left p-2 flex justify-between items-center rounded-md ${
+                          selectedCategory === category
+                            ? "bg-[#B0B0B0]"
+                            : "hover:bg-[#B0B0B0]"
+                        }`}
                       >
                         <span>{category}</span>
-                        {subcategories[category].length > 0 && (
-                          openCategory === category ? <FaChevronUp /> : <FaChevronDown />
-                        )}
-                      </button>
-                      {openCategory === category && subcategories[category].length > 0 && (
-                        <div className="ml-4">
-                          {subcategories[category].map((subcategory) => (
-                            <button
-                              key={subcategory}
-							  disabled 
-                              onClick={() => handleSubcategoryChange(subcategory)}
-                              className={`w-full text-left p-2 cursor-not-allowed rounded-md ${selectedSubcategory === subcategory ? 'no-class' : 'no-class'}`}
-                            >
-                              {subcategory}
-                            </button>
+                        {subcategories[category].length > 0 &&
+                          (openCategory === category ? (
+                            <FaChevronUp />
+                          ) : (
+                            <FaChevronDown />
                           ))}
-                        </div>
-                      )}
+                      </button>
+                      {openCategory === category &&
+                        subcategories[category].length > 0 && (
+                          <div className="ml-4">
+                            {subcategories[category].map((subcategory) => (
+                              <button
+                                key={subcategory}
+                                disabled
+                                onClick={() =>
+                                  handleSubcategoryChange(subcategory)
+                                }
+                                className={`w-full text-left p-2 cursor-not-allowed rounded-md ${
+                                  selectedSubcategory === subcategory
+                                    ? "no-class"
+                                    : "no-class"
+                                }`}
+                              >
+                                {subcategory}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                     </div>
                   ))}
                 </div>
@@ -183,10 +243,12 @@ const SearchProjects = ({ onSearchChange, onFilterChange, onSortOrderChange, cur
         {(selectedCategory || selectedSubcategory) && (
           <div className="mb-10">
             <div className="inline-block  text-gray-800 text-sm font-medium py-2 px-4 rounded-md border">
-              {`${selectedCategory}${selectedSubcategory ? `: ${selectedSubcategory}` : ''}`}
+              {`${selectedCategory}${
+                selectedSubcategory ? `: ${selectedSubcategory}` : ""
+              }`}
               <button
                 className="ml-2 text-gray-600 cursor-not-allowed hover:text-gray-800"
-				disabled
+                disabled
                 onClick={() => {
                   setSelectedCategory("");
                   setSelectedSubcategory("");
