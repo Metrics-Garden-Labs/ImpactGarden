@@ -11,8 +11,8 @@ import { NeynarAPIClient } from "@neynar/nodejs-sdk"; // Import NeynarAPIClient
 // Load environment variables from .env file
 dotenv.config();
 
-const POSTGRES_URL = process.env.POSTGRES_URL;
 const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY;
+const POSTGRES_URL = process.env.POSTGRES_URL;
 
 if (!POSTGRES_URL) {
   console.error("POSTGRES_URL environment variable is not set.");
@@ -34,7 +34,7 @@ const client = new NeynarAPIClient(NEYNAR_API_KEY); // Initialize NeynarAPIClien
 
 const addProjectsToDB = async () => {
   try {
-    const filePath = path.join(__dirname, "Round6Projects5.json");
+    const filePath = path.join(__dirname, "Round7Projects.json");
     const jsonData = fs.readFileSync(filePath, "utf-8");
     const projectsData = JSON.parse(jsonData);
 
