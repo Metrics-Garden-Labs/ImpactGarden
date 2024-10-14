@@ -32,9 +32,9 @@ const getOpStackProjects = async (): Promise<void> => {
   const round6SchemaId =
     "0x2169b74bfcb5d10a6616bbc8931dc1c56f8d1c305319a9eeca77623a991d4b80";
 
-  const dateFilter = Math.floor(
-    new Date("2024-10-10T10:00:00Z").getTime() / 1000
-  );
+  // const dateFilter = Math.floor(
+  //   new Date("2024-10-11T11:00:00Z").getTime() / 1000
+  // );
   // const dateFilter = Math.floor(
   //   new Date("2024-10-09T10:00:00Z").getTime() / 1000
   // );
@@ -45,12 +45,12 @@ const getOpStackProjects = async (): Promise<void> => {
   //   new Date("2024-10-04T00:00:00Z").getTime() / 1000
   // );
   // Date filter: projects created on or after 1st October 2024
-  // const dateFilter = Math.floor(
-  //   new Date("2024-10-01T00:00:00Z").getTime() / 1000
-  // );
+  const dateFilter = Math.floor(
+    new Date("2024-10-14T08:00:00Z").getTime() / 1000
+  );
 
   // Output file path
-  const outputFile = path.join(__dirname, "Round6Projects5.json");
+  const outputFile = path.join(__dirname, "Round7Projects.json");
 
   const allMetadata = [];
 
@@ -400,3 +400,4 @@ getOpStackProjects()
 //09/10/24
 //10/10/24 10:00am
 //11/10/24 11:00am
+//14/10/24 8:35
