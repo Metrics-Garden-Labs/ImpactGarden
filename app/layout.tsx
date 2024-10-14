@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
-import localFont from 'next/font/local';
+import localFont from "next/font/local";
 import { Manrope } from "next/font/google";
-import '@rainbow-me/rainbowkit/styles.css';
+import "@rainbow-me/rainbowkit/styles.css";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
 import ClientHelmetProvider from "./components/ClientHelmetProvider";
-import MatomoTracker from '../src/utils/MatomoTracker';
+import MatomoTracker from "../src/utils/MatomoTracker";
 import "./globals.css";
-import { Providers } from './providers';
+import { Providers } from "./providers";
 import Navbar from "./components/ui/Navbar";
+import Footer from "./components/ui/Footer";
 
 const manrope = Manrope({ subsets: ["latin"] });
 
@@ -33,9 +34,10 @@ export default function RootLayout({
           <MatomoTracker />
           <Providers>
             <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-            <div className="min-h-screen bg-white">
+            <div className="min-h-screen flex flex-col bg-white">
               <Navbar />
-              <main>{children}</main>
+              <main className="flex-grow">{children}</main>
+              <Footer />
             </div>
           </Providers>
         </ClientHelmetProvider>
