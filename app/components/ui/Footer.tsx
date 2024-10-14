@@ -47,7 +47,7 @@ export default function Footer() {
             <FaXTwitter className="text-white text-lg w-6 h-6 hover:text-opacity-75" />
           </Link>
           <Link
-            href="https://t.me/+yFClKgNH2y80N2Fhhttps://t.me/+yFClKgNH2y80N2Fh"
+            href="https://t.me/+yFClKgNH2y80N2Fh"
             target="_blank"
             className="flex items-center"
           >
