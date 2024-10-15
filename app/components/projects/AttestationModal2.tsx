@@ -455,6 +455,8 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
           attestationType={contribution}
           setAttestationUID={setAttestationUID}
           easScanEndpoints={easScanEndpoints}
+		  onClose={onClose}
+
         />
       )}
     </div>
