@@ -7,6 +7,7 @@ interface AttestationConfirmationModalProps {
   attestationType: Project | Contribution | null;
   setAttestationUID: (uid: string) => void;
   easScanEndpoints: { [key: string]: string };
+  onClose?: () => void;
 }
 
 const AttestationConfirmationModal: React.FC<
@@ -16,12 +17,13 @@ const AttestationConfirmationModal: React.FC<
   attestationType,
   setAttestationUID,
   easScanEndpoints,
+  onClose,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   const handleClose = () => {
     setIsOpen(false);
-    window.location.reload();
+    onClose?.();
   };
 
   if (!isOpen) return null;
@@ -35,7 +37,7 @@ const AttestationConfirmationModal: React.FC<
           {" "}
           Thank you for reviewing this project
         </p>
-
+        {""}
         <div className="flex justify-center mt-4">
           <button
             className="px-4 py-2 bg-[#424242] text-white rounded-md"
