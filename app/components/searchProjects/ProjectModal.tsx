@@ -13,6 +13,7 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 interface ProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSubmit?: () => void;
   project: Project | null;
   checkwebsiteUrl: (url: string) => string;
   contribution: ContributionWithProjectsAndAttestationCount | null;
@@ -21,6 +22,7 @@ interface ProjectModalProps {
 const ProjectModal: React.FC<ProjectModalProps> = ({
   isOpen,
   onClose,
+  onSubmit,
   project,
   contribution,
   checkwebsiteUrl,
@@ -115,6 +117,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                 setActiveTab("description");
                 onClose();
               }}
+              onSubmit={onSubmit}
               project={project}
               contribution={contribution}
               className="relative w-full block [&_.Content]:overflow-visible bg-white [&_.Content]:shadow-none [&_.Content]:max-h-none [&_.Content]:!w-full [&_.Content]:!m-0"
