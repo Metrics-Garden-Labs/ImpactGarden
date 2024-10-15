@@ -14,7 +14,7 @@ import Image from "next/image";
 import useLocalStorage from "@/src/hooks/use-local-storage-state";
 import SpinnerIcon from "../ui/spinnermgl/mglspinner";
 import Mgltree from "../ui/spinnermgl/mgltree";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import { getUserAttestations } from "./actions";
 import ProjectModal from "./ProjectModal";
 
@@ -55,13 +55,14 @@ const ContributionList: React.FC<Props> = ({
   //console.debug({ selectedContribution, project });
   console.debug({ visibleContributions, contributions });
 
-  const { data: userAttestations = [] } = useSWR(
-    fid ? `user-data-${fid}` : null,
-    async () => {
-      const result = await getUserAttestations(fid);
-      return result;
-    }
-  );
+  const KEY = fid ? `user-data-${fid}` : null;
+  const { data: userAttestations = [] } = useSWR(KEY, async () => {
+    const result = await getUserAttestations(fid);
+    return result;
+  });
+
+  const { mutate } = useSWRConfig();
+  const revalidate = () => mutate(KEY);
 
   const openModal = (
     contribution: ContributionWithProjectsAndAttestationCount
@@ -74,6 +75,7 @@ const ContributionList: React.FC<Props> = ({
   const closeModal = () => {
     setModalOpen(false);
     window.scrollTo(0, scrollPositionRef.current); // Restore the scroll position
+    setTimeout(revalidate, 500);
   };
 
   // Disable scroll when modal is open
