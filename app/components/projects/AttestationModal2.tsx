@@ -34,6 +34,7 @@ interface AttestationModalProps {
   isOpen: boolean;
   onClose: () => void;
   contribution: Contribution | null;
+  onSubmit?: () => void;
   project: Project | null;
   className?: string;
 }
@@ -41,6 +42,7 @@ interface AttestationModalProps {
 const AttestationModal2: React.FC<AttestationModalProps> = ({
   isOpen,
   onClose,
+  onSubmit,
   contribution,
   project,
   className,
@@ -144,7 +146,6 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
     }
   };
 
- 
   const handleFormSubmit = async (formData: any) => {
     try {
       setIsLoading(true);
@@ -331,6 +332,8 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
         body: JSON.stringify(attestationData),
       });
 
+      onSubmit?.();
+
       if (!response.ok) {
         throw new Error("Failed to submit attestation");
       }
@@ -455,8 +458,7 @@ const AttestationModal2: React.FC<AttestationModalProps> = ({
           attestationType={contribution}
           setAttestationUID={setAttestationUID}
           easScanEndpoints={easScanEndpoints}
-		  onClose={onClose}
-
+          onClose={onClose}
         />
       )}
     </div>
