@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { RxCross2 } from "react-icons/rx";
-import { Contribution, ContributionWithProjectsAndAttestationCount, Project } from "../../../src/types";
+import {
+  Contribution,
+  ContributionWithProjectsAndAttestationCount,
+  Project,
+} from "../../../src/types";
 import { formatOneliner } from "../../../src/utils/fomatOneliner";
 import AttestationModal2 from "../projects/AttestationModal2";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
@@ -28,7 +32,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
 
   const DESCRIPTION_PREVIEW_LENGTH = 300;
 
-  const description = contribution?.description || '';
+  const description = contribution?.description || "";
 
   const toggleLongDescription = () => {
     setIsLongDescription(!isLongDescription);
@@ -78,27 +82,28 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         {activeTab === "description" ? (
           <div className="mb-4 items-center py-3">
             <h3 className="font-semibold text-center">Description</h3>
-            <p className={`text-left font-sm text-[#A6A6A6] leading-relaxed 
-              ${isLongDescription ? '' : 'line-clamp-6'}`}
+            <p
+              className={`text-left font-sm text-[#A6A6A6] leading-relaxed 
+              ${isLongDescription ? "" : "line-clamp-6"}`}
             >
               {formatOneliner(description)}
             </p>
             {description.length > DESCRIPTION_PREVIEW_LENGTH && (
-              <div className='flex justify-center'>
-              <button
-                onClick={toggleLongDescription}
-                className="mt-2 text-gray-600 text-center hover:text-black text-sm flex items-center gap-1"
-              >
-                {isLongDescription ? (
-                  <>
-                    Show less <IoIosArrowUp />
-                  </>
-                ) : (
-                  <>
-                    Show more <IoIosArrowDown />
-                  </>
-                )}
-              </button>
+              <div className="flex justify-center">
+                <button
+                  onClick={toggleLongDescription}
+                  className="mt-2 text-gray-600 text-center hover:text-black text-sm flex items-center gap-1"
+                >
+                  {isLongDescription ? (
+                    <>
+                      Show less <IoIosArrowUp />
+                    </>
+                  ) : (
+                    <>
+                      Show more <IoIosArrowDown />
+                    </>
+                  )}
+                </button>
               </div>
             )}
           </div>
@@ -106,7 +111,10 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           <>
             <AttestationModal2
               isOpen={activeTab === "review"}
-              onClose={() => setActiveTab("description")}
+              onClose={() => {
+                setActiveTab("description");
+                onClose();
+              }}
               project={project}
               contribution={contribution}
               className="relative w-full block [&_.Content]:overflow-visible bg-white [&_.Content]:shadow-none [&_.Content]:max-h-none [&_.Content]:!w-full [&_.Content]:!m-0"
@@ -118,7 +126,10 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           <div className="mb-4">
             <h3 className="font-semibold text-center">Website</h3>
             <p className="text-left font-sm text-[#A6A6A6] leading-relaxed overflow-wrap break-words max-w-full mx-auto truncate">
-              <Link target="_blank" href={`${checkwebsiteUrl(project.websiteUrl)}`}>
+              <Link
+                target="_blank"
+                href={`${checkwebsiteUrl(project.websiteUrl)}`}
+              >
                 <span className="text-left font-sm text-[#A6A6A6] leading-relaxed hover:text-[#2C3F2D] visited:text-indigo-600">
                   {project.websiteUrl}
                 </span>
