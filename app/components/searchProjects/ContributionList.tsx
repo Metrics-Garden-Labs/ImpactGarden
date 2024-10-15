@@ -48,6 +48,8 @@ const ContributionList: React.FC<Props> = ({
   const observerTarget = useRef<HTMLDivElement | null>(null);
   const scrollPositionRef = useRef(0);
 
+  const [localAttestations, setLocalAttestations] = useState<string[]>([]);
+
   const project = projects.find(
     (project) => project.projectUid === selectedContribution?.projectUid
   );
@@ -75,7 +77,7 @@ const ContributionList: React.FC<Props> = ({
   const closeModal = () => {
     setModalOpen(false);
     window.scrollTo(0, scrollPositionRef.current); // Restore the scroll position
-    setTimeout(revalidate, 500);
+    setTimeout(revalidate, 2_000);
   };
 
   // Disable scroll when modal is open
@@ -242,9 +244,12 @@ const ContributionList: React.FC<Props> = ({
           : sortedContributions
               .slice(0, visibleContributions)
               .map((contribution) => {
-                const isReviewed = isReviewedContribution(
-                  contribution.projectName || ""
+                const isOptimisticReviewed = localAttestations.includes(
+                  contribution.id?.toString() || "NONE"
                 );
+                const isReviewed =
+                  isOptimisticReviewed ||
+                  isReviewedContribution(contribution.projectName || "");
 
                 return (
                   <div
@@ -326,6 +331,12 @@ const ContributionList: React.FC<Props> = ({
       <ProjectModal
         isOpen={modalOpen}
         onClose={closeModal}
+        onSubmit={() => {
+          setLocalAttestations((current) => [
+            ...current,
+            selectedContribution?.id?.toString() || "",
+          ]);
+        }}
         project={project || null}
         contribution={selectedContribution}
         checkwebsiteUrl={urlHelper}
