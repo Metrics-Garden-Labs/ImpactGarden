@@ -136,9 +136,17 @@ const SearchProjects = ({
         </div>
         <div className="items-center flex gap-2 justify-center">
           <p className="text-gray-500 text-left w-full text-sm">
-            <PiSealWarningFill className="text-red-500 size-4 inline-block" />
-           {" "} Please report to the Impact Garden team any reviews where there is a
+            <PiSealWarningFill className="text-red-500 size-4 inline-block" />{" "}
+            Please report to the Impact Garden team any reviews where there is a
             COI.
+          </p>
+        </div>
+        <div className="items-center flex gap-2 justify-center">
+          <p className="text-gray-500 text-left w-full text-sm">
+            <PiSealWarningFill className="text-red-500 size-4 inline-block" />{" "}
+            Your review should be focused on your use of the tool in relation to
+            your role in the Optimism Collective. Not your general interactions
+            with the tool.
           </p>
         </div>
         <hr className="border-t border-gray-300 my-4" />
