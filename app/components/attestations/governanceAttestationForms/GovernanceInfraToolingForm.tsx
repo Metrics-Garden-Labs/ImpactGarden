@@ -92,7 +92,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
           <div className="mb-6">
             <h3 className="font-semibold text-center text-black">
               How likely are you to recommend this tool to someone in your role
-              or position?
+              or position as part of Governance?
             </h3>
             <RatingScale10
               rating={localRating1}
@@ -103,7 +103,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
           {/* Q2 */}
           <div className="mb-6">
             <h3 className="font-semibold text-center text-black">
-              How would you feel if this tool ceased to exist?
+              How would you feel if this tool ceased to exist for the OP Collective?
             </h3>
             <SmileyRatingScale
               rating={localSmileyRating}
