@@ -32,6 +32,8 @@ const db = drizzle(vsql);
 const coinbaseAddress = "0x357458739F90461b99789350868CD7CF330Dd7EE";
 const optimismAddress = "0x621477dBA416E12df7FF0d48E14c4D20DC85D7D9";
 const opAddressS4 = "0x3C7820f2874b665AC7471f84f5cbd6E12871F4cC";
+const badgeholderSchema =
+  "0xfdcfdad2dbe7489e0ce56b260348b7f14e8365a8a325aef9834818c00d46b31b";
 
 // Network endpoints
 const selectedNetwork1 = "Optimism";
@@ -154,6 +156,7 @@ async function getBadges(fid: string, ethAddress: string) {
     // Optimism Badgeholder Check
     const isOpBadgeholder = await (async () => {
       const opAttestations = await checkOpBadgeholder(
+        badgeholderSchema,
         optimismAddress,
         checkAddress,
         endpoint1

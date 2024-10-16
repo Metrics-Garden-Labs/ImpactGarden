@@ -1,4 +1,5 @@
 export const checkOpBadgeholder = async (
+  badgeholderSchema: string,
   OpAddress: string,
   address: string,
   endpoint1: string
@@ -7,6 +8,8 @@ export const checkOpBadgeholder = async (
     console.log("OpAddress", OpAddress);
     console.log("address", address);
     console.log("endpoint", endpoint1);
+    console.log("badgeholderSchema", badgeholderSchema);
+
     const response = await fetch(endpoint1, {
       method: "POST",
       headers: {
@@ -14,10 +17,11 @@ export const checkOpBadgeholder = async (
       },
       body: JSON.stringify({
         query: `
-            query Attestations($OpAddress: String!, $address: String!) {
+            query Attestations($badgeholderSchema: String!, $OpAddress: String!, $address: String!) {
               attestations(where: {
+                schemaId: { equals: $badgeholderSchema}
                 attester: { equals: $OpAddress },
-                recipient: { equals: $address }
+                recipient: { equals: $address },
               }) {
                 id
                 attester
@@ -29,6 +33,7 @@ export const checkOpBadgeholder = async (
             }
           `,
         variables: {
+          badgeholderSchema,
           OpAddress,
           address,
         },

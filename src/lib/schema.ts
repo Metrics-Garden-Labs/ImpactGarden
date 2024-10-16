@@ -9,8 +9,6 @@ import {
   uniqueIndex,
   primaryKey,
 } from "drizzle-orm/pg-core";
-import { useGlobalState } from "../config/config";
-import { number } from "zod";
 
 //This is the schema for the users that login to use the app
 export const users = pgTable(
