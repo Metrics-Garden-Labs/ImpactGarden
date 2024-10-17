@@ -92,7 +92,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
           <div className="mb-6">
             <h3 className="font-semibold text-center text-black">
               How likely are you to recommend this tool to someone in your role
-              or position as part of Governance?
+              or position as part of OP Governance?
             </h3>
             <RatingScale10
               rating={localRating1}

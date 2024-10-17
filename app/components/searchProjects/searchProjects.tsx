@@ -145,7 +145,7 @@ const SearchProjects = ({
           <p className="text-gray-500 text-left w-full text-sm">
             <PiSealWarningFill className="text-red-500 size-4 inline-block" />{" "}
             Your review should be focused on your use of the tool in relation to
-            your role in the Optimism Collective. Not your general interactions
+            your role in the Optimism Collective, not your general interactions
             with the tool.
           </p>
         </div>
