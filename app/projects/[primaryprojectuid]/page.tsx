@@ -68,7 +68,6 @@ const ProjectPage = async ({ params }: Props) => {
             />
           </main>
         </div>
-        <Footer />
       </div>
     );
 

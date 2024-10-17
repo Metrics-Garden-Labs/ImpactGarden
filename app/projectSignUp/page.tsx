@@ -279,7 +279,6 @@ export default function ProjectSignUp() {
           selectedProject={selectedProject}
           selectedNetwork={selectedNetwork}
         />
-        <Footer />
       </div>
     );
   }
@@ -332,7 +331,6 @@ export default function ProjectSignUp() {
         <div className="hidden lg:block lg:w-1/3">
         </div>
       </div>
-      <Footer />
       {renderModal()}
     </div>
   );

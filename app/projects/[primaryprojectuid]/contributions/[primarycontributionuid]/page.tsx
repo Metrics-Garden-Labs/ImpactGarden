@@ -58,7 +58,6 @@ const ContributionDetailsPage = async ({ params }: ContributionPageProps) => {
             />
           </main>
         </div>
-        <Footer />
       </div>
     );
   } catch (error: unknown) {
