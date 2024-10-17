@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { toast } from "react-toastify"; // Assuming you're using react-toastify for notifications
+import { toast } from "react-toastify";
 
 interface VerifyUserResponse {
   isVerifiedUser: boolean;
@@ -16,16 +16,13 @@ export const verifyUser = async (
   let isVerifiedUser = false;
 
   try {
-    // Make a POST request to your verify-user API route
     const response = await axios.post<VerifyUserResponse>("/api/verify-user", {
       signerUuid,
       fid,
     });
 
-    // Extract the isVerifiedUser flag from the response
     isVerifiedUser = response.data.isVerifiedUser;
   } catch (err) {
-    // Handle errors, with proper type checks
     if (err instanceof AxiosError) {
       const errorData = err.response?.data as ErrorRes;
       const errorMessage = errorData?.message || "An unexpected error occurred";
