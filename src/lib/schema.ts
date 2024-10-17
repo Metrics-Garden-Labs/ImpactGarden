@@ -114,6 +114,7 @@ export const contributionattestations = pgTable(
     isdelegate: boolean("isdelegate").default(false),
     feedback: text("feedback"),
     extrafeedback: text("extrafeedback"),
+    revoked: boolean("revoked").default(false),
     createdAt: timestamp("createdAt").defaultNow(),
   },
   (contributionattestations) => {
@@ -201,6 +202,7 @@ export const governance_infra_and_tooling = pgTable(
     feeling_if_didnt_exist: text("feeling_if_didnt_exist"),
     explanation: text("explanation"),
     private_feedback: text("private_feedback"),
+    revoked: boolean("revoked").default(false),
     createdAt: timestamp("createdAt").defaultNow(),
   },
   (governance_infra_and_tooling) => {
@@ -241,6 +243,7 @@ export const governance_r_and_a = pgTable(
     effective_for_improvements: text("effective_for_improvements"),
     explanation: text("explanation"),
     private_feedback: text("private_feedback"),
+    revoked: boolean("revoked").default(false),
     createdAt: timestamp("createdAt").defaultNow(),
   },
   (governance_r_and_a) => {
@@ -281,6 +284,7 @@ export const governance_collab_and_onboarding = pgTable(
     feeling_if_didnt_exist: text("feeling_if_didnt_exist"),
     explanation: text("explanation"),
     private_feedback: text("private_feedback"),
+    revoked: boolean("revoked").default(false),
     createdAt: timestamp("createdAt").defaultNow(),
   },
   (governance_collab_and_onboarding) => {
@@ -320,6 +324,7 @@ export const governance_structures_op = pgTable(
     explanation: text("explanation"),
     examples_of_usefulness: text("examples_of_usefulness"),
     private_feedback: text("private_feedback"),
+    revoked: boolean("revoked").default(false),
     createdAt: timestamp("createdAt").defaultNow(),
   },
   (governance_structures_op) => {
@@ -359,6 +364,7 @@ export const onchain_builders = pgTable(
     feeling_if_didnt_exist: text("feeling_if_didnt_exist"),
     explanation: text("explanation"),
     private_feedback: text("private_feedback"),
+    revoked: boolean("revoked").default(false),
     createdAt: timestamp("createdAt").defaultNow(),
   },
   (onchain_builders) => {
@@ -396,6 +402,7 @@ export const op_stack = pgTable(
     attestationUID: text("attestationUID").notNull(),
     feeling_if_didnt_exist: text("feeling_if_didnt_exist"),
     explanation: text("explanation"),
+    revoked: boolean("revoked").default(false),
     createdAt: timestamp("createdAt").defaultNow(),
   },
   (op_stack) => {

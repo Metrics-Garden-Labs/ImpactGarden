@@ -10,6 +10,8 @@ import { RatingSection, renderStars10, renderStars5 } from '../ui/RenderStars';
 import { BadgeDisplay } from '../ui/BadgeDisplay';
 import { getUserBadgeStatus } from '../../../src/utils/badges/badgeHelper';
 import { NEXT_PUBLIC_URL } from '@/src/config/config';
+import useLocalStorage from '@/src/hooks/use-local-storage-state';
+import { revokeAttestationBackend } from './actions';
 
 interface AttestationModalProps {
   attestation: Attestation2 | AttestationDisplay | null;
@@ -25,6 +27,13 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
     isDelegate: false,
     s4Participant: false,
   });
+  const [user] = useLocalStorage("user", {
+    fid: '',
+    username: '',
+    ethAddress: [],
+  });
+
+  console.log('user', user);
 
   // Fetch badge status when the modal opens
  useEffect(() => {
@@ -53,6 +62,21 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
     fetchBadgeStatus();
   }
 }, [isOpen, attestation]);
+
+  const revokeAttestation = async (attestationUID: string) => {
+    console.log('Revoking attestation');
+    if (!attestation?.attestationUID) {
+      console.error('Attestation is null');
+      return;
+    }
+    const revoke = await revokeAttestationBackend(attestation.attestationUID);
+    console.log('Revoke response:', revoke);
+    if (revoke.success) {
+      console.log('Attestation revoked successfully');
+    } else {
+      console.error('Failed to revoke attestation');
+    }
+  };
 
   if (!isOpen || !attestation) return null;
 
@@ -288,12 +312,20 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
             {format(new Date(attestation.createdAt || ''), 'MMMM dd, yyyy')}
           </p>
         </div>
-        <div className="mb-4 text-center">
+        <div className="mb-4 text-center flex justify-center gap-4">
           <Link href={attestationLink}>
             <button className='btn bg-headerblack text-white text-xs hover:bg-gray-200 items-center justify-center hover:text-black px-4 py-1'>
               View on EAS
             </button>
           </Link>
+          {user.fid === attestation.userFid && (
+          <button 
+            onClick={() => revokeAttestation(attestation.attestationUID)}
+            className='btn bg-white text-black text-xs hover:bg-gray-200 items-center justify-center hover:text-black px-4 py-1'
+          >
+            Revoke Review
+          </button>
+          )}
         </div>
         <button onClick={onClose} className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4">
           <RxCross2 className="w-5 h-5" />
