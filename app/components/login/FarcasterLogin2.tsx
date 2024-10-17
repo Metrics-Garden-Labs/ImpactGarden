@@ -98,8 +98,8 @@ const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
     window.onSignInSuccess = async (data: SignInSuccessData) => {
       console.log("Sign in success", data);
 
-      const isVerifiedUser = await verifyUser(data.signer_uuid, data.fid);
-      if (isVerifiedUser && data.is_authenticated) {
+      // const isVerifiedUser = await verifyUser(data.signer_uuid, data.fid);
+      if (data.is_authenticated) {
         setIsAuthenticated(true);
         const updatedUser = {
           fid: data.fid,
