@@ -18,36 +18,36 @@ const steps = [
         enabled your participation in Optimisms governance.{" "}
         <strong>
           To start, make sure your Badgeholder or Delegate wallet is linked to
-          your connected Farcaster account to ensure your reviews are included.
+          your connected Farcaster account to ensure your ratings are included.
         </strong>
       </>
     ),
   },
   {
     image: "/onboarding_two.jpg",
-    title: "Projects to Review",
+    title: "Projects to Rate",
     description: (
       <>
         <strong>
-          You will be reviewing projects only in the tooling & infra
+          You will be rating projects only in the tooling & infra
           sub-category.
         </strong>{" "}
-        Please only review projects you have used.{" "}
-        <strong>Do NOT review any projects you have COIs with.{""}</strong>
-        Try to review as many projects as you can.
+        Please only rate projects you have used.{" "}
+        <strong>Do NOT rate any projects you have COIs with.{""}</strong>
+        Try to rate as many projects as you can.
       </>
     ),
   },
   {
     image: `/onboarding_three.jpg`,
-    title: `Review a project by clicking on it`,
+    title: `Rate a project by clicking on it`,
     description: (
       <>
         <strong>
           Read through the description of the project and then click on {"“"}
-          Review{"”"} to start your review.
+          Rate{"”"} to start your ratings.
         </strong>{" "}
-        The review is made up of 3 questions. That{"'"}s it!
+        The rating is made up of 3 questions. That{"'"}s it!
       </>
     ),
   },
@@ -56,10 +56,10 @@ const steps = [
     title: `Submit, and... Next!`,
     description: (
       <>
-        After completing the review of a project,{" "}
+        After completing the rating of a project,{" "}
         <strong>
           it will be marked with a Reviewed stamp. Close the project and select
-          another one to review!
+          another one to rate!
         </strong>
       </>
     ),
@@ -123,7 +123,7 @@ const OnboargingCarousel: React.FC<OnboargingCarouselProps> = ({
               className=" px-4 py-2 -mt-11 bg-[#424242] text-white rounded-md hover:bg-black"
               onClick={handleStartReviewing}
             >
-              Start Reviewing
+              Start Rating
             </button>
           )}
           <div className="flex items-center justify-center mt-6 mb-4 w-full px-4">
