@@ -234,7 +234,7 @@ const ContributionList: React.FC<Props> = ({
     );
   };
 
-  const reviewCount = userAttestations.length;
+  const reviewCount = userAttestations.length + localAttestations.length;
   const isMetricsGardenReviewExistent = userAttestations.some(
     (attestation) => attestation.id === METRIC_GARDEN_LABS.contribution.id
   );
