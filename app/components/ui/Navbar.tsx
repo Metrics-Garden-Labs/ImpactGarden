@@ -114,38 +114,37 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Alert always visible */}
-      {/* {!user.fid && ( */}
-      <div
-        role="alert"
-        className="alert bg-[#F4D3C3] text-[#424242] flex items-center rounded-none justify-center h-16 w-full border-none"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          className="h-6 w-6 shrink-0 stroke-current"
+      {!user.isAuthenticated && (
+        <div
+          role="alert"
+          className="alert bg-[#F4D3C3] text-[#424242] flex items-center rounded-none justify-center h-16 w-full border-none"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          ></path>
-        </svg>
-        <span>
-          <Link
-            href="https://launamu.notion.site/Optimism-s-R6-Experiment-x-Impact-Garden-11c77d07048080208907fa253d1dc80e"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline text-red-600 "
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            className="h-6 w-6 shrink-0 stroke-current"
           >
-            Connect
-          </Link>{" "}
-          your delegate or badgeholder wallet to your Farcaster account.
-        </span>
-      </div>
-      {/* )} */}
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
+          </svg>
+          <span>
+            <Link
+              href="https://launamu.notion.site/Optimism-s-R6-Experiment-x-Impact-Garden-11c77d07048080208907fa253d1dc80e"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline text-red-600"
+            >
+              Connect
+            </Link>{" "}
+            your delegate or badgeholder wallet to your Farcaster account.
+          </span>
+        </div>
+      )}
 
       {isSidebarOpen && (
         <div
@@ -167,8 +166,7 @@ export default function Navbar() {
           </button>
         </div>
         <ul className="space-y-4 mt-8">
-        
-            {/*
+          {/*
 			  <li><Link
               href="/projectSignUp"
               className="block py-2"
