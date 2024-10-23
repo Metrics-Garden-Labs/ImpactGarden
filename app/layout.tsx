@@ -16,7 +16,7 @@ const manrope = Manrope({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Impact Garden",
-  description: "Impact Garden, Review your favorite web3 projects",
+  description: "Impact Garden, Rate your favorite web3 projects",
 };
 
 export default function RootLayout({
