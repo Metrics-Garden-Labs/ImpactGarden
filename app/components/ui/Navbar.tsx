@@ -64,6 +64,8 @@ export default function Navbar() {
     return null;
   }
 
+  const showConnectBanner = hasJustSignedIn ? false : !user?.fid;
+
   return (
     <>
       <div className="flex justify-between items-center navbar bg-headerblack text-neutral-content p-3 md:p-8">
@@ -114,7 +116,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {hasJustSignedIn ? null : (
+      {showConnectBanner && (
         <div
           role="alert"
           className="alert bg-[#F4D3C3] text-[#424242] flex items-center rounded-none justify-center h-16 w-full border-none"
@@ -150,7 +152,7 @@ export default function Navbar() {
         <div
           className="fixed inset-0 bg-black opacity-50 z-40"
           onClick={closeSidebar}
-        ></div>
+        />
       )}
       <div
         className={`fixed top-0 right-0 h-screen w-64 bg-headerblack text-white p-4 transition-transform duration-300 ease-in-out transform z-50 ${
