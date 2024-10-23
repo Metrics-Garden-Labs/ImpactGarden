@@ -248,7 +248,7 @@ const ContributionList: React.FC<Props> = ({
 
   return (
     <>
-      {1 && (
+      {isOpenReviewMetricsProject && (
         <RateUserExperienceModal
           onClose={() => setLastReviewCount((n) => n + 1)}
         />
