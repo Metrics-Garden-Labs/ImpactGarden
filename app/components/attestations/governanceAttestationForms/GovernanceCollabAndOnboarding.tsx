@@ -154,7 +154,7 @@ const GovernanceCollabAndOnboarding: React.FC<GovernanceCollabAndOnboardingProps
 
           <div className="text-center py-3">
             <button className='btn bg-headerblack text-white hover:bg-blue-500 mr-2' onClick={onClose}>Back</button>
-            <button className="btn bg-headerblack text-white hover:bg-blue-500" onClick={handleSubmit}>Send Review</button>
+            <button className="btn bg-headerblack text-white hover:bg-blue-500" onClick={handleSubmit}>Send Rating</button>
           </div>
         </>
       </div>

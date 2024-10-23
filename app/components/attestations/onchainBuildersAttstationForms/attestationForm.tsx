@@ -123,7 +123,7 @@ const OnchainBuilders: React.FC<OnchainBuildersProps> = ({
 
           <div className="text-center py-3">
             <button className='btn bg-headerblack text-white hover:bg-blue-500 mr-2' onClick={onClose}>Back</button>
-            <button className="btn bg-headerblack text-white hover:bg-blue-500" onClick={handleSubmit}>Send Review</button>
+            <button className="btn bg-headerblack text-white hover:bg-blue-500" onClick={handleSubmit}>Send Rate</button>
           </div>
         </>
         <button onClick={onClose} className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4">

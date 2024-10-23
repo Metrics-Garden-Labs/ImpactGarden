@@ -365,7 +365,7 @@ const AttestationModal: React.FC<AttestationModalProps> = ({
                                 className="btn text-center bg-headerblack text-white hover:bg-blue-500 "
                                 onClick={createAttestation}
                             >
-                                Send Review
+                                Send Rating
                             </button>
                         </div>
                     </>

@@ -150,9 +150,9 @@ useEffect(() => {
       <div className="flex flex-col justify-center items-center p-8 w-full text-black">
         <Image src="/star.png" alt="Smiley" width={60} height={60} className="mb-4" />
         <h1 className="text-xl font-bold text-center mb-4">
-          Review completed!
+          Rating completed!
         </h1>
-        <p className="text-center mb-8 text-sm">Thank you for reviewing this project!</p>
+        <p className="text-center mb-8 text-sm">Thank you for rating this project!</p>
         
         <div className=" rounded-lg shadow-md p-6 mb-12 w-full max-w-sm">
           <Image 
@@ -175,7 +175,7 @@ useEffect(() => {
         ) : (
           <>
             <div className="relative w-full items-center justify-center max-w-6xl flex flex-col text-black">
-              <h3 className="text-lg font-semibold mb-6 text-left w-full">Other projects for you to review</h3>
+              <h3 className="text-lg font-semibold mb-6 text-left w-full">Other projects for you to rate</h3>
               <div className="flex items-center justify-center space-x-7 overflow-x-auto p-6">
                 {contributions.map((contribution, index) => (
                   <div key={index} className="flex-shrink-0 w-56 h-88 bg-white rounded-md p-4 flex flex-col items-center shadow-md">
@@ -200,7 +200,7 @@ useEffect(() => {
                         className="btn btn-primary bg-black text-xs text-white items-center hover:bg-gray-800 px-2 py-1 rounded"
                         onClick={() => openModal(contribution)}
                       >
-                        Review Contribution
+                        Rate Contribution
                       </button>
                     </div>
                   </div>

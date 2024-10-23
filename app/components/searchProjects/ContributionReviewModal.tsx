@@ -110,7 +110,7 @@ const ContributionReviewModal: React.FC<ContributionReviewModalProps> = ({ isOpe
               className="btn btn-primary px-6 py-1 mt-2 bg-[#424242] text-white font-thin rounded-md hover:bg-black"
               onClick={openAttestationModal}
             >
-              Review Contribution
+              Rate Contribution
             </button>
             <Link href={`/projects/${encodeURIComponent(contribution?.primaryprojectuid || '')}`}>
               <button className="btn btn-primary px-6 py-1 mt-2 bg-[#424242] text-white font-thin rounded-md hover:bg-black">

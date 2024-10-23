@@ -6,6 +6,7 @@ import { contributionRolesKey } from "@/src/types";
 import { getSmileyRatingLabel } from "@/src/utils/helpers";
 import { unknown } from "zod";
 import { cn } from "@/src/lib/helpers";
+import { PiSealWarningFill } from "react-icons/pi";
 
 interface GovernanceInfraToolingFormProps {
   onSubmit: (formData: any) => void;
@@ -36,10 +37,10 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
       return; // Prevent form submission
     }
 
-	if (localRating1 === undefined) {
-		alert("Please rate the project.");
-		return; // Prevent form submission
-	  }
+    if (localRating1 === undefined) {
+      alert("Please rate the project.");
+      return; // Prevent form submission
+    }
 
     console.log("localSmileyRating", localSmileyRating);
     const smileyRatingLabel = getSmileyRatingLabel(localSmileyRating);
@@ -69,8 +70,8 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
         <>
           {/* Close Button */}
 
-          <h2 className="text-xl font-bold mb-4 text-center">
-            ✨🔴 Complete your Review 🔴✨
+          <h2 className="text-xl heading font-bold mb-4 text-center">
+            ✨🔴 Complete your Rating 🔴✨
           </h2>
           {/* <div className="mb-4">
             <h3 className="font-semibold text-center">Please select the roles you perform within Optimism's Governance for which this contribution has been impactful. Select all that apply.</h3>
@@ -90,7 +91,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
 
           {/* Q1 */}
           <div className="mb-6">
-            <h3 className="font-semibold text-center text-black">
+            <h3 className="font-semibold description text-center text-black">
               How likely are you to recommend this tool to someone in your role
               or position as part of OP Governance?
             </h3>
@@ -103,7 +104,8 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
           {/* Q2 */}
           <div className="mb-6">
             <h3 className="font-semibold text-center text-black">
-              How would you feel if this tool ceased to exist for the OP Collective?
+              How would you feel if this tool ceased to exist for the OP
+              Collective?
             </h3>
             <SmileyRatingScale
               rating={localSmileyRating}
@@ -141,15 +143,24 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
               {localFeedback.length}/200
             </div>
           </div>
-          <hr className="my-4" />
+          <hr className="mt-2" />
           {/* Q4 */}
 
           <div className="text-center py-3">
+            <PiSealWarningFill className="text-red-600 size-4 inline-block" />
+            <p className="bg-red-400 mt-1 text-xs mb-2 p-2 rounded-lg">
+              <strong>
+                DO NOT RATE THE PROJECT IF YOU HAVEN{"'"}T USED THIS TOOL.
+              </strong>
+			  <br />
+              Your rating should reflect your usage of the tool in the context
+              of OP Governance.
+            </p>
             <button
               className="btn bg-headerblack text-white hover:bg-black"
               onClick={handleSubmit}
             >
-              Send Review
+              Send Rating
             </button>
           </div>
         </>

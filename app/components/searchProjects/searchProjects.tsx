@@ -127,24 +127,24 @@ const SearchProjects = ({
   return (
     <div className="bg-white">
       <div className="container mx-auto px-4 max-w-6xl bg-white">
-        <h1 className="text-2xl font-semibold mt-10 mb-2">Review Projects</h1>
+        <h1 className="text-2xl font-semibold mt-10 mb-2">Rate Projects</h1>
         <div className="items-center flex gap-1 justify-center">
           <PiSealWarningFill className="text-red-500 size-4 inline-block" />
           <p className="text-gray-500 text-left w-full text-sm">
-            Do NOT review any projects you have COIs with.
+            Do NOT rate any projects you have COIs with.
           </p>
         </div>
         <div className="items-center flex gap-2 justify-center">
           <p className="text-gray-500 text-left w-full text-sm">
             <PiSealWarningFill className="text-red-500 size-4 inline-block" />{" "}
-            Please report to the Impact Garden team any reviews where there is a
+            Please report to the Impact Garden team any ratings where there is a
             COI.
           </p>
         </div>
         <div className="items-center flex gap-2 justify-center">
           <p className="text-gray-500 text-left w-full text-sm">
             <PiSealWarningFill className="text-red-500 size-4 inline-block" />{" "}
-            Your review should be focused on your use of the tool in relation to
+            Your rating should be focused on your use of the tool in relation to
             your role in the Optimism Collective, not your general interactions
             with the tool.
           </p>

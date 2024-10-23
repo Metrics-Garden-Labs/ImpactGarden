@@ -1,4 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  PropsWithoutRef,
+  Component,
+  ComponentProps,
+} from "react";
 import Link from "next/link";
 import { RxCross2 } from "react-icons/rx";
 import {
@@ -9,6 +15,7 @@ import {
 import { formatOneliner } from "../../../src/utils/fomatOneliner";
 import AttestationModal2 from "../projects/AttestationModal2";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { cn } from "@/src/lib/helpers";
 
 interface ProjectModalProps {
   isOpen: boolean;
@@ -27,7 +34,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   contribution,
   checkwebsiteUrl,
 }) => {
-  const [activeTab, setActiveTab] = useState<"description" | "review">(
+  const [activeTab, setActiveTab] = useState<"description" | "rating">(
     "description"
   );
   const [isLongDescription, setIsLongDescription] = useState(false);
@@ -71,13 +78,13 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           </button>
           <button
             className={`font-semibold w-full border-b-2 pb-2 ${
-              activeTab === "review"
+              activeTab === "rating"
                 ? "text-black  border-black"
                 : "text-gray-500 border-black/30"
             }`}
-            onClick={() => setActiveTab("review")}
+            onClick={() => setActiveTab("rating")}
           >
-            Review
+            Rate
           </button>
         </div>
 
@@ -110,19 +117,16 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
             )}
           </div>
         ) : (
-          <>
-            <AttestationModal2
-              isOpen={activeTab === "review"}
-              onClose={() => {
-                setActiveTab("description");
-                onClose();
-              }}
-              onSubmit={onSubmit}
-              project={project}
-              contribution={contribution}
-              className="relative w-full block [&_.Content]:overflow-visible bg-white [&_.Content]:shadow-none [&_.Content]:max-h-none [&_.Content]:!w-full [&_.Content]:!m-0"
-            />
-          </>
+          <ProjectReview
+            isOpen={activeTab === "rating"}
+            onClose={() => {
+              setActiveTab("description");
+              onClose();
+            }}
+            onSubmit={onSubmit}
+            project={project}
+            contribution={contribution}
+          />
         )}
 
         {project.websiteUrl && activeTab === "description" && (
@@ -191,6 +195,25 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         </button>
       </div>
     </div>
+  );
+};
+
+export const ProjectReview = ({
+  className,
+  ...props
+}: ComponentProps<typeof AttestationModal2>) => {
+  console.debug({
+    props,
+    metricsData: 1,
+  });
+  return (
+    <AttestationModal2
+      {...props}
+      className={cn(
+        "relative w-full block [&_.Content]:overflow-visible bg-white [&_.Content]:shadow-none [&_.Content]:max-h-none [&_.Content]:!w-full [&_.Content]:!m-0",
+        className
+      )}
+    />
   );
 };
 
