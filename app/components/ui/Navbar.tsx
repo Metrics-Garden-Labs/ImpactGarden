@@ -29,24 +29,18 @@ export default function Navbar() {
   });
   const [hasJustSignedIn, setHasJustSignedIn] = useState(false);
   const [username, setUsername] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   useEffect(() => {
-    if (user.isAuthenticated) {
-      if (hasJustSignedIn) {
-        setisOnboardingCarouselOpen(true);
-        setHasJustSignedIn(false);
-      }
-      setShowAlert(false);
-    } else {
-      setShowAlert(true);
+    if (user.isAuthenticated && hasJustSignedIn) {
+      setisOnboardingCarouselOpen(true);
+      setHasJustSignedIn(false); // Reset the flag
     }
   }, [user.isAuthenticated, hasJustSignedIn]);
-  
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -120,7 +114,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {showAlert && (
+      {hasJustSignedIn ? null : (
         <div
           role="alert"
           className="alert bg-[#F4D3C3] text-[#424242] flex items-center rounded-none justify-center h-16 w-full border-none"
