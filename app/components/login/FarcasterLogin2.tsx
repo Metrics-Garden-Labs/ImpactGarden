@@ -1,14 +1,12 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { verifyUser, removeSearchParams } from '../../../src/utils/verifyUserHelper';
-import useLocalStorage from '../../../src/hooks/use-local-storage-state';
-import { NEXT_PUBLIC_URL, useGlobalState } from '../../../src/config/config';
-import dotenv from 'dotenv';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import UserDropdown from './userSignoutDropdown';
-import { zeroAddress } from 'viem';
-
+import React, { useEffect, useState } from "react";
+import { removeSearchParams } from "../../../src/utils/verifyUserHelper";
+import useLocalStorage from "../../../src/hooks/use-local-storage-state";
+import { NEXT_PUBLIC_URL, useGlobalState } from "../../../src/config/config";
+import dotenv from "dotenv";
+import UserDropdown from "./userSignoutDropdown";
+import { atom, useAtom } from "jotai";
 
 dotenv.config();
 
@@ -36,18 +34,16 @@ interface SignInSuccessData {
     profile: {
       bio: {
         text: string;
-      } 
+      };
     };
     username: string;
-    verifications: string[];  
+    verifications: string[];
     verified_addresses: {
-      eth_addresses: string[];  
-      sol_addresses?: string[]; 
+      eth_addresses: string[];
+      sol_addresses?: string[];
     };
   };
 }
-
-
 
 interface UserLogin {
   fid: string;
@@ -60,20 +56,22 @@ interface FarcasterLoginProps {
   onLoginSuccess: (userData: UserLogin) => void;
 }
 
+export const atomIsSignedIn = atom(false);
+
 const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
   const [user, setUser, removeUser] = useLocalStorage("user", {
-    fid: '',
-    username: '',
-    ethAddress: '',
+    fid: "",
+    username: "",
+    ethAddress: "",
     isAuthenticated: false,
   });
-  
-  const [fid, setFid] = useGlobalState('fid');
-  const [username, setUsername] = useState("");
-  const [firstVerifiedEthAddress, setFirstVerifiedEthAddress] = useGlobalState("ethAddress");
-  const [isSignedIn, setIsSignedIn] = useState(Boolean(user.fid));
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  const [fid, setFid] = useGlobalState("fid");
+  const [username, setUsername] = useState("");
+  const [firstVerifiedEthAddress, setFirstVerifiedEthAddress] =
+    useGlobalState("ethAddress");
+  const [isSignedIn, setIsSignedIn] = useAtom(atomIsSignedIn);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const client_id = process.env.NEXT_PUBLIC_NEYNAR_CLIENT_ID;
 
@@ -82,7 +80,10 @@ const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
   }
 
   useEffect(() => {
+    setIsSignedIn(Boolean(user?.fid));
+  }, [user.fid]);
 
+  useEffect(() => {
     const scriptId = "neynar-signin-script";
     let script = document.getElementById(scriptId) as HTMLScriptElement | null;
 
@@ -110,7 +111,7 @@ const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
         await fetchData(data.fid, updatedUser);
         setIsSignedIn(true);
         removeSearchParams();
-        
+
         setUser(updatedUser);
         onLoginSuccess(updatedUser);
       } else {
@@ -129,7 +130,7 @@ const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
   const handleSignout = () => {
     removeUser();
     setFid("");
-    setUser({ fid: '', username: '', ethAddress: '', isAuthenticated: false });
+    setUser({ fid: "", username: "", ethAddress: "", isAuthenticated: false });
     setUsername("");
     setFirstVerifiedEthAddress("");
     setIsSignedIn(false);
@@ -139,19 +140,19 @@ const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
   async function fetchData(fid: string, updatedUser: UserLogin) {
     try {
       const response = await fetch(`${NEXT_PUBLIC_URL}/api/login`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ fid }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         console.log("Data", data);
       }
     } catch (error) {
-      console.error('Error fetching data', error);
+      console.error("Error fetching data", error);
     }
   }
 
@@ -173,16 +174,16 @@ const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
           className="neynar_signin rounded-lg"
           data-client_id={client_id}
           data-success_callback="onSignInSuccess"
-          data-theme='light'
-          data-variant='farcaster'
-          data-logo_size='25px'
-          data-height='36px'
-          data-width='120px'
-          data-border_radius='10px'
-          data-font_size='16px'
-          data-font_weight='300'
-          data-padding='4px 15px'
-          data-margin='0'
+          data-theme="light"
+          data-variant="farcaster"
+          data-logo_size="25px"
+          data-height="36px"
+          data-width="120px"
+          data-border_radius="10px"
+          data-font_size="16px"
+          data-font_weight="300"
+          data-padding="4px 15px"
+          data-margin="0"
         />
       )}
     </div>

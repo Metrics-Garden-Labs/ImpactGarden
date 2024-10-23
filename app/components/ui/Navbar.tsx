@@ -3,11 +3,12 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { FaBars, FaTimes } from "react-icons/fa";
-import FarcasterLogin from "../login/FarcasterLogin2";
+import FarcasterLogin, { atomIsSignedIn } from "../login/FarcasterLogin2";
 import { isMobile } from "react-device-detect";
 import ReviewCarousel from "../attestations/ReviewCarousel";
 import useLocalStorage from "@/src/hooks/use-local-storage-state";
 import OnboardingCarousel from "../OnboardingCarousel";
+import { useAtom } from "jotai";
 
 interface UserLogin {
   fid: string;
@@ -17,6 +18,7 @@ interface UserLogin {
 }
 
 export default function Navbar() {
+  const [isSignedIn] = useAtom(atomIsSignedIn);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [isOnboardingCarouselOpen, setisOnboardingCarouselOpen] =
@@ -64,8 +66,6 @@ export default function Navbar() {
   if (!isClient) {
     return null;
   }
-
-  const showConnectBanner = !user?.fid;
 
   return (
     <>
@@ -117,7 +117,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {showConnectBanner && (
+      {isSignedIn ? null : (
         <div
           role="alert"
           className="alert bg-[#F4D3C3] text-[#424242] flex items-center rounded-none justify-center h-16 w-full border-none"
