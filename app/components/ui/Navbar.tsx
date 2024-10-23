@@ -21,6 +21,7 @@ export default function Navbar() {
   const [isClient, setIsClient] = useState(false);
   const [isOnboardingCarouselOpen, setisOnboardingCarouselOpen] =
     useState(false);
+
   const [user] = useLocalStorage("user", {
     fid: "",
     username: "",
@@ -64,7 +65,7 @@ export default function Navbar() {
     return null;
   }
 
-  const showConnectBanner = hasJustSignedIn ? false : !user?.fid;
+  const showConnectBanner = !user?.fid;
 
   return (
     <>
