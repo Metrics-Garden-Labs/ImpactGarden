@@ -150,7 +150,7 @@ const GovernanceInfraToolingForm: React.FC<GovernanceInfraToolingFormProps> = ({
             <PiSealWarningFill className="text-red-600 size-4 inline-block" />
             <p className="bg-red-400 mt-1 text-xs mb-2 p-2 rounded-lg">
               <strong>
-                DO NOT RATE THE PROJECT IF YOU HAVEN'T USED THIS TOOL.
+                DO NOT RATE THE PROJECT IF YOU HAVEN{"'"}T USED THIS TOOL.
               </strong>
 			  <br />
               Your rating should reflect your usage of the tool in the context
