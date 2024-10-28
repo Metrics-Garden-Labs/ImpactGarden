@@ -30,7 +30,7 @@ interface Props {
   projects?: Project[];
 }
 
-const atomLastReviewCount = atomWithStorage("lastReviewCount", 0);
+//const atomLastReviewCount = atomWithStorage("lastReviewCount", 0);
 const ContributionList: React.FC<Props> = ({
   contributions,
   query,
@@ -38,7 +38,7 @@ const ContributionList: React.FC<Props> = ({
   sortOrder,
   projects = [],
 }) => {
-  const [lastReviewCount, setLastReviewCount] = useAtom(atomLastReviewCount);
+  // const [lastReviewCount, setLastReviewCount] = useAtom(atomLastReviewCount);
 
   const [user, setUser, removeUser] = useLocalStorage("user", {
     fid: "",
@@ -234,32 +234,36 @@ const ContributionList: React.FC<Props> = ({
     );
   };
 
-  const ALL_REVIEW_IDS = [
-    ...userAttestations.map((attestation) => attestation.id),
-    ...localAttestations,
-  ].filter(
-    (current, index, arr) => arr.findIndex((id) => id == current) === index
-  ); // Remove duplicates
-
-  const reviewCount = ALL_REVIEW_IDS.length;
-  const isMetricsGardenReviewExistent = ALL_REVIEW_IDS.some(
-    (attestationId) => attestationId == METRIC_GARDEN_LABS.contribution.id
-  );
-
-  const isSameReviewCount = reviewCount === lastReviewCount;
-  const isOpenReviewMetricsProject =
-    isMetricsGardenReviewExistent || isSameReviewCount
-      ? false
-      : reviewCount === 2 || (reviewCount > 2 && (reviewCount - 2) % 3 === 0);
-
+  {
+    /* 
+	  Opens the RateUserExperienceModal  
+	  const ALL_REVIEW_IDS = [
+	  ...userAttestations.map((attestation) => attestation.id),
+	  ...localAttestations,
+	].filter(
+	  (current, index, arr) => arr.findIndex((id) => id == current) === index
+	); // Remove duplicates
+  
+	const reviewCount = ALL_REVIEW_IDS.length;
+	const isMetricsGardenReviewExistent = ALL_REVIEW_IDS.some(
+	  (attestationId) => attestationId == METRIC_GARDEN_LABS.contribution.id
+	);
+  
+	const isSameReviewCount = reviewCount === lastReviewCount;
+	const isOpenReviewMetricsProject =
+	  isMetricsGardenReviewExistent || isSameReviewCount
+		? false
+		: reviewCount === 2 || (reviewCount > 2 && (reviewCount - 2) % 3 === 0);
+  
+		 {isOpenReviewMetricsProject && (
+		  <RateUserExperienceModal
+			onClose={() => setLastReviewCount((n) => n + 1)}
+		  />
+		)}
+	  */
+  }
   return (
     <>
-      {isOpenReviewMetricsProject && (
-        <RateUserExperienceModal
-          onClose={() => setLastReviewCount((n) => n + 1)}
-        />
-      )}
-
       <div className="bg-white mx-auto gap-12 max-w-6xl">
         <div className="grid grid-cols-1 gap-4 mx-3 md:grid-cols-3 md:mx-8 lg:grid-cols-4 lg:gap-12 max-w-6xl overflow-y-auto">
           {isFiltering
