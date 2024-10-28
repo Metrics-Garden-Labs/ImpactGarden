@@ -234,13 +234,19 @@ const ContributionList: React.FC<Props> = ({
     );
   };
 
-  const reviewCount = userAttestations.length + localAttestations.length;
-  const isMetricsGardenReviewExistent = userAttestations.some(
-    (attestation) => attestation.id === METRIC_GARDEN_LABS.contribution.id
+  const ALL_REVIEW_IDS = [
+    ...userAttestations.map((attestation) => attestation.id),
+    ...localAttestations,
+  ].filter(
+    (current, index, arr) => arr.findIndex((id) => id == current) === index
+  ); // Remove duplicates
+
+  const reviewCount = ALL_REVIEW_IDS.length;
+  const isMetricsGardenReviewExistent = ALL_REVIEW_IDS.some(
+    (attestationId) => attestationId == METRIC_GARDEN_LABS.contribution.id
   );
 
   const isSameReviewCount = reviewCount === lastReviewCount;
-
   const isOpenReviewMetricsProject =
     isMetricsGardenReviewExistent || isSameReviewCount
       ? false
