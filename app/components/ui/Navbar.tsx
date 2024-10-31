@@ -116,11 +116,11 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-      <div className="bg-[#F4D3C3] text-black text-xl text-center flex items-center gap-2 rounded-none justify-center h-16 w-full border-none">
-        <img src="/opt.svg" alt="MGL Logo" className="h-9 w-9" />
+      <div className="bg-[#F4D3C3] text-black text-center flex items-center gap-2 rounded-none justify-center h-16 w-full border-none">
+        <img src="/opt.svg" alt="MGL Logo" className="size-7" />
         Our experiment has concluded. Thank you for participating! Results will
         be shared soon
-        <img src="/opt.svg" alt="MGL Logo" className="h-9 w-9" />
+        <img src="/opt.svg" alt="MGL Logo" className="size-7" />
       </div>
       {isSidebarOpen && (
         <div
