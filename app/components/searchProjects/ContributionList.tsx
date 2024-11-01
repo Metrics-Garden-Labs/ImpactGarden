@@ -306,7 +306,7 @@ const ContributionList: React.FC<Props> = ({
                         )}
                       </div>
                       {isReviewed && (
-                        <div className="absolute pt-1 pb-16 top-0 bg-white/75 left-0 right-0 bottom-10 flex items-center justify-center">
+                        <div className="absolute pt-1 pb-16 top-0 bg-white/75 left-0 right-0 bottom-20 flex items-center justify-center">
                           <Image
                             src="/reviewed_stamp.svg"
                             alt="Reviewed Stamp"
