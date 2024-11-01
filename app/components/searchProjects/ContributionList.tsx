@@ -21,6 +21,7 @@ import ProjectModal from "./ProjectModal";
 import RateUserExperienceModal from "../ui/RateUserExperience";
 import { METRIC_GARDEN_LABS } from "../ui/RateUserExperience/constants";
 import { useAtom } from "jotai/react";
+import Link from "next/link";
 
 interface Props {
   contributions: ContributionWithProjectsAndAttestationCount[];
@@ -61,8 +62,8 @@ const ContributionList: React.FC<Props> = ({
     (project) => project.projectUid === selectedContribution?.projectUid
   );
 
-  //console.debug({ selectedContribution, project });
-  console.debug({ visibleContributions, contributions });
+ // console.debug({ selectedContribution, project });
+  // console.debug({ visibleContributions, contributions });
 
   const KEY = fid ? `user-data-${fid}` : null;
   const { data: userAttestations = [] } = useSWR(KEY, async () => {
@@ -73,12 +74,10 @@ const ContributionList: React.FC<Props> = ({
   const { mutate } = useSWRConfig();
   const revalidate = () => mutate(KEY);
 
-  const openModal = (
+  const setContributionId = (
     contribution: ContributionWithProjectsAndAttestationCount
   ) => {
-    scrollPositionRef.current = window.scrollY; // Save the scroll position
     setSelectedContribution(contribution);
-    setModalOpen(true);
   };
 
   const closeModal = () => {
@@ -330,12 +329,19 @@ const ContributionList: React.FC<Props> = ({
                             Attestations: {contribution.attestationCount}
                           </p>
                         )}
-                      <button
-                        onClick={() => openModal(contribution)}
-                        className="btn btn-primary px-6 py-1 mt-2 bg-[#424242] cursor-pointer text-white font-thin rounded-md hover:bg-black"
-                      >
-                        {isReviewed ? "View" : "Rate"}
-                      </button>
+
+                      <div className="mb-4 text-center">
+                        <Link
+                          onClick={() => setContributionId(contribution)}
+                          href={`/projects/${encodeURIComponent(
+                            contribution?.primaryprojectuid || ""
+                          )}`}
+                        >
+                          <button className="btn btn-primary px-6 py-1 mt-2 bg-[#424242] cursor-pointer text-white font-thin rounded-md hover:bg-black">
+                            View
+                          </button>
+                        </Link>
+                      </div>
                     </div>
                   );
                 })}
