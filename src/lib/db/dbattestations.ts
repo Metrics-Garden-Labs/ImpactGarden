@@ -29,8 +29,8 @@ import {
   ProjectAttestations,
   Attestation4,
 } from "@/src/types";
-import { desc, sql as drizzlesql } from "drizzle-orm";
-import { inArray, eq, sql } from "drizzle-orm";
+import { and, eq, desc, sql as drizzlesql, ne } from "drizzle-orm";
+import { privacy } from "webextension-polyfill";
 
 export const db = drizzle(vercelsql, { schema });
 
@@ -147,7 +147,12 @@ export const getAttestationsByUserId = async (
     const infraToolingAttestations = await db
       .select()
       .from(governance_infra_and_tooling)
-      .where(eq(governance_infra_and_tooling.userfid, userFid))
+      .where(
+        and(
+          eq(governance_infra_and_tooling.userfid, userFid),
+          ne(governance_infra_and_tooling.private_feedback, "Revoked")
+        )
+      )
       .execute();
 
     const rAndAAttestations = await db
@@ -273,6 +278,7 @@ export const fetchGovernanceAttestationsWithLogos = async (
       feedback: governance_infra_and_tooling.explanation,
       createdAt: governance_infra_and_tooling.createdAt,
       logoUrl: projects.logoUrl,
+      private_feedback: governance_infra_and_tooling.private_feedback,
       likely_to_recommend: governance_infra_and_tooling.likely_to_recommend,
       feeling_if_didnt_exist:
         governance_infra_and_tooling.feeling_if_didnt_exist,
@@ -282,7 +288,12 @@ export const fetchGovernanceAttestationsWithLogos = async (
       projects,
       eq(governance_infra_and_tooling.projectName, projects.projectName)
     )
-    .where(eq(governance_infra_and_tooling.userfid, userFid));
+    .where(
+      and(
+        eq(governance_infra_and_tooling.userfid, userFid),
+        ne(governance_infra_and_tooling.private_feedback, "Revoked")
+      )
+    );
 
   const rAndAAttestations = await db
     .select({
@@ -670,7 +681,13 @@ export const getInfraToolingAttestationsByContribution = async (
       })
       .from(governance_infra_and_tooling)
       .innerJoin(users, eq(governance_infra_and_tooling.userfid, users.fid))
-      .where(eq(governance_infra_and_tooling.contribution, contribution))
+      .where(
+        and(
+          eq(governance_infra_and_tooling.contribution, contribution),
+          ne(governance_infra_and_tooling.private_feedback, "Revoked")
+        )
+      )
+
       .orderBy(desc(governance_infra_and_tooling.createdAt));
 
     return attestations;
