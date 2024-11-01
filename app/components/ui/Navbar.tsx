@@ -171,11 +171,6 @@ export default function Navbar() {
           </li>
         </ul>
       </div>
-      <OnboardingCarousel
-        isOpen={isOnboardingCarouselOpen}
-        onClose={closeModal}
-        userFid={user.fid}
-      />
     </>
   );
 }
