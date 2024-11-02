@@ -7,7 +7,6 @@ interface BadgeDisplayProps {
   isPowerBadgeholder?: boolean;
   isDelegate?: boolean;
   s4Participant?: boolean;
-  size?: 'small' | 'medium' | 'large';
 }
 
 export const BadgeDisplay: React.FC<BadgeDisplayProps> = ({
@@ -15,16 +14,10 @@ export const BadgeDisplay: React.FC<BadgeDisplayProps> = ({
   isOpBadgeholder,
   isPowerBadgeholder,
   isDelegate,
-  s4Participant,
-  size = 'medium'
+  s4Participant
 }) => {
-  const sizeMap = {
-    small: 15,
-    medium: 20,
-    large: 25
-  };
+   
 
-  const badgeSize = sizeMap[size];
 
 
 
@@ -32,27 +25,27 @@ export const BadgeDisplay: React.FC<BadgeDisplayProps> = ({
     <span className="flex items-center space-x-1 ml-2">
       {isCoinbaseVerified && (
         <span className="tooltip" data-tip="Coinbase Verified Wallet">
-          <Image src="/coinbaseWallet.png" alt="Coinbase Wallet Badge" width={badgeSize} height={badgeSize} style={{ height: "auto" }} />
+          <Image src="/coinbaseWallet.png" alt="Coinbase Wallet Badge" width={20} height={20} style={{ height: "auto" }} />
         </span>
       )}
       {isOpBadgeholder && (
         <span className="tooltip" data-tip="OP Badgeholder">
-          <Image src="/opLogo.png" alt="OP Badge" width={badgeSize} height={badgeSize} />
+          <Image src="/badgeholder.svg" alt="OP Badge" width={20} height={20} />
         </span>
       )}
       {isPowerBadgeholder && (
         <span className="tooltip" data-tip="Warpcast Power User">
-          <Image src="/powerBadge.png" alt="Warpcast Power Badge" width={badgeSize} height={badgeSize} style={{ height: "auto" }} />
+          <Image src="/powerBadge.png" alt="Warpcast Power Badge" width={20} height={20} style={{ height: "auto" }} />
         </span>
       )}
       {isDelegate && (
         <span className="tooltip" data-tip="Optimism Delegate">
-          <Image src="/opDelegate.png" alt="Optimism Delegate Badge" width={badgeSize} height={badgeSize} style={{ height: "auto" }} />
+          <Image src="/opDelegate.png" alt="Optimism Delegate Badge" width={20} height={20} style={{ height: "auto" }} />
         </span>
       )}
       {s4Participant && (
         <span className="tooltip" data-tip="Season 4 Participant">
-          <Image src="/s-4grantparticipants.png" alt="Season 4 Participant Badge" width={badgeSize} height={badgeSize} style={{ height: "auto" }}/>
+          <Image src="/s-4grantparticipants.png" alt="Season 4 Participant Badge" width={20} height={20} style={{ height: "auto" }}/>
         </span>
       )}
     </span>
