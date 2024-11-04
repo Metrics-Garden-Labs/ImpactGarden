@@ -61,15 +61,12 @@ const ContributionDetails: React.FC<ContributionDetailsProps> = ({
             Share
             <FaCopy className="ml-1" />
           </button>
-          <div className="cursor-not-allowed">
             <button
               className="btn bg-headerblack  text-white hover:bg-gray-200 items-center justify-center hover:text-black px-2 py-1"
               onClick={() => setIsAttestationModalOpen(true)}
-              disabled
             >
               Endorse
             </button>
-          </div>
         </div>
       </div>
     </>
