@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { format } from 'date-fns';
-import { RxCross2 } from 'react-icons/rx';
-import { Attestation2, AttestationDisplay, AttestationNetworkType } from '@/src/types';
-import { easScanEndpoints } from '../../../src/utils/easScan';
-import Image from 'next/image';
-import { getSmileyRatingEmoji, SmileyRatingSection } from '@/src/utils/helpers';
-import { RatingSection, renderStars10, renderStars5 } from '../ui/RenderStars';
-import { BadgeDisplay } from '../ui/BadgeDisplay';
-import { getUserBadgeStatus } from '../../../src/utils/badges/badgeHelper';
-import { NEXT_PUBLIC_URL } from '@/src/config/config';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { format } from "date-fns";
+import { RxCross2 } from "react-icons/rx";
+import {
+  Attestation2,
+  AttestationDisplay,
+  AttestationNetworkType,
+} from "@/src/types";
+import { easScanEndpoints } from "../../../src/utils/easScan";
+import Image from "next/image";
+import { getSmileyRatingEmoji, SmileyRatingSection } from "@/src/utils/helpers";
+import { RatingSection, renderStars10, renderStars5 } from "../ui/RenderStars";
+import UserBadges from "../ui/UserBadges";
 
 interface AttestationModalProps {
   attestation: Attestation2 | AttestationDisplay | null;
@@ -17,89 +19,66 @@ interface AttestationModalProps {
   onClose: () => void;
 }
 
-const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, isOpen, onClose }) => {
-  const [badgeStatus, setBadgeStatus] = useState({
-    isCoinbaseVerified: false,
-    isOpBadgeholder: false,
-    isPowerBadgeholder: false,
-    isDelegate: false,
-    s4Participant: false,
-  });
-
-  // Fetch badge status when the modal opens
- useEffect(() => {
-  const fetchBadgeStatus = async () => {
-    if (attestation && attestation.userFid) {
-      try {
-        const response = await fetch(`${NEXT_PUBLIC_URL}/api/getBadgeStatus`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fid: attestation.userFid })
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch badge status');
-        }
-
-        const status = await response.json();
-        setBadgeStatus(status);
-      } catch (error) {
-        console.error('Error fetching badge status:', error);
-      }
-    }
-  };
-
-  if (isOpen) {
-    fetchBadgeStatus();
-  }
-}, [isOpen, attestation]);
-
+const AttestationModalView: React.FC<AttestationModalProps> = ({
+  attestation,
+  isOpen,
+  onClose,
+}) => {
   if (!isOpen || !attestation) return null;
 
-  const attestationLink = `${easScanEndpoints[attestation.ecosystem as AttestationNetworkType]}${attestation.attestationUID}`;
-
+  const attestationLink = `${
+    easScanEndpoints[attestation.ecosystem as AttestationNetworkType]
+  }${attestation.attestationUID}`;
 
   const renderAttestationDetails = () => {
-    console.log('Rendering attestation details:', attestation);
-    console.log('category', attestation.category);
-    console.log('subcategory', attestation.subcategory);
+    console.log("Rendering attestation details:", attestation);
+    console.log("category", attestation.category);
+    console.log("subcategory", attestation.subcategory);
 
-    if ('category' in attestation) {
+    if ("category" in attestation) {
       switch (attestation.category) {
         case "Onchain Builders":
           return (
             <>
-                  <div className="mb-4 flex justify-between text-black items-center">
-                  {/* Rating Section */}
-                  <div className="flex-grow mr-2">
-                    <RatingSection
-                      title="Would recommend"
-                      rating={Number(attestation.recommend_contribution) ?? 0}
-                      renderStars={renderStars10}
-                      scaleFactor={2}
+              <div className="mb-4 flex justify-between text-black items-center">
+                {/* Rating Section */}
+                <div className="flex-grow mr-2">
+                  <RatingSection
+                    title="Would recommend"
+                    rating={Number(attestation.recommend_contribution) ?? 0}
+                    renderStars={renderStars10}
+                    scaleFactor={2}
+                  />
+                </div>
+
+                {/* Smiley Rating Section */}
+                {attestation.feeling_if_didnt_exist && (
+                  <div className="flex-grow text-black">
+                    <SmileyRatingSection
+                      title="Absence of Contribution"
+                      description={attestation.feeling_if_didnt_exist}
+                      inline={true}
                     />
                   </div>
-
-                  {/* Smiley Rating Section */}
-                  {attestation.feeling_if_didnt_exist && (
-                    <div className="flex-grow text-black">
-                      <SmileyRatingSection
-                        title="Absence of Contribution"
-                        description={attestation.feeling_if_didnt_exist}
-                        inline={true}
-                      />
-                    </div>
-                  )}
-                </div>
-                </>
+                )}
+              </div>
+            </>
           );
         case "OP Stack":
           return (
             <>
               <div className="mb-4">
-                <h3 className="text-sm font-semibold text-gray-500 text-center">Absence of Contribution</h3>
-                <p className="text-center">{getSmileyRatingEmoji(attestation.feeling_if_didnt_exist || "")}</p>
-                <p className="text-center text-xs text-gray-500">{attestation.feeling_if_didnt_exist || 'N/A'}</p>
+                <h3 className="text-sm font-semibold text-gray-500 text-center">
+                  Absence of Contribution
+                </h3>
+                <p className="text-center">
+                  {getSmileyRatingEmoji(
+                    attestation.feeling_if_didnt_exist || ""
+                  )}
+                </p>
+                <p className="text-center text-xs text-gray-500">
+                  {attestation.feeling_if_didnt_exist || "N/A"}
+                </p>
               </div>
             </>
           );
@@ -109,55 +88,57 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
               return (
                 <>
                   <div className="mb-4 flex justify-between items-center">
-                  {/* Rating Section */}
-                  <div className="flex-grow mr-2">
-                    <RatingSection
-                      title="Would recommend"
-                      rating={Number(attestation.likely_to_recommend) ?? 0}
-                      renderStars={renderStars10}
-                      scaleFactor={2}
-                    />
-                  </div>
-
-                  {/* Smiley Rating Section */}
-                  {attestation.feeling_if_didnt_exist && (
-                    <div className="flex-grow">
-                      <SmileyRatingSection
-                        title="Absence of Contribution"
-                        description={attestation.feeling_if_didnt_exist}
-                        inline={true}
+                    {/* Rating Section */}
+                    <div className="flex-grow mr-2">
+                      <RatingSection
+                        title="Would recommend"
+                        rating={Number(attestation.likely_to_recommend) ?? 0}
+                        renderStars={renderStars10}
+                        scaleFactor={2}
                       />
                     </div>
-                  )}
-                </div>
+
+                    {/* Smiley Rating Section */}
+                    {attestation.feeling_if_didnt_exist && (
+                      <div className="flex-grow">
+                        <SmileyRatingSection
+                          title="Absence of Contribution"
+                          description={attestation.feeling_if_didnt_exist}
+                          inline={true}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </>
               );
             case "Governance Research & Analytics":
               return (
                 <>
-                <div className="mb-4 flex justify-center">
-                  {/* Recommendability */}
-                  <RatingSection
-                    title="Recommendability"
-                    rating={Number(attestation.likely_to_recommend) ?? 0}
-                    renderStars={renderStars10}
-                    scaleFactor={2}  
-                  />
+                  <div className="mb-4 flex justify-center">
+                    {/* Recommendability */}
+                    <RatingSection
+                      title="Recommendability"
+                      rating={Number(attestation.likely_to_recommend) ?? 0}
+                      renderStars={renderStars10}
+                      scaleFactor={2}
+                    />
 
-                  {/* Understanding Governance */}
-                  <RatingSection
-                    title="Understanding Governance"
-                    rating={Number(attestation.useful_for_understanding) ?? 0}
-                    renderStars={renderStars5}
-                  />
+                    {/* Understanding Governance */}
+                    <RatingSection
+                      title="Understanding Governance"
+                      rating={Number(attestation.useful_for_understanding) ?? 0}
+                      renderStars={renderStars5}
+                    />
 
-                  {/* Impact on Governance */}
-                  <RatingSection
-                    title="Impact on Governance"
-                    rating={Number(attestation.effective_for_improvements) ?? 0}
-                    renderStars={renderStars5}
-                  />
-                </div>
+                    {/* Impact on Governance */}
+                    <RatingSection
+                      title="Impact on Governance"
+                      rating={
+                        Number(attestation.effective_for_improvements) ?? 0
+                      }
+                      renderStars={renderStars5}
+                    />
+                  </div>
                 </>
               );
             case "Collaboration & Onboarding":
@@ -168,22 +149,22 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
                     <p className="text-center">{attestation.governance_knowledge || 'N/A'}</p>
                   </div> not on the figma?*/}
                   <div className="flex justify-between items-center">
-                  <div className="flex-grow mr-2">
-                    <RatingSection
-                      title="Would recommend"
-                      rating={Number(attestation.recommend_contribution) ?? 0}
-                      renderStars={renderStars10}
-                      scaleFactor={2}
-                    />
-                  </div>
-                  <div className="flex-grow">
-                    {attestation.feeling_if_didnt_exist && (
-                  <SmileyRatingSection
-                        title="Absence of Contribution"
-                        description={attestation.feeling_if_didnt_exist}
+                    <div className="flex-grow mr-2">
+                      <RatingSection
+                        title="Would recommend"
+                        rating={Number(attestation.recommend_contribution) ?? 0}
+                        renderStars={renderStars10}
+                        scaleFactor={2}
                       />
-                    )}
-                  </div>
+                    </div>
+                    <div className="flex-grow">
+                      {attestation.feeling_if_didnt_exist && (
+                        <SmileyRatingSection
+                          title="Absence of Contribution"
+                          description={attestation.feeling_if_didnt_exist}
+                        />
+                      )}
+                    </div>
                   </div>
                   {/* <div className="mb-4">
                     <h3 className="font-semibold text-center">Explanation</h3>
@@ -196,7 +177,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
                 <>
                   <div className="mb-4">
                     {attestation.feeling_if_didnt_exist && (
-                  <SmileyRatingSection
+                      <SmileyRatingSection
                         title="Absence of Contribution"
                         description={attestation.feeling_if_didnt_exist}
                       />
@@ -224,18 +205,21 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
           {attestation.rating && (
             <div className="mb-4">
               <RatingSection
-                    title="Rating"
-                    rating={Number(attestation.rating) ?? 0}
-                    renderStars={renderStars5}
-                  />
+                title="Rating"
+                rating={Number(attestation.rating) ?? 0}
+                renderStars={renderStars5}
+              />
             </div>
           )}
-          {('improvementareas' in attestation) && attestation.improvementareas && (
-            <div className="mb-4">
-              <h3 className="text-lg text-center mb-3">Improvement Areas</h3>
-              <p className="text-center text-sm text-gray-500">{attestation.improvementareas}</p>
-            </div>
-          )}
+          {"improvementareas" in attestation &&
+            attestation.improvementareas && (
+              <div className="mb-4">
+                <h3 className="text-lg text-center mb-3">Improvement Areas</h3>
+                <p className="text-center text-sm text-gray-500">
+                  {attestation.improvementareas}
+                </p>
+              </div>
+            )}
         </>
       );
     }
@@ -259,43 +243,48 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({ attestation, is
                 alt={attestation.username || ""}
                 width={40}
                 height={40}
-                className='rounded-full'
+                className="rounded-full"
               />
             </div>
           )}
           <div className="flex items-center justify-center">
-          <Link href={`/users/${attestation.username}`}>
-          <p className="text-center font-semibold text-lg">{attestation.username}</p>
-          </Link>
-          <BadgeDisplay
-            isCoinbaseVerified={badgeStatus.isCoinbaseVerified}
-            isOpBadgeholder={badgeStatus.isOpBadgeholder}
-            isPowerBadgeholder={badgeStatus.isPowerBadgeholder}
-            isDelegate={badgeStatus.isDelegate}
-            s4Participant={badgeStatus.s4Participant}
-          />
+            <Link href={`/users/${attestation.username}`}>
+              <p className="text-center font-semibold text-lg">
+                {attestation.username}
+              </p>
+            </Link>
+            <UserBadges fid={attestation.userFid} />
           </div>
         </div>
         <hr className="border-1 border-gray-300 my-2 mx-auto w-1/4 mt-3" />
         {renderAttestationDetails()}
         <div className="mb-5">
           <h3 className="text-lg text-center mb-3">Explanation</h3>
-          <p className="text-center text-sm text-gray-500">{('feedback' in attestation) ? attestation.feedback : (('explanation' in attestation) ? attestation.explanation : 'N/A')}</p>
+          <p className="text-center text-sm text-gray-500">
+            {"feedback" in attestation
+              ? attestation.feedback
+              : "explanation" in attestation
+              ? attestation.explanation
+              : "N/A"}
+          </p>
         </div>
         <div className="mb-4">
           <h3 className="text-lg text-center mb-3">Date</h3>
           <p className="text-center text-sm text-gray-500">
-            {format(new Date(attestation.createdAt || ''), 'MMMM dd, yyyy')}
+            {format(new Date(attestation.createdAt || ""), "MMMM dd, yyyy")}
           </p>
         </div>
         <div className="mb-4 text-center">
           <Link href={attestationLink}>
-            <button className='btn bg-headerblack text-white text-xs hover:bg-gray-200 items-center justify-center hover:text-black px-4 py-1'>
+            <button className="btn bg-headerblack text-white text-xs hover:bg-gray-200 items-center justify-center hover:text-black px-4 py-1">
               View on EAS
             </button>
           </Link>
         </div>
-        <button onClick={onClose} className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4">
+        <button
+          onClick={onClose}
+          className="text-black absolute top-0 right-0 w-5 h-5 mt-4 mr-4"
+        >
           <RxCross2 className="w-5 h-5" />
         </button>
       </div>
