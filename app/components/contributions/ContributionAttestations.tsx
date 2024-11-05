@@ -219,7 +219,7 @@ const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
 
   return (
     <div className="text-black text-left">
-      <div className="  w-full bg-[#F4D3C3]/30 my-4 border-[1px] border-headerblack gap-8 justify-between px-4 py-6 flex items-center">
+      <div className="  w-full bg-[#F4D3C3]/30 my-4 gap-8 justify-between px-4 py-6 flex items-center">
         <h3 className="font-semibold mb-4">Insights</h3>
         <nav className="flex-grow flex justify-end ">
           <div className="relative w-48 sm:w-1/2 md:w-1/5">
