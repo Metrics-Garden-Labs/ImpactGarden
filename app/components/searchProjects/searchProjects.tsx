@@ -149,7 +149,7 @@ const SearchProjects = ({
             with the tool.
           </p>
         </div>
-        <hr className="border-t border-gray-300 my-4" />
+        <hr className="border-t border-lime-900/30 my-4" />
         <div className="flex flex-col sm:flex-row justify-between bg-white items-center mt-6 mb-5 px-0 space-y-4 sm:space-y-0">
           <div className="flex flex-col sm:flex-row flex-grow space-y-4 sm:space-y-0 sm:space-x-4 bg-white w-full sm:w-auto">
             <div className="relative w-full sm:w-5/12">
@@ -157,7 +157,7 @@ const SearchProjects = ({
                 Search
               </label>
               <input
-                className="w-full rounded-md border-gray-200 py-3 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                className="w-full rounded-md border-lime-900/30 py-3 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 placeholder="Search projects"
                 onChange={(e) => debouncedSearch(e.target.value)}
               />
@@ -166,7 +166,7 @@ const SearchProjects = ({
             <div className="relative w-full sm:w-56" ref={filterRef}>
               <button
                 onClick={() => setIsFilterOpen(!isFilterOpen)}
-                className="w-full px-4 py-2 text-left bg-white border border-gray-300 rounded-md focus:outline-none flex justify-between items-center truncate"
+                className="w-full px-4 py-2 text-left bg-white border border-lime-900/30 rounded-md focus:outline-none flex justify-between items-center truncate"
               >
                 <span>
                   {selectedCategory || selectedSubcategory
@@ -180,7 +180,7 @@ const SearchProjects = ({
                 />
               </button>
               {isFilterOpen && (
-                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
+                <div className="absolute z-10 w-full mt-1 bg-white border border-lime-900/30 rounded-md shadow-lg">
                   {categories.map((category) => (
                     <div key={category} className="p-2">
                       <button
@@ -229,12 +229,12 @@ const SearchProjects = ({
           <div className="relative w-full sm:w-auto" ref={sortRef}>
             <button
               onClick={() => setIsSortOpen(!isSortOpen)}
-              className="w-full px-4 py-2 text-left bg-white border border-gray-300 rounded-md focus:outline-none"
+              className="w-full px-4 py-2 text-left bg-white border border-lime-900/30 rounded-md focus:outline-none"
             >
               Sort by: {currentSortOrder}
             </button>
             {isSortOpen && (
-              <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
+              <div className="absolute z-10 w-full mt-1 bg-white border border-lime-900/30 rounded-md shadow-lg">
                 {sortOptions.map((option) => (
                   <button
                     key={option}

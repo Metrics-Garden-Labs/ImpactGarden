@@ -28,7 +28,7 @@ const MultiLinkInput: React.FC<MultiLinkInputProps> = ({ links, setLinks }) => {
           value={currentLink}
           onChange={(e) => setCurrentLink(e.target.value)}
           placeholder="Add a link"
-          className="flex-grow p-2 border border-gray-300 rounded-l-md"
+          className="flex-grow p-2 border border-lime-900/30 rounded-l-md"
         />
         <button
           type="button"

@@ -331,7 +331,7 @@ const FrameCustomization: React.FC<FrameCustomizationProps> = ({ contribution, p
           )}
         </div>
       </div>
-      <div className="w-1/4 p-4 border-l border-gray-300">
+      <div className="w-1/4 p-4 border-l border-lime-900/30">
         <h2 className="text-xl font-bold mb-4">Select Frame</h2>
         <ul className="space-y-2">
           {framesData.map((frame) => (

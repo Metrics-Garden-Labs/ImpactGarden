@@ -237,7 +237,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({
         </div>
         <div className="text-center flex items-center justify-center">
           {attestation.pfp && (
-            <div className="mr-2 rounded-full border-2 border-gray-300 shadow-md p-1">
+            <div className="mr-2 rounded-full border-2 border-lime-900/30 shadow-md p-1">
               <Image
                 src={attestation.pfp}
                 alt={attestation.username || ""}
@@ -256,7 +256,7 @@ const AttestationModalView: React.FC<AttestationModalProps> = ({
             <UserBadges fid={attestation.userFid} />
           </div>
         </div>
-        <hr className="border-1 border-gray-300 my-2 mx-auto w-1/4 mt-3" />
+        <hr className="border-1 border-lime-900/30 my-2 mx-auto w-1/4 mt-3" />
         {renderAttestationDetails()}
         <div className="mb-5">
           <h3 className="text-lg text-center mb-3">Explanation</h3>

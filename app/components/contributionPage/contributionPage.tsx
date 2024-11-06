@@ -155,7 +155,7 @@ export default function ContributionPage({
 
   return (
     <main className="flex-grow relative p-8 sm:p-10 bg-backgroundgray w-full h-full">
-      <div className="mb-4 border-b border-gray-200 mt-4 sm:mt-8">
+      <div className="mb-4 border-b border-lime-900/30 mt-4 sm:mt-8">
         <nav className="flex space-x-4 text-black">
           <button
             className=""

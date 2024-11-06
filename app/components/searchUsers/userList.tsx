@@ -64,7 +64,7 @@ export default async function UserList({ users, query, filter, verificationFilte
       <div className="grid grid-cols-1 gap-4 mx-3 sm:grid-cols-2 sm:gap-4 sm:mx-3 md:grid-cols-3 md:mx-8 md:mx-8 lg:grid-cols-4 lg:gap-12 max-w-6xl overflow-y-auto">
         {filteredUsers.map((user) => (
           <Link key={user.id} href={`/users/${encodeURIComponent(user.username)}`}>
-            <div className="flex flex-col p-6 border justify-center items-center bg-white text-black border-gray-300 rounded-2xl w-full h-60 shadow-lg">
+            <div className="flex flex-col p-6 border justify-center items-center bg-white text-black border-lime-900/30 rounded-2xl w-full h-60 shadow-lg">
               <div className="rounded-full bg-gray-300 w-32 h-32 flex items-center justify-center overflow-hidden mb-4">
                 {user.pfp_url ? (
                   <Image src={user.pfp_url} alt="Profile Picture" width={128} height={128} className="object-cover w-full h-full" />

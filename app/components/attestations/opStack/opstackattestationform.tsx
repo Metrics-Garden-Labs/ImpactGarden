@@ -76,7 +76,7 @@ const OPStackAttestationForm: React.FC<OPStackAttestationFormProps> = ({
                     <div className="mb-8">
                         <h3 className='font-semibold text-center'>Tell us more about why you chose this answer.</h3>
                         <textarea
-                            className="w-full p-2 border border-gray-300 rounded-md"
+                            className="w-full p-2 border border-lime-900/30 rounded-md"
                             rows={4}
                             value={localFeedback}
                             onChange={(e) => setLocalFeedback(e.target.value)}

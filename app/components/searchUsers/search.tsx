@@ -54,14 +54,14 @@ const SearchUsers = () => {
     <>
       <div className="container mx-auto px-4 max-w-6xl bg-white ">
         <h1 className="text-2xl font-semibold mt-10 mb-10">Explore Attestors</h1>
-        <hr className="border-t border-gray-300 my-4"/>
+        <hr className="border-t border-lime-900/30 my-4"/>
 
         <div className='flex flex-col space-y-4 sm:flex-row sm:space-y-0 justify-between bg-white items-center mt-6 mb-10 px-0'>
           <div className="flex flex-col sm:flex-row sm:flex-grow sm:space-x-4 bg-white w-full">
             <div className="relative w-full sm:w-1/2 md:w-2/5 mb-4 sm:mb-0">
               <label htmlFor="search" className="sr-only">Search</label>
               <input
-                className="w-full rounded-md border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                className="w-full rounded-md border-lime-900/30 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 placeholder="Search users"
                 defaultValue={searchParams.get("query")?.toString() || ""}
                 onChange={(e) => debouncedHandleSearch(e.target.value)}
@@ -74,7 +74,7 @@ const SearchUsers = () => {
                 name="verificationFilter"
                 value={verificationFilter}
                 onChange={handleVerificationFilterChange}
-                className="block w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-0 focus:border-0 appearance-none"
+                className="block w-full px-4 py-2 text-gray-900 bg-white border border-lime-900/30 rounded-md focus:outline-none focus:ring-0 focus:border-0 appearance-none"
               >
                 <option value="">Username</option>
                 <option value="coinbaseVerified">Coinbase Verified</option>

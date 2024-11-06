@@ -228,7 +228,7 @@ const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
               onChange={(e) => {
                 setFilter(e.target.value as any);
               }}
-              className="block w-full px-4 py-2 text-gray-900  border border-gray-300 rounded-md focus:outline-none focus:ring-0 focus:border-0 appearance-none"
+              className="block w-full px-4 py-2 text-gray-900  border border-lime-900/30 rounded-md focus:outline-none focus:ring-0 focus:border-0 appearance-none"
             >
               {Object.entries(FILTERS).map(([key, label]) => {
                 return (
@@ -263,7 +263,7 @@ const ContributionAttestations: React.FC<ContributionAttestationsProps> = ({
 
                   return isSelected ? (
                     <div
-                      className="p-4 bg-white border rounded-lg shadow-lg hover:shadow-xl transition-shadow cursor-pointer hover:bg-[#F4D3C3]/20"
+                      className="p-4 bg-white border border-lime-900/30 rounded-lg shadow-lg hover:shadow-xl transition-shadow cursor-pointer hover:bg-[#F4D3C3]/20"
                       onClick={() => handleAttestationClick(attestation)}
                     >
                       <div className="flex items-start mb-2">

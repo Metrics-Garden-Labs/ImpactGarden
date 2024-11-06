@@ -207,7 +207,7 @@ export default function ProfilePage({
         </div>
       )} 
 
-      <div className="mb-4 border-b border-gray-200 mt-4 sm:mt-8">
+      <div className="mb-4 border-b border-lime-900/30 mt-4 sm:mt-8">
         <nav className="flex space-x-4 text-black">
           <button
             className="lg:hidden"

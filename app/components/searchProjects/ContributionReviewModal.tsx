@@ -58,7 +58,7 @@ const ContributionReviewModal: React.FC<ContributionReviewModalProps> = ({ isOpe
             </div>
           )}
 
-          <hr className="border-gray-300 my-4 mx-auto w-1/2" />
+          <hr className="border-lime-900/30 my-4 mx-auto w-1/2" />
 
           <div className="py-3">
             <h3 className="font-semibold text-center">Description</h3>

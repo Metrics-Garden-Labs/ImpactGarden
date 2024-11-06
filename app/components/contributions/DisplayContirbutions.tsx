@@ -68,7 +68,7 @@ const DisplayContributions: React.FC<DisplayContributionsProps> = ({
           <input
             type="text"
             placeholder="Search for a contribution..."
-            className="px-4 py-2 border border-gray-300 rounded-md w-full text-sm"
+            className="px-4 py-2 border border-lime-900/30 rounded-md w-full text-sm"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <span className="absolute right-3 top-3 text-black">
@@ -84,7 +84,7 @@ const DisplayContributions: React.FC<DisplayContributionsProps> = ({
             <FaChevronDown />
           </button>
           {isOpen && (
-            <ul className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10">
+            <ul className="absolute left-0 mt-2 w-full bg-white border border-lime-900/30 rounded-md shadow-lg z-10">
               <li
                 className="px-4 py-2 hover:bg-[#B0B0B0] cursor-pointer"
                 onClick={() => handleSortChange('Most Attestations')}
@@ -115,7 +115,7 @@ const DisplayContributions: React.FC<DisplayContributionsProps> = ({
              key={contribution.easUid}
            >
                <div
-               className="flex flex-col p-4 border bg-white text-black border-gray-300 rounded-lg w-full h-56 shadow-lg overflow-hidden"
+               className="flex flex-col p-4 border bg-white text-black border-lime-900/30 rounded-lg w-full h-56 shadow-lg overflow-hidden"
              >
               <div className="flex-grow flex flex-col justify-center items-center overflow-hidden">
                  <h3 className="text-lg text-center font-semibold mb-2 line-clamp-2 overflow-ellipsis">

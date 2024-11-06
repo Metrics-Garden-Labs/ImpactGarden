@@ -26,7 +26,7 @@ const ContributionDetails: React.FC<ContributionDetailsProps> = ({
         <h3 className="font-semibold text-left">{contribution.subcategory}</h3>
 
         <div className="flex">
-          <hr className="border-1 border-gray-300 my-2 w-1/3" />
+          <hr className="border-1 border-lime-900/30 my-2 w-1/3" />
         </div>
 
         <div className="mb-4 items-left py-3 ">
