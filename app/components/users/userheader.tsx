@@ -68,8 +68,8 @@ const UserHeader = async ({ user }: Props) => {
   } = await getUserBadgeStatus(user.fid);
 
   return (
-    <div className="bg-white py-8">
-      <div className="flex flex-col items-center sm:items-end border-lime-950/50 border-y sm:flex-row justify-between my-8 bg-[#F4D3C3]/50  px-4 sm:px-8 md:px-12 py-10 sm:py-14">
+    <div className="bg-white">
+      <div className="flex flex-col items-center sm:items-end border-lime-950/50 border-y sm:flex-row justify-between bg-[#F4D3C3]/50  px-4 sm:px-8 md:px-12 py-10 sm:py-14">
         <div className="flex flex-col items-center  sm:items-end sm:flex-row space-x-0 sm:space-x-6 mb-6 sm:mb-0">
           <div className="flex-shrink-0 mb-4 justify-center sm:mb-0">
             <Image
@@ -95,7 +95,7 @@ const UserHeader = async ({ user }: Props) => {
             </h1>
           </div>
         </div>
-        <div className="grid grid-cols-3 p-4 bg-lime-900/30 rounded-md gap-4 sm:gap-6 md:gap-8">
+        <div className="grid grid-cols-3 p-4 bg-[#F4D3C3]/30 rounded-md gap-4 sm:gap-6 md:gap-8">
           <div className="bg-white p-2 sm:p-3 md:p-4 rounded-lg shadow text-center">
             <p className="text-xl sm:text-2xl md:text-3xl font-bold text-left">
               {totalAttestations}

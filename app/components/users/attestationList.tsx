@@ -151,18 +151,18 @@ const AttestationList = ({ user }: Props) => {
             attestations.map((attestation) => (
               <div
                 key={attestation.id}
-                className='p-4 bg-white border rounded-lg shadow-md cursor-pointer overflow-hidden'
+                className='p-4 bg-white border rounded-lg shadow-lg hover:shadow-xl transition-shadow hover:bg-[#F4D3C3]/20 cursor-pointer overflow-hidden'
                 onClick={() => openModal(attestation)}
               >
-                <div className='flex flex-col'>
+                <div className='flex flex-col p-6'>
                   <div className='flex items-start mb-2'>
                     {attestation.logoUrl && (
                       <Image
                         src={attestation.logoUrl}
                         alt={attestation.projectName || ''}
-                        width={40}
-                        height={40}
-                        className='mr-2 rounded-full flex-shrink-0'
+                        width={50}
+                        height={50}
+                        className='mr-4 flex-shrink-0'
                       />
                     )}
                     <div className='min-w-0 flex-1'>
@@ -173,13 +173,13 @@ const AttestationList = ({ user }: Props) => {
                       )}
                     </div>
                   </div>
-                  <p className='text-gray-700 mb-2 line-clamp-5 overflow-hidden'>
+                  <p className='text-gray-700 mb-2 pt-4 line-clamp-5 overflow-hidden'>
                     {attestation.feedback}
                   </p>
                   {attestation.rating && (
                     <p className='text-sm text-gray-500'>Rating: {attestation.rating}</p>
                   )}
-                  <p className='text-sm text-gray-500'>
+                  <p className='text-sm pt-8 text-gray-500'>
                     {format(new Date(attestation.createdAt || ''), 'MMMM dd, yyyy')}
                   </p>
                 </div>
