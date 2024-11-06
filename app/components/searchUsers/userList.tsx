@@ -97,7 +97,7 @@ export default async function UserList({
                   </div>
                 )}
               </div>
-              <h3 className="mb-2 text-xl font-semibold flex items-center ">
+              <h3 className="mb-2 text-xl flex items-center ">
                 {user.username}
                 <BadgeDisplay
                   isCoinbaseVerified={user.isCoinbaseVerified}
