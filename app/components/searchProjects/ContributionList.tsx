@@ -62,7 +62,7 @@ const ContributionList: React.FC<Props> = ({
     (project) => project.projectUid === selectedContribution?.projectUid
   );
 
- // console.debug({ selectedContribution, project });
+  // console.debug({ selectedContribution, project });
   // console.debug({ visibleContributions, contributions });
 
   const KEY = fid ? `user-data-${fid}` : null;
@@ -285,11 +285,11 @@ const ContributionList: React.FC<Props> = ({
                   const isReviewed =
                     isOptimisticReviewed ||
                     isReviewedContribution(contribution.projectName || "");
-
+                  //const isReviewed = true;
                   return (
                     <div
                       key={contribution.id}
-                      className="flex flex-col relative px-6 py-8 border justify-center items-center bg-white text-black border-gray-300 rounded-md w-full h-66 shadow-xl"
+                      className="flex group flex-col relative px-6 pt-8 border justify-center items-center bg-white text-black hover:bg-[#F4D3C3]/20 hover:shadow-xl transition-shadow overflow-hidden cursor-pointer border-lime-900 rounded-md w-full h-66 shadow-lg"
                     >
                       <div className="rounded-md bg-gray-300 w-24 h-24 flex items-center justify-center overflow-hidden mb-4">
                         {contribution.projectLogoUrl ? (
@@ -306,7 +306,7 @@ const ContributionList: React.FC<Props> = ({
                         )}
                       </div>
                       {isReviewed && (
-                        <div className="absolute pt-1 pb-16 top-0 bg-white/75 left-0 right-0 bottom-20 flex items-center justify-center">
+                        <div className="absolute pt-8 pb-16 top-0 bg-white/75 left-0 right-0 bottom-20 flex items-center justify-center">
                           <Image
                             src="/reviewed_stamp.svg"
                             alt="Reviewed Stamp"
@@ -337,8 +337,14 @@ const ContributionList: React.FC<Props> = ({
                             contribution?.primaryprojectuid || ""
                           )}`}
                         >
-                          <button className="btn btn-primary px-6 py-1 mt-2 bg-[#424242] cursor-pointer text-white font-thin rounded-md hover:bg-black">
-                            View
+                          <button
+                            className={`btn btn-primary tracking-widest px-6 py-1 mt-2 cursor-pointer group-hover:bg-lime-950 group-hover:text-white text-white font-thin rounded-md ${
+                              isReviewed
+                                ? "bg-lime-950/50 text-black"
+                                : "bg-lime-950 hover:bg-black"
+                            }`}
+                          >
+                            VIEW
                           </button>
                         </Link>
                       </div>
