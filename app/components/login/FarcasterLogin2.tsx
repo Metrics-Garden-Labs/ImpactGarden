@@ -171,7 +171,7 @@ const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
         </>
       ) : (
         <div
-          className="neynar_signin rounded-lg"
+          className="neynar_signin rounded-xl"
           data-client_id={client_id}
           data-success_callback="onSignInSuccess"
           data-theme="light"
@@ -183,7 +183,9 @@ const FarcasterLogin: React.FC<FarcasterLoginProps> = ({ onLoginSuccess }) => {
           data-font_size="16px"
           data-font_weight="300"
           data-padding="4px 15px"
+		  data-background_color="#F4D3C3"
           data-margin="0"
+		 
         />
       )}
     </div>
