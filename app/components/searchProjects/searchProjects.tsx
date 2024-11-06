@@ -187,8 +187,8 @@ const SearchProjects = ({
                         onClick={() => handleCategoryChange(category)}
                         className={`w-full text-left p-2 flex justify-between items-center rounded-md ${
                           selectedCategory === category
-                            ? "bg-[#B0B0B0]"
-                            : "hover:bg-[#B0B0B0]"
+                            ? "bg-lime-800/30"
+                            : "hover:bg-lime-800/30"
                         }`}
                       >
                         <span>{category}</span>
@@ -229,7 +229,7 @@ const SearchProjects = ({
           <div className="relative w-full sm:w-auto" ref={sortRef}>
             <button
               onClick={() => setIsSortOpen(!isSortOpen)}
-              className="w-full px-4 py-2 text-left bg-white border border-lime-900/30 rounded-md focus:outline-none"
+              className="sm:w-48 w-full px-4 py-2 text-center bg-white border border-lime-900/30 rounded-md focus:outline-none"
             >
               Sort by: {currentSortOrder}
             </button>
@@ -239,7 +239,7 @@ const SearchProjects = ({
                   <button
                     key={option}
                     onClick={() => handleSortOrderChange(option)}
-                    className="w-full text-left hover:bg-[#B0B0B0] p-2"
+                    className="w-full text-left hover:bg-lime-900/30 rounded-xl border-8 border-white p-2"
                   >
                     {option}
                   </button>
