@@ -82,7 +82,7 @@ export default async function UserList({
             href={`/users/${encodeURIComponent(user.username)}`}
           >
             <div className="flex flex-col p-6 border justify-center items-center bg-white text-black rounded-lg shadow-lg hover:shadow-xl transition-shadow cursor-pointer hover:bg-[#F4D3C3]/20 border-lime-900/30 w-full h-60">
-              <div className="rounded-full w-32 h-32 flex shadow-black/50 shadow-md hover:shadow-md items-center justify-center overflow-hidden mb-4">
+              <div className="rounded-full w-32 h-32 shrink-0 flex shadow-black/50 shadow-md hover:shadow-md items-center justify-center overflow-hidden mb-4">
                 {user.pfp_url ? (
                   <Image
                     src={user.pfp_url}
