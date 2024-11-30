@@ -12,12 +12,10 @@ interface Props {
   currentSortOrder: string;
 }
 
-const categories: higherCategoryKey[] = ["Governance"];
-// "OP Stack", "Onchain Builders"
+const categories: higherCategoryKey[] = ["Governance", "OP Stack", "Onchain Builders"];
 
 const subcategories = {
-  Governance: ["Infra & Tooling"],
-  //  "Research & Analytics", "Collaboration and Onboarding", "Governance Structures"
+  Governance: ["Infra & Tooling", "Research & Analytics", "Collaboration and Onboarding", "Governance Structures"],
   "OP Stack": [
     "Ethereum Core Contributions",
     "OP Stack Research and Development",
@@ -201,15 +199,14 @@ const SearchProjects = ({
                       </button>
                       {openCategory === category &&
                         subcategories[category].length > 0 && (
-                          <div className="ml-4">
+                          <div className="mx-auto w-48">
                             {subcategories[category].map((subcategory) => (
                               <button
                                 key={subcategory}
-                                disabled
                                 onClick={() =>
                                   handleSubcategoryChange(subcategory)
                                 }
-                                className={`w-full text-left p-2 cursor-not-allowed rounded-md ${
+                                className={`w-full text-left text-base p-2 rounded-md hover:bg-lime-900/10 m-2 ${
                                   selectedSubcategory === subcategory
                                     ? "no-class"
                                     : "no-class"
@@ -255,8 +252,7 @@ const SearchProjects = ({
                 selectedSubcategory ? `: ${selectedSubcategory}` : ""
               }`}
               <button
-                className="ml-2 text-gray-600 cursor-not-allowed hover:text-gray-800"
-                disabled
+                className="ml-2 text-gray-600  hover:text-gray-800"
                 onClick={() => {
                   setSelectedCategory("");
                   setSelectedSubcategory("");
