@@ -86,7 +86,12 @@ export default function Navbar() {
           </button>
         </Link>
         <div className="hidden md:flex justify-end items-center lg:gap-x-8 md:gap-x-2">
-          {/* <Link href='/projectSignUp' className='text-white lg:text-md md:text-sm hover:text-opacity-75'>REGISTER PROJECT</Link>*/}
+          <Link
+            href="/projectSignUp"
+            className="text-white lg:text-md md:text-sm hover:text-opacity-75"
+          >
+            REGISTER PROJECT
+          </Link>
           <Link
             href="/searchProject"
             className="text-white lg:text-md md:text-sm hover:text-opacity-75"
@@ -116,12 +121,6 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-      <div className="bg-[#F4D3C3] text-black text-center flex items-center gap-2 rounded-none justify-center h-16 w-full border-none">
-        <img src="/opt.svg" alt="MGL Logo" className="size-7" />
-        Our experiment has concluded. Thank you for participating! Results will
-        be shared soon
-        <img src="/opt.svg" alt="MGL Logo" className="size-7" />
-      </div>
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black opacity-50 z-40"
@@ -142,15 +141,15 @@ export default function Navbar() {
           </button>
         </div>
         <ul className="space-y-4 mt-8">
-          {/*
-			  <li><Link
+          <li>
+            <Link
               href="/projectSignUp"
               className="block py-2"
               onClick={closeSidebar}
             >
               REGISTER PROJECT
             </Link>
-			 </li>*/}
+          </li>
           <li>
             <Link
               href="/searchProject"
