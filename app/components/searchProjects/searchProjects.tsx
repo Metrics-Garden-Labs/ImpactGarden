@@ -126,27 +126,6 @@ const SearchProjects = ({
     <div className="bg-white">
       <div className="container mx-auto px-4 max-w-6xl bg-white">
         <h1 className="text-2xl font-semibold mt-10 mb-2">Rate Projects</h1>
-        <div className="items-center flex gap-1 justify-center">
-          <PiSealWarningFill className="text-red-500 size-4 inline-block" />
-          <p className="text-gray-500 text-left w-full text-sm">
-            Do NOT rate any projects you have COIs with.
-          </p>
-        </div>
-        <div className="items-center flex gap-2 justify-center">
-          <p className="text-gray-500 text-left w-full text-sm">
-            <PiSealWarningFill className="text-red-500 size-4 inline-block" />{" "}
-            Please report to the Impact Garden team any ratings where there is a
-            COI.
-          </p>
-        </div>
-        <div className="items-center flex gap-2 justify-center">
-          <p className="text-gray-500 text-left w-full text-sm">
-            <PiSealWarningFill className="text-red-500 size-4 inline-block" />{" "}
-            Your rating should be focused on your use of the tool in relation to
-            your role in the Optimism Collective, not your general interactions
-            with the tool.
-          </p>
-        </div>
         <hr className="border-t border-lime-900/30 my-4" />
         <div className="flex flex-col sm:flex-row justify-between bg-white items-center mt-6 mb-5 px-0 space-y-4 sm:space-y-0">
           <div className="flex flex-col sm:flex-row flex-grow space-y-4 sm:space-y-0 sm:space-x-4 bg-white w-full sm:w-auto">
