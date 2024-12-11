@@ -45,7 +45,12 @@ const ProjectPageClient = ({
   const fetchContributions = useCallback(
     async (newQuery: string, newFilter: string, newSortOrder: string) => {
       try {
-        const [category, subcategory] = newFilter.split(":");
+        let category = "";
+        let subcategory = "";
+
+        if (newFilter?.trim()?.includes(":")) {
+          [category, subcategory] = newFilter.split(":");
+        }
         console.log("Fetching contributions with:", {
           newQuery,
           category,
