@@ -49,7 +49,7 @@ export const getProjectsByCategoryAndSubcategory = async (
   try {
     let query;
 
-    if (category && subcategory) {
+    if (category?.trim() && subcategory?.trim()) {
       // Query to filter projects by both category and subcategory
       const subquery = db
         .select({ projectName: contributions.projectName })
@@ -80,7 +80,7 @@ export const getProjectsByCategoryAndSubcategory = async (
         })
         .from(projects)
         .where(inArray(projects.projectName, subquery));
-    } else if (category) {
+    } else if (category?.trim()) {
       // Query to filter projects by category only
       const subquery = db
         .select({ projectName: contributions.projectName })
@@ -231,7 +231,8 @@ export const getContributionsByCategoryAndSubcategory = async (
           primaryprojectuid: projects.primaryprojectuid,
           projectLogoUrl: projects.logoUrl,
         })
-        .from(contributions);
+        .from(contributions)
+		.leftJoin(projects, eq(projects.projectName, contributions.projectName));
     }
 
     // Step 2: Apply Sorting (if requested)
