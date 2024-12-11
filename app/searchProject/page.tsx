@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 const ProjectPage = async ({ searchParams }: Props) => {
   const query = searchParams?.query || '';
-  const filter = searchParams?.filter || 'OP Stack';
+  const filter = searchParams?.filter || '';
   const sortOrder = searchParams?.sortOrder || 'A-Z';
 
   console.log('Received search parameters:', searchParams);
@@ -29,13 +29,6 @@ const ProjectPage = async ({ searchParams }: Props) => {
     // const contributions: ContributionWithProjectsAndAttestationCount[] = await getContributionsByCategoryAndSubcategory(category || '', subcategory || '', query || '');
     // console.log('Projects retrieved successfully:', projects);
     // console.log('Received sortOrder in ProjectPage:', sortOrder);
-    
-    console.log("filter:", filter);
-    console.log("category:", category);
-    console.log("subcategory:", subcategory);
-    console.log("first 5 projects:", projects.slice(0, 5));
-
-
     return (
       <ProjectPageClient
         projects={projects}
