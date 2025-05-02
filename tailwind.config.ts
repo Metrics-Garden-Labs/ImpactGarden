@@ -21,6 +21,8 @@ export default withUt({
         secondarygray: "#424242",
         secondarygreen: "#24583C",
         secondaryblue: "#CAEAEF",
+		notion: "#191919",
+		nation: "#252525"
       },
       tooltip: {
         backgroundColor: 'theme("colors.headerblack")',
