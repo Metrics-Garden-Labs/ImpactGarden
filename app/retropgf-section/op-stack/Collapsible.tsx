@@ -37,6 +37,13 @@ export default function Collapsible({
 		awareness: "bg-violet-700 text-violet-100",
 		adaptability: "bg-indigo-700 text-indigo-100",
 		dependability: "bg-gray-700 text-gray-100",
+		"lower barriers to entry": "bg-rose-700 text-rose-100",
+		"new delegates": "bg-lime-700 text-lime-100",
+		communication: "bg-emerald-700 text-emerald-100",
+		engagement: "bg-slate-600 text-slate-100",
+		collaboration: "bg-amber-600 text-amber-100",
+		understandability: "bg-teal-600 text-teal-100",
+		comprehensibleness: "bg-violet-600 text-violet-100",
 	  };
   
 	  const key = keyword.toLowerCase();
