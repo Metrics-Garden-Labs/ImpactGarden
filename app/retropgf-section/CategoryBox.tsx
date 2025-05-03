@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
 import { AiOutlineArrowRight } from "react-icons/ai";
 
 export default function CategoryBox() {
@@ -16,18 +15,18 @@ export default function CategoryBox() {
           <CategoryCard
             imageURL="/collective_governance.png"
             description=" ⚖️ Collective Governance"
-            href="https://www.ethcc.io/"
+            href="/retropgf-section/collective-governance"
           />
           <CategoryCard
             imageURL="/developer_ecosystem.png"
             description=" 🖥️ Developer Ecosystem"
-            href="https://www.ethcc.io/"
+            href="/retropgf-section/developer-ecosystem"
           />
 
           <CategoryCard
             imageURL="/ux_adoption.png"
             description=" 💃🏽 End UX and Adoption"
-            href="https://www.ethcc.io/"
+            href="/retropgf-section/ux-adoption"
           />
         </div>
       </div>
