@@ -6,12 +6,12 @@ import { AiOutlineArrowRight } from "react-icons/ai";
 export default function CategoryBox() {
   return (
     <>
-      <div className="flex flex-col items-center justify-center pb-8 bg-her-pink">
+      <div className="flex flex-col items-center justify-center pb-8">
         <div className="flex flex-row flex-wrap items-center justify-center w-full gap-12">
           <CategoryCard
             imageURL="/op_stack.png"
             description=" 🔴 OP Stack"
-            href="https://www.ethcc.io/"
+            href="/retropgf-section/op-stack"
           />
           <CategoryCard
             imageURL="/collective_governance.png"

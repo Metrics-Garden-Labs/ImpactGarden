@@ -1,16 +1,8 @@
-import { BiCategory } from "react-icons/bi";
-import CategoryBox from "./CategoryBox";
 import Image from "next/image";
 
 export default function Categories() {
   return (
     <>
-      <div className="flex flex-row gap-1 py-2 items-center">
-        <BiCategory className="text-xl text-white" />
-        <h1> RetroPGF3 Categories </h1>
-      </div>
-      <hr className="border-t border-gray-700 my-[1px]" />
-      <CategoryBox />
       <h1 className="font-black text-xl sm:text-3xl py-12">
         In each category you'll find...{" "}
       </h1>
