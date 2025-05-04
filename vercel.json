@@ -1,14 +1,14 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "has": [
         {
           "type": "host",
           "value": "opimpact.metricsgarden.xyz"
         }
       ],
-      "destination": "/impact-framework/:1"
+      "destination": "/impact-framework/:path*"
     }
   ]
 }
