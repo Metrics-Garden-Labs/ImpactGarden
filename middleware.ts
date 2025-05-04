@@ -7,14 +7,17 @@ export function middleware(request: NextRequest) {
   const { pathname } = url;
 
   const isAsset = pathname.match(/\.(.*)$/);
-  const isInternal = pathname.startsWith('/_next') || pathname.startsWith('/api');
+  const isInternal =
+    pathname.startsWith("/_next") || pathname.startsWith("/api");
 
-  if (host.startsWith("opimpact.metricsgarden.xyz")) {
-    if (!isAsset && !isInternal) {
-      url.pathname = `/impact-framework${pathname}`;
-      return NextResponse.rewrite(url);
-    }
+  if (
+    host.startsWith("opimpact.metricsgarden.xyz") &&
+    pathname === "/" &&
+    !isAsset &&
+    !isInternal
+  ) {
+    url.pathname = "/impact-framework";
+    return NextResponse.rewrite(url);
   }
-
   return NextResponse.next();
 }
