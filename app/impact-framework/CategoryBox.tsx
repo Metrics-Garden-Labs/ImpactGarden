@@ -10,23 +10,23 @@ export default function CategoryBox() {
           <CategoryCard
             imageURL="/op_stack.png"
             description=" 🔴 OP Stack"
-            href="/retropgf-section/op-stack"
+            href="/impact-framework/op-stack"
           />
           <CategoryCard
             imageURL="/collective_governance.png"
             description=" ⚖️ Collective Governance"
-            href="/retropgf-section/collective-governance"
+            href="/impact-framework/collective-governance"
           />
           <CategoryCard
             imageURL="/developer_ecosystem.png"
             description=" 🖥️ Developer Ecosystem"
-            href="/retropgf-section/developer-ecosystem"
+            href="/impact-framework/developer-ecosystem"
           />
 
           <CategoryCard
             imageURL="/ux_adoption.png"
             description=" 💃🏽 End UX and Adoption"
-            href="/retropgf-section/ux-adoption"
+            href="/impact-framework/ux-adoption"
           />
         </div>
       </div>
