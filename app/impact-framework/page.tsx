@@ -9,7 +9,7 @@ import NotionLinks from "./Links";
 export default function Landing() {
   return (
     <>
-      <div className="p-16 bg-notion ">
+      <div className=" sm:p-16 bg-notion ">
         <Head />
         <Intro />
         <Definition />

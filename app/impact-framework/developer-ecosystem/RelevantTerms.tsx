@@ -3,7 +3,7 @@ import Collapsible from "../op-stack/Collapsible";
 export default function RelevantTerms() {
   return (
 	<>
-		  <h1 className="text-2xl py-2 pt-8 font-black">  Relevant terms:</h1>
+		  <h1 className="text-2xl py-2 pt-8 font-black px-4">  Relevant terms:</h1>
 	  <Collapsible
 		Title="Discoverability"
 		Definition="Discoverability refers to the ease with which members of the Developer Ecosystem can gain awareness of, find, and utilize various resources, tools, and projects within the Optimism Ecosystem."

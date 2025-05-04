@@ -43,7 +43,7 @@ function Links({ emoji, text, href }: Props) {
   return (
     <Link
       href={href}
-      className="flex items-center gap-2 px-3 py-1 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors"
+      className="flex items-center gap-2 px-4 py-1 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors"
     >
       <span className="text-xl">{emoji}</span>
       <span className="underline underline-offset-4 decoration-zinc-500 decoration-1 ">

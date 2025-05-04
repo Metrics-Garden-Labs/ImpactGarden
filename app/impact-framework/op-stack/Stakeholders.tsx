@@ -1,7 +1,7 @@
 export default function Stakeholders() {
   return (
     <>
-      <div className="flex  flex-col">
+      <div className="flex  flex-col px-4">
         <h1 className="text-2xl py-2 pt-8 font-black"> Stakeholders</h1>
         <h2 className="text-xl font-bold pb-2">
           ✨Audiences benefitting from this impact✨:

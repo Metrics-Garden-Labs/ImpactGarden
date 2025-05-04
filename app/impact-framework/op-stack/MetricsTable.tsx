@@ -191,7 +191,7 @@ export function CollapsibleII({
   }
   return (
     <>
-      <div className="flex flex-col">
+      <div className="flex flex-col px-4">
         <h1 className="text-2xl py-2 pt-8 font-black"> 📊 🌱 Metrics Garden</h1>
         <p>
           Here you can find some metrics associated to the relevant terms

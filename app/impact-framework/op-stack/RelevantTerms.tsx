@@ -3,7 +3,7 @@ import Collapsible from "./Collapsible";
 export default function RelevantTerms() {
   return (
     <>
-	      <h1 className="text-2xl py-2 pt-8 font-black"> Relevant terms</h1>
+	      <h1 className="text-2xl py-2 pt-8 font-black px-4"> Relevant terms</h1>
       <Collapsible
         Title="Performance"
         Definition="Performance is about ensuring a network runs smoothly, ensuring all transactions and smart contracts are executed without issues while keeping costs low."

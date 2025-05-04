@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function Categories() {
   return (
     <>
-      <h1 className="font-black text-xl sm:text-3xl py-12">
+      <h1 className="font-black text-xl sm:text-3xl py-12 px-4">
         In each category you'll find...{" "}
       </h1>
       <div className="relative w-full h-[2000px] overflow-hidden">

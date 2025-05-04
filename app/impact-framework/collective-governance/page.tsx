@@ -7,7 +7,7 @@ import MetricsTable from "./MetricsTable";
 export default function OpStack() {
   return (
     <>
-      <div className="p-16 bg-notion ">
+      <div className="sm:p-16 bg-notion ">
         <Head />
 		<Definition />
 		<Stakeholders />

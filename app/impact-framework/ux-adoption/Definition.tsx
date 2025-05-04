@@ -1,7 +1,7 @@
 export default function Definition() {
   return (
     <>
-      <div className="flex flex-col  gap-1 py-2">
+      <div className="flex flex-col  gap-1 py-2 px-4">
         <h1 className="text-2xl  py-2 font-black">
           💃🏽 End User Experience and Adoption{" "}
         </h1>
@@ -17,8 +17,8 @@ export default function Definition() {
           a seamless user experience and foster the long-term engagement of
           consumers.{" "}
         </p>
-        <span className="flex items-center gap-2 py-3 px-1 rounded-md text-base font-medium text-zinc-300 bg-zinc-800 hover:text-white transition-colors">
-          🔴 OP Mainnet’s most used project had
+        <span className="gap-2 py-3 px-1 rounded-md text-base font-medium text-zinc-300 bg-zinc-800 hover:text-white transition-colors">
+          🔴 OP Mainnet’s most used project had {" "}
           <a
             href="https://dune.com/optimismfnd/Optimism"
             className="text-white/50 underline"

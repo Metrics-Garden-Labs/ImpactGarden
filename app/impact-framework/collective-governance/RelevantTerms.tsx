@@ -3,7 +3,7 @@ import Collapsible from "../op-stack/Collapsible";
 export default function RelevantTerms() {
   return (
 	<>
-	      <h1 className="text-2xl py-2 pt-8 font-black">  Relevant terms to consider:</h1>
+	      <h1 className="text-2xl py-2 pt-8 font-black px-4">  Relevant terms to consider:</h1>
 	  <Collapsible
 		Title="Governance Accessibility"
 		Definition="Governance accessibility enables a diversity of perspectives from various backgrounds to participate in decision-making processes, such as voting, by lowering barriers to entry."

@@ -4,7 +4,7 @@ import CategoryBox from "./CategoryBox";
 export default function Category() {
   return (
     <>
-      <div className="flex flex-row gap-1 py-2 items-center">
+      <div className="flex flex-row gap-1 py-2 p-4 items-center">
         <BiCategory className="text-xl text-white" />
         <h1> RetroPGF3 Categories </h1>
       </div>
