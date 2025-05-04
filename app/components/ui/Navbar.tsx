@@ -86,6 +86,12 @@ export default function Navbar() {
           </button>
         </Link>
         <div className="hidden md:flex justify-end items-center lg:gap-x-8 md:gap-x-2">
+		<Link
+            href="/impact-framework"
+            className="text-white lg:text-md md:text-sm hover:text-opacity-75"
+          >
+            IMPACT FRAMEWORK
+          </Link>
           <Link
             href="/projectSignUp"
             className="text-white lg:text-md md:text-sm hover:text-opacity-75"
