@@ -3,16 +3,16 @@ import { FaRegArrowAltCircleRight } from "react-icons/fa";
 
 export default function Head() {
   return (
-    <div className="relative w-full overflow-hidden max-h-screen">
+    <div className="relative h-64 sm:h-80 lg:h-auto w-full overflow-hidden max-h-screen">
       <Image
         src="/bgretropgfiii.png"
         alt="background"
         width={1920}
         height={1080}
-        className="object-cover w-full h-auto max-h-screen"
+        className="object-cover size-full max-h-screen"
         priority
       />
-      <div className="absolute top-16 left-4 md:left-12 lg:left-24 z-10">
+      <div className="absolute sm:top-10 top-4 left-4 md:left-12 lg:left-24 z-10">
         <h1 className="text-white text-xl sm:text-2xl md:text-3xl font-bold">
           RetroPGF3
         </h1>
@@ -39,13 +39,13 @@ export default function Head() {
             className="w-24 sm:w-32 md:w-48 h-auto mb-4 sm:mb-0"
           />
           <div className="text-center sm:text-left">
-            <h1 className="text-white text-xl sm:text-2xl md:text-5xl pl-10 font-bold leading-none">
+            <h1 className="text-white text-xl sm:text-2xl md:text-5xl pl-10 font-black leading-none">
               Impact
             </h1>
-            <h1 className="text-white text-2xl sm:text-4xl md:text-7xl font-bold leading-none">
+            <h1 className="text-white text-2xl sm:text-4xl md:text-7xl font-black leading-none">
               Evaluation
             </h1>
-            <h1 className="text-white text-xl sm:text-2xl md:text-5xl pl-32 font-bold leading-none">
+            <h1 className="text-white text-xl sm:text-2xl md:text-5xl pl-32 font-black leading-none">
               Framework
             </h1>
           </div>
