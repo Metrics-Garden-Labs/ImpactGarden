@@ -6,25 +6,22 @@ export default function Categories() {
       <h1 className="font-black text-xl sm:text-3xl py-12 px-4">
         In each category you'll find...{" "}
       </h1>
-      <div className="relative w-full h-[2000px] overflow-hidden">
-        <Image
-          src="/bg-retropgf2.png"
-          alt="background"
-          width={1920}
-          height={1080}
-          className="object-fill w-full h-[2000px]"
-          priority
-        />
-        <div className="flex flex-col items-center space-y-12 w-full absolute top-1/2 px-24 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+      <div
+        style={{
+          backgroundImage: `url('/bg-retropgf2.png')`,
+        }}
+        className="relative bg-center  bg-repeat-y  w-full py-2 overflow-hidden"
+      >
+        <div className="flex flex-col items-center space-y-12 w-full py-16 px-2 sm:px-24 ">
           <div className="relative w-full flex flex-row items-center">
             <Image
               src="/first_item.svg"
               alt="first item"
               width={0}
               height={0}
-              className="w-5/6 h-auto"
+              className="w-full h-auto"
             />
-            <h1 className="text-white text-lg sm:text-7xl font-bold text-center">
+            <h1 className="text-white text-lg sm:text-4xl lg:text-7xl font-bold ">
               What is this + some context
             </h1>
           </div>
@@ -34,9 +31,9 @@ export default function Categories() {
               alt="second item"
               width={0}
               height={0}
-              className="w-5/6 h-auto"
+              className="w-full h-auto"
             />
-            <h1 className="text-white text-lg sm:text-7xl font-bold text-center">
+            <h1 className="text-white text-lg sm:text-4xl lg:text-7xl font-bold ">
               Impact who?
             </h1>
           </div>
@@ -46,9 +43,9 @@ export default function Categories() {
               alt="third item"
               width={0}
               height={0}
-              className="w-5/6 h-auto"
+              className="w-full h-auto"
             />
-            <h1 className="text-white text-lg sm:text-7xl font-bold text-center">
+            <h1 className="text-white text-lg sm:text-4xl lg:text-7xl font-bold ">
               Important terms in the category
             </h1>
           </div>
@@ -58,9 +55,9 @@ export default function Categories() {
               alt="four item"
               width={0}
               height={0}
-              className="w-5/6 h-auto"
+              className="w-full h-auto"
             />
-            <h1 className="text-white text-lg sm:text-7xl font-bold ">
+            <h1 className="text-white text-lg sm:text-4xl lg:text-7xl font-bold ">
               What
               <br />
               How can I think about it?
@@ -74,7 +71,7 @@ export default function Categories() {
               alt="four item"
               width={0}
               height={0}
-              className="w-1/2 h-auto"
+              className="w-full h-auto"
             />
             <div className="flex items-center justify-center flex-col">
               <Image
@@ -84,7 +81,7 @@ export default function Categories() {
                 height={0}
                 className="w-32 h-auto mb-4 sm:mb-0"
               />
-              <h1 className="text-white  text-lg sm:text-7xl font-bold ">
+              <h1 className="text-white text-lg sm:text-4xl lg:text-7xl font-bold ">
                 I want moar!
                 <br />
                 (metrics)

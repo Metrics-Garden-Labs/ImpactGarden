@@ -39,13 +39,13 @@ export default function Head() {
             className="w-24 sm:w-32 md:w-48 h-auto mb-4 sm:mb-0"
           />
           <div className="text-center sm:text-left">
-            <h1 className="text-white text-xl sm:text-2xl md:text-5xl pl-10 font-black leading-none">
+            <h1 className="text-white text-2xl  md:text-5xl pl-10 font-black leading-none">
               Impact
             </h1>
             <h1 className="text-white text-2xl sm:text-4xl md:text-7xl font-black leading-none">
               Evaluation
             </h1>
-            <h1 className="text-white text-xl sm:text-2xl md:text-5xl pl-32 font-black leading-none">
+            <h1 className="text-white text-2xl  md:text-5xl pl-32 font-black leading-none">
               Framework
             </h1>
           </div>
