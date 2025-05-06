@@ -3,7 +3,7 @@ import { FaRegArrowAltCircleRight } from "react-icons/fa";
 
 export default function Diving() {
   return (
-    <div className="relative h-64 mt-8 sm:h-80 lg:h-auto w-full overflow-hidden max-h-screen">
+    <div className="relative h-64 mt-8 sm:h-80 rounded-xl lg:h-auto w-full overflow-hidden max-h-screen">
       <Image
         src="/bg-retropgf2.png"
         alt="background"

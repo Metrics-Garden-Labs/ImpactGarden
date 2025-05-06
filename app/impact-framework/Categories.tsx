@@ -32,7 +32,7 @@ export default function Categories() {
 
       <div
         style={{ backgroundImage: `url('/bg-retropgf2.png')` }}
-        className="bg-center bg-repeat-y w-full py-2 overflow-hidden"
+        className="bg-center bg-repeat-y w-full py-2 overflow-hidden rounded-xl"
       >
         <div className="flex flex-col items-center w-full py-16 px-4 sm:px-12 xl:px-32 space-y-32">
           {items.map(({ src, alt, text }, index) => (

@@ -3,7 +3,7 @@ import { FaRegArrowAltCircleRight } from "react-icons/fa";
 
 export default function Head() {
   return (
-    <div className="relative h-64 sm:h-80 lg:h-auto w-full overflow-hidden max-h-screen">
+    <div className="relative h-64 sm:h-80 lg:h-auto w-full overflow-hidden rounded-xl max-h-screen">
       <Image
         src="/bgretropgfiii.png"
         alt="background"
