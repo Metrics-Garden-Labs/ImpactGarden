@@ -3,7 +3,7 @@ export default function Stakeholders() {
     <>
       <div className="flex  flex-col px-4">
         <h1 className="text-2xl py-2 pt-8 font-black"> Stakeholders</h1>
-        <h2 className="text-xl font-bold pb-2">
+		<h2 className="text-xl font-bold pb-1">
           ✨Audiences benefitting from this impact✨:
         </h2>
         <div className="px-4">
@@ -16,7 +16,7 @@ export default function Stakeholders() {
             Developers: Application, Front-end, Smart contract, Game, Artists.{" "}
           </li>
         </div>
-        <h2 className="text-xl font-bold pt-4">
+		<h2 className="text-xl font-bold pt-4 pb-1">
           🤝Audiences enabling this impact 🤝:
         </h2>
         <div className="px-4 pb-4">
