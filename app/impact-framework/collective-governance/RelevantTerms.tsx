@@ -98,85 +98,64 @@ export default function RelevantTerms() {
 	  />
 	   <Collapsible
 		Title="Accountability"
-		Definition="A system with independent parts facilitates collaborative and extensible development. Independent teams can evolve and improve independent components, eliminating extensive coordination."
-		QuestionOne="Is this contribution designed to coexist and support a modular environment? "
-		QuestionTwo="Can this contribution be used as a building block of several other pieces? "
+		Definition="Accountability refers to the obligation of both voters and grantees to conduct actions and decisions transparently."
+		QuestionOne="Did this contribution increase the ability for members of the Grant Council to make decisions on funding allocation based on grantees previous performance?  "
+		QuestionTwo="Did this contribution increase the accessibility to data that can be leveraged for accountability?  "
 		Example="  "
-		Keywords={["modules", "adaptability", "extensibility", "utility"]}
+		Keywords={["transparency", "visibility", "accesibility of data", "monitoring", "compilance", "oversight"]}
 		TableData={[
 		  {
-			metric: "Number of dependent Github repositories",
-			strength: "Medium",
+			metric: "Increase in number of delegates voting in a proposal",
+			strength: "high",
 			description:
-			  "Measures: Number of dependencies from other repositories. Why this level? A repository which is not Optimism specific may include dependencies that are not benefiting the Optimism Ecosystem, making its impact appear greater than it is.  ",
-			keyword: "Extensibility",
+			  "Measures: Number of delegates that voted in a proposal as a result of a contribution. Why this level? Participation in the decision-making of the collective is fundamental and information on this participation increases the ability to hold delegates accountable.   ",
+			keyword: "monitoring",
 		  },
 		  {
-			metric: "Number of positive testimonies from OP Stack core contributors",
+			metric: "Attestations received by the RetroPGF applicant",
 			strength: "High",
 			description:
-			  "Measures: How useful core contributors have found a resource to be. Why this level? This metric clearly signals the perceived positive value of a contribution by OP specific beneficiaries.  ",
-			keyword: "Utility",
+			  "Measures: Public signaling by users on the impact of a contribution through attestations.  Why this level? The use of attestations increases data availability for Optimism’s Citizenship.",
+			keyword: "accesibility of data",
 		  },
 		  {
-			metric: "Number of dependencies from the OP Stack",
+			metric: "Increase in number of delegates explaining their voting rationale",
 			strength: "High",
 			description:
-			  "Measures: Dependencies the OP Stack has on an external resource. Why this level? A larger number of dependencies could point to this resources being extremely valuable to the Ecosystem.  ",
-			keyword: "Utility",
+			  "Measures: Number of delegates that have shared their voting rationale derived from a contribution. Why this level?  An increase in information that is shared by delegates enables their token holders to hold them accountable for their participation. ",
+			keyword: "transparency",
 		  },
 		  {
-			metric: "Type of dependency from the OP Stack",
+			metric: "Number of grants executed as specified",
 			strength: "High",
 			description:
-			  "Measures: Type of dependencies the OP Stack has on an external resource. Why this level? Some dependencies are fundamental to the OP Stack, while others could be less critical. However, for now recommendation is to value both highly. ",
-			keyword: "       ",
+			  "Measures: Number of grants an applicant has completed according to the requirements. Why this level? By completing their grants according to the requirements Grantees increase the trust Token holders have in the Optimism Governance. ",
+			keyword: "monitoring",
 		  },
 		]}
 	  />
 	   <Collapsible
 		Title="Capture Resistance"
-		Definition="Awareness of the OP Stack means understanding how its parts are arranged and work together. "
-		QuestionOne="Did this project provide insight into how its components can be leveraged?  "
-		QuestionTwo="Did this contribution led to more teams building with the OP Stack? "
-		Example="By leveraging the tool created by blue sunny, two new teams spun out their own OP Chains. "
-		Keywords={["familiarity", "understanding", "effective use", "adoption"]}
+		Definition="Capture Resistance refers to the ability of the governance of the Optimism Collective to resist being captured by one or multiple actors."
+		QuestionOne="Did this contribution support a broader distribution of voting power among delegates?  "
+		QuestionTwo="Did this contribution result in an increase in the votable supply of OP tokens? "
+		Example="The video, created by Green Sunny, helped XX token holders understand how to delegate their voting power to minority delegates. "
+		Keywords={["concentration of voting power", "resilience", "votable supply", "delegation of tokens"]}
 		TableData={[
 		  {
-			metric: "Content impressions",
-			strength: "Low",
+			metric: "Changes in voting power distribution held within the top 10 delegates",
+			strength: "Medium",
 			description:
-			  "Measures: Number of impressions this piece of content has had. Why this level? There is no clear way to know how much value was derived by the Collective based on this metric. ",
-			keyword: "Familiarity",
+			  "Measures: Changes in voting power distribution generated by a contribution. Why this level?",
+			keyword: "concentration of voting power",
 		  },
 		  {
-			metric: "Number of Github stars",
-			strength: "Low",
+			metric: "Increase in votable supply",
+			strength: "high",
 			description:
-			  "Measures: Number of stars a Github repo has received. Why this level? There is no clear way to know if starring a project can be equated to any value being derived from it. ",
-			keyword: "Familiarity",
-		  },
-		  {
-			metric: "Number of event attendees",
-			strength: "Low",
-			description:
-			  "Measures: Number of people who attended an event. Why this level? Depending on the type and content in the event, its value to the Optimism Ecosystem may be low or high based on how fruitful it is to engage people with Optimism. ",
-			keyword: "Understanding",
-		  },
-		  {
-			metric: "Number of content material created on the OP Stack",
-			strength: "Low",
-			description:
-			  "Measures: Content created on the OP Stack. Why this level? There is no clear way to know how much value was derived by the Collective based on this metric.",
-			keyword: "Familiarity",
-		  },
-		  {
-			metric: "Level of engagement with OP Stack content",
-			strength: "Low",
-			description:
-			  "Measures: Engagement a piece of content has had. Why this level? There is no clear way to know how much value was derived by the Collective based on this metric.",
-			keyword: "Understanding",
-		  },
+			  "Measures: Increase in delegated tokens. Why this level? An increase in votable supply translates to more participants in governance (through delegation).",
+			keyword: "capture resistance",
+		  }, 
 		]}
 	  />
 	</>
