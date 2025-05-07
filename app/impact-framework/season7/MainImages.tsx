@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function MainImages() {
   return (
-    <div className="grid grid-cols-2 justify-center gap-8 sm:p-8 p-4">
+    <div className="grid grid-cols-2 justify-items-center gap-8 sm:gap-4 p-4 sm:px-48 py-16 ">
       {/* Primer enlace de imagen */}
       <Link
         href="https://example1.com"
@@ -15,7 +15,7 @@ export default function MainImages() {
           alt="Funders"
           width={500}
           height={280}
-          className="object-cover w-full h-auto rounded-md transition-transform duration-300 group-hover:scale-105"
+          className="object-cover w-full sm:w-5/6 h-auto rounded-md transition-transform duration-300 group-hover:scale-105"
           priority
         />
       </Link>
@@ -31,7 +31,7 @@ export default function MainImages() {
           alt="Builders"
           width={500}
           height={280}
-          className="object-cover w-full h-auto rounded-md transition-transform duration-300 group-hover:scale-105"
+          className="object-cover w-full sm:w-5/6 h-auto rounded-md transition-transform duration-300 group-hover:scale-105"
           priority
         />
       </Link>
