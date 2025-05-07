@@ -1,7 +1,6 @@
 import Head from "@/app/impact-framework/season7/funders/Head";
 import Stakeholders from "./Stakeholders";
 import Definition from "./Definition";
-import ItemsRisks from "./ItemsRisks";
 import Risks from "./Risks";
 import SmartImage from "./SmartImage";
 import Table from "./Table";

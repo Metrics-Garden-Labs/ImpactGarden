@@ -2,7 +2,11 @@ export default function Stakeholders() {
   return (
     <>
       <div className="flex  flex-col px-4">
-        <h1 className="text-2xl py-2 pt-8 font-black"> Stakeholders ✨:</h1>
+        <h1 className="text-3xl font-black pt-8">
+          Theory of Change for Funders
+        </h1>
+        <div className="w-full my-8 border-t border-gray-400" />
+        <h1 className="text-2xl py-2 pt-4 font-black"> Stakeholders ✨:</h1>
         Any individual or group of individuals who is in the position to
         allocate funding from the Collective to an initiative, project or set of
         projects tasked with delivering results towards the intent.
@@ -39,7 +43,7 @@ export default function Stakeholders() {
         Optimism Collective by any contributor.
       </div>
 
-	  <div className="w-full my-8 border-t border-gray-400" />
+      <div className="w-full my-8 border-t border-gray-400" />
     </>
   );
 }
