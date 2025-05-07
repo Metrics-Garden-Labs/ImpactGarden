@@ -6,7 +6,7 @@ export default function MainImages() {
     <div className="grid grid-cols-2 justify-items-center gap-8 sm:gap-4 p-4 sm:px-48 py-16 ">
       {/* Primer enlace de imagen */}
       <Link
-        href="https://example1.com"
+        href="/impact-framework/season7/funders"
         passHref
         className="relative group cursor-pointer"
       >
