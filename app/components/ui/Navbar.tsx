@@ -8,6 +8,7 @@ import { isMobile } from "react-device-detect";
 import ReviewCarousel from "../attestations/ReviewCarousel";
 import useLocalStorage from "@/src/hooks/use-local-storage-state";
 import OnboardingCarousel from "../OnboardingCarousel";
+import { RiArrowDropDownLine } from "react-icons/ri";
 import { useAtom } from "jotai";
 
 interface UserLogin {
@@ -62,6 +63,15 @@ export default function Navbar() {
   const closeModal = () => {
     setisOnboardingCarouselOpen(false);
   };
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+
+  const closeDropdown = () => {
+    setIsDropdownOpen(false);
+  };
 
   if (!isClient) {
     return null;
@@ -86,12 +96,41 @@ export default function Navbar() {
           </button>
         </Link>
         <div className="hidden md:flex justify-end items-center lg:gap-x-8 md:gap-x-2">
-		<Link
-            href="/impact-framework"
-            className="text-white lg:text-md md:text-sm hover:text-opacity-75"
-          >
-            IMPACT FRAMEWORK
-          </Link>
+          <div className="relative inline-block">
+            <button
+              onClick={toggleDropdown}
+              className="text-white lg:text-md md:text-sm hover:text-opacity-75 flex items-center"
+            >
+              IMPACT FRAMEWORK
+              <RiArrowDropDownLine
+                className={`inline-block ml-1 transition-transform duration-300 text-3xl ${
+                  isDropdownOpen ? "rotate-180" : "rotate-0"
+                }`}
+              />
+            </button>
+            {isDropdownOpen && (
+              <div
+                className="absolute w-full bg-headerblack border border-gray-700 rounded shadow-md mt-2 z-50 animate-dropdown"
+                onMouseLeave={closeDropdown}
+              >
+                <Link
+                  href="/impact-framework/rpgf3/"
+                  className="block px-4 py-2 text-sm text-white hover:text-black hover:bg-primarylp"
+                  onClick={closeDropdown}
+                >
+                  RPGF3
+                </Link>
+                <Link
+                  href="/impact-framework/season7/"
+                  className="block px-4 py-2 text-sm text-white hover:text-black hover:bg-primarylp"
+                  onClick={closeDropdown}
+                >
+                  SEASON7
+                </Link>
+              </div>
+            )}
+          </div>
+
           <Link
             href="/projectSignUp"
             className="text-white lg:text-md md:text-sm hover:text-opacity-75"
