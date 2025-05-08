@@ -3,7 +3,7 @@ import SecondTable from "./SecondTable";
 export default function ForFunders() {
   return (
     <>
-      <div>
+      <div className="px-4">
         <h1 className="text-xl font-black py-4">📊 Impact Vectors for Funders</h1>
         <p>
           To evaluate whether funding is driving meaningful progress toward

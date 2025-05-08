@@ -3,7 +3,7 @@ import ItemsRisks from "./ItemsRisks";
 export default function Risks() {
   return (
     <>
-      <div className="">
+      <div className="px-4">
         <h1 className="text-2xl  pt-8 font-black">
           {" "}
           ⚠️ Risks to keep in mind:
