@@ -187,6 +187,42 @@ export default function Navbar() {
         </div>
         <ul className="space-y-4 mt-8">
           <li>
+            <button
+              onClick={toggleDropdown}
+              className="flex items-center justify-between w-full py-2"
+            >
+              IMPACT FRAMEWORK
+              <RiArrowDropDownLine
+                className={`ml-2 text-2xl transition-transform duration-300 ${
+                  isDropdownOpen ? "rotate-180" : "rotate-0"
+                }`}
+              />
+            </button>
+            {isDropdownOpen && (
+              <ul className="pl-4 mt-1 space-y-2">
+                <li>
+                  <Link
+                    href="/impact-framework/rpgf3/"
+                    className="block py-1"
+                    onClick={closeSidebar}
+                  >
+                    RPGF3
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/impact-framework/season7/"
+                    className="block py-1"
+                    onClick={closeSidebar}
+                  >
+                    SEASON7
+                  </Link>
+                </li>
+              </ul>
+            )}
+          </li>
+
+          <li>
             <Link
               href="/projectSignUp"
               className="block py-2"
@@ -210,7 +246,7 @@ export default function Navbar() {
               className="block py-2"
               onClick={closeSidebar}
             >
-              SEARCH USERS
+              SEARCH USERSS
             </Link>
           </li>
         </ul>
