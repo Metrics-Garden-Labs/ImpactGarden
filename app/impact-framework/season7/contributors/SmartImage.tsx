@@ -4,13 +4,13 @@ import { FaRegArrowAltCircleRight } from "react-icons/fa";
 export default function SmartImage() {
   return (
     <>
-      <div className=" h-64 mt-8 sm:h-80 rounded-xl lg:h-auto w-full overflow-hidden max-h-screen">
+      <div className=" h-32 mt-8 sm:h-80 lg:h-auto w-full overflow-hidden max-h-screen">
         <Image
           src="/smart.gif"
           alt="background"
           width={1920}
           height={1080}
-          className="object-contain w-full h-auto"
+          className="object-contain w-full h-auto rounded-xl"
           priority
         />
       </div>

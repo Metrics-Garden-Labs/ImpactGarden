@@ -10,7 +10,7 @@ type Props = {
 export default function Sources() {
   return (
 	<>
-	<div className="px-4" >
+	<div className="p-4" >
 
 	<h1 className="text-xl font-black py-4">⛳ Sources for a data-driven successful evaluation of funding strategies pursued during S7</h1>
 	  <Links

@@ -1,7 +1,7 @@
 export default function Table() {
   return (
     <>
-      <div>
+      <div className="px-4">
         <div className="overflow-x-auto mt-8 rounded-md">
           <table className="min-w-full border border-gray-600 text-left text-sm text-white">
             <thead className="bg-nation/50 text-white">

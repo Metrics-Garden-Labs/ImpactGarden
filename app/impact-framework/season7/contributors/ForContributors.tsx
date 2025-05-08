@@ -3,7 +3,7 @@ import SecondTable from "./SecondTable";
 export default function ForContributors() {
   return (
     <>
-      <div className="">
+      <div className="px-4">
         <h1 className="text-xl font-black py-4">
           🛠️ Impact Vectors for Contributors
         </h1>
