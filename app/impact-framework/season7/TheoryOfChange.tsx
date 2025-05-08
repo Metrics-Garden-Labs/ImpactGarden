@@ -4,7 +4,7 @@ import { FaRegArrowAltCircleRight } from "react-icons/fa";
 export default function TheoryOfChange() {
   return (
     <>
-      <div className=" h-64 mt-8 sm:h-80 rounded-xl lg:h-auto w-full overflow-hidden max-h-screen">
+      <div className=" h-32 mt-8 sm:h-80 rounded-xl lg:h-auto w-full overflow-hidden max-h-screen">
         <Image
           src="/theoryofchange.gif"
           alt="background"
@@ -20,9 +20,9 @@ export default function TheoryOfChange() {
           on achieving the Collective's Intent:{" "}
           <span className="relative inline-block underline underline-offset-4">
             A set of interoperable Stage 1 chains doing $250m per month in
-            cross-chain asset transfers
+            cross-chain asset transfers. 
           </span>
-          . Using the Theory of Change framework helps funders, builders, and
+          Using the Theory of Change framework helps funders, builders, and
           the broader community align on what matters, identify high-leverage
           opportunities, and evaluate what meaningful progress to completing
           this intent looks like.

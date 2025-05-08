@@ -3,20 +3,20 @@ import Image from "next/image";
 export default function Mision() {
   return (
     <>
-      <div className="relative pt-8 h-64 sm:h-80 lg:h-auto w-full overflow-hidden rounded-xl max-h-screen">
+      <div className="relative pt-8 pb-8 h-80 lg:h-auto w-full overflow-hidden rounded-xl max-h-screen">
         <Image
           src="/season7_head.png"
           alt="background"
           width={1920}
           height={1080}
-          className="object-cover size-full max-h-screen"
+          className="object-cover size-full max-h-screen rounded-xl"
           priority
         />
 
         <div className="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 px-4 w-full max-w-8xl mx-auto">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 w-full">
             <div className="  grow py-6 rounded-md w-full max-w-full">
-              <h1 className="text-white text-3xl sm:text-5xl md:text-6xl font-black leading-tight">
+              <h1 className="text-white text-2xl sm:text-5xl md:text-6xl font-black leading-tight">
                 These are two perspectives that feed into the same Mission{" "}!
               </h1>
             </div>
