@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
     !isAsset &&
     !isInternal
   ) {
-    url.pathname = "/impact-framework";
+    url.pathname = "/impact-framework/season7";
     return NextResponse.rewrite(url);
   }
   return NextResponse.next();
